@@ -1,6 +1,4 @@
-# Sistema de Análisis y Anticipación de Demanda de Urgencia en Salud Mental para la Región Metropolitana
-
-Nombre provisional del proyecto. El nombre definitivo de la plataforma está pendiente de definición por el equipo.
+# SAAD: Sistema de Análisis y Anticipación de Demanda de Urgencia en Salud Mental para la Región Metropolitana
 
 ## Descripción del proyecto
 
@@ -22,18 +20,28 @@ Actualmente, la demanda y la accesibilidad territorial no se analizan de manera 
 ## Componentes propuestos
 
 1. Modelo de demanda
-
    Proyección de atenciones de urgencia por salud mental para una ventana de 4 a 8 semanas, con intervalos de predicción y evaluación mediante backtesting contra un baseline estacional.
 
 2. Accesibilidad geoespacial
-
    Georreferenciación de establecimientos, cálculo de accesibilidad mediante red vial y transporte público, y estimación de cobertura territorial cruzada con vulnerabilidad socioeconómica.
 
 3. Caracterización de la hospitalización psiquiátrica
-
    Análisis de los factores relacionados con la duración de estadía para diagnósticos F00-F99, considerando diagnóstico, edad, previsión, pertenencia al SNSS y condición de egreso.
 
 Estos componentes están sujetos a validación académica y a validación con el futuro cliente piloto.
+
+## Stack Tecnológico
+
+El proyecto se desarrollará utilizando tecnologías modernas orientadas al análisis de datos y la escalabilidad:
+
+- **Frontend & UI:** React, Tailwind CSS, Recharts (visualización de datos), React Leaflet (mapas espaciales).
+- **Backend & API:** Python con FastAPI.
+- **Modelamiento Predictivo:** LightGBM, TensorFlow, Prophet/SARIMAX (para evaluación baseline).
+- **Base de Datos:** PostgreSQL con extensión PostGIS (para análisis de rutas y polígonos geoespaciales).
+- **Infraestructura y Entorno:** Docker Compose (despliegue local), WSL2 (Linux), automatización con Cron.
+- **Gestión y Control de Versiones:** Git, GitHub, GitHub Projects (Metodología Kanban).
+- **Diseño y Prototipado:** Figma.
+- **IDE:** Visual Studio Code.
 
 ## Público objetivo
 
@@ -103,7 +111,10 @@ Se utilizará una metodología ágil basada en:
 
 | Integrante | Rol | Responsabilidades |
 |---|---|---|
-| Por definir | Por definir | Los roles se asignarán después de validar el alcance |
+| Camila A. | Jefa de Proyecto (PM) | Gestión ágil en Kanban, coordinación con cliente piloto/expertos y documentación. |
+| Felipe R. | Data Engineer | Extracción, limpieza y auditoría de datos del DEIS, gestión de BD PostgreSQL/PostGIS. |
+| Cristopher R. | Data Scientist | Desarrollo, entrenamiento y *benchmarking* de modelos predictivos de demanda. |
+| Catalina | Full Stack / Geoespacial | Desarrollo de la plataforma visual en React, integración con API y análisis espacial. |
 
 ## Licencia
 
