@@ -1,0 +1,316 @@
+{
+  "urgencias": [
+    {
+      "year": 2020,
+      "zip": "AtencionesUrgencia2020.zip",
+      "zip_valido": true,
+      "tamano_zip": 44777907,
+      "archivos_extraidos": [
+        {
+          "nombre": "DICCIONARIO_ATENCIONES_DE_URGENCIA.xlsx",
+          "tamano_bytes": 359866,
+          "extension": ".xlsx"
+        },
+        {
+          "nombre": "AtencionesUrgencia2020.csv",
+          "tamano_bytes": 796227186,
+          "extension": ".csv"
+        }
+      ],
+      "datos": [
+        "AtencionesUrgencia2020.csv"
+      ],
+      "diccionarios": [
+        "DICCIONARIO_ATENCIONES_DE_URGENCIA.xlsx"
+      ],
+      "tiene_diccionario": "Sí",
+      "nombre_diccionario": "DICCIONARIO_ATENCIONES_DE_URGENCIA.xlsx"
+    },
+    {
+      "year": 2021,
+      "zip": "AtencionesUrgencia2021.zip",
+      "zip_valido": true,
+      "tamano_zip": 48697421,
+      "archivos_extraidos": [
+        {
+          "nombre": "DICCIONARIO_ATENCIONES_DE_URGENCIA.xlsx",
+          "tamano_bytes": 359866,
+          "extension": ".xlsx"
+        },
+        {
+          "nombre": "AtencionesUrgencia2021.csv",
+          "tamano_bytes": 1130831814,
+          "extension": ".csv"
+        }
+      ],
+      "datos": [
+        "AtencionesUrgencia2021.csv"
+      ],
+      "diccionarios": [
+        "DICCIONARIO_ATENCIONES_DE_URGENCIA.xlsx"
+      ],
+      "tiene_diccionario": "Sí",
+      "nombre_diccionario": "DICCIONARIO_ATENCIONES_DE_URGENCIA.xlsx"
+    },
+    {
+      "year": 2022,
+      "zip": "AtencionesUrgencia2022.zip",
+      "zip_valido": true,
+      "tamano_zip": 136263293,
+      "archivos_extraidos": [
+        {
+          "nombre": "DICCIONARIO_ATENCIONES_DE_URGENCIA.xlsx",
+          "tamano_bytes": 359866,
+          "extension": ".xlsx"
+        },
+        {
+          "nombre": "AtencionesUrgencia2022.csv",
+          "tamano_bytes": 1144770884,
+          "extension": ".csv"
+        }
+      ],
+      "datos": [
+        "AtencionesUrgencia2022.csv"
+      ],
+      "diccionarios": [
+        "DICCIONARIO_ATENCIONES_DE_URGENCIA.xlsx"
+      ],
+      "tiene_diccionario": "Sí",
+      "nombre_diccionario": "DICCIONARIO_ATENCIONES_DE_URGENCIA.xlsx"
+    },
+    {
+      "year": 2023,
+      "zip": "AtencionesUrgencia2023.zip",
+      "zip_valido": true,
+      "tamano_zip": 138904367,
+      "archivos_extraidos": [
+        {
+          "nombre": "AtencionesUrgencia2023.csv",
+          "tamano_bytes": 1598833998,
+          "extension": ".csv"
+        }
+      ],
+      "datos": [
+        "AtencionesUrgencia2023.csv"
+      ],
+      "diccionarios": [],
+      "tiene_diccionario": "No",
+      "nombre_diccionario": "No contiene diccionario dentro del ZIP."
+    },
+    {
+      "year": 2024,
+      "zip": "AtencionesUrgencia2024.zip",
+      "zip_valido": true,
+      "tamano_zip": 49902062,
+      "archivos_extraidos": [
+        {
+          "nombre": "AtencionesUrgencia2024.csv",
+          "tamano_bytes": 1608911448,
+          "extension": ".csv"
+        }
+      ],
+      "datos": [
+        "AtencionesUrgencia2024.csv"
+      ],
+      "diccionarios": [],
+      "tiene_diccionario": "No",
+      "nombre_diccionario": "No contiene diccionario dentro del ZIP."
+    },
+    {
+      "year": 2025,
+      "zip": "AtencionesUrgencia2025.zip",
+      "zip_valido": true,
+      "tamano_zip": 55288674,
+      "archivos_extraidos": [
+        {
+          "nombre": "AtencionesUrgencia2025.csv",
+          "tamano_bytes": 1956418531,
+          "extension": ".csv"
+        }
+      ],
+      "datos": [
+        "AtencionesUrgencia2025.csv"
+      ],
+      "diccionarios": [],
+      "tiene_diccionario": "No",
+      "nombre_diccionario": "No contiene diccionario dentro del ZIP."
+    },
+    {
+      "year": 2026,
+      "zip": "AtencionesUrgencia2026.zip",
+      "zip_valido": true,
+      "tamano_zip": 36340184,
+      "archivos_extraidos": [
+        {
+          "nombre": "AtencionesUrgencia2026.csv",
+          "tamano_bytes": 1311803411,
+          "extension": ".csv"
+        }
+      ],
+      "datos": [
+        "AtencionesUrgencia2026.csv"
+      ],
+      "diccionarios": [],
+      "tiene_diccionario": "No",
+      "nombre_diccionario": "No contiene diccionario dentro del ZIP."
+    }
+  ],
+  "egresos": [
+    {
+      "year": 2020,
+      "zip": "EGRESOS_2020.zip",
+      "zip_valido": true,
+      "tamano_zip": 9092080,
+      "archivos_extraidos": [
+        {
+          "nombre": "EGRE_DATOS_ABIERTOS_2020.csv",
+          "tamano_bytes": 245975785,
+          "extension": ".csv"
+        },
+        {
+          "nombre": "Diccionario BD egresos hospitalario.xlsx",
+          "tamano_bytes": 684270,
+          "extension": ".xlsx"
+        }
+      ],
+      "datos": [
+        "EGRE_DATOS_ABIERTOS_2020.csv"
+      ],
+      "diccionarios": [
+        "Diccionario BD egresos hospitalario.xlsx"
+      ],
+      "tiene_diccionario": "Sí",
+      "nombre_diccionario": "Diccionario BD egresos hospitalario.xlsx"
+    },
+    {
+      "year": 2021,
+      "zip": "EGRESOS_2021.zip",
+      "zip_valido": true,
+      "tamano_zip": 8229879,
+      "archivos_extraidos": [
+        {
+          "nombre": "EGR_DATOS_ABIERTO_2021.csv",
+          "tamano_bytes": 219500927,
+          "extension": ".csv"
+        },
+        {
+          "nombre": "Diccionario BD egresos hospitalario.xlsx",
+          "tamano_bytes": 684270,
+          "extension": ".xlsx"
+        }
+      ],
+      "datos": [
+        "EGR_DATOS_ABIERTO_2021.csv"
+      ],
+      "diccionarios": [
+        "Diccionario BD egresos hospitalario.xlsx"
+      ],
+      "tiene_diccionario": "Sí",
+      "nombre_diccionario": "Diccionario BD egresos hospitalario.xlsx"
+    },
+    {
+      "year": 2022,
+      "zip": "EGRESOS_2022.zip",
+      "zip_valido": true,
+      "tamano_zip": 22086409,
+      "archivos_extraidos": [
+        {
+          "nombre": "Diccionario BD egresos hospitalario.xlsx",
+          "tamano_bytes": 684270,
+          "extension": ".xlsx"
+        },
+        {
+          "nombre": "EGRE_DATOS_ABIERTOS_2022.csv",
+          "tamano_bytes": 357942502,
+          "extension": ".csv"
+        }
+      ],
+      "datos": [
+        "EGRE_DATOS_ABIERTOS_2022.csv"
+      ],
+      "diccionarios": [
+        "Diccionario BD egresos hospitalario.xlsx"
+      ],
+      "tiene_diccionario": "Sí",
+      "nombre_diccionario": "Diccionario BD egresos hospitalario.xlsx"
+    },
+    {
+      "year": 2023,
+      "zip": "EGRESOS_2023.zip",
+      "zip_valido": true,
+      "tamano_zip": 7867392,
+      "archivos_extraidos": [
+        {
+          "nombre": "EGRESOS_2023.csv",
+          "tamano_bytes": 278312188,
+          "extension": ".csv"
+        },
+        {
+          "nombre": "Diccionario BD egresos hospitalario.xlsx",
+          "tamano_bytes": 684270,
+          "extension": ".xlsx"
+        }
+      ],
+      "datos": [
+        "EGRESOS_2023.csv"
+      ],
+      "diccionarios": [
+        "Diccionario BD egresos hospitalario.xlsx"
+      ],
+      "tiene_diccionario": "Sí",
+      "nombre_diccionario": "Diccionario BD egresos hospitalario.xlsx"
+    },
+    {
+      "year": 2024,
+      "zip": "EGRESOS_2024.zip",
+      "zip_valido": true,
+      "tamano_zip": 22066509,
+      "archivos_extraidos": [
+        {
+          "nombre": "EGR_DATOS_ABIERTO_2024.csv",
+          "tamano_bytes": 291175891,
+          "extension": ".csv"
+        },
+        {
+          "nombre": "Diccionario BD egresos hospitalario.xlsx",
+          "tamano_bytes": 684270,
+          "extension": ".xlsx"
+        }
+      ],
+      "datos": [
+        "EGR_DATOS_ABIERTO_2024.csv"
+      ],
+      "diccionarios": [
+        "Diccionario BD egresos hospitalario.xlsx"
+      ],
+      "tiene_diccionario": "Sí",
+      "nombre_diccionario": "Diccionario BD egresos hospitalario.xlsx"
+    },
+    {
+      "year": 2025,
+      "zip": "EGRESOS_2025.zip",
+      "zip_valido": true,
+      "tamano_zip": 22824807,
+      "archivos_extraidos": [
+        {
+          "nombre": "EGR_DATOS_ABIERTO_2025.csv",
+          "tamano_bytes": 302672065,
+          "extension": ".csv"
+        },
+        {
+          "nombre": "Diccionario BD egresos hospitalario.xlsx",
+          "tamano_bytes": 684270,
+          "extension": ".xlsx"
+        }
+      ],
+      "datos": [
+        "EGR_DATOS_ABIERTO_2025.csv"
+      ],
+      "diccionarios": [
+        "Diccionario BD egresos hospitalario.xlsx"
+      ],
+      "tiene_diccionario": "Sí",
+      "nombre_diccionario": "Diccionario BD egresos hospitalario.xlsx"
+    }
+  ]
+}

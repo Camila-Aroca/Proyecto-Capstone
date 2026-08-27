@@ -1,0 +1,840 @@
+{
+  "2024": {
+    "year": 2024,
+    "file_name": "EGR_DATOS_ABIERTO_2024.csv",
+    "total_rows": 1667349,
+    "num_cols": 16,
+    "header": [
+      "PERTENENCIA_ESTABLECIMIENTO_SALU",
+      "SEXO",
+      "GRUPO_EDAD",
+      "ETNIA",
+      "GLOSA_PAIS_ORIGEN",
+      "COMUNA_RESIDENCIA",
+      "GLOSA_COMUNA_RESIDENCIA",
+      "REGION_RESIDENCIA",
+      "GLOSA_REGION_RESIDENCIA",
+      "PREVISION",
+      "GLOSA_PREVISION",
+      "ANO_EGRESO",
+      "DIAG1",
+      "DIAG2",
+      "DIAS_ESTADA",
+      "CONDICION_EGRESO"
+    ],
+    "total_affected_rows_count": 746224,
+    "results_by_col": {
+      "GLOSA_COMUNA_RESIDENCIA": {
+        "count": 393067,
+        "distinct_values_count": 80,
+        "distinct_values": {
+          "Maip�": 39672,
+          "Vi�a del Mar": 30631,
+          "Valpara�so": 29127,
+          "Concepci�n": 25647,
+          "�u�oa": 23780,
+          "Los �ngeles": 22310,
+          "Pe�alol�n": 21891,
+          "Chill�n": 18774,
+          "Estaci�n Central": 14006,
+          "Quilpu�": 13573,
+          "Copiap�": 13525,
+          "Curic�": 12183,
+          "Conchal�": 8916,
+          "Hualp�n": 8472,
+          "Pedro�Aguirre Cerda": 6924,
+          "San Joaqu�n": 6912,
+          "Pe�aflor": 6695,
+          "Tom�": 6213,
+          "San Ram�n": 5779,
+          "La Uni�n": 4283
+        },
+        "sample_rows": [
+          {
+            "row_num": 7,
+            "val": "Concepci�n",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "50 a 59",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "08101",
+              "GLOSA_COMUNA_RESIDENCIA": "Concepci�n",
+              "REGION_RESIDENCIA": "08",
+              "GLOSA_REGION_RESIDENCIA": "Del B�ob�o",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "D410",
+              "DIAG2": "",
+              "DIAS_ESTADA": "4",
+              "CONDICION_EGRESO": "1"
+            }
+          },
+          {
+            "row_num": 8,
+            "val": "San Joaqu�n",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "MUJER",
+              "GRUPO_EDAD": "10 a 19",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "13129",
+              "GLOSA_COMUNA_RESIDENCIA": "San Joaqu�n",
+              "REGION_RESIDENCIA": "13",
+              "GLOSA_REGION_RESIDENCIA": "Metropolitana de Santiago",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "L021",
+              "DIAG2": "",
+              "DIAS_ESTADA": "5",
+              "CONDICION_EGRESO": "1"
+            }
+          },
+          {
+            "row_num": 11,
+            "val": "Quilpu�",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "30 a 39",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "05801",
+              "GLOSA_COMUNA_RESIDENCIA": "Quilpu�",
+              "REGION_RESIDENCIA": "05",
+              "GLOSA_REGION_RESIDENCIA": "De Valpara�so",
+              "PREVISION": "3",
+              "GLOSA_PREVISION": "CAPREDENA",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "M239",
+              "DIAG2": "",
+              "DIAS_ESTADA": "1",
+              "CONDICION_EGRESO": "1"
+            }
+          },
+          {
+            "row_num": 19,
+            "val": "Vi�a del Mar",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "MUJER",
+              "GRUPO_EDAD": "40 a 49",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "05109",
+              "GLOSA_COMUNA_RESIDENCIA": "Vi�a del Mar",
+              "REGION_RESIDENCIA": "05",
+              "GLOSA_REGION_RESIDENCIA": "De Valpara�so",
+              "PREVISION": "2",
+              "GLOSA_PREVISION": "ISAPRE",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "D440",
+              "DIAG2": "",
+              "DIAS_ESTADA": "2",
+              "CONDICION_EGRESO": "1"
+            }
+          },
+          {
+            "row_num": 25,
+            "val": "Los �ngeles",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "40 a 49",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "08301",
+              "GLOSA_COMUNA_RESIDENCIA": "Los �ngeles",
+              "REGION_RESIDENCIA": "08",
+              "GLOSA_REGION_RESIDENCIA": "Del B�ob�o",
+              "PREVISION": "2",
+              "GLOSA_PREVISION": "ISAPRE",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "N40X",
+              "DIAG2": "",
+              "DIAS_ESTADA": "4",
+              "CONDICION_EGRESO": "1"
+            }
+          }
+        ]
+      },
+      "GLOSA_REGION_RESIDENCIA": {
+        "count": 518500,
+        "distinct_values_count": 8,
+        "distinct_values": {
+          "Del B�ob�o": 155554,
+          "De Valpara�so": 154624,
+          "De La Araucan�a": 83059,
+          "De �uble": 40656,
+          "De Los R�os": 37368,
+          "De Tarapac�": 28847,
+          "De Ais�n del Gral. C. Ib��ez del Campo": 10624,
+          "De Magallanes y de La Ant�rtica Chilena": 7768
+        },
+        "sample_rows": [
+          {
+            "row_num": 7,
+            "val": "Del B�ob�o",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "50 a 59",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "08101",
+              "GLOSA_COMUNA_RESIDENCIA": "Concepci�n",
+              "REGION_RESIDENCIA": "08",
+              "GLOSA_REGION_RESIDENCIA": "Del B�ob�o",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "D410",
+              "DIAG2": "",
+              "DIAS_ESTADA": "4",
+              "CONDICION_EGRESO": "1"
+            }
+          },
+          {
+            "row_num": 11,
+            "val": "De Valpara�so",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "30 a 39",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "05801",
+              "GLOSA_COMUNA_RESIDENCIA": "Quilpu�",
+              "REGION_RESIDENCIA": "05",
+              "GLOSA_REGION_RESIDENCIA": "De Valpara�so",
+              "PREVISION": "3",
+              "GLOSA_PREVISION": "CAPREDENA",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "M239",
+              "DIAG2": "",
+              "DIAS_ESTADA": "1",
+              "CONDICION_EGRESO": "1"
+            }
+          },
+          {
+            "row_num": 12,
+            "val": "De Ais�n del Gral. C. Ib��ez del Campo",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "MUJER",
+              "GRUPO_EDAD": "30 a 39",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "11101",
+              "GLOSA_COMUNA_RESIDENCIA": "Coihaique",
+              "REGION_RESIDENCIA": "11",
+              "GLOSA_REGION_RESIDENCIA": "De Ais�n del Gral. C. Ib��ez del Campo",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "O829",
+              "DIAG2": "",
+              "DIAS_ESTADA": "2",
+              "CONDICION_EGRESO": "1"
+            }
+          },
+          {
+            "row_num": 14,
+            "val": "Del B�ob�o",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "50 a 59",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "08312",
+              "GLOSA_COMUNA_RESIDENCIA": "Tucapel",
+              "REGION_RESIDENCIA": "08",
+              "GLOSA_REGION_RESIDENCIA": "Del B�ob�o",
+              "PREVISION": "2",
+              "GLOSA_PREVISION": "ISAPRE",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "K402",
+              "DIAG2": "",
+              "DIAS_ESTADA": "1",
+              "CONDICION_EGRESO": "1"
+            }
+          },
+          {
+            "row_num": 19,
+            "val": "De Valpara�so",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "MUJER",
+              "GRUPO_EDAD": "40 a 49",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "05109",
+              "GLOSA_COMUNA_RESIDENCIA": "Vi�a del Mar",
+              "REGION_RESIDENCIA": "05",
+              "GLOSA_REGION_RESIDENCIA": "De Valpara�so",
+              "PREVISION": "2",
+              "GLOSA_PREVISION": "ISAPRE",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "D440",
+              "DIAG2": "",
+              "DIAS_ESTADA": "2",
+              "CONDICION_EGRESO": "1"
+            }
+          }
+        ]
+      },
+      "GRUPO_EDAD": {
+        "count": 62886,
+        "distinct_values_count": 2,
+        "distinct_values": {
+          "menor de un a�o": 39459,
+          "90 y m�s": 23427
+        },
+        "sample_rows": [
+          {
+            "row_num": 38,
+            "val": "menor de un a�o",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "menor de un a�o",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "13201",
+              "GLOSA_COMUNA_RESIDENCIA": "Puente Alto",
+              "REGION_RESIDENCIA": "13",
+              "GLOSA_REGION_RESIDENCIA": "Metropolitana de Santiago",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "P599",
+              "DIAG2": "",
+              "DIAS_ESTADA": "3",
+              "CONDICION_EGRESO": "1"
+            }
+          },
+          {
+            "row_num": 40,
+            "val": "90 y m�s",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "MUJER",
+              "GRUPO_EDAD": "90 y m�s",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "14201",
+              "GLOSA_COMUNA_RESIDENCIA": "La Uni�n",
+              "REGION_RESIDENCIA": "14",
+              "GLOSA_REGION_RESIDENCIA": "De Los R�os",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "I249",
+              "DIAG2": "",
+              "DIAS_ESTADA": "7",
+              "CONDICION_EGRESO": "1"
+            }
+          },
+          {
+            "row_num": 53,
+            "val": "90 y m�s",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "MUJER",
+              "GRUPO_EDAD": "90 y m�s",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "14101",
+              "GLOSA_COMUNA_RESIDENCIA": "Valdivia",
+              "REGION_RESIDENCIA": "14",
+              "GLOSA_REGION_RESIDENCIA": "De Los R�os",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "S821",
+              "DIAG2": "W060",
+              "DIAS_ESTADA": "20",
+              "CONDICION_EGRESO": "1"
+            }
+          },
+          {
+            "row_num": 74,
+            "val": "menor de un a�o",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "MUJER",
+              "GRUPO_EDAD": "menor de un a�o",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "08102",
+              "GLOSA_COMUNA_RESIDENCIA": "Coronel",
+              "REGION_RESIDENCIA": "08",
+              "GLOSA_REGION_RESIDENCIA": "Del B�ob�o",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "E872",
+              "DIAG2": "",
+              "DIAS_ESTADA": "2",
+              "CONDICION_EGRESO": "1"
+            }
+          },
+          {
+            "row_num": 83,
+            "val": "menor de un a�o",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "menor de un a�o",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "13132",
+              "GLOSA_COMUNA_RESIDENCIA": "Vitacura",
+              "REGION_RESIDENCIA": "13",
+              "GLOSA_REGION_RESIDENCIA": "Metropolitana de Santiago",
+              "PREVISION": "2",
+              "GLOSA_PREVISION": "ISAPRE",
+              "ANO_EGRESO": "2024",
+              "DIAG1": "Q248",
+              "DIAG2": "",
+              "DIAS_ESTADA": "3",
+              "CONDICION_EGRESO": "1"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "2025": {
+    "year": 2025,
+    "file_name": "EGR_DATOS_ABIERTO_2025.csv",
+    "total_rows": 1705514,
+    "num_cols": 17,
+    "header": [
+      "PERTENENCIA_ESTABLECIMIENTO_SALU",
+      "SEXO",
+      "GRUPO_EDAD",
+      "ETNIA",
+      "GLOSA_PAIS_ORIGEN",
+      "COMUNA_RESIDENCIA",
+      "GLOSA_COMUNA_RESIDENCIA",
+      "REGION_RESIDENCIA",
+      "GLOSA_REGION_RESIDENCIA",
+      "PREVISION",
+      "GLOSA_PREVISION",
+      "ANO_EGRESO",
+      "DIAG1",
+      "DIAG2",
+      "DIAS_ESTADA",
+      "CONDICION_EGRESO",
+      "ERROR"
+    ],
+    "total_affected_rows_count": 763636,
+    "results_by_col": {
+      "GLOSA_COMUNA_RESIDENCIA": {
+        "count": 400569,
+        "distinct_values_count": 79,
+        "distinct_values": {
+          "Maip�": 40409,
+          "Valpara�so": 29745,
+          "Vi�a del Mar": 28124,
+          "Los �ngeles": 25931,
+          "�u�oa": 25095,
+          "Concepci�n": 24328,
+          "Pe�alol�n": 23196,
+          "Chill�n": 18589,
+          "Estaci�n Central": 14073,
+          "Quilpu�": 13320,
+          "Copiap�": 13054,
+          "Curic�": 12144,
+          "Conchal�": 9106,
+          "Hualp�n": 8790,
+          "Pe�aflor": 7417,
+          "Pedro�Aguirre Cerda": 6932,
+          "San Joaqu�n": 6501,
+          "Tom�": 6139,
+          "San Ram�n": 6137,
+          "Ca�ete": 4503
+        },
+        "sample_rows": [
+          {
+            "row_num": 2,
+            "val": "Hualaihu�",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "70 a 79",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "10403",
+              "GLOSA_COMUNA_RESIDENCIA": "Hualaihu�",
+              "REGION_RESIDENCIA": "10",
+              "GLOSA_REGION_RESIDENCIA": "De Los Lagos",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "I482",
+              "DIAG2": "",
+              "DIAS_ESTADA": "9",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          },
+          {
+            "row_num": 6,
+            "val": "Valpara�so",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "60 a 69",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "05101",
+              "GLOSA_COMUNA_RESIDENCIA": "Valpara�so",
+              "REGION_RESIDENCIA": "05",
+              "GLOSA_REGION_RESIDENCIA": "De Valpara�so",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "J449",
+              "DIAG2": "",
+              "DIAS_ESTADA": "8",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          },
+          {
+            "row_num": 10,
+            "val": "Los �ngeles",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "MUJER",
+              "GRUPO_EDAD": "20 a 29",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "08301",
+              "GLOSA_COMUNA_RESIDENCIA": "Los �ngeles",
+              "REGION_RESIDENCIA": "08",
+              "GLOSA_REGION_RESIDENCIA": "Del B�ob�o",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "J342",
+              "DIAG2": "",
+              "DIAS_ESTADA": "1",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          },
+          {
+            "row_num": 11,
+            "val": "Curic�",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "70 a 79",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "07301",
+              "GLOSA_COMUNA_RESIDENCIA": "Curic�",
+              "REGION_RESIDENCIA": "07",
+              "GLOSA_REGION_RESIDENCIA": "Del Maule",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "C61X",
+              "DIAG2": "",
+              "DIAS_ESTADA": "2",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          },
+          {
+            "row_num": 23,
+            "val": "San Jos� de Maipo",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "60 a 69",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "13203",
+              "GLOSA_COMUNA_RESIDENCIA": "San Jos� de Maipo",
+              "REGION_RESIDENCIA": "13",
+              "GLOSA_REGION_RESIDENCIA": "Metropolitana de Santiago",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "J22X",
+              "DIAG2": "",
+              "DIAS_ESTADA": "4",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          }
+        ]
+      },
+      "GLOSA_REGION_RESIDENCIA": {
+        "count": 530319,
+        "distinct_values_count": 8,
+        "distinct_values": {
+          "Del B�ob�o": 161135,
+          "De Valpara�so": 154207,
+          "De La Araucan�a": 85993,
+          "De �uble": 40982,
+          "De Los R�os": 38560,
+          "De Tarapac�": 29463,
+          "De Ais�n del Gral. C. Ib��ez del Campo": 10209,
+          "De Magallanes y de La Ant�rtica Chilena": 9770
+        },
+        "sample_rows": [
+          {
+            "row_num": 6,
+            "val": "De Valpara�so",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "60 a 69",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "05101",
+              "GLOSA_COMUNA_RESIDENCIA": "Valpara�so",
+              "REGION_RESIDENCIA": "05",
+              "GLOSA_REGION_RESIDENCIA": "De Valpara�so",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "J449",
+              "DIAG2": "",
+              "DIAS_ESTADA": "8",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          },
+          {
+            "row_num": 9,
+            "val": "De Los R�os",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "1 a 9",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "14101",
+              "GLOSA_COMUNA_RESIDENCIA": "Valdivia",
+              "REGION_RESIDENCIA": "14",
+              "GLOSA_REGION_RESIDENCIA": "De Los R�os",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "J353",
+              "DIAG2": "",
+              "DIAS_ESTADA": "1",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          },
+          {
+            "row_num": 10,
+            "val": "Del B�ob�o",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "MUJER",
+              "GRUPO_EDAD": "20 a 29",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "08301",
+              "GLOSA_COMUNA_RESIDENCIA": "Los �ngeles",
+              "REGION_RESIDENCIA": "08",
+              "GLOSA_REGION_RESIDENCIA": "Del B�ob�o",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "J342",
+              "DIAG2": "",
+              "DIAS_ESTADA": "1",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          },
+          {
+            "row_num": 14,
+            "val": "De Valpara�so",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "MUJER",
+              "GRUPO_EDAD": "50 a 59",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "05804",
+              "GLOSA_COMUNA_RESIDENCIA": "Villa Alemana",
+              "REGION_RESIDENCIA": "05",
+              "GLOSA_REGION_RESIDENCIA": "De Valpara�so",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "C229",
+              "DIAG2": "",
+              "DIAS_ESTADA": "6",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          },
+          {
+            "row_num": 17,
+            "val": "De Valpara�so",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "MUJER",
+              "GRUPO_EDAD": "50 a 59",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "05705",
+              "GLOSA_COMUNA_RESIDENCIA": "Putaendo",
+              "REGION_RESIDENCIA": "05",
+              "GLOSA_REGION_RESIDENCIA": "De Valpara�so",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "N201",
+              "DIAG2": "",
+              "DIAS_ESTADA": "8",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          }
+        ]
+      },
+      "GRUPO_EDAD": {
+        "count": 63876,
+        "distinct_values_count": 2,
+        "distinct_values": {
+          "menor de un a�o": 38720,
+          "90 y m�s": 25156
+        },
+        "sample_rows": [
+          {
+            "row_num": 69,
+            "val": "90 y m�s",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "90 y m�s",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "13101",
+              "GLOSA_COMUNA_RESIDENCIA": "Santiago",
+              "REGION_RESIDENCIA": "13",
+              "GLOSA_REGION_RESIDENCIA": "Metropolitana de Santiago",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "J440",
+              "DIAG2": "",
+              "DIAS_ESTADA": "6",
+              "CONDICION_EGRESO": "2",
+              "ERROR": "0"
+            }
+          },
+          {
+            "row_num": 93,
+            "val": "menor de un a�o",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "menor de un a�o",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "09120",
+              "GLOSA_COMUNA_RESIDENCIA": "Villarrica",
+              "REGION_RESIDENCIA": "09",
+              "GLOSA_REGION_RESIDENCIA": "De La Araucan�a",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "T232",
+              "DIAG2": "X029",
+              "DIAS_ESTADA": "2",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          },
+          {
+            "row_num": 122,
+            "val": "90 y m�s",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "MUJER",
+              "GRUPO_EDAD": "90 y m�s",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "08106",
+              "GLOSA_COMUNA_RESIDENCIA": "Lota",
+              "REGION_RESIDENCIA": "08",
+              "GLOSA_REGION_RESIDENCIA": "Del B�ob�o",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "J189",
+              "DIAG2": "",
+              "DIAS_ESTADA": "6",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          },
+          {
+            "row_num": 125,
+            "val": "menor de un a�o",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "HOMBRE",
+              "GRUPO_EDAD": "menor de un a�o",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "04102",
+              "GLOSA_COMUNA_RESIDENCIA": "Coquimbo",
+              "REGION_RESIDENCIA": "04",
+              "GLOSA_REGION_RESIDENCIA": "De Coquimbo",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "J969",
+              "DIAG2": "",
+              "DIAS_ESTADA": "4",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          },
+          {
+            "row_num": 128,
+            "val": "menor de un a�o",
+            "row_data": {
+              "PERTENENCIA_ESTABLECIMIENTO_SALU": "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+              "SEXO": "MUJER",
+              "GRUPO_EDAD": "menor de un a�o",
+              "ETNIA": "No se identifica con alguna etnia",
+              "GLOSA_PAIS_ORIGEN": "Chileno",
+              "COMUNA_RESIDENCIA": "05405",
+              "GLOSA_COMUNA_RESIDENCIA": "Zapallar",
+              "REGION_RESIDENCIA": "05",
+              "GLOSA_REGION_RESIDENCIA": "De Valpara�so",
+              "PREVISION": "1",
+              "GLOSA_PREVISION": "FONASA",
+              "ANO_EGRESO": "2025",
+              "DIAG1": "E849",
+              "DIAG2": "",
+              "DIAS_ESTADA": "9",
+              "CONDICION_EGRESO": "1",
+              "ERROR": "0"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

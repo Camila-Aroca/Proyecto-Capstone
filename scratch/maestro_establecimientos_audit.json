@@ -1,0 +1,96 @@
+{
+  "urg_coverage": [
+    {
+      "year": 2020,
+      "unique_estabs": 142,
+      "found_in_master": 142,
+      "not_found": 0,
+      "coverage_pct": 100.0,
+      "with_coords_count": 140,
+      "without_coords_count": 2,
+      "without_coords_sample": [
+        "200142",
+        "112820"
+      ]
+    },
+    {
+      "year": 2021,
+      "unique_estabs": 148,
+      "found_in_master": 148,
+      "not_found": 0,
+      "coverage_pct": 100.0,
+      "with_coords_count": 146,
+      "without_coords_count": 2,
+      "without_coords_sample": [
+        "112820",
+        "200142"
+      ]
+    },
+    {
+      "year": 2022,
+      "unique_estabs": 147,
+      "found_in_master": 147,
+      "not_found": 0,
+      "coverage_pct": 100.0,
+      "with_coords_count": 145,
+      "without_coords_count": 2,
+      "without_coords_sample": [
+        "112820",
+        "200142"
+      ]
+    },
+    {
+      "year": 2023,
+      "unique_estabs": 148,
+      "found_in_master": 148,
+      "not_found": 0,
+      "coverage_pct": 100.0,
+      "with_coords_count": 146,
+      "without_coords_count": 2,
+      "without_coords_sample": [
+        "200142",
+        "112820"
+      ]
+    },
+    {
+      "year": 2024,
+      "unique_estabs": 149,
+      "found_in_master": 149,
+      "not_found": 0,
+      "coverage_pct": 100.0,
+      "with_coords_count": 147,
+      "without_coords_count": 2,
+      "without_coords_sample": [
+        "112820",
+        "200142"
+      ]
+    },
+    {
+      "year": 2025,
+      "unique_estabs": 152,
+      "found_in_master": 152,
+      "not_found": 0,
+      "coverage_pct": 100.0,
+      "with_coords_count": 150,
+      "without_coords_count": 2,
+      "without_coords_sample": [
+        "112820",
+        "200142"
+      ]
+    },
+    {
+      "year": 2026,
+      "unique_estabs": 156,
+      "found_in_master": 156,
+      "not_found": 0,
+      "coverage_pct": 100.0,
+      "with_coords_count": 153,
+      "without_coords_count": 3,
+      "without_coords_sample": [
+        "112820",
+        "200142",
+        "202306"
+      ]
+    }
+  ]
+}
