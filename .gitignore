@@ -1,41 +1,54 @@
-.DS_Store
-._*
-
 # Microsoft Office temporary files
 ~$*
 
 # Editor and IDE local settings
-.vscode/
 .idea/
-*.swp
+.vscode/
 *.swo
+*.swp
 
 # Environment variables and local secrets
 .env
 .env.*
 !.env.example
-*.pem
 *.key
 *.p12
+*.pem
 *.pfx
-id_rsa
 id_dsa
 id_ecdsa
 id_ed25519
+id_rsa
 
 # Logs and temporary files
 *.log
-logs/
-tmp/
-temp/
-*.tmp
 *.temp
+*.tmp
+logs/
+temp/
+tmp/
 
 # Caches and build artifacts
 .cache/
 __pycache__/
 *.py[cod]
-node_modules/
-dist/
 build/
 coverage/
+dist/
+node_modules/
+
+# Virtual environments
+.venv/
+ENV/
+env/
+venv/
+
+# Local data (do not version heavy or raw files)
+data/processed/*
+!data/processed/.gitkeep
+data/raw/*
+!data/raw/.gitkeep
+
+# macOS
+.DS_Store
+._*

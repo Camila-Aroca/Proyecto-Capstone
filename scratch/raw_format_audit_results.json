@@ -1,0 +1,1802 @@
+{
+  "urgencias": [
+    {
+      "file_name": "AtencionesUrgencia2020.csv",
+      "file_path": "data/raw/urgencias/AtencionesUrgencia2020.csv",
+      "file_size_bytes": 796227186,
+      "file_size_mb": 759.34,
+      "encoding_info": {
+        "is_valid_utf8": false,
+        "has_utf8_bom": false,
+        "real_encoding": "Latin-1 / CP1252",
+        "has_mojibake_bytes": false
+      },
+      "read_encoding_used": "latin-1",
+      "separator": ";",
+      "num_rows": 6446646,
+      "num_cols": 15,
+      "columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "IdCausa",
+        "GlosaCausa",
+        "Total",
+        "Menores_1",
+        "De_1_a_4",
+        "De_5_a_14",
+        "De_15_a_64",
+        "De_65_y_mas",
+        "fecha",
+        "semana",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana"
+      ],
+      "mismatched_lines": 0,
+      "mismatched_samples": [],
+      "mojibake_detected": true,
+      "mojibake_columns": [
+        "NEstablecimiento",
+        "IdCausa",
+        "Menores_1",
+        "De_1_a_4",
+        "De_5_a_14",
+        "fecha",
+        "IdEstablecimiento",
+        "semana",
+        "GLOSATIPOATENCION",
+        "Total",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GlosaTipoCampana",
+        "GlosaCausa",
+        "De_15_a_64",
+        "De_65_y_mas"
+      ],
+      "date_columns": [
+        "fecha",
+        "semana"
+      ],
+      "date_samples": {
+        "fecha": [
+          "23/09/2020",
+          "27/09/2020",
+          "26/09/2020",
+          "25/09/2020",
+          "24/09/2020"
+        ],
+        "semana": [
+          "41",
+          "14",
+          "39",
+          "40",
+          "25"
+        ]
+      },
+      "territorial_columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "GlosaCausa",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana"
+      ],
+      "sample_rows_head": [
+        [
+          "19-809",
+          "SAPU Talcahuano Sur",
+          "21",
+          "TOTAL DEMÁS CAUSAS",
+          "22",
+          "0",
+          "1",
+          "4",
+          "15",
+          "2",
+          "23/09/2020",
+          "39",
+          "SAPU",
+          "Indiferenciado",
+          "Ninguna"
+        ],
+        [
+          "19-809",
+          "SAPU Talcahuano Sur",
+          "21",
+          "TOTAL DEMÁS CAUSAS",
+          "30",
+          "0",
+          "2",
+          "3",
+          "21",
+          "4",
+          "24/09/2020",
+          "39",
+          "SAPU",
+          "Indiferenciado",
+          "Ninguna"
+        ]
+      ]
+    },
+    {
+      "file_name": "AtencionesUrgencia2021.csv",
+      "file_path": "data/raw/urgencias/AtencionesUrgencia2021.csv",
+      "file_size_bytes": 1130831814,
+      "file_size_mb": 1078.45,
+      "encoding_info": {
+        "is_valid_utf8": false,
+        "has_utf8_bom": false,
+        "real_encoding": "Latin-1 / CP1252",
+        "has_mojibake_bytes": false
+      },
+      "read_encoding_used": "latin-1",
+      "separator": ";",
+      "num_rows": 8816240,
+      "num_cols": 15,
+      "columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "IdCausa",
+        "GlosaCausa",
+        "Total",
+        "Menores_1",
+        "De_1_a_4",
+        "De_5_a_14",
+        "De_15_a_64",
+        "De_65_y_mas",
+        "fecha",
+        "semana",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana"
+      ],
+      "mismatched_lines": 0,
+      "mismatched_samples": [],
+      "mojibake_detected": true,
+      "mojibake_columns": [
+        "NEstablecimiento",
+        "IdCausa",
+        "Menores_1",
+        "De_1_a_4",
+        "De_5_a_14",
+        "fecha",
+        "IdEstablecimiento",
+        "semana",
+        "GLOSATIPOATENCION",
+        "Total",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GlosaTipoCampana",
+        "GlosaCausa",
+        "De_15_a_64",
+        "De_65_y_mas"
+      ],
+      "date_columns": [
+        "fecha",
+        "semana"
+      ],
+      "date_samples": {
+        "fecha": [
+          "04/06/2021",
+          "05/06/2021",
+          "06/06/2021",
+          "08/06/2021",
+          "07/06/2021"
+        ],
+        "semana": [
+          "23",
+          "24",
+          "25",
+          "22",
+          "3"
+        ]
+      },
+      "territorial_columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "GlosaCausa",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana"
+      ],
+      "sample_rows_head": [
+        [
+          "14-900",
+          "SAPU José Alvo",
+          "24",
+          "CIRUGÍAS DE URGENCIA",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "04/06/2021",
+          "22",
+          "SAPU",
+          "Indiferenciado",
+          "Ninguna"
+        ],
+        [
+          "14-900",
+          "SAPU José Alvo",
+          "24",
+          "CIRUGÍAS DE URGENCIA",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "05/06/2021",
+          "22",
+          "SAPU",
+          "Indiferenciado",
+          "Ninguna"
+        ]
+      ]
+    },
+    {
+      "file_name": "AtencionesUrgencia2022.csv",
+      "file_path": "data/raw/urgencias/AtencionesUrgencia2022.csv",
+      "file_size_bytes": 1144770884,
+      "file_size_mb": 1091.74,
+      "encoding_info": {
+        "is_valid_utf8": false,
+        "has_utf8_bom": false,
+        "real_encoding": "Latin-1 / CP1252",
+        "has_mojibake_bytes": false
+      },
+      "read_encoding_used": "latin-1",
+      "separator": ";",
+      "num_rows": 8926307,
+      "num_cols": 15,
+      "columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "IdCausa",
+        "GlosaCausa",
+        "Total",
+        "Menores_1",
+        "De_1_a_4",
+        "De_5_a_14",
+        "De_15_a_64",
+        "De_65_y_mas",
+        "fecha",
+        "semana",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana"
+      ],
+      "mismatched_lines": 0,
+      "mismatched_samples": [],
+      "mojibake_detected": true,
+      "mojibake_columns": [
+        "NEstablecimiento",
+        "IdCausa",
+        "Menores_1",
+        "De_1_a_4",
+        "De_5_a_14",
+        "fecha",
+        "IdEstablecimiento",
+        "semana",
+        "GLOSATIPOATENCION",
+        "Total",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GlosaTipoCampana",
+        "GlosaCausa",
+        "De_15_a_64",
+        "De_65_y_mas"
+      ],
+      "date_columns": [
+        "fecha",
+        "semana"
+      ],
+      "date_samples": {
+        "fecha": [
+          "01/01/2022",
+          "06/02/2022",
+          "23/08/2022",
+          "13/07/2022",
+          "16/07/2022"
+        ],
+        "semana": [
+          "34",
+          "6",
+          "28",
+          "52",
+          "43"
+        ]
+      },
+      "territorial_columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "GlosaCausa",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana"
+      ],
+      "sample_rows_head": [
+        [
+          "18-106",
+          "Hospital de Lota",
+          "1",
+          "SECCIÓN 1. TOTAL ATENCIONES DE URGENCIA",
+          "68",
+          "1",
+          "3",
+          "10",
+          "43",
+          "11",
+          "01/01/2022",
+          "52",
+          "Hospital",
+          "Indiferenciado",
+          "Ninguna"
+        ],
+        [
+          "03-910",
+          "SAR Alemania",
+          "1",
+          "SECCIÓN 1. TOTAL ATENCIONES DE URGENCIA",
+          "80",
+          "1",
+          "5",
+          "10",
+          "55",
+          "9",
+          "01/01/2022",
+          "52",
+          "SAR",
+          "Indiferenciado",
+          "Ninguna"
+        ]
+      ]
+    },
+    {
+      "file_name": "AtencionesUrgencia2023.csv",
+      "file_path": "data/raw/urgencias/AtencionesUrgencia2023.csv",
+      "file_size_bytes": 1598833998,
+      "file_size_mb": 1524.77,
+      "encoding_info": {
+        "is_valid_utf8": false,
+        "has_utf8_bom": false,
+        "real_encoding": "Latin-1 / CP1252",
+        "has_mojibake_bytes": false
+      },
+      "read_encoding_used": "latin-1",
+      "separator": ";",
+      "num_rows": 8899080,
+      "num_cols": 21,
+      "columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "IdCausa",
+        "GlosaCausa",
+        "Total",
+        "Menores_1",
+        "De_1_a_4",
+        "De_5_a_14",
+        "De_15_a_64",
+        "De_65_y_mas",
+        "fecha",
+        "semana",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana",
+        "CodigoRegion",
+        "NombreRegion",
+        "CodigoDependencia",
+        "NombreDependencia",
+        "CodigoComuna",
+        "NombreComuna"
+      ],
+      "mismatched_lines": 0,
+      "mismatched_samples": [],
+      "mojibake_detected": true,
+      "mojibake_columns": [
+        "Menores_1",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana",
+        "NombreRegion",
+        "CodigoDependencia",
+        "GlosaCausa",
+        "fecha",
+        "De_5_a_14",
+        "IdEstablecimiento",
+        "NombreDependencia",
+        "De_15_a_64",
+        "NombreComuna",
+        "De_65_y_mas",
+        "CodigoComuna",
+        "Total",
+        "GLOSATIPOESTABLECIMIENTO",
+        "CodigoRegion",
+        "NEstablecimiento",
+        "IdCausa",
+        "De_1_a_4",
+        "semana"
+      ],
+      "date_columns": [
+        "fecha",
+        "semana"
+      ],
+      "date_samples": {
+        "fecha": [
+          "05/07/2023",
+          "04/07/2023",
+          "03/07/2023"
+        ],
+        "semana": [
+          "27"
+        ]
+      },
+      "territorial_columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "GlosaCausa",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana",
+        "CodigoRegion",
+        "NombreRegion",
+        "CodigoComuna",
+        "NombreComuna"
+      ],
+      "sample_rows_head": [
+        [
+          "23-985",
+          "SAPU Dr. Marcelo Lopetegui Adams",
+          "40",
+          "Trastornos neuróticos, trastornos relacionados con el estrés y trastornos somatomorfos (F40-F48) Incluído el trastorno de pánico (F41.0)",
+          "3",
+          "0",
+          "0",
+          "0",
+          "2",
+          "1",
+          "03/07/2023",
+          "27",
+          "SAPU",
+          "Indiferenciado",
+          "Ninguna",
+          "10",
+          "De Los Lagos",
+          "23",
+          "Osorno",
+          "10301",
+          "Osorno"
+        ],
+        [
+          "21-109",
+          "Hospital Dr. Hernán Henríquez Aravena (Temuco)",
+          "40",
+          "Trastornos neuróticos, trastornos relacionados con el estrés y trastornos somatomorfos (F40-F48) Incluído el trastorno de pánico (F41.0)",
+          "1",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "03/07/2023",
+          "27",
+          "Hospital",
+          "Indiferenciado",
+          "Invierno Regiones",
+          "9",
+          "De La Araucanía",
+          "21",
+          "Araucanía Sur",
+          "9101",
+          "Temuco"
+        ]
+      ]
+    },
+    {
+      "file_name": "AtencionesUrgencia2024.csv",
+      "file_path": "data/raw/urgencias/AtencionesUrgencia2024.csv",
+      "file_size_bytes": 1608911448,
+      "file_size_mb": 1534.38,
+      "encoding_info": {
+        "is_valid_utf8": false,
+        "has_utf8_bom": false,
+        "real_encoding": "Latin-1 / CP1252",
+        "has_mojibake_bytes": false
+      },
+      "read_encoding_used": "latin-1",
+      "separator": ";",
+      "num_rows": 8973229,
+      "num_cols": 21,
+      "columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "IdCausa",
+        "GlosaCausa",
+        "Total",
+        "Menores_1",
+        "De_1_a_4",
+        "De_5_a_14",
+        "De_15_a_64",
+        "De_65_y_mas",
+        "fecha",
+        "semana",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana",
+        "CodigoRegion",
+        "NombreRegion",
+        "CodigoDependencia",
+        "NombreDependencia",
+        "CodigoComuna",
+        "NombreComuna"
+      ],
+      "mismatched_lines": 0,
+      "mismatched_samples": [],
+      "mojibake_detected": true,
+      "mojibake_columns": [
+        "Menores_1",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana",
+        "NombreRegion",
+        "CodigoDependencia",
+        "GlosaCausa",
+        "fecha",
+        "De_5_a_14",
+        "IdEstablecimiento",
+        "NombreDependencia",
+        "De_15_a_64",
+        "NombreComuna",
+        "De_65_y_mas",
+        "CodigoComuna",
+        "Total",
+        "GLOSATIPOESTABLECIMIENTO",
+        "CodigoRegion",
+        "NEstablecimiento",
+        "IdCausa",
+        "De_1_a_4",
+        "semana"
+      ],
+      "date_columns": [
+        "fecha",
+        "semana"
+      ],
+      "date_samples": {
+        "fecha": [
+          "05/08/2024",
+          "01/01/2024",
+          "25/01/2024",
+          "30/03/2024",
+          "17/07/2024"
+        ],
+        "semana": [
+          "29",
+          "4",
+          "1",
+          "32",
+          "13"
+        ]
+      },
+      "territorial_columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "GlosaCausa",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana",
+        "CodigoRegion",
+        "NombreRegion",
+        "CodigoComuna",
+        "NombreComuna"
+      ],
+      "sample_rows_head": [
+        [
+          "01-100",
+          "Hospital Regional Dr. Juan Noé Crevani (Arica)",
+          "29",
+          "DIARREA AGUDA (A00-A09)",
+          "16",
+          "2",
+          "4",
+          "5",
+          "3",
+          "2",
+          "01/01/2024",
+          "1",
+          "Hospital",
+          "Indiferenciado",
+          "Ninguna",
+          "15",
+          "De Arica y Parinacota",
+          "1",
+          "Arica",
+          "15101",
+          "Arica"
+        ],
+        [
+          "01-100",
+          "Hospital Regional Dr. Juan Noé Crevani (Arica)",
+          "21",
+          "TOTAL DEMÁS CAUSAS",
+          "148",
+          "5",
+          "6",
+          "19",
+          "95",
+          "23",
+          "01/01/2024",
+          "1",
+          "Hospital",
+          "Indiferenciado",
+          "Ninguna",
+          "15",
+          "De Arica y Parinacota",
+          "1",
+          "Arica",
+          "15101",
+          "Arica"
+        ]
+      ]
+    },
+    {
+      "file_name": "AtencionesUrgencia2025.csv",
+      "file_path": "data/raw/urgencias/AtencionesUrgencia2025.csv",
+      "file_size_bytes": 1956418531,
+      "file_size_mb": 1865.79,
+      "encoding_info": {
+        "is_valid_utf8": false,
+        "has_utf8_bom": false,
+        "real_encoding": "Latin-1 / CP1252",
+        "has_mojibake_bytes": false
+      },
+      "read_encoding_used": "latin-1",
+      "separator": ";",
+      "num_rows": 9142479,
+      "num_cols": 21,
+      "columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "IdCausa",
+        "GlosaCausa",
+        "Total",
+        "Menores_1",
+        "De_1_a_4",
+        "De_5_a_14",
+        "De_15_a_64",
+        "De_65_y_mas",
+        "fecha",
+        "semana",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana",
+        "CodigoRegion",
+        "NombreRegion",
+        "CodigoDependencia",
+        "NombreDependencia",
+        "CodigoComuna",
+        "NombreComuna"
+      ],
+      "mismatched_lines": 0,
+      "mismatched_samples": [],
+      "mojibake_detected": true,
+      "mojibake_columns": [
+        "Menores_1",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana",
+        "NombreRegion",
+        "CodigoDependencia",
+        "GlosaCausa",
+        "fecha",
+        "De_5_a_14",
+        "IdEstablecimiento",
+        "NombreDependencia",
+        "De_15_a_64",
+        "NombreComuna",
+        "De_65_y_mas",
+        "CodigoComuna",
+        "Total",
+        "GLOSATIPOESTABLECIMIENTO",
+        "CodigoRegion",
+        "NEstablecimiento",
+        "IdCausa",
+        "De_1_a_4",
+        "semana"
+      ],
+      "date_columns": [
+        "fecha",
+        "semana"
+      ],
+      "date_samples": {
+        "fecha": [
+          "04/01/2025",
+          "02/01/2025",
+          "01/01/2025",
+          "05/01/2025",
+          "03/01/2025"
+        ],
+        "semana": [
+          "3",
+          "4",
+          "2",
+          "1"
+        ]
+      },
+      "territorial_columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "GlosaCausa",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana",
+        "CodigoRegion",
+        "NombreRegion",
+        "CodigoComuna",
+        "NombreComuna"
+      ],
+      "sample_rows_head": [
+        [
+          "01-100",
+          "Hospital Regional Dr. Juan Noé Crevani (Arica)",
+          "34",
+          "TOTAL DEMANDA ",
+          "279",
+          "11",
+          "28",
+          "36",
+          "162",
+          "42",
+          "01/01/2025",
+          "1",
+          "Hospital",
+          "Indiferenciado",
+          "Ninguna",
+          "15",
+          "De Arica y Parinacota",
+          "1",
+          "Servicio de Salud Arica y Parinacota",
+          "15101",
+          "Arica"
+        ],
+        [
+          "01-100",
+          "Hospital Regional Dr. Juan Noé Crevani (Arica)",
+          "1",
+          "SECCIÓN 1. TOTAL ATENCIONES DE URGENCIA",
+          "260",
+          "11",
+          "28",
+          "32",
+          "150",
+          "39",
+          "01/01/2025",
+          "1",
+          "Hospital",
+          "Indiferenciado",
+          "Ninguna",
+          "15",
+          "De Arica y Parinacota",
+          "1",
+          "Servicio de Salud Arica y Parinacota",
+          "15101",
+          "Arica"
+        ]
+      ]
+    },
+    {
+      "file_name": "AtencionesUrgencia2026.csv",
+      "file_path": "data/raw/urgencias/AtencionesUrgencia2026.csv",
+      "file_size_bytes": 1311803411,
+      "file_size_mb": 1251.03,
+      "encoding_info": {
+        "is_valid_utf8": false,
+        "has_utf8_bom": false,
+        "real_encoding": "Latin-1 / CP1252",
+        "has_mojibake_bytes": false
+      },
+      "read_encoding_used": "latin-1",
+      "separator": ";",
+      "num_rows": 6090837,
+      "num_cols": 21,
+      "columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "IdCausa",
+        "GlosaCausa",
+        "Total",
+        "Menores_1",
+        "De_1_a_4",
+        "De_5_a_14",
+        "De_15_a_64",
+        "De_65_y_mas",
+        "fecha",
+        "semana",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana",
+        "CodigoRegion",
+        "NombreRegion",
+        "CodigoDependencia",
+        "NombreDependencia",
+        "CodigoComuna",
+        "NombreComuna"
+      ],
+      "mismatched_lines": 0,
+      "mismatched_samples": [],
+      "mojibake_detected": true,
+      "mojibake_columns": [
+        "Menores_1",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana",
+        "NombreRegion",
+        "CodigoDependencia",
+        "GlosaCausa",
+        "fecha",
+        "De_5_a_14",
+        "IdEstablecimiento",
+        "NombreDependencia",
+        "De_15_a_64",
+        "NombreComuna",
+        "De_65_y_mas",
+        "CodigoComuna",
+        "Total",
+        "GLOSATIPOESTABLECIMIENTO",
+        "CodigoRegion",
+        "NEstablecimiento",
+        "IdCausa",
+        "De_1_a_4",
+        "semana"
+      ],
+      "date_columns": [
+        "fecha",
+        "semana"
+      ],
+      "date_samples": {
+        "fecha": [
+          "03/01/2026",
+          "05/01/2026",
+          "01/01/2026",
+          "02/01/2026",
+          "04/01/2026"
+        ],
+        "semana": [
+          "4",
+          "1",
+          "53",
+          "3",
+          "2"
+        ]
+      },
+      "territorial_columns": [
+        "IdEstablecimiento",
+        "NEstablecimiento",
+        "GlosaCausa",
+        "GLOSATIPOESTABLECIMIENTO",
+        "GLOSATIPOATENCION",
+        "GlosaTipoCampana",
+        "CodigoRegion",
+        "NombreRegion",
+        "CodigoComuna",
+        "NombreComuna"
+      ],
+      "sample_rows_head": [
+        [
+          "01-100",
+          "Hospital Regional Dr. Juan Noé Crevani (Arica)",
+          "34",
+          "TOTAL DEMANDA ",
+          "261",
+          "9",
+          "15",
+          "35",
+          "153",
+          "49",
+          "01/01/2026",
+          "53",
+          "Hospital",
+          "Indiferenciado",
+          "Ninguna",
+          "15",
+          "De Arica y Parinacota",
+          "1",
+          "Servicio de Salud Arica y Parinacota",
+          "15101",
+          "Arica"
+        ],
+        [
+          "01-100",
+          "Hospital Regional Dr. Juan Noé Crevani (Arica)",
+          "1",
+          "SECCIÓN 1. TOTAL ATENCIONES DE URGENCIA",
+          "235",
+          "8",
+          "14",
+          "34",
+          "134",
+          "45",
+          "01/01/2026",
+          "53",
+          "Hospital",
+          "Indiferenciado",
+          "Ninguna",
+          "15",
+          "De Arica y Parinacota",
+          "1",
+          "Servicio de Salud Arica y Parinacota",
+          "15101",
+          "Arica"
+        ]
+      ]
+    }
+  ],
+  "egresos": [
+    {
+      "file_name": "EGR_DATOS_ABIERTO_2021.csv",
+      "file_path": "data/raw/egresos/EGR_DATOS_ABIERTO_2021.csv",
+      "file_size_bytes": 219500927,
+      "file_size_mb": 209.33,
+      "encoding_info": {
+        "is_valid_utf8": false,
+        "has_utf8_bom": false,
+        "real_encoding": "Latin-1 / CP1252",
+        "has_mojibake_bytes": false
+      },
+      "read_encoding_used": "latin-1",
+      "separator": ";",
+      "num_rows": 1467062,
+      "num_cols": 15,
+      "columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALUD",
+        "SEXO",
+        "GRUPO_EDAD",
+        "GLOSA_PAIS_ORIGEN",
+        "COMUNA_RESIDENCIA",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "REGION_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "PREVISION",
+        "GLOSA_PREVISION",
+        "ANO_EGRESO",
+        "DIAG1",
+        "DIAG2",
+        "DIAS_ESTADA",
+        "CONDICION_EGRESO"
+      ],
+      "mismatched_lines": 0,
+      "mismatched_samples": [],
+      "mojibake_detected": true,
+      "mojibake_columns": [
+        "SEXO",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "GLOSA_PAIS_ORIGEN",
+        "COMUNA_RESIDENCIA",
+        "ANO_EGRESO",
+        "DIAG1",
+        "CONDICION_EGRESO",
+        "GRUPO_EDAD",
+        "DIAS_ESTADA",
+        "PREVISION",
+        "PERTENENCIA_ESTABLECIMIENTO_SALUD",
+        "GLOSA_PREVISION",
+        "DIAG2",
+        "REGION_RESIDENCIA"
+      ],
+      "date_columns": [
+        "DIAG1",
+        "DIAG2",
+        "DIAS_ESTADA"
+      ],
+      "date_samples": {
+        "DIAG1": [
+          "T181",
+          "Q381",
+          "Q531",
+          "S015",
+          "K590"
+        ],
+        "DIAG2": [
+          "W179",
+          "W180",
+          "W440",
+          "W199",
+          "X499"
+        ],
+        "DIAS_ESTADA": [
+          "5",
+          "14",
+          "4",
+          "1",
+          "2"
+        ]
+      },
+      "territorial_columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALUD",
+        "GLOSA_PAIS_ORIGEN",
+        "COMUNA_RESIDENCIA",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "REGION_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "GLOSA_PREVISION"
+      ],
+      "sample_rows_head": [
+        [
+          "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+          "1",
+          "1 A 4 AÑOS",
+          "Argentina",
+          "05605",
+          "El Tabo",
+          "05",
+          "De Valparaíso",
+          "2",
+          "ISAPRE",
+          "2021",
+          "K590",
+          "",
+          "1",
+          "1"
+        ],
+        [
+          "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+          "1",
+          "1 A 4 AÑOS",
+          "Argentina",
+          "13114",
+          "Las Condes",
+          "13",
+          "Metropolitana de Santiago",
+          "96",
+          "NINGUNA",
+          "2021",
+          "S015",
+          "W180",
+          "1",
+          "1"
+        ]
+      ]
+    },
+    {
+      "file_name": "EGR_DATOS_ABIERTO_2024.csv",
+      "file_path": "data/raw/egresos/EGR_DATOS_ABIERTO_2024.csv",
+      "file_size_bytes": 291175891,
+      "file_size_mb": 277.69,
+      "encoding_info": {
+        "is_valid_utf8": true,
+        "has_utf8_bom": false,
+        "real_encoding": "UTF-8 (con mojibake preexistente en origen)",
+        "has_mojibake_bytes": true
+      },
+      "read_encoding_used": "utf-8",
+      "separator": ";",
+      "num_rows": 1667349,
+      "num_cols": 16,
+      "columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALU",
+        "SEXO",
+        "GRUPO_EDAD",
+        "ETNIA",
+        "GLOSA_PAIS_ORIGEN",
+        "COMUNA_RESIDENCIA",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "REGION_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "PREVISION",
+        "GLOSA_PREVISION",
+        "ANO_EGRESO",
+        "DIAG1",
+        "DIAG2",
+        "DIAS_ESTADA",
+        "CONDICION_EGRESO"
+      ],
+      "mismatched_lines": 0,
+      "mismatched_samples": [],
+      "mojibake_detected": true,
+      "mojibake_columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALU",
+        "SEXO",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "GLOSA_PAIS_ORIGEN",
+        "ETNIA",
+        "COMUNA_RESIDENCIA",
+        "ANO_EGRESO",
+        "DIAG1",
+        "CONDICION_EGRESO",
+        "GRUPO_EDAD",
+        "DIAS_ESTADA",
+        "PREVISION",
+        "GLOSA_PREVISION",
+        "DIAG2",
+        "REGION_RESIDENCIA"
+      ],
+      "date_columns": [
+        "DIAG1",
+        "DIAG2",
+        "DIAS_ESTADA"
+      ],
+      "date_samples": {
+        "DIAG1": [
+          "E145",
+          "F319",
+          "R073",
+          "G009",
+          "K409"
+        ],
+        "DIAG2": [
+          "W180",
+          "X449",
+          "W019",
+          "W190",
+          "Y838"
+        ],
+        "DIAS_ESTADA": [
+          "14",
+          "7",
+          "4",
+          "1",
+          "22"
+        ]
+      },
+      "territorial_columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALU",
+        "GLOSA_PAIS_ORIGEN",
+        "COMUNA_RESIDENCIA",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "REGION_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "GLOSA_PREVISION"
+      ],
+      "sample_rows_head": [
+        [
+          "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+          "MUJER",
+          "10 a 19",
+          "No se identifica con alguna etnia",
+          "Chileno",
+          "04101",
+          "La Serena",
+          "04",
+          "De Coquimbo",
+          "1",
+          "FONASA",
+          "2024",
+          "G009",
+          "",
+          "14",
+          "1"
+        ],
+        [
+          "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+          "HOMBRE",
+          "60 a 69",
+          "No se identifica con alguna etnia",
+          "Chileno",
+          "10205",
+          "Dalcahue",
+          "10",
+          "De Los Lagos",
+          "1",
+          "FONASA",
+          "2024",
+          "E145",
+          "",
+          "22",
+          "1"
+        ]
+      ]
+    },
+    {
+      "file_name": "EGR_DATOS_ABIERTO_2025.csv",
+      "file_path": "data/raw/egresos/EGR_DATOS_ABIERTO_2025.csv",
+      "file_size_bytes": 302672065,
+      "file_size_mb": 288.65,
+      "encoding_info": {
+        "is_valid_utf8": true,
+        "has_utf8_bom": false,
+        "real_encoding": "UTF-8 (con mojibake preexistente en origen)",
+        "has_mojibake_bytes": true
+      },
+      "read_encoding_used": "utf-8",
+      "separator": ";",
+      "num_rows": 1705514,
+      "num_cols": 17,
+      "columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALU",
+        "SEXO",
+        "GRUPO_EDAD",
+        "ETNIA",
+        "GLOSA_PAIS_ORIGEN",
+        "COMUNA_RESIDENCIA",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "REGION_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "PREVISION",
+        "GLOSA_PREVISION",
+        "ANO_EGRESO",
+        "DIAG1",
+        "DIAG2",
+        "DIAS_ESTADA",
+        "CONDICION_EGRESO",
+        "ERROR"
+      ],
+      "mismatched_lines": 0,
+      "mismatched_samples": [],
+      "mojibake_detected": true,
+      "mojibake_columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALU",
+        "SEXO",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "GLOSA_PAIS_ORIGEN",
+        "ETNIA",
+        "COMUNA_RESIDENCIA",
+        "ANO_EGRESO",
+        "DIAG1",
+        "CONDICION_EGRESO",
+        "ERROR",
+        "GRUPO_EDAD",
+        "DIAS_ESTADA",
+        "PREVISION",
+        "GLOSA_PREVISION",
+        "DIAG2",
+        "REGION_RESIDENCIA"
+      ],
+      "date_columns": [
+        "DIAG1",
+        "DIAG2",
+        "DIAS_ESTADA"
+      ],
+      "date_samples": {
+        "DIAG1": [
+          "K914",
+          "K805",
+          "H903",
+          "I482",
+          "J449"
+        ],
+        "DIAG2": [
+          "X590",
+          "W189",
+          "W010",
+          "W491",
+          "W190"
+        ],
+        "DIAS_ESTADA": [
+          "1",
+          "9",
+          "13",
+          "8",
+          "2"
+        ]
+      },
+      "territorial_columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALU",
+        "GLOSA_PAIS_ORIGEN",
+        "COMUNA_RESIDENCIA",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "REGION_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "GLOSA_PREVISION"
+      ],
+      "sample_rows_head": [
+        [
+          "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+          "HOMBRE",
+          "70 a 79",
+          "No se identifica con alguna etnia",
+          "Chileno",
+          "10403",
+          "Hualaihu�",
+          "10",
+          "De Los Lagos",
+          "1",
+          "FONASA",
+          "2025",
+          "I482",
+          "",
+          "9",
+          "1",
+          "0"
+        ],
+        [
+          "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+          "MUJER",
+          "60 a 69",
+          "No se identifica con alguna etnia",
+          "Chileno",
+          "13127",
+          "Recoleta",
+          "13",
+          "Metropolitana de Santiago",
+          "2",
+          "ISAPRE",
+          "2025",
+          "K914",
+          "",
+          "13",
+          "1",
+          "0"
+        ]
+      ]
+    },
+    {
+      "file_name": "EGRE_DATOS_ABIERTOS_2020.csv",
+      "file_path": "data/raw/egresos/EGRE_DATOS_ABIERTOS_2020.csv",
+      "file_size_bytes": 245975785,
+      "file_size_mb": 234.58,
+      "encoding_info": {
+        "is_valid_utf8": false,
+        "has_utf8_bom": false,
+        "real_encoding": "Latin-1 / CP1252",
+        "has_mojibake_bytes": false
+      },
+      "read_encoding_used": "latin-1",
+      "separator": ";",
+      "num_rows": 1330477,
+      "num_cols": 18,
+      "columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALUD",
+        "SEXO",
+        "GRUPO_EDAD",
+        "ETNIA",
+        "GLOSA_PAIS_ORIGEN",
+        "COMUNA_RESIDENCIA",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "REGION_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "PREVISION",
+        "GLOSA_PREVISION",
+        "ANO_EGRESO",
+        "DIAG1",
+        "DIAG2",
+        "DIAS_ESTADA",
+        "CONDICION_EGRESO",
+        "INTERV_Q",
+        "PROCED"
+      ],
+      "mismatched_lines": 0,
+      "mismatched_samples": [],
+      "mojibake_detected": true,
+      "mojibake_columns": [
+        "INTERV_Q",
+        "SEXO",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "GLOSA_PAIS_ORIGEN",
+        "ETNIA",
+        "COMUNA_RESIDENCIA",
+        "ANO_EGRESO",
+        "DIAG1",
+        "CONDICION_EGRESO",
+        "PROCED",
+        "GRUPO_EDAD",
+        "DIAS_ESTADA",
+        "PREVISION",
+        "PERTENENCIA_ESTABLECIMIENTO_SALUD",
+        "GLOSA_PREVISION",
+        "DIAG2",
+        "REGION_RESIDENCIA"
+      ],
+      "date_columns": [
+        "DIAG1",
+        "DIAG2",
+        "DIAS_ESTADA"
+      ],
+      "date_samples": {
+        "DIAG1": [
+          "Z412",
+          "N47X",
+          "N433",
+          "Q173",
+          "Q531"
+        ],
+        "DIAG2": [
+          "W449",
+          "W280",
+          "W189",
+          "W229",
+          "X440"
+        ],
+        "DIAS_ESTADA": [
+          "6",
+          "1",
+          "11",
+          "3",
+          "2"
+        ]
+      },
+      "territorial_columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALUD",
+        "GLOSA_PAIS_ORIGEN",
+        "COMUNA_RESIDENCIA",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "REGION_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "GLOSA_PREVISION"
+      ],
+      "sample_rows_head": [
+        [
+          "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+          "HOMBRE",
+          "1 a 9",
+          "No se identifica con alguna etnia",
+          "Chileno",
+          "01101",
+          "Iquique",
+          "01",
+          "De Tarapacá",
+          "1",
+          "FONASA",
+          "2020",
+          "Q531",
+          "",
+          "1",
+          "1",
+          "1",
+          "2"
+        ],
+        [
+          "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+          "HOMBRE",
+          "1 a 9",
+          "No se identifica con alguna etnia",
+          "Chileno",
+          "01101",
+          "Iquique",
+          "01",
+          "De Tarapacá",
+          "1",
+          "FONASA",
+          "2020",
+          "Q173",
+          "",
+          "1",
+          "1",
+          "1",
+          "2"
+        ]
+      ]
+    },
+    {
+      "file_name": "EGRE_DATOS_ABIERTOS_2022.csv",
+      "file_path": "data/raw/egresos/EGRE_DATOS_ABIERTOS_2022.csv",
+      "file_size_bytes": 357942502,
+      "file_size_mb": 341.36,
+      "encoding_info": {
+        "is_valid_utf8": false,
+        "has_utf8_bom": false,
+        "real_encoding": "Latin-1 / CP1252",
+        "has_mojibake_bytes": false
+      },
+      "read_encoding_used": "latin-1",
+      "separator": ";",
+      "num_rows": 1597118,
+      "num_cols": 18,
+      "columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALUD",
+        "SEXO",
+        "GRUPO_EDAD",
+        "ETNIA",
+        "GLOSA_PAIS_ORIGEN",
+        "COMUNA_RESIDENCIA",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "REGION_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "PREVISION",
+        "GLOSA_PREVISION",
+        "ANO_EGRESO",
+        "DIAG1",
+        "DIAG2",
+        "DIAS_ESTADA",
+        "CONDICION_EGRESO",
+        "GLOSA_INTERV_Q_PPAL",
+        "GLOSA_PROCED_PPAL"
+      ],
+      "mismatched_lines": 0,
+      "mismatched_samples": [],
+      "mojibake_detected": true,
+      "mojibake_columns": [
+        "SEXO",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "GLOSA_PAIS_ORIGEN",
+        "ETNIA",
+        "COMUNA_RESIDENCIA",
+        "ANO_EGRESO",
+        "DIAG1",
+        "CONDICION_EGRESO",
+        "GLOSA_PROCED_PPAL",
+        "GRUPO_EDAD",
+        "DIAS_ESTADA",
+        "PREVISION",
+        "PERTENENCIA_ESTABLECIMIENTO_SALUD",
+        "GLOSA_PREVISION",
+        "GLOSA_INTERV_Q_PPAL",
+        "DIAG2",
+        "REGION_RESIDENCIA"
+      ],
+      "date_columns": [
+        "DIAG1",
+        "DIAG2",
+        "DIAS_ESTADA"
+      ],
+      "date_samples": {
+        "DIAG1": [
+          "Z539",
+          "A099",
+          "J129",
+          "Q531",
+          "J209"
+        ],
+        "DIAG2": [
+          "W029",
+          "W189",
+          "Y822",
+          "W199",
+          "Y349"
+        ],
+        "DIAS_ESTADA": [
+          "5",
+          "1",
+          "8",
+          "3",
+          "2"
+        ]
+      },
+      "territorial_columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALUD",
+        "GLOSA_PAIS_ORIGEN",
+        "COMUNA_RESIDENCIA",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "REGION_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "GLOSA_PREVISION",
+        "GLOSA_INTERV_Q_PPAL",
+        "GLOSA_PROCED_PPAL"
+      ],
+      "sample_rows_head": [
+        [
+          "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+          "HOMBRE",
+          "1 a 9",
+          "No se identifica con alguna etnia",
+          "Chileno",
+          "01101",
+          "Iquique",
+          "01",
+          "De Tarapacá",
+          "1",
+          "FONASA",
+          "2022",
+          "Z539",
+          "",
+          "1",
+          "1",
+          "",
+          "Sin Arancel FONASA"
+        ],
+        [
+          "No Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+          "HOMBRE",
+          "1 a 9",
+          "No se identifica con alguna etnia",
+          "Chileno",
+          "01101",
+          "Iquique",
+          "01",
+          "De Tarapacá",
+          "1",
+          "FONASA",
+          "2022",
+          "J209",
+          "",
+          "2",
+          "1",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "file_name": "EGRESOS_2023.csv",
+      "file_path": "data/raw/egresos/EGRESOS_2023.csv",
+      "file_size_bytes": 278312188,
+      "file_size_mb": 265.42,
+      "encoding_info": {
+        "is_valid_utf8": false,
+        "has_utf8_bom": false,
+        "real_encoding": "Latin-1 / CP1252",
+        "has_mojibake_bytes": false
+      },
+      "read_encoding_used": "latin-1",
+      "separator": ";",
+      "num_rows": 1612267,
+      "num_cols": 16,
+      "columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALU",
+        "SEXO",
+        "GRUPO_EDAD",
+        "ETNIA",
+        "GLOSA_PAIS_ORIGEN",
+        "COMUNA_RESIDENCIA",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "REGION_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "PREVISION",
+        "GLOSA_PREVISION",
+        "ANO_EGRESO",
+        "DIAG1",
+        "DIAG2",
+        "DIAS_ESTADA",
+        "CONDICION_EGRESO"
+      ],
+      "mismatched_lines": 0,
+      "mismatched_samples": [],
+      "mojibake_detected": true,
+      "mojibake_columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALU",
+        "SEXO",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "GLOSA_PAIS_ORIGEN",
+        "ETNIA",
+        "COMUNA_RESIDENCIA",
+        "ANO_EGRESO",
+        "DIAG1",
+        "CONDICION_EGRESO",
+        "GRUPO_EDAD",
+        "DIAS_ESTADA",
+        "PREVISION",
+        "GLOSA_PREVISION",
+        "DIAG2",
+        "REGION_RESIDENCIA"
+      ],
+      "date_columns": [
+        "DIAG1",
+        "DIAG2",
+        "DIAS_ESTADA"
+      ],
+      "date_samples": {
+        "DIAG1": [
+          "T181",
+          "K353",
+          "D180",
+          "T232",
+          "K358"
+        ],
+        "DIAG2": [
+          "W490",
+          "W449",
+          "X400",
+          "X100",
+          "X159"
+        ],
+        "DIAS_ESTADA": [
+          "6",
+          "7",
+          "1",
+          "3",
+          "2"
+        ]
+      },
+      "territorial_columns": [
+        "PERTENENCIA_ESTABLECIMIENTO_SALU",
+        "GLOSA_PAIS_ORIGEN",
+        "COMUNA_RESIDENCIA",
+        "GLOSA_COMUNA_RESIDENCIA",
+        "REGION_RESIDENCIA",
+        "GLOSA_REGION_RESIDENCIA",
+        "GLOSA_PREVISION"
+      ],
+      "sample_rows_head": [
+        [
+          "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+          "HOMBRE",
+          "1 a 9",
+          "No se identifica con alguna etnia",
+          "Chileno",
+          "01101",
+          "Iquique",
+          "01",
+          "De Tarapacá",
+          "1",
+          "FONASA",
+          "2023",
+          "D180",
+          "",
+          "7",
+          "1"
+        ],
+        [
+          "Pertenecientes al Sistema Nacional de Servicios de Salud, SNSS",
+          "HOMBRE",
+          "1 a 9",
+          "No se identifica con alguna etnia",
+          "Chileno",
+          "01101",
+          "Iquique",
+          "01",
+          "De Tarapacá",
+          "1",
+          "FONASA",
+          "2023",
+          "T181",
+          "W449",
+          "2",
+          "1"
+        ]
+      ]
+    }
+  ],
+  "censo_comunal": {
+    "file_name": "Cartografia_censo2024_Pais_Comunal.parquet",
+    "file_path": "data/raw/censo/Cartografia_censo2024_Pais_Comunal.parquet",
+    "file_size_mb": 119.96,
+    "num_rows": 345,
+    "num_cols": 11,
+    "columns": [
+      "OBJECTID",
+      "CUT",
+      "COD_REGION",
+      "REGION",
+      "COD_PROVINCIA",
+      "PROVINCIA",
+      "COMUNA",
+      "SHAPE_Length",
+      "SHAPE_Area",
+      "SHAPE",
+      "SHAPE_bbox"
+    ],
+    "dtypes": [
+      [
+        "OBJECTID",
+        "int64"
+      ],
+      [
+        "CUT",
+        "int32"
+      ],
+      [
+        "COD_REGION",
+        "int32"
+      ],
+      [
+        "REGION",
+        "str"
+      ],
+      [
+        "COD_PROVINCIA",
+        "int32"
+      ],
+      [
+        "PROVINCIA",
+        "str"
+      ],
+      [
+        "COMUNA",
+        "str"
+      ],
+      [
+        "SHAPE_Length",
+        "float64"
+      ],
+      [
+        "SHAPE_Area",
+        "float64"
+      ],
+      [
+        "SHAPE",
+        "object"
+      ],
+      [
+        "SHAPE_bbox",
+        "object"
+      ]
+    ],
+    "crs": "SIRGAS 2000 (EPSG:4674)",
+    "primary_geom_col": "SHAPE",
+    "null_geoms": 0,
+    "invalid_geoms": 0,
+    "mojibake_in_text": true,
+    "mojibake_cols": [
+      "SHAPE_bbox"
+    ]
+  }
+}
