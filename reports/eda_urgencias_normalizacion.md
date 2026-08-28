@@ -28,7 +28,7 @@ Para la homologación territorial se utilizó el catálogo procesado de la RM:
 
 - **Encoding utilizado:** `Latin-1 / CP1252` en todos los años (2020 a 2026).
 - **Separador utilizado:** Punto y coma (`;`).
-- **Verificación:** 0 errores de decodificación y 0 líneas desbalanceadas en los 54,488,491 registros nacionales.
+- **Verificación:** Durante el procesamiento de los 57,322,001 registros nacionales, el parser estructural no arrojó líneas desbalanceadas y la decodificación Latin-1 fue exitosa.
 
 ---
 
@@ -73,7 +73,7 @@ Para la homologación territorial se utilizó el catálogo procesado de la RM:
 
 ## 5. Homologación Territorial y Filtrado RM
 
-- **Registros con correspondencia territorial:** **54,488,491 de 54,488,491 (100.0%)**.
+- **Registros con correspondencia territorial:** **57,322,001 de 57,322,001 (100.0%)**.
 - **Registros sin correspondencia territorial:** **0**.
 - **Establecimientos no encontrados en catálogo:** **0**.
 
@@ -89,8 +89,8 @@ Para la homologación territorial se utilizó el catálogo procesado de la RM:
 | 2023 | 8,899,080 | 2,148,520 | 6,750,560 | 0 | 2,148,520 | 100.0% |
 | 2024 | 8,973,229 | 2,141,400 | 6,831,829 | 0 | 2,141,400 | 100.0% |
 | 2025 | 9,142,479 | 2,177,404 | 6,965,075 | 0 | 2,177,404 | 100.0% |
-| 2026 | 6,090,837 | 1,439,756 | 4,651,081 | 0 | 1,439,756 | 100.0% |
-| **TOTAL** | **57,294,818** | **13,897,800** | **43,397,018** | **0** | **13,897,800** | **100.0%** |
+| 2026 | 6,118,020 | 1,445,865 | 4,672,155 | 0 | 1,445,865 | 100.0% |
+| **TOTAL** | **57,322,001** | **13,903,909** | **43,418,092** | **0** | **13,903,909** | **100.0%** |
 
 ---
 
@@ -111,12 +111,12 @@ Para la homologación territorial se utilizó el catálogo procesado de la RM:
 
 - **Cantidad de registros descartados por falta de territorio:** **0**.
 - **Cantidad de registros descartados por corrupción de formato:** **0**.
-- **Trazabilidad:** La diferencia entre `Filas RAW` y `Filas PROCESSED` corresponde única y exclusivamente al filtrado geográfico legítimo de establecimientos ubicados en regiones distintas a la RM (`Filas no RM = 43,397,018`).
+- **Trazabilidad:** La diferencia entre `Filas RAW` y `Filas PROCESSED` corresponde única y exclusivamente al filtrado geográfico legítimo de establecimientos ubicados en regiones distintas a la RM (`Filas no RM = 43,418,092`).
 
 ---
 
 ## 9. Limitaciones
 
 1. **Resolución temporal:** La serie de atenciones está agrupada a nivel diario y semanal por causa y grupo etario, no a nivel de transacción de paciente individual (datos ecológicos).
-2. **Disponibilidad 2026:** El archivo 2026 contiene la serie en curso (primeras semanas del año), por lo que su volumen es inferior al de años completos.
+2. **Disponibilidad 2026:** El archivo 2026 corresponde a una serie parcial disponible desde el 1 de enero hasta el 26 de agosto de 2026, con 35 semanas observadas. Por tanto, 2026 no constituye un año completo y sus volúmenes acumulados no deben compararse directamente con años completos.
 3. **Cambio de causas CIE:** Las glosas y agrupaciones de causas del DEIS se auditarán y homologarán específicamente para salud mental (F00–F99) en la siguiente etapa analítica.

@@ -62,4 +62,5 @@
 - [x] Auditoría del maestro de establecimientos y relaciones de red asistencial/territorial (`reports/eda_maestro_establecimientos_y_red.md`).
 - [x] Perfilado descriptivo de la demanda de urgencias general y de salud mental en la RM (`scripts/eda_demanda_urgencias_rm.py`, `reports/eda_demanda_urgencias_rm.md`).
 - [ ] Normalización, perfilado y auditoría de Egresos Hospitalarios F00-F99 (2020–2025).
-- [ ] Prototipo y diseño de arquitectura técnica de datos.
+- [x] Prototipo y diseño de arquitectura técnica de datos.
+- [x] Formalización de pipeline reproducible e idempotente (`scripts/run_pipeline.py`, `PIPELINE.md`).
