@@ -80,6 +80,18 @@ STAGES = {
         ],
         "depends_on": ["download_deis", "clean_establishments", "clean_censo", "build_catalogs"]
     },
+    "clean_egresos": {
+        "module": "src.data.clean_egresos",
+        "outputs": [
+            "data/processed/egresos/egresos_2020.parquet",
+            "data/processed/egresos/egresos_2021.parquet",
+            "data/processed/egresos/egresos_2022.parquet",
+            "data/processed/egresos/egresos_2023.parquet",
+            "data/processed/egresos/egresos_2024.parquet",
+            "data/processed/egresos/egresos_2025.parquet"
+        ],
+        "depends_on": ["download_deis"]
+    },
     "eda_establishments": {
         "module": "scripts.eda_establecimientos_rm",
         "outputs": ["reports/eda/registros_sin_coordenadas.csv"],
@@ -101,6 +113,7 @@ PIPELINE_ORDER = [
     "clean_censo",
     "build_catalogs",
     "clean_urgencias",
+    "clean_egresos",
     "eda_establishments",
     "eda_urgencias"
 ]

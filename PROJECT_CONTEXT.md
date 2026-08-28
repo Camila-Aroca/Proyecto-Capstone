@@ -18,7 +18,7 @@
 
 ## 3. Decisiones y Supuestos Clave
 - **Exclusión explícita:** Fuera de alcance la gestión de vacantes/cupos en tiempo real.
-- **Enlace de datos:** El cruce entre urgencias y egresos es exclusivamente ecológico (datos no unibles por individuo).
+- **Enlace de datos:** El cruce entre urgencias y egresos es exclusivamente ecológico (datos no unibles por individuo). Egresos carece de identificador de establecimiento, por ende la relación será ecológico-territorial.
 - **Limitación temporal:** Serie de urgencias parte en 2021; estacionalidad evaluada con cautela.
 - **Metodología:** Ágil / CRISP-DM iterativo, gestionado con GitHub Projects y tableros Kanban.
 - **Fuente DEIS Establecimientos:** Descargada y procesada. Archivo crudo en `data/raw/deis/establecimientos_salud_actualizado.csv` (UTF-8, separador `;`). Caracteres con acentos preservados mediante decodificación UTF-8 pura. Coordenadas tipadas a `float64` numérico sin manipulación destructiva. Salidas generadas en `data/processed/establecimientos_rm_clean.csv`, `data/processed/establecimientos_rm_clean.parquet` y `data/processed/establecimientos_salud_clean.parquet`.
@@ -61,6 +61,7 @@
 - [x] Auditoría y homologación de causas de urgencia DEIS y catálogo dimensional F00–F99 (`data/processed/urgencias/catalogo_f00_f99.csv`, `reports/eda_urgencias_causas_2020_2026.md`).
 - [x] Auditoría del maestro de establecimientos y relaciones de red asistencial/territorial (`reports/eda_maestro_establecimientos_y_red.md`).
 - [x] Perfilado descriptivo de la demanda de urgencias general y de salud mental en la RM (`scripts/eda_demanda_urgencias_rm.py`, `reports/eda_demanda_urgencias_rm.md`).
-- [ ] Normalización, perfilado y auditoría de Egresos Hospitalarios F00-F99 (2020–2025).
+- [x] Normalización reproducible de Egresos Hospitalarios (2020–2025).
+- [ ] Perfilado y auditoría de Egresos Hospitalarios F00-F99.
 - [x] Prototipo y diseño de arquitectura técnica de datos.
 - [x] Formalización de pipeline reproducible e idempotente (`scripts/run_pipeline.py`, `PIPELINE.md`).

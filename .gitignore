@@ -52,3 +52,5 @@ data/raw/*
 # macOS
 .DS_Store
 ._*
+
+scratch/

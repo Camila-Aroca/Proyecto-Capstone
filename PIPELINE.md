@@ -55,8 +55,9 @@ El orquestador ejecutará las etapas estrictamente en este orden:
 5. `clean_censo` → (Filtro espacial RM para Censo)
 6. `build_catalogs` → (Creación de catálogo F00-F99)
 7. `clean_urgencias` → (Limpieza de Urgencias 2020-2026 y unión territorial)
-8. `eda_establishments` → (Validación EDA de Establecimientos)
-9. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
+8. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
+9. `eda_establishments` → (Validación EDA de Establecimientos)
+10. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
 
 ## 6. Lógica de Idempotencia (Skip)
 
