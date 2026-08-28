@@ -77,3 +77,44 @@
 - Si se necesita enlazar un archivo dentro del proyecto desde Markdown, utilizar un enlace relativo, por ejemplo:
   `[registros sin coordenadas](eda/registros_sin_coordenadas.csv)`
 - Nunca revelar información del entorno local que no sea necesaria para reproducir el proyecto.
+
+## 7. Reproducibilidad y Registro Obligatorio en el Pipeline
+
+* `scripts/run_pipeline.py` y `PIPELINE.md` constituyen la fuente oficial para conocer el orden de ejecución reproducible del proyecto.
+
+* Ningún nuevo script de descarga, ingesta, transformación, limpieza, validación, construcción de catálogos o generación de outputs analíticos puede considerarse terminado si queda fuera del pipeline oficial cuando forme parte del flujo reproducible.
+
+* Antes de crear un nuevo archivo `.py`, verificar si la lógica puede incorporarse a un módulo o stage existente para evitar duplicación.
+
+* Si el nuevo código constituye una nueva etapa del flujo, debe registrar explícitamente:
+
+  1. nombre del stage;
+  2. inputs;
+  3. outputs;
+  4. dependencias upstream;
+  5. dependencias downstream;
+  6. condición de `SKIP`;
+  7. comportamiento con `--force`;
+  8. tests mínimos de integración/orquestación.
+
+* Todo nuevo stage debe incorporarse en:
+
+  * `scripts/run_pipeline.py`;
+  * `PIPELINE.md`;
+  * tests correspondientes en `tests/`.
+
+* Si una etapa upstream cambia o regenera outputs, el pipeline debe invalidar o regenerar únicamente los outputs downstream que dependan realmente de ella.
+
+* Los scripts de EDA reproducibles también deben estar registrados en el pipeline cuando generen tablas o artefactos utilizados por etapas posteriores. Los informes Markdown curados manualmente no deben sobrescribirse automáticamente.
+
+* `scratch/` nunca puede contener lógica indispensable para reproducir el proyecto. Todo código crítico debe estar formalizado en `src/` o `scripts/` y conectado al pipeline oficial.
+
+* Al finalizar cualquier tarea que cree o modifique código ejecutable, verificar obligatoriamente:
+
+  `python scripts/run_pipeline.py --help`
+
+  `pytest tests/`
+
+  y comprobar si el DAG descrito en `PIPELINE.md` requiere actualización.
+
+* Si se crea un script necesario para reproducir un resultado pero no se incorpora al pipeline, la tarea debe considerarse INCOMPLETA.
