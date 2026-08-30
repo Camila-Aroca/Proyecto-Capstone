@@ -30,7 +30,7 @@ tmp/
 
 # Caches and build artifacts
 .cache/
-__pycache__/
+**pycache**/
 *.py[cod]
 build/
 coverage/
@@ -43,7 +43,6 @@ ENV/
 env/
 venv/
 
-# Local data (do not version heavy or raw files)
 data/processed/*
 !data/processed/.gitkeep
 data/raw/*
