@@ -23,30 +23,50 @@ Para correr todo el pipeline (saltará automáticamente las etapas que ya tengan
 python scripts/run_pipeline.py
 ```
 
-## 3. Ejecución por Etapa
+## 3. Ejecución desde una Etapa
 
-Para ejecutar únicamente una fase específica (por ejemplo, limpiar las atenciones de urgencia):
+`--stage` define el punto de inicio de una rama del DAG.
+
+Ejemplo:
 
 ```bash
 python scripts/run_pipeline.py --stage clean_urgencias
 ```
 
+Si los outputs son válidos y no existen cambios upstream relevantes, las etapas correspondientes realizan `SKIP`.
+
+Con `--force`, la etapa seleccionada se regenera y el cambio se propaga únicamente a sus dependencias downstream, sin ejecutar ramas no relacionadas.
+
+Por ejemplo, `--stage clean_urgencias --force` ejecuta `clean_urgencias` y posteriormente `eda_urgencias`.
+
 ## 4. Forzar Regeneración (Force)
 
-Si deseas forzar la ejecución de una etapa (o de todo el pipeline) ignorando la regla de salto, añade el flag `--force`:
+Si deseas regenerar una etapa ignorando su condición normal de `SKIP`, utiliza `--force`.
+
+Cuando se combina con `--stage`, se fuerza la etapa seleccionada y la regeneración se propaga únicamente a sus dependencias downstream.
+
+Ejemplo:
 
 ```bash
-python scripts/run_pipeline.py --stage download_censo --force
+python scripts/run_pipeline.py --stage clean_urgencias --force
 ```
+
+Para forzar la evaluación completa del pipeline puede utilizarse:
+
+```bash
+python scripts/run_pipeline.py --force
+```
+
+--force debe utilizarse deliberadamente, especialmente en etapas de descarga, porque las fuentes del año en curso pueden ser mutables y producir un snapshot distinto.
 
 ## 5. Orden de Ejecución (DAG)
 
-Se han dispuesto los scripts en `src/data/` para encapsular la ingesta y descarga.
+La lógica reutilizable de ingesta, descarga, limpieza y normalización se organiza principalmente en `src/data/`, mientras que los ejecutables de análisis y orquestación se mantienen en `scripts/`. `scripts/run_pipeline.py` coordina las dependencias entre estas etapas.
 
 > [!WARNING]
 > La serie de atenciones del año en curso (2026) es una fuente mutable. El DEIS sobrescribe periódicamente el archivo ZIP sin versionado. Por lo tanto, ejecutar el mismo pipeline en fechas distintas descargará snapshots diferentes. Para mitigar esto, los scripts de descarga generan y actualizan un registro ligero de auditoría en `data/raw/provenance_manifest.json` con el SHA256 de lo descargado.
 
-El orquestador ejecutará las etapas estrictamente en este orden:
+El siguiente listado representa el orden topológico actual del DAG. El orquestador ejecuta únicamente las etapas necesarias según los outputs existentes, las dependencias, el `--stage` solicitado y el uso de `--force`
 
 1. `download_censo` → (Descarga Censo a RAW)
 2. `download_deis` → (Descarga Urgencias y Egresos a RAW)
@@ -59,9 +79,26 @@ El orquestador ejecutará las etapas estrictamente en este orden:
 9. `eda_establishments` → (Validación EDA de Establecimientos)
 10. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
 
-## 6. Lógica de Idempotencia (Skip)
+## 6. Idempotencia y Validación de Outputs
 
-El orquestador no sobrescribe ciegamente. Antes de lanzar cada módulo, `run_pipeline.py` verifica la existencia de archivos clave (outputs) de esa etapa (y que su tamaño sea > 0 bytes). Si todos los outputs esperados existen, el script asume que la etapa ya fue ejecutada y la salta automáticamente, ahorrando tiempo y peticiones a la red.
+El orquestador evita recomputaciones innecesarias y no considera válido un output únicamente porque exista.
+
+Antes de ejecutar una etapa, `scripts/run_pipeline.py` valida sus outputs esperados mediante controles apropiados al formato, que pueden incluir:
+
+- existencia del archivo;
+- tamaño válido;
+- integridad de archivos ZIP;
+- legibilidad mínima de CSV;
+- legibilidad de Parquet/GeoParquet;
+- metadata y esquema mínimo esperado cuando corresponda.
+
+Si todos los outputs son válidos y ningún upstream de la etapa cambió durante la ejecución actual, la etapa realiza `SKIP`.
+
+Si una etapa upstream genera o modifica efectivamente sus outputs, únicamente las dependencias downstream correspondientes son reevaluadas o regeneradas.
+
+El uso de `--force` obliga a ejecutar la etapa seleccionada y propaga la regeneración por su rama downstream, sin ejecutar ramas independientes.
+
+Los módulos de `src/data/` encapsulan la lógica de procesamiento, pero `scripts/run_pipeline.py` es el punto de entrada oficial para generar outputs canónicos del proyecto.
 
 ## 7. Informes Históricos y Protegidos
 
