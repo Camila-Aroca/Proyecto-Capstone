@@ -547,6 +547,10 @@ def parse_due_date(raw_due: str | None) -> str | None:
         return raw_due[:10]
 
 
+def github_milestone_due_timestamp(calendar_date: str) -> str:
+    return f"{calendar_date}T12:00:00Z"
+
+
 def milestone_actions(remote_state: dict[str, Any]) -> list[dict[str, str]]:
     milestones = remote_state.get("milestones")
     if not isinstance(milestones, list):
@@ -981,7 +985,7 @@ def ensure_milestones_apply(remote_state: dict[str, Any]) -> None:
                 "-f",
                 f"title={milestone['title']}",
                 "-f",
-                f"due_on={milestone['due_on']}T00:00:00Z",
+                f"due_on={github_milestone_due_timestamp(milestone['due_on'])}",
             ],
             check=True,
         )
