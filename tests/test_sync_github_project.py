@@ -99,9 +99,10 @@ class SyncGithubProjectTests(unittest.TestCase):
             return payloads[key]
 
         with patch.object(sync, "run_gh", side_effect=fake_run_gh) as run_mock:
-            with patch.object(sys, "argv", ["sync_github_project.py", "--dry-run"]):
-                with redirect_stdout(io.StringIO()):
-                    self.assertEqual(sync.main(), 0)
+            with patch.object(sync, "write_manifest"), patch.object(sync, "write_dry_run_report"):
+                with patch.object(sys, "argv", ["sync_github_project.py", "--dry-run"]):
+                    with redirect_stdout(io.StringIO()):
+                        self.assertEqual(sync.main(), 0)
 
         forbidden = [
             ("issue", "create"),
@@ -184,6 +185,32 @@ class SyncGithubProjectTests(unittest.TestCase):
 
         close_calls = [call for call in run_mock.call_args_list if call.args[0][:2] == ["issue", "close"]]
         self.assertEqual(close_calls, [])
+
+    def test_creating_milestone_sends_noon_utc_due_on(self):
+        state = sample_remote_state(milestones=[])
+
+        with patch.object(sync, "run_gh", return_value=command_result(["api"])) as run_mock:
+            sync.ensure_milestones_apply(state)
+
+        first_call_args = run_mock.call_args_list[0].args[0]
+        self.assertIn("due_on=2026-09-03T12:00:00Z", first_call_args)
+        self.assertNotIn("due_on=2026-09-03T00:00:00Z", first_call_args)
+
+    def test_midnight_utc_remote_milestone_reuses_expected_calendar_date(self):
+        milestone = sync.MILESTONES["Fase 1"]
+        state = sample_remote_state(
+            milestones=[
+                {
+                    "title": milestone["title"],
+                    "due_on": "2026-09-03T00:00:00Z",
+                }
+            ]
+        )
+
+        actions = sync.milestone_actions(state)
+        fase_1_action = next(action for action in actions if action["title"] == milestone["title"])
+
+        self.assertEqual(fase_1_action["action"], "REUSE")
 
     def test_plan_hash_is_stable_and_changes_with_remote_state(self):
         manifest = sync.build_manifest()
