@@ -24,9 +24,9 @@ PROJECT_OWNER = "Camila-Aroca"
 PROJECT_NUMBER = "12"
 PROJECT_NAME = "Tablero Kanban Capstone"
 PROJECT_URL = "https://github.com/users/Camila-Aroca/projects/12"
-REPORT_PATH = Path("reports/PROJECT_STATUS_AUDIT_2026-08-31.md")
+REPORT_PATH = Path("reports/project/PROJECT_STATUS_AUDIT_2026-08-31.md")
 MANIFEST_PATH = Path("docs/04-gestion-proyecto/github_project_tasks.json")
-DRY_RUN_REPORT_PATH = Path("reports/GITHUB_PROJECT_IMPORT_DRY_RUN_2026-08-31.md")
+DRY_RUN_REPORT_PATH = Path("reports/project/GITHUB_PROJECT_IMPORT_DRY_RUN_2026-08-31.md")
 SOURCE_REPORT = REPORT_PATH.as_posix()
 
 TASK_MARKER_RE = re.compile(r"<!--\s*capstone-task-id:\s*([A-Z]+-\d{3})\s*-->")
