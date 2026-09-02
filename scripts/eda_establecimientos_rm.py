@@ -10,7 +10,7 @@ RAW_PATH = Path("data/raw/deis/establecimientos_salud_actualizado.csv")
 CLEAN_PATH = Path("data/processed/establecimientos_rm_clean.csv")
 REPORTS_DIR = Path("reports")
 EDA_DIR = REPORTS_DIR / "eda"
-REPORT_MD_PATH = REPORTS_DIR / "eda_establecimientos_rm.md"
+REPORT_MD_PATH = EDA_DIR / "eda_establecimientos_rm.md"
 MISSING_COORDS_CSV = EDA_DIR / "registros_sin_coordenadas.csv"
 MISSING_RM_PATH = EDA_DIR / "registros_rm_faltantes.csv"
 

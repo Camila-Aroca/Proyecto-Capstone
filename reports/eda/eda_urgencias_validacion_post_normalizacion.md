@@ -41,7 +41,7 @@ El dataset procesado de Atenciones de Urgencia de la Región Metropolitana cumpl
 | **TOTAL** | **57,294,818** | **57,294,818 (Tabla)** / *54,488,491 (Texto)* | **57,294,818** | **13,897,800** | **13,897,800** | **0** |
 
 ### 2.2 Diagnóstico de la Discrepancia Observada
-- **Hecho Observado:** El archivo `reports/eda_auditoria_formato_raw.md` presentaba en la tabla de la Sección 2.1 exactamente los mismos conteos anuales cuya suma aritmética da **57,294,818**. Sin embargo, en el texto introductorio de la Sección 1 figuraba la cifra `54,488,491` producto de un error tipográfico en la redacción del resumen.
+- **Hecho Observado:** El archivo `reports/eda/eda_auditoria_formato_raw.md` presentaba en la tabla de la Sección 2.1 exactamente los mismos conteos anuales cuya suma aritmética da **57,294,818**. Sin embargo, en el texto introductorio de la Sección 1 figuraba la cifra `54,488,491` producto de un error tipográfico en la redacción del resumen.
 - **Conclusión:** La cifra real, verificada directamente mediante conteo de líneas de los 7 archivos CSV en disco, es **57,294,818 registros RAW nacionales**.
 
 ---
@@ -142,7 +142,7 @@ Los 7 archivos Parquet generados en `data/processed/urgencias/` presentan una es
 ## 8. Respuestas a las Preguntas de Control
 
 1. **¿Los conteos RAW son correctos?:** Sí, el volumen nacional verificado en disco es de **57,294,818 registros**.
-2. **¿Existe alguna discrepancia con informes anteriores?:** Sí. Se detectó y aclaró una discrepancia de redacción en el texto de `reports/eda_auditoria_formato_raw.md` (que citaba 54,488,491 pero cuya tabla detallada sumaba 57,294,818).
+2. **¿Existe alguna discrepancia con informes anteriores?:** Sí. Se detectó y aclaró una discrepancia de redacción en el texto de `reports/eda/eda_auditoria_formato_raw.md` (que citaba 54,488,491 pero cuya tabla detallada sumaba 57,294,818).
 3. **¿La cantidad de registros RM es reproducible?:** Sí, exactamente **13,897,800 registros**.
 4. **¿El join territorial es 1:1 donde corresponde?:** Sí, 1:1 exacto sin colisiones ni multiplicaciones.
 5. **¿Se introdujeron duplicados?:** No (0 duplicados).

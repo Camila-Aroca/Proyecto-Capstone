@@ -102,7 +102,7 @@ Los módulos de `src/data/` encapsulan la lógica de procesamiento, pero `script
 
 ## 7. Informes Históricos y Protegidos
 
-Los reportes en Markdown dentro de la carpeta `reports/` (ej: `eda_demanda_urgencias_rm.md`) contienen correcciones cualitativas y manuales, por lo que **no son sobreescritos automáticamente por el orquestador**. El script de EDA genera únicamente las tablas (`.csv`) asociadas que sustentan los reportes.
+Los reportes en Markdown dentro de la carpeta `reports/eda/` (ej: `eda_demanda_urgencias_rm.md`) contienen correcciones cualitativas y manuales, por lo que **no son sobreescritos automáticamente por el orquestador**. El script de EDA genera únicamente las tablas (`.csv`) asociadas que sustentan los reportes.
 
 ## 8. Ejecutar Pruebas (Tests)
 

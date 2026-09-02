@@ -13,7 +13,7 @@ PROCESSED_URGENCIAS_DIR = Path("data/processed/urgencias")
 ESTABLECIMIENTOS_RM_PATH = Path("data/processed/establecimientos_rm_clean.csv")
 ESTABLECIMIENTOS_NAC_PATH = Path("data/processed/establecimientos_salud_clean.parquet")
 REPORTS_DIR = Path("reports")
-REPORT_MD_PATH = REPORTS_DIR / "eda_urgencias_normalizacion.md"
+REPORT_MD_PATH = REPORTS_DIR / "eda" / "eda_urgencias_normalizacion.md"
 
 COLUMN_MAPPING_RAW_TO_SNAKE = {
     "IdEstablecimiento": "id_establecimiento_raw",
