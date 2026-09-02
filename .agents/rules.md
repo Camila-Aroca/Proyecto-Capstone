@@ -9,12 +9,15 @@
 - **Privacidad:** No procesar datos personales sensibles identificables; solo datos agregados o disociados DEIS/MINSAL.
 - **Relación de Fuentes:** El cruce entre urgencias y egresos hospitalarios debe tratarse siempre como **ecológico** (no enlazar por paciente ni por establecimiento único).
 - **Calidad de Datos:** Cualquier pipeline o módulo debe auditar subregistro y validar la resolución diagnóstica antes de entrenar modelos o generar comparaciones comunales.
+- **Hospitalización F00–F99:** El análisis debe cubrir como mínimo duración de estadía y diferencias/factores asociados a sexo, previsión y pertenencia al SNSS. Edad, condición de egreso u otras variables pueden utilizarse como análisis complementarios cuando sean pertinentes.
+- **Contexto por sexo:** Cuando corresponda al análisis de hospitalización, complementar la interpretación con indicadores oficiales de salud mental desagregados por sexo, manteniendo claramente separados los datos DEIS analizados y las fuentes contextuales externas.
+- **Producto final:** Los componentes analíticos deben poder integrarse en una plataforma web funcional; evitar diseñar el producto como un dashboard exclusivamente descriptivo.
 
 ## 3. Estándares Técnicos (Python)
 - Seguir estándares **PEP 8** y tipado estricto con **Type Hints** (`typing`).
 - Arquitectura modular:
   - `src/data/`: Ingesta, limpieza, perfilado y validación de esquemas.
-  - `src/models/`: Modelos de series de tiempo (4-8 semanas, intervalos, baseline ingenuo).
+  - `src/models/`: Modelos de series de tiempo (horizonte 4–8 semanas, intervalos de predicción, backtesting y baseline estacional ingenuo).
   - `src/geo/`: Cálculo de isócronas (OSM/GTFS), georreferenciación y métricas de accesibilidad.
   - `src/api/`: Endpoints para servir pronósticos y capas territoriales.
 - Cada función de transformación o cálculo analítico debe contar con pruebas unitarias en `tests/` con `pytest`.
@@ -33,6 +36,14 @@
   - No cargar datasets completos en memoria cuando el análisis pueda resolverse mediante lectura selectiva, filtros, particionado o procesamiento por bloques.
 
 ## 4. Gestión de Contexto y Eficiencia de Tokens
+
+### Jerarquía de contexto
+
+- El Documento de Definición Proyecto APT vigente fija alcance académico, objetivos y entregables.
+- `PROJECT_CONTEXT.md` resume estado actual y decisiones estables del repositorio.
+- `PIPELINE.md` es la fuente de verdad del DAG reproducible.
+- Código, datos, tests y reports reproducibles son la fuente de verdad para resultados cuantitativos.
+- Si la documentación histórica contradice evidencia reproducible actual, comprobar y documentar la discrepancia antes de modificar nada.
 
 - Consultar `PROJECT_CONTEXT.md` antes de realizar cambios sustantivos en código, datos o arquitectura.
 
@@ -65,13 +76,15 @@
   - estado Git;
   - bloqueos reales.
 
-- Al finalizar una tarea o fase, actualizar `PROJECT_CONTEXT.md` únicamente cuando cambie:
+- Actualizar `PROJECT_CONTEXT.md` solo cuando cambie información estable del proyecto:
   - `Estado Actual`;
-  - `Decisiones y Supuestos Clave`.
+  - `Decisiones y Supuestos Clave`;
+  - alcance/componentes, únicamente si existe una decisión formal que los modifique.
 
 - No copiar logs extensos, transcripts ni resultados EDA completos a `PROJECT_CONTEXT.md`.
 
 - En análisis de datos grandes, evitar lecturas completas cuando no sean necesarias. Priorizar metadata, esquemas, conteos, selección de columnas, filtros y procesamiento por bloques antes de cargar datasets completos.
+
 
 ## 5. Rigor Analítico y Uso de Evidencia
 
@@ -263,3 +276,13 @@
 - Todo algoritmo estocástico utilizado en modelamiento, validación o muestreo debe definir una semilla reproducible cuando técnicamente corresponda.
 
 - Nunca asumir que una librería está instalada solo porque existe en el entorno local; toda dependencia permanente debe estar declarada en `requirements.txt`.
+
+## 10. Cierre de Tareas y Evidencias APT
+
+- Una tarea no debe declararse terminada sin indicar qué validaciones respaldan ese estado.
+
+- Cuando una tarea cierre total o parcialmente una evidencia académica del APT, verificar que exista un artefacto trazable que pueda utilizarse en el informe de avance o final, sin duplicar innecesariamente información ya reproducible en código, tests o reports.
+
+- El artefacto debe ser reproducible cuando corresponda y permitir identificar la evidencia, método, resultados, limitaciones y archivos que la respaldan.
+
+- No crear documentación adicional solo para cumplir esta regla si la evidencia ya queda correctamente respaldada por un artefacto existente.
