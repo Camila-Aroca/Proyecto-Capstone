@@ -175,6 +175,32 @@
 
 - Los EDA que generen tablas o artefactos utilizados posteriormente deben formar parte del DAG. Los informes Markdown curados manualmente no deben sobrescribirse automáticamente.
 
+### Organización de reports y artefactos analíticos
+
+- `reports/` debe mantenerse organizado por componente o propósito analítico. Evitar acumular informes heterogéneos directamente en su raíz.
+
+- La raíz de `reports/` debe reservarse, como máximo, para documentación transversal o índices que realmente abarquen todo el proyecto. Los informes específicos de un componente deben almacenarse en su subdirectorio correspondiente.
+
+- Utilizar únicamente los subdirectorios necesarios, por ejemplo:
+  - `reports/eda/`: EDA, perfilado, auditorías descriptivas y sus tablas pequeñas de apoyo;
+  - `reports/modeling/`: evaluación, backtesting y resultados del modelo de demanda;
+  - `reports/geo/`: accesibilidad y análisis geoespacial;
+  - `reports/hospitalization/`: análisis F00–F99 y duración de estadía;
+  - `reports/validation/`: QA, pruebas y reconciliaciones transversales;
+  - `reports/project/`: estados, auditorías y documentación transversal del proyecto.
+
+- Los artefactos pequeños destinados a inspección humana y asociados directamente a un report pueden mantenerse junto al report dentro de su subdirectorio. No crear carpetas adicionales como `tables/`, `figures/` o similares salvo que el volumen realmente lo justifique.
+
+- No crear subdirectorios vacíos ni anticipar estructuras para componentes que todavía no generan artefactos.
+
+- Antes de crear un nuevo report, comprobar si ya existe una categoría apropiada y reutilizarla.
+
+- Los productores reproducibles deben escribir directamente en su ubicación canónica; no generar archivos en `reports/` para moverlos manualmente después.
+
+- Si se reorganizan archivos existentes, usar movimientos que preserven historial (`git mv` cuando corresponda) y actualizar productores, referencias, enlaces, tests, `PIPELINE.md` u otra documentación afectada.
+
+- No duplicar el mismo reporte o artefacto en distintas ubicaciones.
+
 - `scratch/` nunca puede contener lógica indispensable. El código permanente debe vivir en `src/`, `scripts/` o `tests/`.
 
 - Para outputs grandes o costosos de regenerar utilizar escritura segura:
