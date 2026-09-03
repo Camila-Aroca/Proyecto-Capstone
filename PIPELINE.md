@@ -71,13 +71,16 @@ El siguiente listado representa el orden topológico actual del DAG. El orquesta
 1. `download_censo` → (Descarga Censo a RAW)
 2. `download_deis` → (Descarga Urgencias y Egresos a RAW)
 3. `download_establishments` → (Descarga Maestro Establecimientos a RAW)
-4. `clean_establishments` → (Limpieza y filtrado RM)
-5. `clean_censo` → (Filtro espacial RM para Censo)
-6. `build_catalogs` → (Creación de catálogo F00-F99)
-7. `clean_urgencias` → (Limpieza de Urgencias 2020-2026 y unión territorial)
-8. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
-9. `eda_establishments` → (Validación EDA de Establecimientos)
-10. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
+4. `download_contexto_genero` → (Descarga RAW de cuatro cuadros XLSX de Estadísticas de Género)
+5. `normalize_contexto_genero` → (Normalización independiente de los cuatro cuadros contextuales)
+6. `clean_establishments` → (Limpieza y filtrado RM)
+7. `clean_censo` → (Filtro espacial RM para Censo)
+8. `build_catalogs` → (Creación de catálogo F00-F99)
+9. `clean_urgencias` → (Limpieza de Urgencias 2020-2026 y unión territorial)
+10. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
+11. `eda_establishments` → (Validación EDA de Establecimientos)
+12. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
+13. `eda_contexto_genero` → (EDA reproducible de los cuatro cuadros contextuales)
 
 ## 6. Idempotencia y Validación de Outputs
 
@@ -100,9 +103,11 @@ El uso de `--force` obliga a ejecutar la etapa seleccionada y propaga la regener
 
 Los módulos de `src/data/` encapsulan la lógica de procesamiento, pero `scripts/run_pipeline.py` es el punto de entrada oficial para generar outputs canónicos del proyecto.
 
+La rama `download_contexto_genero` → `normalize_contexto_genero` → `eda_contexto_genero` es independiente de Egresos y Urgencias: mantiene un Parquet por fuente, no realiza uniones entre ellas y tampoco las enlaza con registros DEIS. La descarga conserva cada XLSX original en `data/raw/contexto_genero/`, valida el workbook antes de publicarlo y agrega URL, fecha/hora UTC, tamaño y SHA256 al historial de `data/raw/provenance_manifest.json`. En operación normal los RAW válidos hacen `SKIP`; `--force` solicita explícitamente un snapshot nuevo.
+
 ## 7. Informes Históricos y Protegidos
 
-Los reportes en Markdown dentro de la carpeta `reports/eda/` (ej: `eda_demanda_urgencias_rm.md`) contienen correcciones cualitativas y manuales, por lo que **no son sobreescritos automáticamente por el orquestador**. El script de EDA genera únicamente las tablas (`.csv`) asociadas que sustentan los reportes.
+Los reportes en Markdown dentro de la carpeta `reports/eda/` (ej: `eda_demanda_urgencias_rm.md`) contienen correcciones cualitativas y manuales, por lo que **no son sobreescritos automáticamente por el orquestador**. La excepción es `eda_contexto_genero_estadisticas_genero.md`, que es un perfil reproducible generado por `eda_contexto_genero`; el script de EDA de Urgencias genera únicamente las tablas (`.csv`) asociadas que sustentan sus reportes curados.
 
 ## 8. Ejecutar Pruebas (Tests)
 

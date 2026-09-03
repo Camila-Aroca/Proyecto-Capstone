@@ -77,6 +77,7 @@ Metodología: desarrollo ágil iterativo + ciclo de datos inspirado en CRISP-DM.
 - [x] EDA descriptivo de demanda de Urgencias.
 - [x] Ingesta RAW Egresos 2020–2025.
 - [x] Normalización reproducible de Egresos 2020–2025.
+- [x] Ingesta, provenance, normalización y EDA de cuatro indicadores contextuales de salud mental por sexo.
 - [ ] Perfilado y auditoría F00–F99 de Egresos.
 - [ ] Modelo de demanda 4–8 semanas.
 - [ ] Capa de accesibilidad OSM/GTFS.

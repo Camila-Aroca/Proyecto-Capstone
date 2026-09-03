@@ -48,6 +48,26 @@ STAGES = {
         "outputs": ["data/raw/deis/establecimientos_salud_actualizado.csv"],
         "depends_on": []
     },
+    "download_contexto_genero": {
+        "module": "src.data.download_gender_statistics",
+        "outputs": [
+            "data/raw/contexto_genero/egresos_intento_suicida_sexo_anio.xlsx",
+            "data/raw/contexto_genero/suicidio_ratio_hm_tasas_nacional_regional.xlsx",
+            "data/raw/contexto_genero/ansiedad_depresion_sintomas_18_mas_sexo.xlsx",
+            "data/raw/contexto_genero/prevalencia_sintomas_depresivos_sexo.xlsx",
+        ],
+        "depends_on": []
+    },
+    "normalize_contexto_genero": {
+        "module": "src.data.normalize_gender_statistics",
+        "outputs": [
+            "data/processed/contexto_genero/egresos_intento_suicida_sexo_anio.parquet",
+            "data/processed/contexto_genero/suicidio_ratio_hm_tasas_nacional_regional.parquet",
+            "data/processed/contexto_genero/ansiedad_depresion_sintomas_18_mas_sexo.parquet",
+            "data/processed/contexto_genero/prevalencia_sintomas_depresivos_sexo.parquet",
+        ],
+        "depends_on": ["download_contexto_genero"]
+    },
     "clean_establishments": {
         "module": "src.data.clean_establishments",
         "outputs": [
@@ -101,6 +121,11 @@ STAGES = {
         "module": "scripts.eda_demanda_urgencias_rm",
         "outputs": ["data/processed/urgencias/tabla1_demanda_anual_rm.csv"],
         "depends_on": ["clean_urgencias"]
+    },
+    "eda_contexto_genero": {
+        "module": "scripts.eda_contexto_genero",
+        "outputs": ["reports/eda/eda_contexto_genero_estadisticas_genero.md"],
+        "depends_on": ["normalize_contexto_genero"]
     }
 }
 
@@ -109,13 +134,16 @@ PIPELINE_ORDER = [
     "download_censo",
     "download_deis",
     "download_establishments",
+    "download_contexto_genero",
+    "normalize_contexto_genero",
     "clean_establishments",
     "clean_censo",
     "build_catalogs",
     "clean_urgencias",
     "clean_egresos",
     "eda_establishments",
-    "eda_urgencias"
+    "eda_urgencias",
+    "eda_contexto_genero"
 ]
 
 
@@ -141,6 +169,17 @@ def check_outputs_exist(outputs: list[str]) -> bool:
                 import pyarrow.parquet as pq
                 schema = pq.read_schema(p)
                 if len(schema.names) == 0:
+                    return False
+            elif ext == '.xlsx':
+                from openpyxl import load_workbook
+                workbook = load_workbook(p, read_only=True, data_only=False)
+                try:
+                    if not workbook.sheetnames:
+                        return False
+                finally:
+                    workbook.close()
+            elif ext == '.md':
+                if not p.read_text(encoding="utf-8").strip():
                     return False
         except Exception as e:
             logger.warning(f"Archivo corrupto o ilegible {p}: {e}")

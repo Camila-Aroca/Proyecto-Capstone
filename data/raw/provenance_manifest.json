@@ -1,0 +1,38 @@
+[
+  {
+    "source_id": "egresos_intento_suicida_sexo_anio",
+    "source_url": "https://www.estadisticasdegenero.cl/wp-content/uploads/2023/11/Distribucion-y-razon-egresos-intento-suicida-3.xlsx",
+    "filename": "egresos_intento_suicida_sexo_anio.xlsx",
+    "raw_path": "data/raw/contexto_genero/egresos_intento_suicida_sexo_anio.xlsx",
+    "downloaded_at": "2026-09-03T00:18:15.075772+00:00",
+    "file_size": 23828,
+    "sha256": "8613c0b78d1172a1169dd00bd0b1c6fb2f9e84396a59cd4011899a35fa57808c"
+  },
+  {
+    "source_id": "suicidio_ratio_hm_tasas_nacional_regional",
+    "source_url": "https://www.estadisticasdegenero.cl/wp-content/uploads/2021/12/Ratio-hombre-mujer-y-tasas-de-defuncion-por-sucidio-Nacional-y-regional-4.xlsx",
+    "filename": "suicidio_ratio_hm_tasas_nacional_regional.xlsx",
+    "raw_path": "data/raw/contexto_genero/suicidio_ratio_hm_tasas_nacional_regional.xlsx",
+    "downloaded_at": "2026-09-03T00:20:20.256795+00:00",
+    "file_size": 76887,
+    "sha256": "be37c5a9082021b55f7e375e3fbfb216d83409b60fbd72abded27e8a61424f9a"
+  },
+  {
+    "source_id": "ansiedad_depresion_sintomas_18_mas_sexo",
+    "source_url": "https://www.estadisticasdegenero.cl/wp-content/uploads/2022/08/personas-de-18-anos-o-mas-que-presentan-sintomas-moderados-o-severos-de-ansiedad-yo-depresion-por-sexo.xlsx",
+    "filename": "ansiedad_depresion_sintomas_18_mas_sexo.xlsx",
+    "raw_path": "data/raw/contexto_genero/ansiedad_depresion_sintomas_18_mas_sexo.xlsx",
+    "downloaded_at": "2026-09-03T00:20:20.600893+00:00",
+    "file_size": 143526,
+    "sha256": "a29f4a74250f828760cfacfcd80641cbd676b8f83ee3baa504eca5c7f4442073"
+  },
+  {
+    "source_id": "prevalencia_sintomas_depresivos_sexo",
+    "source_url": "https://www.estadisticasdegenero.cl/wp-content/uploads/2021/11/Prevalencia-de-sintomas-depresivos-Nacional-1.xlsx",
+    "filename": "prevalencia_sintomas_depresivos_sexo.xlsx",
+    "raw_path": "data/raw/contexto_genero/prevalencia_sintomas_depresivos_sexo.xlsx",
+    "downloaded_at": "2026-09-03T00:20:20.891850+00:00",
+    "file_size": 18039,
+    "sha256": "864462a83e93d97cb9da4abb2b4611def6dd629784372377ab8556065b391cfa"
+  }
+]
