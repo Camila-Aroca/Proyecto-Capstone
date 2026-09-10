@@ -106,6 +106,8 @@ Se utilizará una metodología ágil basada en:
 - [Definición del proyecto APT - Fase 1](docs/01-definicion-proyecto/Definicion_Proyecto_APT_Fase_1.docx)
 - [Bitácora de entrevista con Belén Guzmán](docs/02-entrevistas/Bitacora_Entrevista_Belen_Guzman.docx)
 - [Bitácora de reunión de definición y alcance](docs/03-bitacoras/Bitacora_Reunion_Definicion_Alcance.docx)
+- [Especificación de Requisitos Funcionales (ERF-SAAD-2026)](docs/06-requisitos/Especificacion_Requisitos_Funcionales.docx)
+- [Especificación de Requisitos No Funcionales (ERNF-SAAD-2026)](docs/06-requisitos/Especificacion_Requisitos_No_Funcionales.docx)
 
 ## Equipo
 

@@ -54,6 +54,7 @@ Metodología: desarrollo ágil iterativo + ciclo de datos inspirado en CRISP-DM.
 - `ID35` e `ID42` están fuera de `ID36`.
 - Los reports contienen el detalle cuantitativo validado; no duplicar aquí métricas volátiles.
 - Ante conflicto entre documentación histórica y datos actuales, comprobar el dato y documentar la discrepancia.
+- Requisitos funcionales y no funcionales especificados formalmente en `docs/06-requisitos/` (ISO/IEC/IEEE 29148, ISO/IEC 25010/25012), regenerables desde `scripts/generate_erf_docx.py` y `scripts/generate_ernf_docx.py`.
 
 ## 4. Reproducibilidad
 
@@ -86,3 +87,4 @@ Metodología: desarrollo ágil iterativo + ciclo de datos inspirado en CRISP-DM.
 - [ ] Pruebas técnicas y validación con usuarios.
 - [ ] Despliegue y documentación final.
 - [x] Pipeline reproducible e idempotente.
+- [x] Especificación formal de requisitos funcionales y no funcionales (`docs/06-requisitos/`).
