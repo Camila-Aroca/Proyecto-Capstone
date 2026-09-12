@@ -120,3 +120,16 @@ class TestPipelineIdempotency(unittest.TestCase):
         mock_run.assert_called_once()
         args = mock_run.call_args[0][0]
         self.assertIn("--force", args)
+
+    @patch('scripts.run_pipeline.subprocess.run')
+    @patch('scripts.run_pipeline.check_outputs_exist')
+    def test_clean_urgencias_year_targets_one_output_and_forwards_year(
+        self, mock_check, mock_run
+    ):
+        rp.run_stage("clean_urgencias", force=True, year=2026)
+
+        mock_check.assert_not_called()
+        args = mock_run.call_args[0][0]
+        self.assertIn("--year", args)
+        self.assertIn("2026", args)
+        self.assertIn("--force", args)

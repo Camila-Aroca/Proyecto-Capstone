@@ -146,6 +146,8 @@ PIPELINE_ORDER = [
     "eda_contexto_genero"
 ]
 
+SUPPORTED_URGENCIAS_YEARS = tuple(range(2020, 2027))
+
 
 def check_outputs_exist(outputs: list[str]) -> bool:
     """Verifica que todos los archivos de salida existan, tengan tamaño > 0 y sean legibles."""
@@ -188,7 +190,21 @@ def check_outputs_exist(outputs: list[str]) -> bool:
     return True
 
 
-def run_stage(stage_name: str, force: bool = False, upstream_changed: bool = False) -> bool:
+def stage_outputs(stage_name: str, year: int | None = None) -> list[str]:
+    """Devuelve outputs de la etapa, acotados al año si corresponde."""
+    if year is None:
+        return STAGES[stage_name]["outputs"]
+    if stage_name != "clean_urgencias":
+        raise ValueError("--year solo está disponible para clean_urgencias.")
+    return [f"data/processed/urgencias/urgencias_rm_{year}.parquet"]
+
+
+def run_stage(
+    stage_name: str,
+    force: bool = False,
+    upstream_changed: bool = False,
+    year: int | None = None,
+) -> bool:
     """Ejecuta una etapa específica. Devuelve True si se ejecutó, False si hizo SKIP."""
     if stage_name not in STAGES:
         logger.error(f"Stage desconocido: {stage_name}")
@@ -196,7 +212,7 @@ def run_stage(stage_name: str, force: bool = False, upstream_changed: bool = Fal
         
     config = STAGES[stage_name]
     module = config["module"]
-    outputs = config["outputs"]
+    outputs = stage_outputs(stage_name, year)
     
     logger.info(f"--- Evaluando etapa: {stage_name} ---")
     
@@ -210,6 +226,8 @@ def run_stage(stage_name: str, force: bool = False, upstream_changed: bool = Fal
     logger.info(f"[EJECUTANDO] Etapa '{stage_name}' -> Módulo: {module}")
     try:
         cmd = [sys.executable, "-m", module]
+        if year is not None:
+            cmd.extend(["--year", str(year)])
         if force:
             cmd.append("--force")
         subprocess.run(cmd, check=True)
@@ -234,13 +252,26 @@ def main():
         action="store_true", 
         help="Fuerza la ejecución ignorando si los archivos de salida ya existen."
     )
+    parser.add_argument(
+        "--year", type=int,
+        help="Año individual, disponible únicamente con --stage clean_urgencias.",
+    )
     args = parser.parse_args()
+
+    if args.year is not None:
+        if args.stage != "clean_urgencias":
+            parser.error("--year solo puede usarse con --stage clean_urgencias.")
+        if args.year not in SUPPORTED_URGENCIAS_YEARS:
+            parser.error(f"Año no soportado para clean_urgencias: {args.year}.")
+        raw_path = Path(f"data/raw/urgencias/AtencionesUrgencia{args.year}.csv")
+        if not raw_path.is_file() or raw_path.stat().st_size == 0:
+            parser.error(f"RAW no disponible o vacío: {raw_path.as_posix()}")
 
     logger.info("Iniciando ejecución del pipeline...")
     
     # Determinar qué etapas evaluar según el --stage indicado
     target_stages = set(PIPELINE_ORDER) if args.stage == "all" else {args.stage}
-    if args.stage != "all":
+    if args.stage != "all" and args.year is None:
         # Propagar recursivamente dependencias downstream (transitive closure)
         added = True
         while added:
@@ -262,7 +293,12 @@ def main():
             is_explicit_target = (args.stage == "all" or stage == args.stage)
             stage_force = args.force if is_explicit_target else False
             
-            executed = run_stage(stage, force=stage_force, upstream_changed=upstream_changed)
+            executed = run_stage(
+                stage,
+                force=stage_force,
+                upstream_changed=upstream_changed,
+                year=args.year if stage == "clean_urgencias" else None,
+            )
             if executed:
                 executed_stages.add(stage)
                 

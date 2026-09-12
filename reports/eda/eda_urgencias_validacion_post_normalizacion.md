@@ -139,7 +139,34 @@ Los 7 archivos Parquet generados en `data/processed/urgencias/` presentan una es
 
 ---
 
-## 8. Respuestas a las Preguntas de Control
+## 8. Contrato semántico comprobado para agregaciones futuras
+
+La llave natural del Parquet normalizado es
+`fecha + establecimiento_codigo + id_causa + tipo_atencion_urgencia +
+tipo_campana + tipo_establecimiento_urgencia`. Cada fila es un conteo diario
+agregado de **atenciones**; no identifica pacientes ni personas. En cada fila,
+`total` equivale a la suma de los grupos etarios publicados.
+
+- `id_causa=1` es el total general publicado. `id_causa=36` es el total de
+  salud mental publicado y, para cada llave operacional verificada en
+  2021--2025, equivale a `37 + 38 + 39 + 40 + 41`.
+- Por ello se debe seleccionar **36 o sus componentes 37--41**, nunca sumar
+  ambos. `id_causa=35` e `id_causa=42` son métricas publicadas separadas y no
+  componentes que deban añadirse a 36.
+- Las dimensiones operacionales revisadas (`tipo_atencion_urgencia`,
+  `tipo_campana` y `tipo_establecimiento_urgencia`) no contienen filas
+  `TOTAL`/`SUBTOTAL`. Aun así, antes de agregar se debe fijar o conservar esas
+  dimensiones para no mezclar universos de atención distintos.
+
+**Método/evidencia.** Se revisó el productor, el diccionario DEIS y muestras
+por establecimiento-fecha; la igualdad de 36 con 37--41 se comprobó para las
+267.342 llaves operacionales de 2021--2025. Estas reglas complementan la
+validación estructural de este EDA y son el contrato anti-doble-conteo para
+marts posteriores.
+
+---
+
+## 9. Respuestas a las Preguntas de Control
 
 1. **¿Los conteos RAW son correctos?:** Sí, el volumen nacional verificado en disco es de **57,294,818 registros**.
 2. **¿Existe alguna discrepancia con informes anteriores?:** Sí. Se detectó y aclaró una discrepancia de redacción en el texto de `reports/eda/eda_auditoria_formato_raw.md` (que citaba 54,488,491 pero cuya tabla detallada sumaba 57,294,818).

@@ -51,6 +51,18 @@ Ejemplo:
 python scripts/run_pipeline.py --stage clean_urgencias --force
 ```
 
+Para regenerar un único Parquet anual de Urgencias sin evaluar downstream ni
+reprocesar otros años, usar el contrato particionado:
+
+```bash
+python scripts/run_pipeline.py --stage clean_urgencias --year 2026
+```
+
+`--year` se valida contra los años soportados y el RAW local correspondiente.
+La validación de `SKIP` se restringe a ese Parquet; `--force` conserva el mismo
+alcance anual. La ejecución sin `--year` mantiene el comportamiento histórico
+del stage completo y su propagación downstream.
+
 Para forzar la evaluación completa del pipeline puede utilizarse:
 
 ```bash

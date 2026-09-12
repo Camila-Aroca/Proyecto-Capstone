@@ -121,7 +121,29 @@ Debido a que las bases de egresos hospitalarios se encuentran disociadas y anoni
 
 ---
 
-## 9. Recomendaciones para el Futuro Pipeline de Limpieza (`src/data/`)
+## 9. Contrato semántico comprobado para agregaciones futuras
+
+Una fila procesada corresponde a un registro de egreso publicado y disociado;
+contar filas cuenta registros publicados, no pacientes ni personas únicas. El
+productor no deduplica esos registros.
+
+- En las revisiones de 2020--2025 no se observaron filas `TOTAL`/`SUBTOTAL`
+  en sexo, edad, previsión, SNSS, `diag1` o `diag2`; sus valores se deben
+  conservar como atributos del registro, sin crear agregados artificiales.
+- Para salud mental, `diag1` es el diagnóstico principal y permite el filtro
+  F00--F99. `diag2` no sustituye a `diag1`.
+- La comuna publicada es residencia del paciente, no ubicación del hospital.
+  Mantener `*`, nulos y la codificación de sexo de 2021 hasta contar con una
+  regla auditada. Tampoco excluir `error=1` de 2025 sin semántica documentada.
+
+**Método/evidencia.** Se contrastó el normalizador, los diccionarios y
+muestras/controles por año; no existe identificador que permita inferir
+personas únicas. Estas reglas son el contrato anti-doble-conteo para futuras
+agregaciones territoriales.
+
+---
+
+## 10. Recomendaciones para el Futuro Pipeline de Limpieza (`src/data/`)
 
 1. **Filtrado Territorial Robusto por Código Numérico:** Para filtrar los egresos correspondientes a la Región Metropolitana o a comunas específicas, **utilizar siempre `REGION_RESIDENCIA == '13'` y `COMUNA_RESIDENCIA` (códigos CUT)**, evitando filtrar por las columnas de texto `GLOSA_...`.
 2. **Homologación de Glosas desde Fuentes Oficiales:** Si se requiere visualizar o exportar los nombres de comunas en tablas procesadas, asignar la glosa correcta mediante un join con la cartografía comunal validada (`data/processed/censo/Cartografia_censo2024_RM_Comunal.parquet`) a través del código `COMUNA_RESIDENCIA == CUT`.

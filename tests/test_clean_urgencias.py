@@ -1,6 +1,7 @@
 """Pruebas unitarias para el módulo de normalización de Atenciones de Urgencia."""
 
 from pathlib import Path
+from unittest.mock import patch
 import pytest
 import pyarrow.parquet as pq
 import pandas as pd
@@ -76,6 +77,54 @@ def test_process_urgencias_year_small_fixture(tmp_path: Path):
     assert table.schema.field("total").type == "int32"
     assert set(table["region_codigo"].to_pylist()) == {13}
     assert set(table["ano"].to_pylist()) == {2024}
+
+
+def test_process_urgencias_preserves_canonical_output_on_write_failure(
+    tmp_path: Path,
+):
+    """Una falla de escritura no debe reemplazar el Parquet canónico previo."""
+    raw_path = tmp_path / "AtencionesUrgencia2024.csv"
+    raw_path.write_text(
+        "IdEstablecimiento;NEstablecimiento;IdCausa;GlosaCausa;Total;"
+        "Menores_1;De_1_a_4;De_5_a_14;De_15_a_64;De_65_y_mas;fecha;"
+        "semana;GLOSATIPOESTABLECIMIENTO;GLOSATIPOATENCION;GlosaTipoCampana;"
+        "CodigoRegion;NombreRegion;CodigoComuna;NombreComuna\n"
+        "OLD-RM;Catalogo RM;1;F32;10;1;2;3;3;1;01/01/2024;1;"
+        "Hospital;Urgencia;;13;Metropolitana;13101;Santiago\n",
+        encoding="utf-8",
+    )
+    rm_info = {
+        "establecimiento_codigo": 100,
+        "establecimiento_codigo_antiguo": "OLD-RM",
+        "establecimiento_glosa": "Catalogo RM",
+        "comuna_codigo": "13101",
+        "comuna_glosa": "Santiago",
+        "tipo_establecimiento_glosa": "Hospital",
+        "latitud": -33.4,
+        "longitud": -70.6,
+    }
+    output_dir = tmp_path / "processed"
+    output_dir.mkdir()
+    canonical = output_dir / "urgencias_rm_2024.parquet"
+    canonical.write_bytes(b"previous-canonical-output")
+
+    with patch(
+        "src.data.clean_urgencias.pq.ParquetWriter.write_table",
+        side_effect=RuntimeError("simulated write failure"),
+    ):
+        with pytest.raises(RuntimeError, match="simulated write failure"):
+            process_urgencias_year(
+                year=2024,
+                rm_by_antiguo={"OLD-RM": rm_info},
+                rm_by_nuevo={"100": rm_info},
+                nac_by_antiguo={},
+                nac_by_nuevo={},
+                raw_dir=tmp_path,
+                output_dir=output_dir,
+                chunk_size=1,
+            )
+
+    assert canonical.read_bytes() == b"previous-canonical-output"
 
 
 def test_process_urgencias_year_2020(tmp_path: Path):

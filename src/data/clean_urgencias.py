@@ -1,5 +1,6 @@
 """Módulo de normalización y filtrado territorial para Atenciones de Urgencia DEIS (2020-2026)."""
 
+import argparse
 import csv
 import json
 from pathlib import Path
@@ -14,6 +15,7 @@ ESTABLECIMIENTOS_RM_PATH = Path("data/processed/establecimientos_rm_clean.csv")
 ESTABLECIMIENTOS_NAC_PATH = Path("data/processed/establecimientos_salud_clean.parquet")
 REPORTS_DIR = Path("reports")
 REPORT_MD_PATH = REPORTS_DIR / "eda" / "eda_urgencias_normalizacion.md"
+SUPPORTED_YEARS = tuple(range(2020, 2027))
 
 COLUMN_MAPPING_RAW_TO_SNAKE = {
     "IdEstablecimiento": "id_establecimiento_raw",
@@ -140,7 +142,11 @@ def process_urgencias_year(
         ("longitud", pa.float64()),
     ])
 
-    writer = pq.ParquetWriter(output_parquet, schema=schema, compression="snappy")
+    # Nunca exponer un Parquet incompleto en la ruta canónica. Una ejecución
+    # interrumpida sólo puede dejar un temporal, que se descarta al reintentar.
+    temp_parquet = output_dir / f"{output_parquet.name}.tmp"
+    temp_parquet.unlink(missing_ok=True)
+    writer = pq.ParquetWriter(temp_parquet, schema=schema, compression="snappy")
 
     # Buffer de filas procesadas para escribir en bloques
     rm_rows_buffer = []
@@ -265,6 +271,14 @@ def process_urgencias_year(
 
     writer.close()
 
+    # Validar el footer y el esquema antes de publicar el artefacto canónico.
+    validated_schema = pq.read_schema(temp_parquet)
+    if validated_schema != schema:
+        raise ValueError(
+            f"Esquema Parquet inesperado para {temp_parquet.as_posix()}"
+        )
+    temp_parquet.replace(output_parquet)
+
     return {
         "year": year,
         "raw_file": raw_file.as_posix(),
@@ -285,7 +299,7 @@ def run_full_normalization() -> List[Dict[str, Any]]:
     rm_antiguo, rm_nuevo, nac_antiguo, nac_nuevo = load_establishment_catalogs()
 
     results = []
-    for year in range(2020, 2027):
+    for year in SUPPORTED_YEARS:
         print(f"Normalizando Atenciones de Urgencia {year}...")
         res = process_urgencias_year(
             year=year,
@@ -431,7 +445,30 @@ Para la homologación territorial se utilizó el catálogo procesado de la RM:
 
 
 def main():
-    results = run_full_normalization()
+    parser = argparse.ArgumentParser(
+        description="Normaliza Atenciones de Urgencia DEIS para la RM."
+    )
+    parser.add_argument(
+        "--year", type=int, choices=SUPPORTED_YEARS,
+        help="Procesa únicamente el año indicado sin reescribir el reporte global.",
+    )
+    parser.add_argument(
+        "--force", action="store_true",
+        help="Compatibilidad con el orquestador; la etapa ya se ejecuta forzada.",
+    )
+    args = parser.parse_args()
+
+    if args.year is None:
+        results = run_full_normalization()
+    else:
+        rm_antiguo, rm_nuevo, nac_antiguo, nac_nuevo = load_establishment_catalogs()
+        results = [process_urgencias_year(
+            year=args.year,
+            rm_by_antiguo=rm_antiguo,
+            rm_by_nuevo=rm_nuevo,
+            nac_by_antiguo=nac_antiguo,
+            nac_by_nuevo=nac_nuevo,
+        )]
     print("\nProceso de normalización finalizado exitosamente.")
     for r in results:
         print(f"Año {r['year']}: RAW {r['raw_rows']:,} -> PROCESSED RM {r['rm_rows']:,} en {r['processed_file']}")
