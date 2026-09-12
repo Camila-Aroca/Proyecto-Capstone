@@ -13,6 +13,10 @@
 - **Contexto por sexo:** Cuando corresponda al análisis de hospitalización, complementar la interpretación con indicadores oficiales de salud mental desagregados por sexo, manteniendo claramente separados los datos DEIS analizados y las fuentes contextuales externas.
 - **Producto final:** Los componentes analíticos deben poder integrarse en una plataforma web funcional; evitar diseñar el producto como un dashboard exclusivamente descriptivo.
 
+- **Indicadores externos de género:** Son contexto interpretativo. No cruzarlos automáticamente con Egresos o Urgencias ni convertirlos automáticamente en features.
+- **Valores publicados de contexto:** Preservar `period` y `year = null` para PHQ-4; los períodos `2003`, `2009-10` y `2016-17` para síntomas depresivos; y el valor `-` de ratios regionales como texto. No imputarlos ni recodificarlos silenciosamente.
+- **Validación del producto:** La plataforma web/API debe ser reproducible, probada, desplegada, documentada y validada en utilidad/comprensión con docente o cliente piloto; la evidencia de esa validación debe ser trazable.
+
 ## 3. Estándares Técnicos (Python)
 - Seguir estándares **PEP 8** y tipado estricto con **Type Hints** (`typing`).
 - Arquitectura modular:

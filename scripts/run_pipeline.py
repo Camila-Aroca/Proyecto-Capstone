@@ -34,12 +34,12 @@ STAGES = {
             "data/raw/urgencias/AtencionesUrgencia2024.csv",
             "data/raw/urgencias/AtencionesUrgencia2025.csv",
             "data/raw/urgencias/AtencionesUrgencia2026.csv",
-            "data/raw/egresos/EGRESOS_2020.csv",
-            "data/raw/egresos/EGRESOS_2021.csv",
-            "data/raw/egresos/EGRESOS_2022.csv",
-            "data/raw/egresos/EGRESOS_2023.csv",
-            "data/raw/egresos/EGRESOS_2024.csv",
-            "data/raw/egresos/EGRESOS_2025.csv"
+            "data/raw/egresos/egresos_2020.csv",
+            "data/raw/egresos/egresos_2021.csv",
+            "data/raw/egresos/egresos_2022.csv",
+            "data/raw/egresos/egresos_2023.csv",
+            "data/raw/egresos/egresos_2024.csv",
+            "data/raw/egresos/egresos_2025.csv"
         ],
         "depends_on": []
     },

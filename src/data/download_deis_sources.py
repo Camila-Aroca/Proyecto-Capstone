@@ -5,8 +5,10 @@ import datetime
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import ssl
 import sys
+from typing import Any
 import urllib.request
 import zipfile
 
@@ -34,36 +36,62 @@ EGRESOS_CONFIG = [
 DEST_URGENCIAS = Path("data/raw/urgencias")
 DEST_EGRESOS = Path("data/raw/egresos")
 
+
+def canonical_egresos_raw_path(year: int) -> Path:
+    """Return the stable RAW path consumed by the Egresos normalizer."""
+    return DEST_EGRESOS / f"egresos_{year}.csv"
+
 ssl_context = ssl.create_default_context()
 ssl_context.check_hostname = False
 ssl_context.verify_mode = ssl.CERT_NONE
 
 
-def update_manifest(source_url, zip_path, year):
+def file_sha256(file_path: Path) -> str:
+    """Calculate the SHA256 digest of a file without loading it into memory."""
+    sha256_hash = hashlib.sha256()
+    with open(file_path, "rb") as file_handle:
+        for byte_block in iter(lambda: file_handle.read(4096), b""):
+            sha256_hash.update(byte_block)
+    return sha256_hash.hexdigest()
+
+
+def update_manifest(
+    source_url: str,
+    zip_path: Path,
+    year: int,
+    raw_path: Path | None = None,
+    archive_member: str | None = None,
+) -> None:
     manifest_path = Path("data/raw/provenance_manifest.json")
     manifest = []
     if manifest_path.exists():
         with open(manifest_path, "r", encoding="utf-8") as f:
             manifest = json.load(f)
             
-    # Calculate SHA256
-    sha256_hash = hashlib.sha256()
-    with open(zip_path, "rb") as f:
-        for byte_block in iter(lambda: f.read(4096), b""):
-            sha256_hash.update(byte_block)
-    
     entry = {
+        "source_id": f"deis_{year}_{zip_path.stem.lower()}",
         "source_url": source_url,
         "filename": zip_path.name,
         "year": year,
         "downloaded_at": datetime.datetime.now().isoformat(),
         "file_size": zip_path.stat().st_size,
-        "sha256": sha256_hash.hexdigest()
+        "sha256": file_sha256(zip_path),
     }
+
+    if raw_path is not None:
+        entry.update(
+            {
+                "raw_path": raw_path.as_posix(),
+                "raw_filename": raw_path.name,
+                "raw_sha256": file_sha256(raw_path),
+                "archive_member": archive_member,
+            }
+        )
     
-    # Update if exists, else append
+    # Update the snapshot for this source, retaining the published archive and
+    # member names alongside the deterministic internal RAW path.
     for i, e in enumerate(manifest):
-        if e["filename"] == entry["filename"]:
+        if e.get("source_id") == entry["source_id"]:
             manifest[i] = entry
             break
     else:
@@ -73,7 +101,72 @@ def update_manifest(source_url, zip_path, year):
         json.dump(manifest, f, indent=2, ensure_ascii=False)
 
 
-def download_and_extract_source(source_name: str, config_list: list, dest_dir: Path, force: bool = False):
+def find_single_csv_member(archive: zipfile.ZipFile) -> zipfile.ZipInfo:
+    """Return the unique CSV member in a DEIS archive.
+
+    DEIS has changed the published Egresos CSV filename between years. The
+    archive contract is therefore structural (one tabular CSV), not lexical.
+    """
+    csv_members = [
+        member
+        for member in archive.infolist()
+        if not member.is_dir() and Path(member.filename).suffix.lower() == ".csv"
+    ]
+    if len(csv_members) != 1:
+        names = ", ".join(member.filename for member in csv_members) or "none"
+        raise ValueError(
+            "Expected exactly one DEIS CSV data member; found: " f"{names}."
+        )
+    return csv_members[0]
+
+
+def extract_canonical_egresos_csv(
+    archive_path: Path,
+    year: int,
+    destination_dir: Path = DEST_EGRESOS,
+    force: bool = False,
+) -> dict[str, Any]:
+    """Publish a DEIS Egresos CSV under the stable per-year RAW contract."""
+    canonical_path = destination_dir / canonical_egresos_raw_path(year).name
+    if canonical_path.exists() and canonical_path.stat().st_size > 0 and not force:
+        with zipfile.ZipFile(archive_path, "r") as archive:
+            member = find_single_csv_member(archive)
+        return {
+            "raw_path": canonical_path,
+            "archive_member": member.filename,
+            "published": False,
+        }
+
+    destination_dir.mkdir(parents=True, exist_ok=True)
+    temporary_path = canonical_path.with_suffix(".csv.tmp")
+    try:
+        with zipfile.ZipFile(archive_path, "r") as archive:
+            bad_file = archive.testzip()
+            if bad_file:
+                raise zipfile.BadZipFile(f"Archivo corrupto en zip: {bad_file}")
+            member = find_single_csv_member(archive)
+            with archive.open(member) as source, open(temporary_path, "wb") as target:
+                shutil.copyfileobj(source, target)
+        if temporary_path.stat().st_size == 0:
+            raise ValueError(f"CSV extracted empty: {member.filename}")
+        temporary_path.replace(canonical_path)
+    except Exception:
+        temporary_path.unlink(missing_ok=True)
+        raise
+
+    return {
+        "raw_path": canonical_path,
+        "archive_member": member.filename,
+        "published": True,
+    }
+
+
+def download_and_extract_source(
+    source_name: str,
+    config_list: list[dict[str, Any]],
+    dest_dir: Path,
+    force: bool = False,
+) -> list[dict[str, Any]]:
     dest_dir.mkdir(parents=True, exist_ok=True)
     results = []
 
@@ -105,7 +198,6 @@ def download_and_extract_source(source_name: str, config_list: list, dest_dir: P
                         out_file.write(chunk)
                         downloaded += len(chunk)
                 print(f"Descarga completada: {zip_path.as_posix()} ({zip_path.stat().st_size:,} bytes)")
-                update_manifest(url, zip_path, year)
             except Exception as e:
                 print(f"ERROR al descargar {url}: {e}")
                 results.append({"year": year, "zip_valido": False, "error": str(e)})
@@ -119,14 +211,33 @@ def download_and_extract_source(source_name: str, config_list: list, dest_dir: P
                 if bad_file:
                     raise zipfile.BadZipFile(f"Archivo corrupto en zip: {bad_file}")
 
-                infolist = z.infolist()
-                for member in infolist:
-                    # Skip extraction if the file already exists and has size > 0
-                    extracted_path = dest_dir / member.filename
-                    if force or not extracted_path.exists() or extracted_path.stat().st_size == 0:
-                        z.extract(member, dest_dir)
-                
-                results.append({"year": year, "zip_valido": True})
+                if source_name == "Egresos Hospitalarios":
+                    extracted = extract_canonical_egresos_csv(
+                        zip_path, year, destination_dir=dest_dir, force=force
+                    )
+                    update_manifest(
+                        url,
+                        zip_path,
+                        year,
+                        raw_path=extracted["raw_path"],
+                        archive_member=extracted["archive_member"],
+                    )
+                    results.append(
+                        {
+                            "year": year,
+                            "zip_valido": True,
+                            "raw_path": extracted["raw_path"].as_posix(),
+                            "archive_member": extracted["archive_member"],
+                        }
+                    )
+                else:
+                    infolist = z.infolist()
+                    for member in infolist:
+                        extracted_path = dest_dir / member.filename
+                        if force or not extracted_path.exists() or extracted_path.stat().st_size == 0:
+                            z.extract(member, dest_dir)
+                    update_manifest(url, zip_path, year)
+                    results.append({"year": year, "zip_valido": True})
         except Exception as e:
             print(f"ERROR al validar/extraer ZIP {zip_path}: {e}")
             results.append({"year": year, "zip_valido": False, "error": str(e)})

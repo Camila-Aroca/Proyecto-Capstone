@@ -8,6 +8,8 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
+from src.data.download_deis_sources import canonical_egresos_raw_path
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
@@ -15,12 +17,12 @@ RAW_EGRESOS_DIR = Path("data/raw/egresos")
 PROCESSED_EGRESOS_DIR = Path("data/processed/egresos")
 
 YEAR_CONFIG = {
-    2020: {"file": "EGRE_DATOS_ABIERTOS_2020.csv", "encoding": "latin-1"},
-    2021: {"file": "EGR_DATOS_ABIERTO_2021.csv", "encoding": "latin-1"},
-    2022: {"file": "EGRE_DATOS_ABIERTOS_2022.csv", "encoding": "latin-1"},
-    2023: {"file": "EGRESOS_2023.csv", "encoding": "latin-1"},
-    2024: {"file": "EGR_DATOS_ABIERTO_2024.csv", "encoding": "utf-8"},
-    2025: {"file": "EGR_DATOS_ABIERTO_2025.csv", "encoding": "utf-8"},
+    2020: {"encoding": "latin-1"},
+    2021: {"encoding": "latin-1"},
+    2022: {"encoding": "latin-1"},
+    2023: {"encoding": "latin-1"},
+    2024: {"encoding": "utf-8"},
+    2025: {"encoding": "utf-8"},
 }
 
 SCHEMA_PARQUET = pa.schema([
@@ -59,7 +61,7 @@ def process_egresos_year(year: int, chunk_size: int = 250000) -> Dict[str, Any]:
         raise ValueError(f"Año {year} no configurado.")
     
     config = YEAR_CONFIG[year]
-    raw_file = RAW_EGRESOS_DIR / config["file"]
+    raw_file = RAW_EGRESOS_DIR / canonical_egresos_raw_path(year).name
     
     if not raw_file.exists():
         raise FileNotFoundError(f"Archivo raw no encontrado: {raw_file.as_posix()}")

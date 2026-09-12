@@ -5,6 +5,7 @@ import pytest
 from unittest.mock import patch
 import math
 from src.data.clean_egresos import try_int, process_egresos_year, YEAR_CONFIG
+from src.data.download_deis_sources import canonical_egresos_raw_path
 
 def test_try_int():
     assert try_int("123") == 123
@@ -16,7 +17,7 @@ def test_try_int():
 
 def test_process_egresos_year_mocked(tmp_path):
     # Crear un CSV temporal simulando 2024 con la columna truncada
-    mock_csv_path = tmp_path / "EGR_DATOS_ABIERTO_2024.csv"
+    mock_csv_path = tmp_path / canonical_egresos_raw_path(2024).name
     mock_csv_content = (
         "PERTENENCIA_ESTABLECIMIENTO_SALU;SEXO;COMUNA_RESIDENCIA;REGION_RESIDENCIA;DIAG1;DIAG2\n"
         "Sistema Público;HOMBRE;13101;13;F32;X60\n"
@@ -65,11 +66,11 @@ def test_process_egresos_year_mocked(tmp_path):
 
 def test_process_egresos_schema_homogenization(tmp_path):
     # Test that 2020 (with INTERV_Q) and 2024 (without) have identical schema
-    mock_csv_path20 = tmp_path / "EGRE_DATOS_ABIERTOS_2020.csv"
+    mock_csv_path20 = tmp_path / canonical_egresos_raw_path(2020).name
     mock_csv_content20 = "ANO_EGRESO;INTERV_Q;PROCED\n2020;1;0\n"
     mock_csv_path20.write_text(mock_csv_content20, encoding="latin-1")
     
-    mock_csv_path24 = tmp_path / "EGR_DATOS_ABIERTO_2024.csv"
+    mock_csv_path24 = tmp_path / canonical_egresos_raw_path(2024).name
     mock_csv_content24 = "ANO_EGRESO\n2024\n"
     mock_csv_path24.write_text(mock_csv_content24, encoding="utf-8")
     
@@ -99,7 +100,7 @@ def test_process_egresos_year_invalid_year():
         process_egresos_year(1999)
 
 def test_process_egresos_atomic_write(tmp_path):
-    mock_csv_path20 = tmp_path / "EGRE_DATOS_ABIERTOS_2020.csv"
+    mock_csv_path20 = tmp_path / canonical_egresos_raw_path(2020).name
     mock_csv_content20 = "ANO_EGRESO\n2020\n"
     mock_csv_path20.write_text(mock_csv_content20, encoding="latin-1")
     

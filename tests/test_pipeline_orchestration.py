@@ -64,12 +64,12 @@ class TestPipelineIdempotency(unittest.TestCase):
 
     @patch('scripts.run_pipeline.Path')
     def test_download_deis_skip_condition(self, mock_path):
-        """Si falta un CSV (ej. EGRESOS_2023), download_deis NO hace skip."""
+        """Si falta un CSV canÃ³nico (ej. egresos_2023), download_deis NO hace skip."""
         outputs = rp.STAGES["download_deis"]["outputs"]
         
         def path_side_effect(out):
             mock_p = MagicMock()
-            if "EGRESOS_2023" in out:
+            if "egresos_2023" in out:
                 mock_p.exists.return_value = False
             else:
                 mock_p.exists.return_value = True
@@ -83,7 +83,7 @@ class TestPipelineIdempotency(unittest.TestCase):
     @patch('scripts.run_pipeline.Path')
     @patch('pandas.read_csv')
     def test_csv_corrupto(self, mock_read_csv, mock_path):
-        outputs = ["data/raw/egresos/EGRESOS_2020.csv"]
+        outputs = ["data/raw/egresos/egresos_2020.csv"]
         mock_p = MagicMock()
         mock_p.exists.return_value = True
         mock_p.stat.return_value.st_size = 100

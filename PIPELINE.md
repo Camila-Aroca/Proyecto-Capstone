@@ -68,6 +68,12 @@ La lógica reutilizable de ingesta, descarga, limpieza y normalización se organ
 
 El siguiente listado representa el orden topológico actual del DAG. El orquestador ejecuta únicamente las etapas necesarias según los outputs existentes, las dependencias, el `--stage` solicitado y el uso de `--force`
 
+For Egresos, `download_deis` publishes the CSV in each ZIP through the
+deterministic RAW contract `data/raw/egresos/egresos_<year>.csv`. The original
+name of the CSV member published by DEIS is recorded in
+`data/raw/provenance_manifest.json`, so `clean_egresos` does not depend on
+historical filename variants.
+
 1. `download_censo` → (Descarga Censo a RAW)
 2. `download_deis` → (Descarga Urgencias y Egresos a RAW)
 3. `download_establishments` → (Descarga Maestro Establecimientos a RAW)
