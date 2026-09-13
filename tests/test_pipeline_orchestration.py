@@ -18,6 +18,15 @@ def test_pipeline_help_command():
     assert "Orquestador del Pipeline de Datos" in result.stdout
     assert "--stage" in result.stdout
 
+def test_censo_poblacion_stages_are_registered():
+    """El download y clean de población comunal Censo 2024 deben estar en el DAG."""
+    assert rp.STAGES["download_censo_poblacion"]["depends_on"] == []
+    assert rp.STAGES["clean_censo_poblacion"]["depends_on"] == ["download_censo_poblacion"]
+    assert "download_censo_poblacion" in rp.PIPELINE_ORDER
+    assert "clean_censo_poblacion" in rp.PIPELINE_ORDER
+    assert rp.PIPELINE_ORDER.index("download_censo_poblacion") < rp.PIPELINE_ORDER.index("clean_censo_poblacion")
+
+
 def test_pipeline_invalid_stage():
     """Prueba que el orquestador falla de forma controlada ante una etapa inválida."""
     result = subprocess.run(

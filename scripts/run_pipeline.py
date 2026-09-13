@@ -24,6 +24,13 @@ STAGES = {
         "outputs": ["data/raw/censo/Cartografia_censo2024_Pais_Comunal.parquet"],
         "depends_on": []
     },
+    "download_censo_poblacion": {
+        "module": "src.data.download_censo_poblacion",
+        "outputs": [
+            "data/raw/censo/D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx"
+        ],
+        "depends_on": []
+    },
     "download_deis": {
         "module": "src.data.download_deis_sources",
         "outputs": [
@@ -81,6 +88,11 @@ STAGES = {
         "module": "src.data.clean_censo_comunas",
         "outputs": ["data/processed/censo/Cartografia_censo2024_RM_Comunal.parquet"],
         "depends_on": ["download_censo"]
+    },
+    "clean_censo_poblacion": {
+        "module": "src.data.clean_censo_poblacion",
+        "outputs": ["data/processed/censo/dim_poblacion_comuna_censo2024.parquet"],
+        "depends_on": ["download_censo_poblacion"]
     },
     "build_catalogs": {
         "module": "src.data.build_catalogs",
@@ -148,12 +160,14 @@ STAGES = {
 # Orden estricto de ejecución
 PIPELINE_ORDER = [
     "download_censo",
+    "download_censo_poblacion",
     "download_deis",
     "download_establishments",
     "download_contexto_genero",
     "normalize_contexto_genero",
     "clean_establishments",
     "clean_censo",
+    "clean_censo_poblacion",
     "build_catalogs",
     "clean_urgencias",
     "clean_egresos",

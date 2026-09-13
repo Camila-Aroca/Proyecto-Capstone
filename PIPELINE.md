@@ -80,6 +80,8 @@ La lógica reutilizable de ingesta, descarga, limpieza y normalización se organ
 
 La cartografía del Censo 2024 corresponde a un año cerrado: un RAW válido hace `SKIP` en la operación normal y `--force` constituye la solicitud explícita y registrada para sustituir ese snapshot. El maestro de establecimientos no representa un año cerrado sino el catálogo publicado como actualizado por DEIS; también hace `SKIP` mientras el RAW sea válido y `--force` solicita un nuevo snapshot. Ambas ingestas descargan y validan fuera de `data/raw/`, publican sólo candidatos validados y agregan al historial URL, timestamp UTC, hash, tamaño, ruta RAW y metadata de transporte en el mismo manifest.
 
+`download_censo_poblacion` descarga a staging (`.cache/downloads/censo_poblacion/`) el tabulado oficial INE `D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx` (censo2024.ine.gob.cl), valida que sea un XLSX legible con las hojas "1" (regional) y "2" (comunal) antes de publicarlo en `data/raw/censo/`, y registra URL, timestamp UTC, hash y tamaño en `data/raw/provenance_manifest.json`. Es un año cerrado: RAW válido hace `SKIP`, `--force` solicita explícitamente un nuevo snapshot. `clean_censo_poblacion` depende de esta descarga, lee únicamente la hoja "2" (grano comuna) filtrando `región=13`, valida que las 52 comunas RM coincidan exactamente con el CUT oficial (sin duplicados, sin población nula o no positiva) y contrasta la suma comunal contra el total regional independiente publicado en la hoja "1" del mismo workbook antes de publicar `data/processed/censo/dim_poblacion_comuna_censo2024.parquet` (escritura atómica). Esta dimensión es un insumo poblacional estático de 2024, separado de los marts temporales de Urgencias; no se usa como proxy poblacional para otros años ni se cruza aquí con series históricas.
+
 El siguiente listado representa el orden topológico actual del DAG. El orquestador ejecuta únicamente las etapas necesarias según los outputs existentes, las dependencias, el `--stage` solicitado y el uso de `--force`
 
 For Egresos, `download_deis` publishes the CSV in each ZIP through the
@@ -89,20 +91,22 @@ name of the CSV member published by DEIS is recorded in
 historical filename variants.
 
 1. `download_censo` → (Descarga Censo a RAW)
-2. `download_deis` → (Descarga Urgencias y Egresos a RAW)
-3. `download_establishments` → (Descarga Maestro Establecimientos a RAW)
-4. `download_contexto_genero` → (Descarga RAW de cuatro cuadros XLSX de Estadísticas de Género)
-5. `normalize_contexto_genero` → (Normalización independiente de los cuatro cuadros contextuales)
-6. `clean_establishments` → (Limpieza y filtrado RM)
-7. `clean_censo` → (Filtro espacial RM para Censo)
-8. `build_catalogs` → (Creación de catálogo F00-F99)
-9. `clean_urgencias` → (Limpieza de Urgencias 2020-2026 y unión territorial)
-10. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
-11. `eda_establishments` → (Validación EDA de Establecimientos)
-12. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
-13. `profile_urgencias_sm_coverage` → (Perfil comuna×semana ID 36 para cobertura 2021–2025)
-14. `build_urgencias_comuna_marts` → (Marts históricos comunales semanal y mensual de Urgencias, 2021–2025)
-15. `eda_contexto_genero` → (EDA reproducible de los cuatro cuadros contextuales)
+2. `download_censo_poblacion` → (Descarga a RAW el tabulado comunal oficial INE de población censada 2024)
+3. `download_deis` → (Descarga Urgencias y Egresos a RAW)
+4. `download_establishments` → (Descarga Maestro Establecimientos a RAW)
+5. `download_contexto_genero` → (Descarga RAW de cuatro cuadros XLSX de Estadísticas de Género)
+6. `normalize_contexto_genero` → (Normalización independiente de los cuatro cuadros contextuales)
+7. `clean_establishments` → (Limpieza y filtrado RM)
+8. `clean_censo` → (Filtro espacial RM para Censo)
+9. `clean_censo_poblacion` → (Dimensión de población censada 2024 por comuna RM)
+10. `build_catalogs` → (Creación de catálogo F00-F99)
+11. `clean_urgencias` → (Limpieza de Urgencias 2020-2026 y unión territorial)
+12. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
+13. `eda_establishments` → (Validación EDA de Establecimientos)
+14. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
+15. `profile_urgencias_sm_coverage` → (Perfil comuna×semana ID 36 para cobertura 2021–2025)
+16. `build_urgencias_comuna_marts` → (Marts históricos comunales semanal y mensual de Urgencias, 2021–2025)
+17. `eda_contexto_genero` → (EDA reproducible de los cuatro cuadros contextuales)
 
 ## 6. Idempotencia y Validación de Outputs
 

@@ -34,5 +34,26 @@
     "downloaded_at": "2026-09-03T00:20:20.891850+00:00",
     "file_size": 18039,
     "sha256": "864462a83e93d97cb9da4abb2b4611def6dd629784372377ab8556065b391cfa"
+  },
+  {
+    "source_id": "censo_2024_poblacion_comunal",
+    "snapshots": [
+      {
+        "source_url": "https://censo2024.ine.gob.cl/wp-content/uploads/2025/03/D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx",
+        "downloaded_at": "2026-09-13T00:24:35.405676+00:00",
+        "raw_path": "data/raw/censo/D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx",
+        "raw_filename": "D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx",
+        "raw_size": 505437,
+        "raw_sha256": "1f3a9c97a1b3defa47a2fc3b8495688c4e08f164063cab704e7a18c41239e009",
+        "transport": {
+          "filename": "D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx",
+          "size": 505437,
+          "sha256": "1f3a9c97a1b3defa47a2fc3b8495688c4e08f164063cab704e7a18c41239e009"
+        }
+      }
+    ],
+    "dataset": "censo",
+    "year": 2024,
+    "cuadro": "2. Población censada por sexo y razón hombre-mujer, según comuna."
   }
 ]
