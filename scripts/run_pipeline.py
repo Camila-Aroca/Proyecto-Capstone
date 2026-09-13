@@ -122,6 +122,22 @@ STAGES = {
         "outputs": ["data/processed/urgencias/tabla1_demanda_anual_rm.csv"],
         "depends_on": ["clean_urgencias"]
     },
+    "profile_urgencias_sm_coverage": {
+        "module": "src.data.profile_urgencias_sm_coverage",
+        "outputs": [
+            "data/processed/urgencias/"
+            "perfil_cobertura_sm_comuna_semanal_2021_2025.parquet"
+        ],
+        "depends_on": ["clean_urgencias"]
+    },
+    "build_urgencias_comuna_marts": {
+        "module": "src.data.build_urgencias_comuna_marts",
+        "outputs": [
+            "data/processed/marts/mart_urgencias_comuna_weekly.parquet",
+            "data/processed/marts/mart_urgencias_comuna_monthly.parquet",
+        ],
+        "depends_on": ["clean_urgencias"]
+    },
     "eda_contexto_genero": {
         "module": "scripts.eda_contexto_genero",
         "outputs": ["reports/eda/eda_contexto_genero_estadisticas_genero.md"],
@@ -143,6 +159,8 @@ PIPELINE_ORDER = [
     "clean_egresos",
     "eda_establishments",
     "eda_urgencias",
+    "profile_urgencias_sm_coverage",
+    "build_urgencias_comuna_marts",
     "eda_contexto_genero"
 ]
 
