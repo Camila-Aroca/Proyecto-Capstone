@@ -27,6 +27,28 @@ def test_censo_poblacion_stages_are_registered():
     assert rp.PIPELINE_ORDER.index("download_censo_poblacion") < rp.PIPELINE_ORDER.index("clean_censo_poblacion")
 
 
+def test_poblacion_proyecciones_stages_are_registered():
+    """El download y clean de la dimensión anual de población (INE) deben estar en el DAG."""
+    assert rp.STAGES["download_poblacion_proyecciones"]["depends_on"] == []
+    assert rp.STAGES["clean_poblacion_proyecciones"]["depends_on"] == [
+        "download_poblacion_proyecciones", "clean_censo_poblacion"
+    ]
+    assert "download_poblacion_proyecciones" in rp.PIPELINE_ORDER
+    assert "clean_poblacion_proyecciones" in rp.PIPELINE_ORDER
+    assert (
+        rp.PIPELINE_ORDER.index("download_poblacion_proyecciones")
+        < rp.PIPELINE_ORDER.index("clean_poblacion_proyecciones")
+    )
+    assert (
+        rp.PIPELINE_ORDER.index("clean_censo_poblacion")
+        < rp.PIPELINE_ORDER.index("clean_poblacion_proyecciones")
+    )
+    assert (
+        rp.PIPELINE_ORDER.index("clean_poblacion_proyecciones")
+        < rp.PIPELINE_ORDER.index("build_urgencias_comuna_marts")
+    )
+
+
 def test_pipeline_invalid_stage():
     """Prueba que el orquestador falla de forma controlada ante una etapa inválida."""
     result = subprocess.run(

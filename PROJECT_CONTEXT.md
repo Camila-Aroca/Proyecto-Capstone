@@ -35,7 +35,7 @@ Restricciones que no deben relajarse:
 
 ## 4. Estado actual
 
-- **Base de datos y pipeline:** implementada la ingesta/normalizacion reproducible de establecimientos, Censo RM, Urgencias 2020-2026, Egresos 2020-2025 y cuatro indicadores contextuales de salud mental por sexo; tambien existen catalogos y EDA de Urgencias.
+- **Base de datos y pipeline:** implementada la ingesta/normalizacion reproducible de establecimientos, Censo RM, Urgencias 2020-2026, Egresos 2020-2025 y cuatro indicadores contextuales de salud mental por sexo; tambien existen catalogos y EDA de Urgencias. Se agrego `dim_poblacion_comuna_anual` (INE, estimaciones/proyecciones 2002-2035 base Censo 2017) como denominador poblacional anual 2021-2025 por comuna RM, distinto de la poblacion censada 2024; los marts comunales de Urgencias (weekly/monthly) ya incorporan tasas de atenciones por 10.000 habitantes (ID1, ID35, ID36) usando esa dimension.
 - **Preparacion analitica:** pendiente el perfilado/auditoria F00-F99 de Egresos y la consolidacion de evidencias de validacion donde corresponda. No afirmar completitud global del pipeline.
 - **Pendientes principales:** forecasting 4-8 semanas; accesibilidad OSM/GTFS, cobertura y brechas; analisis de duracion de estadia y factores asociados; integracion web/API; pruebas tecnicas integrales, validacion con usuario piloto, despliegue y documentacion final.
 - **Siguiente frente logico aproximado:** completar la auditoria analitica de Egresos F00-F99 y, en paralelo segun dependencias, preparar las bases para forecasting y accesibilidad.

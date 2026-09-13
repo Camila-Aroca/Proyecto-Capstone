@@ -31,6 +31,13 @@ STAGES = {
         ],
         "depends_on": []
     },
+    "download_poblacion_proyecciones": {
+        "module": "src.data.download_poblacion_proyecciones",
+        "outputs": [
+            "data/raw/poblacion/ine_estimaciones_proyecciones_2002_2035_comunas.xlsx"
+        ],
+        "depends_on": []
+    },
     "download_deis": {
         "module": "src.data.download_deis_sources",
         "outputs": [
@@ -94,6 +101,11 @@ STAGES = {
         "outputs": ["data/processed/censo/dim_poblacion_comuna_censo2024.parquet"],
         "depends_on": ["download_censo_poblacion"]
     },
+    "clean_poblacion_proyecciones": {
+        "module": "src.data.clean_poblacion_proyecciones",
+        "outputs": ["data/processed/censo/dim_poblacion_comuna_anual.parquet"],
+        "depends_on": ["download_poblacion_proyecciones", "clean_censo_poblacion"]
+    },
     "build_catalogs": {
         "module": "src.data.build_catalogs",
         "outputs": ["data/processed/urgencias/catalogo_f00_f99.csv"],
@@ -148,7 +160,7 @@ STAGES = {
             "data/processed/marts/mart_urgencias_comuna_weekly.parquet",
             "data/processed/marts/mart_urgencias_comuna_monthly.parquet",
         ],
-        "depends_on": ["clean_urgencias"]
+        "depends_on": ["clean_urgencias", "clean_poblacion_proyecciones"]
     },
     "eda_contexto_genero": {
         "module": "scripts.eda_contexto_genero",
@@ -161,6 +173,7 @@ STAGES = {
 PIPELINE_ORDER = [
     "download_censo",
     "download_censo_poblacion",
+    "download_poblacion_proyecciones",
     "download_deis",
     "download_establishments",
     "download_contexto_genero",
@@ -168,6 +181,7 @@ PIPELINE_ORDER = [
     "clean_establishments",
     "clean_censo",
     "clean_censo_poblacion",
+    "clean_poblacion_proyecciones",
     "build_catalogs",
     "clean_urgencias",
     "clean_egresos",

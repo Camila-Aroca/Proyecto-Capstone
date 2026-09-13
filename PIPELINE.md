@@ -82,6 +82,10 @@ La cartografía del Censo 2024 corresponde a un año cerrado: un RAW válido hac
 
 `download_censo_poblacion` descarga a staging (`.cache/downloads/censo_poblacion/`) el tabulado oficial INE `D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx` (censo2024.ine.gob.cl), valida que sea un XLSX legible con las hojas "1" (regional) y "2" (comunal) antes de publicarlo en `data/raw/censo/`, y registra URL, timestamp UTC, hash y tamaño en `data/raw/provenance_manifest.json`. Es un año cerrado: RAW válido hace `SKIP`, `--force` solicita explícitamente un nuevo snapshot. `clean_censo_poblacion` depende de esta descarga, lee únicamente la hoja "2" (grano comuna) filtrando `región=13`, valida que las 52 comunas RM coincidan exactamente con el CUT oficial (sin duplicados, sin población nula o no positiva) y contrasta la suma comunal contra el total regional independiente publicado en la hoja "1" del mismo workbook antes de publicar `data/processed/censo/dim_poblacion_comuna_censo2024.parquet` (escritura atómica). Esta dimensión es un insumo poblacional estático de 2024, separado de los marts temporales de Urgencias; no se usa como proxy poblacional para otros años ni se cruza aquí con series históricas.
 
+`download_poblacion_proyecciones` descarga a staging (`.cache/downloads/poblacion_proyecciones/`) el cuadro oficial INE "Estimaciones y Proyecciones de la Población de Chile a nivel comunal 2002-2035" (base Censo 2017, documento metodológico de noviembre 2019; `estimaciones-y-proyecciones-2002-2035-comunas.xlsx`), valida que sea un XLSX legible con la hoja "Est. y Proy. de Pob. Comunal" y dimensiones mínimas esperadas antes de publicarlo en `data/raw/poblacion/`, y registra URL, timestamp UTC, hash y tamaño en `data/raw/provenance_manifest.json`. Es un producto demográfico ya cerrado en su base (Censo 2017): RAW válido hace `SKIP`, `--force` solicita explícitamente un nuevo snapshot. El cuadro publica población residente habitual por sexo (1=Hombre, 2=Mujer), edad simple (0 a 80, top-coded "80 y más") y comuna, al 30 de junio de cada año 2002-2035; los años 2021-2025 corresponden en su totalidad al tramo de proyección (posterior al Censo 2017 usado como ancla), no al tramo de estimación intercensal 2002-2017. Las columnas de texto de región/comuna del workbook presentan corrupción de codificación irrecuperable (U+FFFD); el CUT numérico no está afectado.
+
+`clean_poblacion_proyecciones` depende de `download_poblacion_proyecciones` y de `clean_censo_poblacion` (reutiliza sus glosas comunales validadas, ya que el texto del workbook de proyecciones está corrupto). Filtra `región=13`, valida que sexo esté en {1,2} y edad en [0,80], suma población por comuna×año sobre todas las combinaciones sexo×edad (sin fila "total" en la fuente, por lo que no hay doble conteo), valida cobertura exacta de 52 comunas × 5 años (260 filas), sin nulos ni valores no positivos, y publica `data/processed/censo/dim_poblacion_comuna_anual.parquet` (escritura atómica) con columnas `comuna_codigo`, `comuna_glosa`, `ano`, `poblacion`, `fuente`, `tipo_poblacion` (constante `"proyeccion"` para 2021-2025). Esta dimensión es independiente de `dim_poblacion_comuna_censo2024.parquet`: una es población proyectada (residente habitual, base Censo 2017) y la otra es población efectivamente censada en 2024; no deben usarse como proxy una de la otra y la diferencia observada entre ambas para 2024 no se corrige ni se fuerza a coincidir.
+
 El siguiente listado representa el orden topológico actual del DAG. El orquestador ejecuta únicamente las etapas necesarias según los outputs existentes, las dependencias, el `--stage` solicitado y el uso de `--force`
 
 For Egresos, `download_deis` publishes the CSV in each ZIP through the
@@ -92,21 +96,23 @@ historical filename variants.
 
 1. `download_censo` → (Descarga Censo a RAW)
 2. `download_censo_poblacion` → (Descarga a RAW el tabulado comunal oficial INE de población censada 2024)
-3. `download_deis` → (Descarga Urgencias y Egresos a RAW)
-4. `download_establishments` → (Descarga Maestro Establecimientos a RAW)
-5. `download_contexto_genero` → (Descarga RAW de cuatro cuadros XLSX de Estadísticas de Género)
-6. `normalize_contexto_genero` → (Normalización independiente de los cuatro cuadros contextuales)
-7. `clean_establishments` → (Limpieza y filtrado RM)
-8. `clean_censo` → (Filtro espacial RM para Censo)
-9. `clean_censo_poblacion` → (Dimensión de población censada 2024 por comuna RM)
-10. `build_catalogs` → (Creación de catálogo F00-F99)
-11. `clean_urgencias` → (Limpieza de Urgencias 2020-2026 y unión territorial)
-12. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
-13. `eda_establishments` → (Validación EDA de Establecimientos)
-14. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
-15. `profile_urgencias_sm_coverage` → (Perfil comuna×semana ID 36 para cobertura 2021–2025)
-16. `build_urgencias_comuna_marts` → (Marts históricos comunales semanal y mensual de Urgencias, 2021–2025)
-17. `eda_contexto_genero` → (EDA reproducible de los cuatro cuadros contextuales)
+3. `download_poblacion_proyecciones` → (Descarga a RAW el cuadro comunal oficial INE de estimaciones/proyecciones de población 2002-2035)
+4. `download_deis` → (Descarga Urgencias y Egresos a RAW)
+5. `download_establishments` → (Descarga Maestro Establecimientos a RAW)
+6. `download_contexto_genero` → (Descarga RAW de cuatro cuadros XLSX de Estadísticas de Género)
+7. `normalize_contexto_genero` → (Normalización independiente de los cuatro cuadros contextuales)
+8. `clean_establishments` → (Limpieza y filtrado RM)
+9. `clean_censo` → (Filtro espacial RM para Censo)
+10. `clean_censo_poblacion` → (Dimensión de población censada 2024 por comuna RM)
+11. `clean_poblacion_proyecciones` → (Dimensión anual de población comunal RM 2021-2025, INE proyecciones base Censo 2017)
+12. `build_catalogs` → (Creación de catálogo F00-F99)
+13. `clean_urgencias` → (Limpieza de Urgencias 2020-2026 y unión territorial)
+14. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
+15. `eda_establishments` → (Validación EDA de Establecimientos)
+16. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
+17. `profile_urgencias_sm_coverage` → (Perfil comuna×semana ID 36 para cobertura 2021–2025)
+18. `build_urgencias_comuna_marts` → (Marts históricos comunales semanal y mensual de Urgencias, 2021–2025, con tasas por 10.000 habitantes)
+19. `eda_contexto_genero` → (EDA reproducible de los cuatro cuadros contextuales)
 
 ## 6. Idempotencia y Validación de Outputs
 
@@ -133,7 +139,9 @@ La rama `download_contexto_genero` → `normalize_contexto_genero` → `eda_cont
 
 La etapa `profile_urgencias_sm_coverage` depende de `clean_urgencias`, no tiene downstream por ahora y publica `data/processed/urgencias/perfil_cobertura_sm_comuna_semanal_2021_2025.parquet`. Lee únicamente los Parquet 2021–2025 y las columnas necesarias: usa `id_causa=1` para conservar el calendario semanal DEIS y el universo de comunas con reporte general, e `id_causa=36` como único insumo de atenciones de salud mental. Una semana con fila ID 36 y total agregado cero es observada; una semana sin fila ID 36 se reporta como ausencia, sin imputarla. El perfil no incluye 2026 ni crea `mart_urgencias_comuna_weekly`. El orquestador valida que el Parquet exista, no esté vacío y tenga esquema legible; en operación normal realiza `SKIP` cuando pasa ese control y `--force` lo regenera. Su contrato se prueba en `tests/test_profile_urgencias_sm_coverage.py` y el registro del stage en `tests/test_pipeline_orchestration.py`.
 
-La etapa `build_urgencias_comuna_marts` depende de `clean_urgencias`, no tiene downstream por ahora y publica `data/processed/marts/mart_urgencias_comuna_weekly.parquet` y `data/processed/marts/mart_urgencias_comuna_monthly.parquet`. Sus inputs son los Parquet de Urgencias RM 2021–2025, con filtros de columnas e IDs 1, 35, 36 y 37–41. Cada métrica es un conteo agregado de atenciones; el mensual se agrega desde `fecha` diaria y el semanal conserva `ano`, `semana` y el mínimo `fecha` publicado como `fecha_inicio_semana`, sin convertir al calendario ISO. No imputa semanas, meses ni causas ausentes. Incluye los conteos reportantes ID1 e ID36; no incorpora el catálogo de establecimientos actual porque es un snapshot no histórico. Antes de publicar, valida grano, no negatividad, jerarquía ID36, ratios, reportantes y reconciliación anual semanal→mensual; ambos Parquet se escriben con temporal y reemplazo atómico. El orquestador valida existencia, tamaño y esquema, realiza `SKIP` cuando ambos outputs son válidos y los regenera con `--force`. Las pruebas están en `tests/test_build_urgencias_comuna_marts.py`.
+La etapa `build_urgencias_comuna_marts` depende de `clean_urgencias` y de `clean_poblacion_proyecciones`, no tiene downstream por ahora y publica `data/processed/marts/mart_urgencias_comuna_weekly.parquet` y `data/processed/marts/mart_urgencias_comuna_monthly.parquet`. Sus inputs son los Parquet de Urgencias RM 2021–2025, con filtros de columnas e IDs 1, 35, 36 y 37–41. Cada métrica es un conteo agregado de atenciones; el mensual se agrega desde `fecha` diaria y el semanal conserva `ano`, `semana` y el mínimo `fecha` publicado como `fecha_inicio_semana`, sin convertir al calendario ISO. No imputa semanas, meses ni causas ausentes. Incluye los conteos reportantes ID1 e ID36; no incorpora el catálogo de establecimientos actual porque es un snapshot no histórico. Antes de publicar, valida grano, no negatividad, jerarquía ID36, ratios, reportantes y reconciliación anual semanal→mensual; ambos Parquet se escriben con temporal y reemplazo atómico. El orquestador valida existencia, tamaño y esquema, realiza `SKIP` cuando ambos outputs son válidos y los regenera con `--force`. Las pruebas están en `tests/test_build_urgencias_comuna_marts.py`.
+
+Ambos marts unen `data/processed/censo/dim_poblacion_comuna_anual.parquet` por `comuna_codigo`+`ano` (join `many_to_one`, 100% de cobertura exigida: cualquier comuna×año sin denominador hace fallar la etapa) y publican `poblacion_anual` junto con `tasa_atenciones_id1_por_10000`, `tasa_atenciones_id35_por_10000` y `tasa_atenciones_id36_por_10000`. Como la fuente poblacional es anual, el mart mensual reutiliza la misma `poblacion_anual` para los 12 meses del año y el semanal la reutiliza para todas las semanas del año, sin interpolar. Estas tasas cuantifican atenciones (evento) por 10.000 habitantes; no son porcentaje de población atendida ni deben interpretarse como prevalencia o incidencia de personas.
 
 ## 7. Informes Históricos y Protegidos
 

@@ -3,6 +3,16 @@
 Los marts agregan conteos de atenciones (no personas) para 2021--2025. No
 generan semanas ni meses ausentes, ni sustituyen la ausencia de una causa por
 cero. El calendario semanal conserva la codificación publicada por DEIS.
+
+Ambos marts incorporan tasas de atenciones por 10.000 habitantes usando como
+denominador `dim_poblacion_comuna_anual.parquet` (INE, estimaciones y
+proyecciones 2002-2035 base Censo 2017; ver
+`src/data/clean_poblacion_proyecciones.py`). Esa dimensión es anual: el mart
+mensual reutiliza la misma población para los 12 meses de un año y el
+semanal reutiliza la misma población para todas las semanas de un año, sin
+interpolar. Estas tasas cuantifican atenciones (evento), no personas únicas
+atendidas; no representan porcentaje de población atendida ni deben
+interpretarse como prevalencia o incidencia.
 """
 
 from __future__ import annotations
@@ -34,6 +44,42 @@ RATIO_SPECS: Final[dict[str, tuple[str, str]]] = {
     "proporcion_id40_sobre_id36": ("atenciones_id40", "atenciones_id36"),
     "proporcion_id41_sobre_id36": ("atenciones_id41", "atenciones_id36"),
 }
+POBLACION_ANUAL_PATH: Final[Path] = Path("data/processed/censo/dim_poblacion_comuna_anual.parquet")
+RATE_CAUSES: Final[tuple[int, ...]] = (1, 35, 36)
+RATE_COLUMNS: Final[tuple[str, ...]] = tuple(
+    f"tasa_atenciones_id{cause}_por_10000" for cause in RATE_CAUSES
+)
+
+
+def load_poblacion_anual(path: Path = POBLACION_ANUAL_PATH) -> pd.DataFrame:
+    """Lee la dimensión anual de población comunal y valida su grano/positividad."""
+    table = pq.read_table(path, columns=["comuna_codigo", "ano", "poblacion"])
+    frame = table.to_pandas()
+    frame["ano"] = frame["ano"].astype("int64")
+    if frame.duplicated(["comuna_codigo", "ano"]).any():
+        raise ValueError("Dimensión de población anual con grano duplicado (comuna_codigo, ano).")
+    if (frame["poblacion"] <= 0).any():
+        raise ValueError("Población anual no positiva en la dimensión de población.")
+    return frame.rename(columns={"poblacion": "poblacion_anual"})
+
+
+def _add_tasas(mart: pd.DataFrame, poblacion_anual: pd.DataFrame) -> pd.DataFrame:
+    """Une la población anual (misma cifra para todo el año) y calcula tasas por 10.000 hab."""
+    merged = mart.merge(
+        poblacion_anual, on=["comuna_codigo", "ano"], how="left", validate="many_to_one"
+    )
+    if merged["poblacion_anual"].isna().any():
+        missing = (
+            merged.loc[merged["poblacion_anual"].isna(), ["comuna_codigo", "ano"]]
+            .drop_duplicates()
+            .to_dict("records")
+        )
+        raise ValueError(f"Sin denominador poblacional para comuna×año: {missing}")
+    for cause in RATE_CAUSES:
+        merged[f"tasa_atenciones_id{cause}_por_10000"] = (
+            merged[f"atenciones_id{cause}"].div(merged["poblacion_anual"]) * 10_000
+        )
+    return merged
 
 
 def load_urgencias_source(input_dir: Path = INPUT_DIR) -> pd.DataFrame:
@@ -111,7 +157,9 @@ def _add_ratios(mart: pd.DataFrame) -> pd.DataFrame:
     return result
 
 
-def build_weekly_mart(source: pd.DataFrame) -> pd.DataFrame:
+def build_weekly_mart(
+    source: pd.DataFrame, poblacion_anual: pd.DataFrame | None = None
+) -> pd.DataFrame:
     """Construye el mart comuna×semana usando el inicio observado DEIS."""
     required = {"ano", "semana", "fecha"}
     if missing := required - set(source.columns):
@@ -126,11 +174,16 @@ def build_weekly_mart(source: pd.DataFrame) -> pd.DataFrame:
     mart = _aggregate_grain(working, ["ano", "semana"])
     mart = mart.merge(starts, on=["ano", "semana"], how="left", validate="many_to_one")
     mart["fecha_inicio_semana"] = mart["fecha_inicio_semana"].dt.date.astype(str)
+    mart = _add_ratios(mart)
+    poblacion_anual = load_poblacion_anual() if poblacion_anual is None else poblacion_anual
+    mart = _add_tasas(mart, poblacion_anual)
     ordered = ["comuna_codigo", "comuna_glosa", "fecha_inicio_semana", "ano", "semana"]
-    return _add_ratios(mart).sort_values(ordered).reset_index(drop=True)
+    return mart.sort_values(ordered).reset_index(drop=True)
 
 
-def build_monthly_mart(source: pd.DataFrame) -> pd.DataFrame:
+def build_monthly_mart(
+    source: pd.DataFrame, poblacion_anual: pd.DataFrame | None = None
+) -> pd.DataFrame:
     """Construye el mart comuna×mes a partir de las fechas diarias DEIS."""
     if "fecha" not in source:
         raise ValueError("Columna faltante para mes: fecha")
@@ -140,8 +193,11 @@ def build_monthly_mart(source: pd.DataFrame) -> pd.DataFrame:
     working["fecha_mes"] = working["fecha"].dt.to_period("M").dt.start_time
     mart = _aggregate_grain(working, ["ano", "mes", "fecha_mes"])
     mart["fecha_mes"] = mart["fecha_mes"].dt.date.astype(str)
+    mart = _add_ratios(mart)
+    poblacion_anual = load_poblacion_anual() if poblacion_anual is None else poblacion_anual
+    mart = _add_tasas(mart, poblacion_anual)
     ordered = ["comuna_codigo", "comuna_glosa", "fecha_mes"]
-    return _add_ratios(mart).sort_values(ordered).reset_index(drop=True)
+    return mart.sort_values(ordered).reset_index(drop=True)
 
 
 def validate_mart(mart: pd.DataFrame, grain: str) -> None:
@@ -185,6 +241,15 @@ def validate_mart(mart: pd.DataFrame, grain: str) -> None:
         <= reporters.loc[comparable_reporters, "n_establecimientos_reportantes_id1"]
     ).all():
         raise ValueError("Reportantes ID36 exceden el universo ID1.")
+    if "poblacion_anual" not in mart.columns:
+        raise ValueError("Falta la columna poblacion_anual: el enriquecimiento de tasas no se aplicó.")
+    if mart["poblacion_anual"].isna().any() or (mart["poblacion_anual"] <= 0).any():
+        raise ValueError("poblacion_anual nula o no positiva en el mart.")
+    for rate_column in RATE_COLUMNS:
+        if rate_column not in mart.columns:
+            raise ValueError(f"Falta la columna de tasa esperada: {rate_column}")
+        if (mart[rate_column].dropna() < 0).any():
+            raise ValueError(f"Tasa negativa detectada: {rate_column}")
 
 
 def validate_reconciliation(weekly: pd.DataFrame, monthly: pd.DataFrame) -> None:
@@ -221,8 +286,9 @@ def _atomic_write(frame: pd.DataFrame, output_path: Path) -> None:
 def main() -> None:
     """Genera y valida ambos marts comunales históricos de Urgencias."""
     source = load_urgencias_source()
-    weekly = build_weekly_mart(source)
-    monthly = build_monthly_mart(source)
+    poblacion_anual = load_poblacion_anual()
+    weekly = build_weekly_mart(source, poblacion_anual)
+    monthly = build_monthly_mart(source, poblacion_anual)
     validate_mart(weekly, "weekly")
     validate_mart(monthly, "monthly")
     validate_reconciliation(weekly, monthly)

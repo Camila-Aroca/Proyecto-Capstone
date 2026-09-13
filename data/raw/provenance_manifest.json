@@ -55,5 +55,27 @@
     "dataset": "censo",
     "year": 2024,
     "cuadro": "2. Población censada por sexo y razón hombre-mujer, según comuna."
+  },
+  {
+    "source_id": "ine_proyecciones_poblacion_comunal_2002_2035",
+    "snapshots": [
+      {
+        "source_url": "https://www.ine.gob.cl/docs/default-source/proyecciones-de-poblacion/cuadros-estadisticos/base-2017/estimaciones-y-proyecciones-2002-2035-comunas.xlsx",
+        "downloaded_at": "2026-09-13T00:47:45.164102+00:00",
+        "raw_path": "data/raw/poblacion/ine_estimaciones_proyecciones_2002_2035_comunas.xlsx",
+        "raw_filename": "ine_estimaciones_proyecciones_2002_2035_comunas.xlsx",
+        "raw_size": 11057485,
+        "raw_sha256": "de4ed9522031fad091dd2a51b3215bba685ebb851a14fb7421078ba927aa7ec1",
+        "transport": {
+          "filename": "ine_estimaciones_proyecciones_2002_2035_comunas.xlsx",
+          "size": 11057485,
+          "sha256": "de4ed9522031fad091dd2a51b3215bba685ebb851a14fb7421078ba927aa7ec1"
+        }
+      }
+    ],
+    "dataset": "ine_proyecciones_poblacion_comunal",
+    "base_censal": 2017,
+    "cobertura_anos": "2002-2035",
+    "cuadro": "Est. y Proy. de Pob. Comunal (sexo x edad simple x comuna)"
   }
 ]
