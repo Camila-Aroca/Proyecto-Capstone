@@ -43,8 +43,10 @@ Para evitar sobreconteo, el cálculo de las atenciones debe regirse por las sigu
 1. **Demanda General Total de Urgencias:**
    $$\text{Atenciones Totales} = \sum_{\text{filas}} \text{total} \quad \text{donde } \mathbf{id\_causa == 1} \text{ (Sección 1. Total Atenciones de Urgencia)}$$
 
-2. **Demanda Agregada de Salud Mental (F00–F99):**
-   $$\text{Atenciones Salud Mental} = \sum_{\text{filas}} \text{total} \quad \text{donde } \mathbf{id\_causa == 36} \text{ (Total F00--F99)}$$
+2. **Demanda Agregada de Salud Mental (ID 36):**
+   $$\text{Atenciones Salud Mental} = \sum_{\text{filas}} \text{total} \quad \text{donde } \mathbf{id\_causa == 36} \text{ (Total causas de trastornos mentales, glosa DEIS)}$$
+
+   **Aclaración de nomenclatura:** en este informe, "F00–F99" se usa como abreviatura de la categoría agregada `ID 36` publicada por DEIS, no como un filtro estricto por rango CIE-10. `ID 36` reconcilia exactamente con `ID37+ID38+ID39+ID40+ID41`, y `ID 37` (Ideación Suicida) corresponde al código CIE-10 `R45.8` (capítulo R, síntomas y signos), no al capítulo F. Por lo tanto, ninguna cifra de `ID 36` reportada en este documento es un total estrictamente F00–F99; siempre incluye la componente `R45.8`.
 
 3. **Demanda por Subcausas Específicas de Salud Mental:**
    Filtrar por cada `id_causa` correspondiente:
@@ -201,14 +203,14 @@ Se validó formalmente que la suma de todas las filas sin filtrar genera un sobr
 | **9** | `109811` | SAPU José Bauzá Frau | SAPU | Lampa | 7,344 | 1.28% | 2.07% |
 | **10** | `109805` | SAR La Pincoya | SAR | Huechuraba | 7,208 | 1.26% | 2.64% |
 
-- **Concentración Institucional:** El **Instituto Psiquiátrico Dr. José Horwitz Barak** concentra por sí solo el **17.38% de todas las atenciones de urgencia de salud mental de la región** y el **95.54% de sus consultas** son del capítulo F00–F99.
+- **Concentración Institucional:** El **Instituto Psiquiátrico Dr. José Horwitz Barak** concentra por sí solo el **17.38% de todas las atenciones de urgencia de salud mental de la región (ID 36)** y el **95.54% de sus consultas de urgencia** corresponden a la categoría agregada de salud mental (`ID 36`, que incluye `ID 37`/R45.8 junto a las causas F00–F99).
 
 ---
 
 ## 15. Desagregación de Causas de Salud Mental
 
 ### TABLA 10: Descomposición de Causas de Salud Mental y Relacionadas (2021–2026)
-| ID Causa | Glosa Estándar | Atenciones (2021–2026) | % sobre Total F00–F99 (`ID 36`) | Clasificación Clínica |
+| ID Causa | Glosa Estándar | Atenciones (2021–2026) | % sobre Total `ID 36` (agregado de salud mental, incluye R45.8) | Clasificación Clínica |
 |---:|:---|---:|---:|:---|
 | **36** | **TOTAL CAUSAS TRASTORNOS MENTALES (F00–F99)** | **574,257** | **100.00%** | **Macro-agregador** |
 | `40` | Trastornos neuróticos, estrés y somatomorfos (F40–F48) | 311,278 | **54.21%** | Subcausa CIE-10 (Componente) |

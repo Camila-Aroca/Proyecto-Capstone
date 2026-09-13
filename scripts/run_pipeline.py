@@ -174,6 +174,11 @@ STAGES = {
         ],
         "depends_on": ["clean_urgencias", "clean_poblacion_proyecciones"]
     },
+    "build_dim_oferta_urgencia_rm": {
+        "module": "src.data.build_dim_oferta_urgencia_rm",
+        "outputs": ["data/processed/geo/dim_oferta_urgencia_rm.parquet"],
+        "depends_on": ["clean_establishments", "clean_urgencias"]
+    },
     "eda_contexto_genero": {
         "module": "scripts.eda_contexto_genero",
         "outputs": ["reports/eda/eda_contexto_genero_estadisticas_genero.md"],
@@ -203,6 +208,7 @@ PIPELINE_ORDER = [
     "eda_urgencias",
     "profile_urgencias_sm_coverage",
     "build_urgencias_comuna_marts",
+    "build_dim_oferta_urgencia_rm",
     "eda_contexto_genero"
 ]
 
