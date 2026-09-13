@@ -77,5 +77,28 @@
     "base_censal": 2017,
     "cobertura_anos": "2002-2035",
     "cuadro": "Est. y Proy. de Pob. Comunal (sexo x edad simple x comuna)"
+  },
+  {
+    "source_id": "mds_casen_pobreza_comunal_2022",
+    "snapshots": [
+      {
+        "source_url": "https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/pobreza-comunal/2022/Estimaciones_Tasa_Pobreza_Ingresos_Comunas_2022.xlsx",
+        "downloaded_at": "2026-09-13T01:20:28.838044+00:00",
+        "raw_path": "data/raw/pobreza/mds_casen_2022_tasa_pobreza_ingresos_comunal.xlsx",
+        "raw_filename": "mds_casen_2022_tasa_pobreza_ingresos_comunal.xlsx",
+        "raw_size": 53824,
+        "raw_sha256": "d84f44accb14e73bdd785ccdd61290d298504a3d1afe3d2fea1431804409bcc9",
+        "transport": {
+          "filename": "mds_casen_2022_tasa_pobreza_ingresos_comunal.xlsx",
+          "size": 53824,
+          "sha256": "d84f44accb14e73bdd785ccdd61290d298504a3d1afe3d2fea1431804409bcc9"
+        }
+      }
+    ],
+    "dataset": "mds_casen_pobreza_comunal_ingresos",
+    "institucion": "Ministerio de Desarrollo Social y Familia (MDS), Observatorio Social",
+    "encuesta": "Casen 2022",
+    "metodologia": "Estimación para Áreas Pequeñas (SAE, Fay-Herriot)",
+    "cuadro": "Estimaciones de Tasa de Pobreza por Ingresos por Comuna 2022"
   }
 ]

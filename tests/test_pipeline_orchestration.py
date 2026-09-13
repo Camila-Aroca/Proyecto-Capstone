@@ -49,6 +49,24 @@ def test_poblacion_proyecciones_stages_are_registered():
     )
 
 
+def test_pobreza_comunal_stages_are_registered():
+    """El download y clean de la dimensión de vulnerabilidad comunal (MDS/Casen) deben estar en el DAG."""
+    assert rp.STAGES["download_pobreza_comunal"]["depends_on"] == []
+    assert rp.STAGES["clean_pobreza_comunal"]["depends_on"] == [
+        "download_pobreza_comunal", "clean_censo_poblacion"
+    ]
+    assert "download_pobreza_comunal" in rp.PIPELINE_ORDER
+    assert "clean_pobreza_comunal" in rp.PIPELINE_ORDER
+    assert (
+        rp.PIPELINE_ORDER.index("download_pobreza_comunal")
+        < rp.PIPELINE_ORDER.index("clean_pobreza_comunal")
+    )
+    assert (
+        rp.PIPELINE_ORDER.index("clean_censo_poblacion")
+        < rp.PIPELINE_ORDER.index("clean_pobreza_comunal")
+    )
+
+
 def test_pipeline_invalid_stage():
     """Prueba que el orquestador falla de forma controlada ante una etapa inválida."""
     result = subprocess.run(

@@ -86,6 +86,10 @@ La cartografía del Censo 2024 corresponde a un año cerrado: un RAW válido hac
 
 `clean_poblacion_proyecciones` depende de `download_poblacion_proyecciones` y de `clean_censo_poblacion` (reutiliza sus glosas comunales validadas, ya que el texto del workbook de proyecciones está corrupto). Filtra `región=13`, valida que sexo esté en {1,2} y edad en [0,80], suma población por comuna×año sobre todas las combinaciones sexo×edad (sin fila "total" en la fuente, por lo que no hay doble conteo), valida cobertura exacta de 52 comunas × 5 años (260 filas), sin nulos ni valores no positivos, y publica `data/processed/censo/dim_poblacion_comuna_anual.parquet` (escritura atómica) con columnas `comuna_codigo`, `comuna_glosa`, `ano`, `poblacion`, `fuente`, `tipo_poblacion` (constante `"proyeccion"` para 2021-2025). Esta dimensión es independiente de `dim_poblacion_comuna_censo2024.parquet`: una es población proyectada (residente habitual, base Censo 2017) y la otra es población efectivamente censada en 2024; no deben usarse como proxy una de la otra y la diferencia observada entre ambas para 2024 no se corrige ni se fuerza a coincidir.
 
+`download_pobreza_comunal` descarga a staging (`.cache/downloads/pobreza_comunal/`) el cuadro oficial del Ministerio de Desarrollo Social y Familia (MDS), Observatorio Social, "Estimaciones de Tasa de Pobreza por Ingresos por Comuna" (Encuesta Casen 2022, Metodología de Estimación para Áreas Pequeñas — SAE, Fay-Herriot; `Estimaciones_Tasa_Pobreza_Ingresos_Comunas_2022.xlsx`), valida que sea un XLSX legible con la hoja "Estimaciones" y dimensiones mínimas esperadas antes de publicarlo en `data/raw/pobreza/`, y registra URL, timestamp UTC, hash y tamaño en `data/raw/provenance_manifest.json`. Es un producto ya cerrado (ronda Casen 2022): RAW válido hace `SKIP`, `--force` solicita explícitamente un nuevo snapshot. El cuadro publica, para las 346 comunas del país, el porcentaje de personas en situación de pobreza por ingresos 2022 con su intervalo de confianza, la presencia de la comuna en la muestra Casen y el tipo de estimación SAE (directa+sintética Fay-Herriot, o sintética pura cuando la comuna no cumple los criterios de inclusión muestral).
+
+`clean_pobreza_comunal` depende de `download_pobreza_comunal` y de `clean_censo_poblacion` (reutiliza sus glosas comunales validadas para mantener consistencia de nombres entre dimensiones). Filtra `región=13`, valida cobertura exacta de las 52 comunas RM contra el CUT oficial sin duplicados, exige que cada comuna RM tenga presencia en la muestra Casen, valida que la tasa esté en el dominio [0,1] y que el intervalo de confianza publicado contenga la tasa, y publica `data/processed/pobreza/dim_vulnerabilidad_comuna.parquet` (escritura atómica) con columnas `comuna_codigo`, `comuna_glosa`, `ano_referencia` (2022, constante), `indicador_vulnerabilidad` (tasa de pobreza por ingresos, proporción 0-1), `nombre_indicador`, `fuente`, `direccion_indicador` (constante `"mayor_valor_mayor_vulnerabilidad"`), `intervalo_confianza_inferior`, `intervalo_confianza_superior` y `tipo_estimacion_sae`. Es un indicador/proxy oficial de vulnerabilidad socioeconómica comunal (tasa de pobreza por ingresos), no un índice general ni compuesto de vulnerabilidad, y un indicador estático de un único período (Casen 2022): no se replica artificialmente por semana/mes ni se combina aquí con demanda de Urgencias o Egresos para construir un puntaje de riesgo compuesto.
+
 El siguiente listado representa el orden topológico actual del DAG. El orquestador ejecuta únicamente las etapas necesarias según los outputs existentes, las dependencias, el `--stage` solicitado y el uso de `--force`
 
 For Egresos, `download_deis` publishes the CSV in each ZIP through the
@@ -97,22 +101,24 @@ historical filename variants.
 1. `download_censo` → (Descarga Censo a RAW)
 2. `download_censo_poblacion` → (Descarga a RAW el tabulado comunal oficial INE de población censada 2024)
 3. `download_poblacion_proyecciones` → (Descarga a RAW el cuadro comunal oficial INE de estimaciones/proyecciones de población 2002-2035)
-4. `download_deis` → (Descarga Urgencias y Egresos a RAW)
-5. `download_establishments` → (Descarga Maestro Establecimientos a RAW)
-6. `download_contexto_genero` → (Descarga RAW de cuatro cuadros XLSX de Estadísticas de Género)
-7. `normalize_contexto_genero` → (Normalización independiente de los cuatro cuadros contextuales)
-8. `clean_establishments` → (Limpieza y filtrado RM)
-9. `clean_censo` → (Filtro espacial RM para Censo)
-10. `clean_censo_poblacion` → (Dimensión de población censada 2024 por comuna RM)
-11. `clean_poblacion_proyecciones` → (Dimensión anual de población comunal RM 2021-2025, INE proyecciones base Censo 2017)
-12. `build_catalogs` → (Creación de catálogo F00-F99)
-13. `clean_urgencias` → (Limpieza de Urgencias 2020-2026 y unión territorial)
-14. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
-15. `eda_establishments` → (Validación EDA de Establecimientos)
-16. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
-17. `profile_urgencias_sm_coverage` → (Perfil comuna×semana ID 36 para cobertura 2021–2025)
-18. `build_urgencias_comuna_marts` → (Marts históricos comunales semanal y mensual de Urgencias, 2021–2025, con tasas por 10.000 habitantes)
-19. `eda_contexto_genero` → (EDA reproducible de los cuatro cuadros contextuales)
+4. `download_pobreza_comunal` → (Descarga a RAW el cuadro comunal oficial MDS/Casen 2022 de tasa de pobreza por ingresos, SAE)
+5. `download_deis` → (Descarga Urgencias y Egresos a RAW)
+6. `download_establishments` → (Descarga Maestro Establecimientos a RAW)
+7. `download_contexto_genero` → (Descarga RAW de cuatro cuadros XLSX de Estadísticas de Género)
+8. `normalize_contexto_genero` → (Normalización independiente de los cuatro cuadros contextuales)
+9. `clean_establishments` → (Limpieza y filtrado RM)
+10. `clean_censo` → (Filtro espacial RM para Censo)
+11. `clean_censo_poblacion` → (Dimensión de población censada 2024 por comuna RM)
+12. `clean_poblacion_proyecciones` → (Dimensión anual de población comunal RM 2021-2025, INE proyecciones base Censo 2017)
+13. `clean_pobreza_comunal` → (Dimensión de vulnerabilidad socioeconómica comunal RM, MDS/Casen 2022, tasa de pobreza por ingresos SAE)
+14. `build_catalogs` → (Creación de catálogo F00-F99)
+15. `clean_urgencias` → (Limpieza de Urgencias 2020-2026 y unión territorial)
+16. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
+17. `eda_establishments` → (Validación EDA de Establecimientos)
+18. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
+19. `profile_urgencias_sm_coverage` → (Perfil comuna×semana ID 36 para cobertura 2021–2025)
+20. `build_urgencias_comuna_marts` → (Marts históricos comunales semanal y mensual de Urgencias, 2021–2025, con tasas por 10.000 habitantes)
+21. `eda_contexto_genero` → (EDA reproducible de los cuatro cuadros contextuales)
 
 ## 6. Idempotencia y Validación de Outputs
 

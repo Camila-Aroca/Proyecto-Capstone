@@ -38,6 +38,13 @@ STAGES = {
         ],
         "depends_on": []
     },
+    "download_pobreza_comunal": {
+        "module": "src.data.download_pobreza_comunal",
+        "outputs": [
+            "data/raw/pobreza/mds_casen_2022_tasa_pobreza_ingresos_comunal.xlsx"
+        ],
+        "depends_on": []
+    },
     "download_deis": {
         "module": "src.data.download_deis_sources",
         "outputs": [
@@ -105,6 +112,11 @@ STAGES = {
         "module": "src.data.clean_poblacion_proyecciones",
         "outputs": ["data/processed/censo/dim_poblacion_comuna_anual.parquet"],
         "depends_on": ["download_poblacion_proyecciones", "clean_censo_poblacion"]
+    },
+    "clean_pobreza_comunal": {
+        "module": "src.data.clean_pobreza_comunal",
+        "outputs": ["data/processed/pobreza/dim_vulnerabilidad_comuna.parquet"],
+        "depends_on": ["download_pobreza_comunal", "clean_censo_poblacion"]
     },
     "build_catalogs": {
         "module": "src.data.build_catalogs",
@@ -174,6 +186,7 @@ PIPELINE_ORDER = [
     "download_censo",
     "download_censo_poblacion",
     "download_poblacion_proyecciones",
+    "download_pobreza_comunal",
     "download_deis",
     "download_establishments",
     "download_contexto_genero",
@@ -182,6 +195,7 @@ PIPELINE_ORDER = [
     "clean_censo",
     "clean_censo_poblacion",
     "clean_poblacion_proyecciones",
+    "clean_pobreza_comunal",
     "build_catalogs",
     "clean_urgencias",
     "clean_egresos",
