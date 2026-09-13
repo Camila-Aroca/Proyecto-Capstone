@@ -179,6 +179,14 @@ STAGES = {
         "outputs": ["data/processed/geo/dim_oferta_urgencia_rm.parquet"],
         "depends_on": ["clean_establishments", "clean_urgencias"]
     },
+    "build_mart_mvp_territorial_comuna": {
+        "module": "src.data.build_mart_mvp_territorial_comuna",
+        "outputs": ["data/processed/marts/mart_mvp_territorial_comuna.parquet"],
+        "depends_on": [
+            "clean_censo_poblacion", "clean_poblacion_proyecciones", "clean_pobreza_comunal",
+            "clean_urgencias", "build_urgencias_comuna_marts", "build_dim_oferta_urgencia_rm",
+        ]
+    },
     "eda_contexto_genero": {
         "module": "scripts.eda_contexto_genero",
         "outputs": ["reports/eda/eda_contexto_genero_estadisticas_genero.md"],
@@ -209,6 +217,7 @@ PIPELINE_ORDER = [
     "profile_urgencias_sm_coverage",
     "build_urgencias_comuna_marts",
     "build_dim_oferta_urgencia_rm",
+    "build_mart_mvp_territorial_comuna",
     "eda_contexto_genero"
 ]
 

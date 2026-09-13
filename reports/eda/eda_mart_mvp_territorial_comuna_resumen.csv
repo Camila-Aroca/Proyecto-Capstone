@@ -1,0 +1,13 @@
+metrica,valor
+filas_mart,52
+comunas_unicas,52
+comunas_con_reporte_urgencias_2025,51
+comunas_sin_reporte_urgencias_2025,1
+oferta_total_mart,174
+oferta_total_dim,174
+oferta_reconcilia,True
+demanda_2025_reconcilia_monthly,True
+tasas_recalculadas_ok,True
+poblacion_2025_min,7954
+poblacion_censada_2024_min,7768
+indicador_vulnerabilidad_cobertura,52/52
