@@ -187,11 +187,14 @@
 
 - Utilizar únicamente los subdirectorios necesarios, por ejemplo:
   - `reports/eda/`: EDA, perfilado, auditorías descriptivas y sus tablas pequeñas de apoyo;
+  - `reports/dictionary/`: diccionarios versionados de datasets analíticos canónicos;
   - `reports/modeling/`: evaluación, backtesting y resultados del modelo de demanda;
   - `reports/geo/`: accesibilidad y análisis geoespacial;
   - `reports/hospitalization/`: análisis F00–F99 y duración de estadía;
   - `reports/validation/`: QA, pruebas y reconciliaciones transversales;
   - `reports/project/`: estados, auditorías y documentación transversal del proyecto.
+
+- Todo mart o dataset analítico canónico de nivel superior (features, insumos de modelado, marts destinados al MVP) debe contar con diccionario versionado en `reports/dictionary/` y EDA reproducible en `reports/eda/`. El diccionario debe documentar como mínimo: grano, columnas, tipos, semántica, construcción/derivación, fuente y advertencias de interpretación relevantes. Esta obligación no se extiende automáticamente a RAW ni a datasets de staging intermedio.
 
 - Los artefactos pequeños destinados a inspección humana y asociados directamente a un report pueden mantenerse junto al report dentro de su subdirectorio. No crear carpetas adicionales como `tables/`, `figures/` o similares salvo que el volumen realmente lo justifique.
 

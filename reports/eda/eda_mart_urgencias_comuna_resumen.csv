@@ -1,0 +1,9 @@
+metrica,valor
+weekly_filas,13362
+monthly_filas,3060
+weekly_comunas_unicas,51
+monthly_comunas_unicas,51
+reconciliacion_anual_id1_id36_ok,True
+reportantes_id1_igual_id36_weekly_proporcion,1.0
+tasa_id36_por_10000_media_weekly,2.6428
+tasa_id36_por_10000_max_weekly,24.5861
