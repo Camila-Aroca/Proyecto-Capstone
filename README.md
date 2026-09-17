@@ -108,6 +108,8 @@ Se utilizará una metodología ágil basada en:
 - [Bitácora de reunión de definición y alcance](docs/03-bitacoras/Bitacora_Reunion_Definicion_Alcance.docx)
 - [Especificación de Requisitos Funcionales (ERF-SAAD-2026)](docs/06-requisitos/Especificacion_Requisitos_Funcionales.docx)
 - [Especificación de Requisitos No Funcionales (ERNF-SAAD-2026)](docs/06-requisitos/Especificacion_Requisitos_No_Funcionales.docx)
+- [Diagrama UML de casos de uso](docs/07-diagramas/casos_de_uso_saad.png) — fuente: [`casos_de_uso_saad.puml`](docs/07-diagramas/casos_de_uso_saad.puml)
+- [Diagrama UML de componentes](docs/07-diagramas/componentes_saad.png) — fuente: [`componentes_saad.puml`](docs/07-diagramas/componentes_saad.puml)
 
 ## Equipo
 
