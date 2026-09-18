@@ -161,6 +161,14 @@ STAGES = {
         ],
         "depends_on": ["download_deis"]
     },
+    "build_egresos_f00_f99": {
+        "module": "src.data.build_egresos_f00_f99",
+        "outputs": [
+            "data/processed/egresos/egresos_f00_f99_nacional_2020_2025.parquet",
+            "data/processed/egresos/catalogo_cie10_f00_f99.csv",
+        ],
+        "depends_on": ["clean_egresos"]
+    },
     "eda_establishments": {
         "module": "scripts.eda_establecimientos_rm",
         "outputs": ["reports/eda/registros_sin_coordenadas.csv"],
@@ -239,6 +247,7 @@ PIPELINE_ORDER = [
     "build_catalogs",
     "clean_urgencias",
     "clean_egresos",
+    "build_egresos_f00_f99",
     "eda_establishments",
     "eda_urgencias",
     "profile_urgencias_sm_coverage",
