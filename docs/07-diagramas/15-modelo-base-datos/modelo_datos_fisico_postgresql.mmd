@@ -5,7 +5,7 @@
 %% y la capa de accesibilidad OSM/GTFS/isocronas NO estan implementados (ver README item 15,
 %% seccion 9 "Limitaciones"). Este diagrama es coherente 1:1 con db/schema_postgresql.sql.
 %% Los esquemas replican los subdirectorios de data/processed/ para trazabilidad
-%% (censo, geo, pobreza, urgencias, marts, egresos).
+%% (censo, geo, pobreza, urgencias, marts, egresos, contexto_genero).
 
 erDiagram
 
@@ -124,6 +124,22 @@ erDiagram
         bigint poblacion_censada_2024
         numeric indicador_vulnerabilidad
         bigint n_oferta_urgencia_actual
+    }
+
+    contexto_genero_indicador_por_sexo {
+        bigint indicador_contexto_genero_id PK "surrogate tecnico de persistencia del mart; no existe en la fuente"
+        text source_id "uno de los cuatro inputs processed; contrato de origen"
+        text source_sheet
+        text geography_level
+        text geography
+        integer region_code "NULL para filas nacionales"
+        text period "periodo publicado, nunca convertido forzosamente a ano"
+        smallint year "NULL para PHQ-4 y periodos multianuales"
+        text sex "sexo, Total, razon o brecha publicada"
+        text indicator
+        double_precision value "NULL si el valor publicado es textual"
+        text value_text "preserva '-' publicado"
+        text unit
     }
 
     egresos_f00_f99_nacional {

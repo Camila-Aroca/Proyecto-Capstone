@@ -185,6 +185,27 @@ package "Marts e informacion hospitalaria" {
 }
 
 '---------------------------------------------------------------------
+' Contexto interpretativo oficial por sexo/genero
+'---------------------------------------------------------------------
+package "Contexto oficial por sexo/genero" {
+  class MartContextoGeneroIndicadorSexo <<mart>> {
+    +sourceId: String
+    +geographyLevel: String
+    +geography: String
+    +regionCode: Integer [0..1]
+    +period: String
+    +year: Integer [0..1]
+    +sex: String
+    +indicator: String
+    +value: Decimal [0..1]
+    +valueText: String [0..1]
+    +unit: String
+    --
+    +obtenerValorPublicado(): String
+  }
+}
+
+'---------------------------------------------------------------------
 ' Relaciones territoriales y de granularidad
 '---------------------------------------------------------------------
 Comuna "1" -- "0..*" PoblacionComunaAnual : proyecta >
@@ -215,6 +236,14 @@ note right of EgresoF00F99
   asociacion con Urgencias. regionResidencia y
   comunaResidencia son residencia del paciente,
   no ubicacion del hospital.
+end note
+
+note right of MartContextoGeneroIndicadorSexo
+  Mart de serving contextual, no individual.
+  sourceId preserva los cuatro inputs y sus
+  semanticas; period no se fuerza a ano.
+  Sin asociacion ni join automatico con Urgencias
+  o Egresos aunque coincidan sexo, ano o geografia.
 end note
 
 note bottom of UrgenciasComunaMonthly

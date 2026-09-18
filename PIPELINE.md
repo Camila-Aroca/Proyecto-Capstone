@@ -112,24 +112,26 @@ La etapa `build_egresos_f00_f99` depende de `clean_egresos`, no tiene downstream
 6. `download_establishments` → (Descarga Maestro Establecimientos a RAW)
 7. `download_contexto_genero` → (Descarga RAW de cuatro cuadros XLSX de Estadísticas de Género)
 8. `normalize_contexto_genero` → (Normalización independiente de los cuatro cuadros contextuales)
-9. `clean_establishments` → (Limpieza y filtrado RM)
-10. `clean_censo` → (Filtro espacial RM para las 5 capas de cartografía Censo 2024: Comunal, Distrital, Zonal, Entidades, Manzanas)
-11. `clean_censo_poblacion` → (Dimensión de población censada 2024 por comuna RM)
-12. `clean_poblacion_proyecciones` → (Dimensión anual de población comunal RM 2021-2025, INE proyecciones base Censo 2017)
-13. `clean_pobreza_comunal` → (Dimensión de vulnerabilidad socioeconómica comunal RM, MDS/Casen 2022, tasa de pobreza por ingresos SAE)
-14. `build_catalogs` → (Creación de catálogo F00-F99)
-15. `clean_urgencias` → (Limpieza de Urgencias 2020-2026 y unión territorial)
-16. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
-17. `build_egresos_f00_f99` → (Dataset canónico nacional de Egresos F00-F99, 2020-2025, con flag de residencia RM)
-18. `eda_establishments` → (Validación EDA de Establecimientos)
-19. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
-20. `profile_urgencias_sm_coverage` → (Perfil comuna×semana ID 36 para cobertura 2021–2025)
-21. `build_urgencias_comuna_marts` → (Marts históricos comunales semanal y mensual de Urgencias, 2021–2025, con tasas por 10.000 habitantes)
-22. `build_urgencias_establecimiento_mart` → (Mart histórico establecimiento×mes de Urgencias, 2021–2025, sin población ni tasas)
-23. `build_urgencias_comuna_etario_mart` → (Mart histórico comuna×mes×grupo_etario de Urgencias, 2021–2025, formato largo)
-24. `build_dim_oferta_urgencia_rm` → (Dimensión canónica de oferta territorial de urgencia RM: snapshot actual, no serie histórica)
-25. `build_mart_mvp_territorial_comuna` → (Mart canónico MVP territorial comunal: integra demanda 2025, población 2025/2024, vulnerabilidad 2022 y oferta actual en una fila por comuna RM)
-26. `eda_contexto_genero` → (EDA reproducible de los cuatro cuadros contextuales)
+9. `build_mart_contexto_genero_indicador_sexo` → (Mart canónico de serving MVP, contextual e independiente)
+10. `clean_establishments` → (Limpieza y filtrado RM)
+11. `clean_censo` → (Filtro espacial RM para las 5 capas de cartografía Censo 2024: Comunal, Distrital, Zonal, Entidades, Manzanas)
+12. `clean_censo_poblacion` → (Dimensión de población censada 2024 por comuna RM)
+13. `clean_poblacion_proyecciones` → (Dimensión anual de población comunal RM 2021-2025, INE proyecciones base Censo 2017)
+14. `clean_pobreza_comunal` → (Dimensión de vulnerabilidad socioeconómica comunal RM, MDS/Casen 2022, tasa de pobreza por ingresos SAE)
+15. `build_catalogs` → (Creación de catálogo F00-F99)
+16. `clean_urgencias` → (Limpieza de Urgencias 2020-2026 y unión territorial)
+17. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
+18. `build_egresos_f00_f99` → (Dataset canónico nacional de Egresos F00-F99, 2020-2025, con flag de residencia RM)
+19. `eda_establishments` → (Validación EDA de Establecimientos)
+20. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
+21. `profile_urgencias_sm_coverage` → (Perfil comuna×semana ID 36 para cobertura 2021–2025)
+22. `build_urgencias_comuna_marts` → (Marts históricos comunales semanal y mensual de Urgencias, 2021–2025, con tasas por 10.000 habitantes)
+23. `build_urgencias_establecimiento_mart` → (Mart histórico establecimiento×mes de Urgencias, 2021–2025, sin población ni tasas)
+24. `build_urgencias_comuna_etario_mart` → (Mart histórico comuna×mes×grupo_etario de Urgencias, 2021–2025, formato largo)
+25. `build_dim_oferta_urgencia_rm` → (Dimensión canónica de oferta territorial de urgencia RM: snapshot actual, no serie histórica)
+26. `build_mart_mvp_territorial_comuna` → (Mart canónico MVP territorial comunal: integra demanda 2025, población 2025/2024, vulnerabilidad 2022 y oferta actual en una fila por comuna RM)
+27. `eda_contexto_genero` → (EDA reproducible de los cuatro cuadros contextuales)
+28. `eda_mart_contexto_genero_indicador_sexo` → (EDA reproducible del mart contextual de serving)
 
 La etapa `build_dim_oferta_urgencia_rm` depende de `clean_establishments` y `clean_urgencias`, no tiene downstream por ahora y publica `data/processed/geo/dim_oferta_urgencia_rm.parquet`. Distingue dos temporalidades: el universo y criterio de inclusión son un snapshot ACTUAL del catálogo de establecimientos (no una serie histórica) — incluye establecimientos vigentes cuyo `tipo_establecimiento_glosa` es `Hospital` o termina en el acrónimo DEIS `(SAPU)`, `(SAR)` o `(SUR)`, más una excepción documentada y detectada dinámicamente contra Urgencias (establecimientos que reportan `tipo_establecimiento_urgencia="CEAR"` sin caer en el tipo anterior) —; la evidencia de reporte (`reporto_id1_periodo`, `reporto_id36_periodo`, `ultimo_ano_reporte_id36`, `tipo_urgencia_reportado`) usa en cambio el período canónico CERRADO 2021-2025, excluyendo 2020 (discontinuidad metodológica de salud mental) y 2026 (año parcial/mutable); es información temporal complementaria, no el criterio de inclusión ni un filtro. No usa `tiene_servicio_urgencia` ni `tipo_urgencia` del maestro como criterio de inclusión (se comprobó que no son confiables: ver `reports/eda/eda_dim_oferta_urgencia_rm.md`) ni exige actividad `ID36>0` para pertenecer a la oferta. Antes de publicar valida unicidad de `establecimiento_codigo`, dominio de `criterio_inclusion_oferta` + coherencia con el tipo, vigencia, formato de `comuna_codigo`, nulidad conjunta de coordenadas, bounding box geográfico de la RM y coherencia entre los flags de reporte. El orquestador valida existencia/esquema del Parquet y realiza `SKIP` cuando es válido; `--force` lo regenera. Sus pruebas están en `tests/test_build_dim_oferta_urgencia_rm.py`. No implementa OSM/GTFS ni isócronas; es únicamente el insumo de oferta para esa capa futura de accesibilidad territorial.
 
@@ -156,7 +158,7 @@ El uso de `--force` obliga a ejecutar la etapa seleccionada y propaga la regener
 
 Los módulos de `src/data/` encapsulan la lógica de procesamiento, pero `scripts/run_pipeline.py` es el punto de entrada oficial para generar outputs canónicos del proyecto.
 
-La rama `download_contexto_genero` → `normalize_contexto_genero` → `eda_contexto_genero` es independiente de Egresos y Urgencias: mantiene un Parquet por fuente, no realiza uniones entre ellas y tampoco las enlaza con registros DEIS. La descarga conserva cada XLSX original en `data/raw/contexto_genero/`, valida el workbook antes de publicarlo y agrega URL, fecha/hora UTC, tamaño y SHA256 al historial de `data/raw/provenance_manifest.json`. En operación normal los RAW válidos hacen `SKIP`; `--force` solicita explícitamente un snapshot nuevo.
+La rama `download_contexto_genero` → `normalize_contexto_genero` conserva cuatro Parquet processed independientes. `build_mart_contexto_genero_indicador_sexo` depende de esa normalización y publica `data/processed/marts/mart_contexto_genero_indicador_sexo.parquet` como capa de serving del MVP. Su grano es una observación publicada de un indicador de contexto de salud mental por sexo, fuente, ámbito geográfico y período; concatena los cuatro contratos sin joins, agregaciones ni enriquecimiento. Valida schema, los cuatro `source_id`, reconciliación exacta de filas por fuente, unicidad lógica de `source_id`+`source_sheet`+`geography_level`+`geography`+`region_code`+`period`+`sex`+`indicator`+`unit`, preservación de `period`, `year`, `value_text` y del símbolo `-`. El output válido hace `SKIP`; `--force` lo regenera con escritura atómica. `eda_contexto_genero` perfila las fuentes y `eda_mart_contexto_genero_indicador_sexo` perfila el mart. Toda la rama es contexto interpretativo: no tiene FK, joins automáticos ni features hacia Urgencias/Egresos, aunque coincidan sexo, año, período o territorio. La descarga conserva cada XLSX original en `data/raw/contexto_genero/`, valida el workbook antes de publicarlo y agrega URL, fecha/hora UTC, tamaño y SHA256 al historial de `data/raw/provenance_manifest.json`. En operación normal los RAW válidos hacen `SKIP`; `--force` solicita explícitamente un snapshot nuevo.
 
 La etapa `profile_urgencias_sm_coverage` depende de `clean_urgencias`, no tiene downstream por ahora y publica `data/processed/urgencias/perfil_cobertura_sm_comuna_semanal_2021_2025.parquet`. Lee únicamente los Parquet 2021–2025 y las columnas necesarias: usa `id_causa=1` para conservar el calendario semanal DEIS y el universo de comunas con reporte general, e `id_causa=36` como único insumo de atenciones de salud mental. Una semana con fila ID 36 y total agregado cero es observada; una semana sin fila ID 36 se reporta como ausencia, sin imputarla. El perfil no incluye 2026 ni crea `mart_urgencias_comuna_weekly`. El orquestador valida que el Parquet exista, no esté vacío y tenga esquema legible; en operación normal realiza `SKIP` cuando pasa ese control y `--force` lo regenera. Su contrato se prueba en `tests/test_profile_urgencias_sm_coverage.py` y el registro del stage en `tests/test_pipeline_orchestration.py`.
 
@@ -174,7 +176,7 @@ Ambos marts nuevos son estrictamente Urgencias: no cruzan con Egresos ni afectan
 
 ## 7. Informes Históricos y Protegidos
 
-Los reportes en Markdown dentro de la carpeta `reports/eda/` (ej: `eda_demanda_urgencias_rm.md`) contienen correcciones cualitativas y manuales, por lo que **no son sobreescritos automáticamente por el orquestador**. La excepción es `eda_contexto_genero_estadisticas_genero.md`, que es un perfil reproducible generado por `eda_contexto_genero`; el script de EDA de Urgencias genera únicamente las tablas (`.csv`) asociadas que sustentan sus reportes curados.
+Los reportes en Markdown dentro de la carpeta `reports/eda/` (ej: `eda_demanda_urgencias_rm.md`) contienen correcciones cualitativas y manuales, por lo que **no son sobreescritos automáticamente por el orquestador**. Las excepciones son `eda_contexto_genero_estadisticas_genero.md` y `eda_mart_contexto_genero_indicador_sexo.md`, perfiles reproducibles generados por sus stages; el script de EDA de Urgencias genera únicamente las tablas (`.csv`) asociadas que sustentan sus reportes curados.
 
 ## 8. Ejecutar Pruebas (Tests)
 

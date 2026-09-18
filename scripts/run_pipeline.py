@@ -96,6 +96,13 @@ STAGES = {
         ],
         "depends_on": ["download_contexto_genero"]
     },
+    "build_mart_contexto_genero_indicador_sexo": {
+        "module": "src.data.build_contexto_genero_mart",
+        "outputs": [
+            "data/processed/marts/mart_contexto_genero_indicador_sexo.parquet",
+        ],
+        "depends_on": ["normalize_contexto_genero"]
+    },
     "clean_establishments": {
         "module": "src.data.clean_establishments",
         "outputs": [
@@ -226,6 +233,11 @@ STAGES = {
         "module": "scripts.eda_contexto_genero",
         "outputs": ["reports/eda/eda_contexto_genero_estadisticas_genero.md"],
         "depends_on": ["normalize_contexto_genero"]
+    },
+    "eda_mart_contexto_genero_indicador_sexo": {
+        "module": "scripts.eda_mart_contexto_genero_indicador_sexo",
+        "outputs": ["reports/eda/eda_mart_contexto_genero_indicador_sexo.md"],
+        "depends_on": ["build_mart_contexto_genero_indicador_sexo"]
     }
 }
 
@@ -239,6 +251,7 @@ PIPELINE_ORDER = [
     "download_establishments",
     "download_contexto_genero",
     "normalize_contexto_genero",
+    "build_mart_contexto_genero_indicador_sexo",
     "clean_establishments",
     "clean_censo",
     "clean_censo_poblacion",
@@ -256,7 +269,8 @@ PIPELINE_ORDER = [
     "build_urgencias_comuna_etario_mart",
     "build_dim_oferta_urgencia_rm",
     "build_mart_mvp_territorial_comuna",
-    "eda_contexto_genero"
+    "eda_contexto_genero",
+    "eda_mart_contexto_genero_indicador_sexo"
 ]
 
 SUPPORTED_URGENCIAS_YEARS = tuple(range(2020, 2027))

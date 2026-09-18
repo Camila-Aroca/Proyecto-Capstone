@@ -4,9 +4,6 @@
 %% Estos archivos NO tienen constraints SQL activos; las PK/FK aqui mostradas son
 %% llaves logicas inferidas y verificadas sobre los datos (ver README seccion 5 y 7),
 %% no restricciones fisicas ya implementadas.
-%% Alcance excluido deliberadamente (ver README seccion 8):
-%% - data/processed/contexto_genero/* (indicadores de genero): contexto interpretativo
-%%   externo, no se cruza automaticamente con Urgencias/Egresos (AGENTS.md, PROJECT_CONTEXT.md).
 %% - Egresos NO tiene relacion de llave con Urgencias ni con establecimientos (invariante).
 
 erDiagram
@@ -141,6 +138,24 @@ erDiagram
         bigint poblacion_censada_2024
         double indicador_vulnerabilidad
         bigint n_oferta_urgencia_actual
+    }
+
+    %% grain: 1 fila = 1 observacion publicada de un indicador contextual por sexo/genero.
+    %% Normaliza la maquetacion, no homologa semanticas: source_id conserva los 4 contratos.
+    %% Sin FK ni relacion con Urgencias/Egresos, aunque coincidan sexo, ano o geografia.
+    mart_contexto_genero_indicador_sexo {
+        string source_id "uno de los cuatro inputs processed; contrato original"
+        string source_sheet
+        string geography_level "nacional o regional"
+        string geography
+        int region_code "NULL en nacional; codigo publicado en regional"
+        string period "texto publicado; no se fuerza a ano"
+        int year "NULL para PHQ-4 y periodos no anuales"
+        string sex "incluye Total, razones y brechas publicadas"
+        string indicator
+        double value "NULL si el valor publicado es textual"
+        string value_text "ej.: '-' publicado, no imputado"
+        string unit
     }
 
     %% grain: 1 fila = 1 registro de egreso hospitalario publicado DEIS (218794 filas, nacional, no pacientes unicos)

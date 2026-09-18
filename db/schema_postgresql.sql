@@ -44,6 +44,7 @@ CREATE SCHEMA IF NOT EXISTS geo;
 CREATE SCHEMA IF NOT EXISTS urgencias;
 CREATE SCHEMA IF NOT EXISTS marts;
 CREATE SCHEMA IF NOT EXISTS egresos;
+CREATE SCHEMA IF NOT EXISTS contexto_genero;
 
 -- =============================================================================
 -- censo.cartografia_comunal
@@ -414,6 +415,61 @@ COMMENT ON TABLE marts.mart_mvp_territorial_comuna IS
     'una integracion comunal derivada para el MVP analitico, no fuente '
     'primaria. atenciones_id36_2025 y demas metricas de demanda son NULL '
     '(nunca 0) cuando tiene_reporte_urgencias = FALSE.';
+
+-- =============================================================================
+-- contexto_genero.indicador_por_sexo
+-- Grain: 1 fila = 1 observacion publicada del mart canonico
+-- data/processed/marts/mart_contexto_genero_indicador_sexo.parquet por sexo/
+-- genero. Tabla de persistencia trazable al mart, que conserva source_id,
+-- indicador, geografia y periodo publicados; no homologa sus semanticas.
+-- SIN FK hacia Urgencias, Egresos ni dimensiones territoriales: es contexto
+-- interpretativo y una coincidencia de sexo/ano/geografia no autoriza un join.
+-- =============================================================================
+CREATE TABLE contexto_genero.indicador_por_sexo (
+    indicador_contexto_genero_id  BIGINT GENERATED ALWAYS AS IDENTITY,
+    source_id                     TEXT        NOT NULL,
+    source_sheet                  TEXT        NOT NULL,
+    geography_level               TEXT        NOT NULL,
+    geography                     TEXT        NOT NULL,
+    region_code                   INTEGER,
+    period                        TEXT        NOT NULL,
+    year                          SMALLINT,
+    sex                           TEXT        NOT NULL,
+    indicator                     TEXT        NOT NULL,
+    value                         DOUBLE PRECISION,
+    value_text                    TEXT,
+    unit                          TEXT        NOT NULL,
+    CONSTRAINT pk_indicador_por_sexo PRIMARY KEY (indicador_contexto_genero_id),
+    CONSTRAINT ck_indicador_por_sexo_valor_publicado CHECK (
+        (value IS NOT NULL AND value_text IS NULL) OR
+        (value IS NULL AND value_text IS NOT NULL)
+    )
+);
+
+COMMENT ON TABLE contexto_genero.indicador_por_sexo IS
+    'Persistencia del mart canonico data/processed/marts/'
+    'mart_contexto_genero_indicador_sexo.parquet: indicadores oficiales de '
+    'contexto interpretativo por sexo/genero. Deriva de los cuatro Parquet '
+    'de data/processed/contexto_genero y conserva '
+    'source_id, source_sheet, geografia, period, year, sex, indicator, unit '
+    'y el valor publicado. No hay FK ni join automatico hacia Urgencias, '
+    'Egresos o dimensiones territoriales; las comparaciones son contextuales.';
+COMMENT ON COLUMN contexto_genero.indicador_por_sexo.indicador_contexto_genero_id IS
+    'Clave tecnica de persistencia. No existe en las fuentes y no representa '
+    'una persona, episodio ni una clave de enlace con otros dominios.';
+COMMENT ON COLUMN contexto_genero.indicador_por_sexo.period IS
+    'Periodo tal como fue publicado: PHQ-4 conserva sus rondas textuales y '
+    'sintomas depresivos conserva 2003, 2009-10 y 2016-17.';
+COMMENT ON COLUMN contexto_genero.indicador_por_sexo.year IS
+    'Ano numerico solo cuando esta publicado como ano unico; NULL para PHQ-4 '
+    'y para periodos no anuales. No se imputa ni deriva desde period.';
+COMMENT ON COLUMN contexto_genero.indicador_por_sexo.value_text IS
+    'Valor textual publicado, por ejemplo el simbolo ''-'' de ratios regionales; '
+    'se conserva y nunca se recodifica como cero o valor faltante.';
+
+CREATE INDEX ix_indicador_por_sexo_source ON contexto_genero.indicador_por_sexo (source_id);
+CREATE INDEX ix_indicador_por_sexo_geografia_period
+    ON contexto_genero.indicador_por_sexo (geography_level, geography, period);
 
 -- =============================================================================
 -- egresos.egresos_f00_f99_nacional

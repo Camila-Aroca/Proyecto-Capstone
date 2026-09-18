@@ -31,10 +31,11 @@ Se realizó una búsqueda dirigida antes de crear cualquier artefacto:
 - `mart_urgencias_comuna_weekly`, `mart_urgencias_comuna_monthly`, `mart_urgencias_establecimiento_monthly`, `mart_urgencias_comuna_etario_monthly` (`data/processed/marts/`).
 - `mart_mvp_territorial_comuna` (`data/processed/marts/`).
 - `egresos_f00_f99_nacional_2020_2025` (`data/processed/egresos/`).
+- `mart_contexto_genero_indicador_sexo` (`data/processed/marts/`), derivado
+  de los cuatro Parquet independientes de `data/processed/contexto_genero/`.
 
 **Excluido deliberadamente:**
 
-- `data/processed/contexto_genero/*` (PHQ-4, síntomas depresivos, egresos por intento suicida por sexo, ratios de suicidio H/M). Son indicadores oficiales de contexto interpretativo externo. `AGENTS.md` y `PROJECT_CONTEXT.md` son explícitos: **no se cruzan automáticamente con Urgencias/Egresos ni se convierten automáticamente en features.** Persistirlos en este mismo modelo relacional, con FK hacia las entidades territoriales, insinuaría una relación de join automático que el proyecto prohíbe explícitamente. Quedan fuera del alcance de este ítem; si en el futuro se decide persistirlos, deben modelarse como un dominio separado, sin FK hacia Urgencias/Egresos.
 - Catálogo CIE-10 (`data/processed/egresos/catalogo_cie10_f00_f99.csv`, `data/processed/urgencias/catalogo_f00_f99.csv`): no fue solicitado como entidad del modelo; no se inventa como tabla adicional.
 - El maestro general de establecimientos de salud (`establecimientos_rm_clean.parquet`, `establecimientos_salud_clean.parquet`) no forma parte de este ítem: la tarea pidió específicamente `dim_oferta_urgencia_rm` (subconjunto vigente de oferta de urgencia), no el maestro completo.
 
@@ -47,6 +48,29 @@ Se realizó una búsqueda dirigida antes de crear cualquier artefacto:
   - **clave lógica**: combinación de columnas de grano verificada sin duplicados (ej. `comuna_codigo + ano + semana`).
   - **clave técnica propuesta**: no existe en la fuente, se propone para el modelo físico (ej. `egreso_id`).
   - **ausencia de clave natural**: declarada explícitamente cuando corresponde (Egresos).
+
+### Contratos de contexto oficial por sexo/género
+
+Los cuatro Parquet comparten exactamente el esquema normalizado `source_id`,
+`source_sheet`, `geography_level`, `geography`, `region_code`, `period`, `year`,
+`sex`, `indicator`, `value`, `value_text`, `unit`, pero no son intercambiables:
+
+| Dataset | Grain observado | Período | Ámbito / sexo | Indicadores |
+|---|---|---|---|---|
+| `egresos_intento_suicida_sexo_anio` | año nacional × medida/sexo (120 filas) | 2006–2025 | Nacional; Hombres, Mujeres, Total, Mujeres/Hombres | egresos, distribución y razón de intento suicida |
+| `suicidio_ratio_hm_tasas_nacional_regional` | año × nivel (nacional/regional) × medida/sexo (3790 filas) | 1997–2023 | Nacional y 16 regiones; Hombres, Mujeres, Total, Hombres/Mujeres | defunciones, población, tasa y ratio de suicidio |
+| `ansiedad_depresion_sintomas_18_mas_sexo` (PHQ-4) | período nacional × medida/sexo (40 filas) | Julio 2020; nov.–dic. 2020; jun.–jul. 2021; nov. 2021 | Nacional; Hombres, Mujeres, Total, Mujeres-Hombres | población 18+, síntomas moderados/severos, porcentaje y brecha |
+| `prevalencia_sintomas_depresivos_sexo` | período nacional × sexo (6 filas) | `2003`, `2009-10`, `2016-17` | Nacional; Hombres, Mujeres | prevalencia de síntomas depresivos último año |
+
+Se elige el mart contextual normalizado `mart_contexto_genero_indicador_sexo`
+porque el contrato de columnas es idéntico y `source_id` conserva el contrato de
+cada fuente. No se combinan indicadores ni se fuerza una granularidad común:
+`period` se conserva como texto, `year` queda nulo para PHQ-4 y períodos no
+anuales, y `value_text` conserva el valor publicado `-` de ratios regionales.
+Su clave lógica verificada es `source_id, source_sheet, geography_level,
+geography, region_code, period, sex, indicator, unit`; el Parquet no añade una
+PK técnica. La tabla física equivalente usa una clave técnica de persistencia,
+sin inventar una llave de enlace entre fuentes o dominios.
 
 ## 5. Modelo lógico
 
@@ -176,6 +200,21 @@ erDiagram
         bigint poblacion_censada_2024
         double indicador_vulnerabilidad
         bigint n_oferta_urgencia_actual
+    }
+
+    mart_contexto_genero_indicador_sexo {
+        string source_id "uno de los cuatro inputs processed; contrato de origen"
+        string source_sheet
+        string geography_level "nacional o regional"
+        string geography
+        int region_code "NULL en nacional"
+        string period "texto publicado; no se fuerza a ano"
+        int year "NULL para PHQ-4 y periodos no anuales"
+        string sex "incluye Total, razones y brechas publicadas"
+        string indicator
+        double value "NULL si el valor publicado es textual"
+        string value_text "ej.: '-' publicado, no imputado"
+        string unit
     }
 
     egresos_f00_f99_nacional_2020_2025 {
@@ -343,6 +382,22 @@ erDiagram
         bigint n_oferta_urgencia_actual
     }
 
+    contexto_genero_indicador_por_sexo {
+        bigint indicador_contexto_genero_id PK "surrogate tecnico de persistencia del mart; no existe en la fuente"
+        text source_id "uno de los cuatro inputs processed; contrato de origen"
+        text source_sheet
+        text geography_level
+        text geography
+        integer region_code "NULL para filas nacionales"
+        text period "periodo publicado, nunca convertido forzosamente a ano"
+        smallint year "NULL para PHQ-4 y periodos multianuales"
+        text sex "sexo, Total, razon o brecha publicada"
+        text indicator
+        double_precision value "NULL si el valor publicado es textual"
+        text value_text "preserva '-' publicado"
+        text unit
+    }
+
     egresos_f00_f99_nacional {
         bigint egreso_id PK "surrogate tecnico GENERATED ALWAYS AS IDENTITY; no existe en DEIS, no identifica paciente, no habilita joins por paciente"
         smallint ano_egreso
@@ -404,6 +459,7 @@ Los esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egres
 | `mart_urgencias_establecimiento_monthly` | establecimiento × año × mes (8857 filas, 152 establec. 2021-2025) | `establecimiento_codigo, ano, mes` | `comuna_codigo` → `cartografia_comunal`; vínculo lógico (no FK) a `dim_oferta_urgencia_rm` | N → 1 comuna |
 | `mart_urgencias_comuna_etario_monthly` | comuna × año × mes × grupo etario (15300 filas, 51/52 comunas) | `comuna_codigo, ano, mes, grupo_etario_urgencia` | `comuna_codigo` → `cartografia_comunal` | N → 1 comuna |
 | `mart_mvp_territorial_comuna` | 1 comuna, corte único MVP (52 filas) | `comuna_codigo` | `comuna_codigo` → `cartografia_comunal` | 1 → 1 comuna |
+| `mart_contexto_genero_indicador_sexo` | 1 observación publicada por sexo/género, fuente, geografía, período e indicador (3956 filas) | clave lógica: `source_id, source_sheet, geography_level, geography, region_code, period, sex, indicator, unit`; físico: `indicador_contexto_genero_id` técnico | ninguna | mart contextual aislado |
 | `egresos_f00_f99_nacional_2020_2025` | 1 registro de egreso publicado, nacional (218794 filas) | sin clave natural (físico: `egreso_id` técnico) | ninguna (invariante: sin enlace por paciente/establecimiento; alcance nacional, sin FK a dimensiones exclusivas RM) | entidad aislada |
 
 ## 8. Decisiones de modelado (lógico → físico)
@@ -416,12 +472,12 @@ Los esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egres
 6. **`egresos_f00_f99_nacional` no tiene FK hacia ninguna dimensión territorial.** `region_residencia`/`comuna_residencia` son la residencia del paciente (no la ubicación del hospital) y el dataset es de alcance **nacional**, no solo RM. Crear una FK hacia `censo.cartografia_comunal` (exclusivamente RM) invalidaría todas las filas de residentes fuera de la Región Metropolitana; el dominio territorial no coincide.
 7. **`urgencias.mart_establecimiento_monthly.establecimiento_codigo` no tiene FK física hacia `geo.dim_oferta_urgencia_rm`.** Se verificó que 3 de los 152 `establecimiento_codigo` históricos (2021-2025) no están en el snapshot vigente de 174 establecimientos: `dim_oferta_urgencia_rm` es un snapshot **actual**, mientras que el mart es histórico. Una FK física real rompería la carga de esas 3 filas; se documenta como relación lógica no forzada, con `COMMENT ON TABLE`.
 8. **Las geometrías se modelan con tipos PostGIS nativos (`geometry(MultiPolygon, 4674)`), no `BYTEA`.** El stack objetivo del proyecto ya incluye PostGIS (`README.md` raíz); el SRID 4674 (SIRGAS 2000) es el CRS real observado en el GeoParquet fuente (`reports/eda/eda_cartografia_censo2024_subcomunal.md`), sin ninguna reproyección.
-9. **Esquemas PostgreSQL por dominio** (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egresos`), replicando los subdirectorios de `data/processed/`, en vez de forzar una convención genérica `dim_`/`fact_`: la estructura real del pipeline (censo, geo, pobreza, urgencias, marts, egresos) ya refleja una separación por dominio razonable y trazable.
-10. **`indicadores de contexto de género` no se persisten en este modelo** (ver sección 3): son contexto interpretativo externo que el proyecto prohíbe cruzar automáticamente con Urgencias/Egresos; incluirlos con FK hacia las entidades territoriales habría sido inventar una relación que el proyecto explícitamente no autoriza.
+9. **Esquemas PostgreSQL por dominio** (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egresos`, `contexto_genero`), replicando los subdirectorios de `data/processed/`, en vez de forzar una convención genérica `dim_`/`fact_`. `contexto_genero` permanece aislado para preservar la naturaleza interpretativa de sus fuentes.
+10. **Los cuatro indicadores de contexto de género alimentan `mart_contexto_genero_indicador_sexo`, no un mega-mart.** El mart canónico de serving conserva el contrato normalizado de cada input mediante `source_id`, geografía, `period`, `year`, `sex`, `indicator`, `unit`, `value` y `value_text`. La persistencia física equivalente es `contexto_genero.indicador_por_sexo`. No tiene FK hacia Urgencias, Egresos, cartografía ni otros marts; coincidir en sexo, año o geografía no habilita un join automático ni convierte estos indicadores en features.
 
 ## 9. Limitaciones
 
-- **Este DDL no se ejecutó contra una instancia PostgreSQL/PostGIS real**: no hay PostgreSQL, `psql` ni Docker disponibles en este entorno de ejecución. La validación realizada fue **estática**: parseo con `sqlparse` (Python) verificando balance de paréntesis/comillas, conteo y clasificación de las 58 sentencias (37 `CREATE`, 21 `COMMENT`), e inventario cruzado de 6 esquemas, 15 tablas, 15 PK, 13 FK, 15 `CHECK` y 15 índices. No se afirma ejecución real donde no la hubo.
+- **El DDL no se ejecutó contra una instancia PostgreSQL/PostGIS real**: no hay PostgreSQL, `psql` ni Docker disponibles en este entorno de ejecución. Se valida estáticamente en cada actualización; no se afirma ejecución real donde no la hubo.
 - Los dos diagramas `.mmd` sí se renderizaron exitosamente con `@mermaid-js/mermaid-cli` (v11.17.0, vía `npx`) a SVG y PNG, confirmando sintaxis Mermaid válida end-to-end (no solo inspección visual). Los artefactos persistentes (`modelo_datos_logico.svg/png`, `modelo_datos_fisico_postgresql.svg/png`) se generaron directamente desde los `.mmd` vigentes, sin edición manual posterior.
 - Las ~150 columnas socioeconómicas (`n_*`, `prom_*`) de `cartografia_zonal`/`cartografia_entidades`/`cartografia_manzanas` no están documentadas formalmente por el diccionario oficial del Censo 2024 (`reports/eda/eda_cartografia_censo2024_subcomunal.md`, sección 2); no se listan exhaustivamente aquí ni en el DDL por ese motivo, no por limitación de espacio únicamente.
 - 6 de 66873 geometrías de `cartografia_manzanas` RM son topológicamente inválidas (autointersección de anillo, documentado en el EDA); no impide crear la columna `geometry`, pero podría afectar operaciones geométricas exactas sobre esas 6 filas específicas.
@@ -430,4 +486,4 @@ Los esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egres
 
 ## 10. Relación con `db/schema_postgresql.sql`
 
-El DDL ejecutable vive en [`db/schema_postgresql.sql`](../../../db/schema_postgresql.sql) (fuera de `docs/`, para no mezclar evidencia académica con código de infraestructura) y es coherente 1:1 con el diagrama de la sección 6: mismos 6 esquemas, mismas 15 tablas, mismas PK/FK, mismos tipos. No contiene `INSERT`/`COPY`, credenciales, AWS/RDS, Docker, usuarios ni migrations — únicamente `CREATE EXTENSION` (PostGIS), `CREATE SCHEMA`, `CREATE TABLE` con `PRIMARY KEY`/`FOREIGN KEY`/`CHECK`/`COMMENT`, y los índices básicos necesarios para las FK no cubiertas por una PK compuesta y para las columnas `geometry` (`GIST`).
+El DDL ejecutable vive en [`db/schema_postgresql.sql`](../../../db/schema_postgresql.sql) (fuera de `docs/`, para no mezclar evidencia académica con código de infraestructura) y es coherente 1:1 con el diagrama de la sección 6: mismos 7 esquemas, mismas 16 tablas, mismas PK/FK, mismos tipos. No contiene `INSERT`/`COPY`, credenciales, AWS/RDS, Docker, usuarios ni migrations — únicamente `CREATE EXTENSION` (PostGIS), `CREATE SCHEMA`, `CREATE TABLE` con `PRIMARY KEY`/`FOREIGN KEY`/`CHECK`/`COMMENT`, y los índices básicos necesarios para las FK no cubiertas por una PK compuesta y para las columnas `geometry` (`GIST`).
