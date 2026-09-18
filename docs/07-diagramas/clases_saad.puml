@@ -1,0 +1,235 @@
+@startuml clases_saad
+'=====================================================================
+' SAAD - Diagrama de Clases (UML 2.5)
+'
+' Proyecto : Sistema de Analisis y Anticipacion de Demanda de Urgencia
+'            en Salud Mental para la Region Metropolitana
+' Fuente   : README.md, PROJECT_CONTEXT.md y modelo de datos aprobado
+'            (docs/07-diagramas/15-modelo-base-datos/).
+'
+' El diagrama es conceptual: sintetiza clases del dominio y sus
+' operaciones minimas; no reproduce todas las columnas del ERD.
+' Render   : java -jar plantuml.jar -charset UTF-8 -Playout=smetana
+'=====================================================================
+
+title Sistema SAAD — Diagrama de Clases (modelo conceptual)
+
+left to right direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam linetype ortho
+skinparam nodesep 25
+skinparam ranksep 40
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 10
+skinparam titleFontSize 18
+skinparam titleFontColor #1F3B63
+skinparam ArrowColor #44546A
+skinparam classAttributeIconSize 0
+
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2E5E8C
+  FontColor #1A1A1A
+  HeaderBackgroundColor #EAF0F6
+  BackgroundColor<<dimension>> #F3F8FC
+  BorderColor<<dimension>> #2E5E8C
+  BackgroundColor<<mart>> #EAF4E7
+  BorderColor<<mart>> #4E8C3F
+  BackgroundColor<<registro publicado>> #FFF4E5
+  BorderColor<<registro publicado>> #C08B2F
+}
+skinparam package {
+  BackgroundColor #FCFCFD
+  BorderColor #1F3B63
+  FontColor #1F3B63
+  FontStyle bold
+}
+skinparam note {
+  BackgroundColor #FFF4E5
+  BorderColor #C08B2F
+}
+
+'---------------------------------------------------------------------
+' Dominio territorial y dimensiones
+'---------------------------------------------------------------------
+package "Territorio y dimensiones" {
+  class Comuna <<dimension>> {
+    +comunaCodigo: String [5]
+    +nombre: String
+    +provincia: String
+    +geometria: MultiPolygon (EPSG:4674)
+    --
+    +construirResumenTerritorial(): ResumenTerritorial
+  }
+
+  class PoblacionComunaAnual <<dimension>> {
+    +comunaCodigo: String [5]
+    +ano: Integer
+    +tipoPoblacion: String = "proyeccion"
+    +poblacion: Long
+    --
+    +obtenerDenominador(): Long
+  }
+
+  class PoblacionComunaCenso2024 <<dimension>> {
+    +comunaCodigo: String [5]
+    +anoReferencia: Integer = 2024
+    +poblacionCensada: Long
+    +fuente: String
+    --
+    +obtenerPoblacionCensada(): Long
+  }
+
+  class VulnerabilidadComuna <<dimension>> {
+    +comunaCodigo: String [5]
+    +anoReferencia: Integer = 2022
+    +indicadorVulnerabilidad: Decimal
+    +direccionIndicador: String
+    --
+    +interpretarIndicador(): String
+  }
+}
+
+'---------------------------------------------------------------------
+' Dominio de urgencias
+'---------------------------------------------------------------------
+package "Urgencias (DEIS)" {
+  class EstablecimientoUrgencia <<dimension>> {
+    +establecimientoCodigo: Long
+    +comunaCodigo: String [5]
+    +tipoEstablecimiento: String
+    +estadoFuncionamiento: String
+    +latitud: Decimal
+    +longitud: Decimal
+    --
+    +reportaId36EnPeriodo(): Boolean
+  }
+
+  class UrgenciasComunaWeekly <<mart>> {
+    +comunaCodigo: String [5]
+    +ano: Integer
+    +semanaDeis: Integer
+    +atencionesId1: Integer
+    +atencionesId36: Integer
+    +tasaId36Por10000: Decimal
+    --
+    +calcularTasa(poblacion: Long): Decimal
+    +calcularProporcionId36(): Decimal
+  }
+
+  class UrgenciasComunaMonthly <<mart>> {
+    +comunaCodigo: String [5]
+    +ano: Integer
+    +mes: Integer
+    +atencionesId1: Integer
+    +atencionesId36: Integer
+    +tasaId36Por10000: Decimal
+    --
+    +calcularTasa(poblacion: Long): Decimal
+    +calcularProporcionId36(): Decimal
+  }
+
+  class UrgenciasEstablecimientoMonthly <<mart>> {
+    +establecimientoCodigo: Long
+    +ano: Integer
+    +mes: Integer
+    +comunaCodigo: String
+    +atencionesId36: Integer
+    --
+    +obtenerAtencionesId36(): Integer
+  }
+
+  class UrgenciasComunaEtarioMonthly <<mart>> {
+    +comunaCodigo: String [5]
+    +ano: Integer
+    +mes: Integer
+    +grupoEtarioUrgencia: String
+    +atencionesId36: Integer
+    --
+    +calcularProporcionEtaria(): Decimal
+  }
+}
+
+'---------------------------------------------------------------------
+' Integracion territorial y hospitalizacion
+'---------------------------------------------------------------------
+package "Marts e informacion hospitalaria" {
+  class MartMVPTerritorialComuna <<mart>> {
+    +comunaCodigo: String [5]
+    +tieneReporteUrgencias: Boolean
+    +atencionesId36_2025: Long [0..1]
+    +poblacion2025: Long
+    +poblacionCensada2024: Long
+    +indicadorVulnerabilidad: Decimal
+    +nOfertaUrgenciaActual: Long
+    --
+    +construirResumenTerritorial(): ResumenTerritorial
+  }
+
+  class EgresoF00F99 <<registro publicado>> {
+    +egresoId: Long <<tecnico>>
+    +anoEgreso: Integer
+    +sexo: String
+    +grupoEdad: String
+    +regionResidencia: Integer
+    +comunaResidencia: Integer
+    +diagnosticoPrincipal: String [F00-F99]
+    +diasEstada: Integer
+    +pertenenciaEstablecimientoSalud: String
+    +residenteRm: Boolean [0..1]
+    --
+    +esResidenteRM(): Boolean
+    +obtenerDuracionEstadia(): Integer
+  }
+}
+
+'---------------------------------------------------------------------
+' Relaciones territoriales y de granularidad
+'---------------------------------------------------------------------
+Comuna "1" -- "0..*" PoblacionComunaAnual : proyecta >
+Comuna "1" -- "0..1" PoblacionComunaCenso2024 : registra >
+Comuna "1" -- "0..1" VulnerabilidadComuna : caracteriza >
+Comuna "1" -- "0..*" EstablecimientoUrgencia : ubica >
+
+Comuna "1" -- "0..*" UrgenciasComunaWeekly : agrega >
+Comuna "1" -- "0..*" UrgenciasComunaMonthly : agrega >
+Comuna "1" -- "0..*" UrgenciasComunaEtarioMonthly : desagrega >
+Comuna "1" -- "0..1" MartMVPTerritorialComuna : resume >
+
+EstablecimientoUrgencia "0..1" .. "0..*" UrgenciasEstablecimientoMonthly : establecimientoCodigo
+
+'---------------------------------------------------------------------
+' Restricciones semanticas que no se expresan como asociaciones
+'---------------------------------------------------------------------
+note right of UrgenciasEstablecimientoMonthly
+  Vinculo logico por establecimientoCodigo.
+  No es FK garantizada: el mart historico
+  (2021-2025) y la oferta vigente son
+  temporalidades distintas.
+end note
+
+note right of EgresoF00F99
+  Registro publicado disociado, no paciente unico.
+  No tiene identificador de establecimiento ni
+  asociacion con Urgencias. regionResidencia y
+  comunaResidencia son residencia del paciente,
+  no ubicacion del hospital.
+end note
+
+note bottom of UrgenciasComunaMonthly
+  ID36 es un agregado DEIS de salud mental e incluye
+  ID37 (ideacion suicida, R45.8); no equivale
+  estrictamente a diagnosticos CIE-10 F00-F99.
+end note
+
+legend right
+  |= Estereotipo |= Significado |
+  |<#F3F8FC> <<dimension>> | Dimension territorial o de referencia |
+  |<#EAF4E7> <<mart>> | Agregado analitico con grano declarado |
+  |<#FFF4E5> <<registro publicado>> | Egreso hospitalario disociado |
+  | .. | Dependencia o vinculo logico, no FK estricta |
+endlegend
+
+footer README.md · modelo de datos aprobado · docs/07-diagramas/clases_saad.puml
+@enduml
