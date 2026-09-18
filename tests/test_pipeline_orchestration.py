@@ -18,6 +18,24 @@ def test_pipeline_help_command():
     assert "Orquestador del Pipeline de Datos" in result.stdout
     assert "--stage" in result.stdout
 
+def test_censo_cartografia_stages_are_registered():
+    """El download y clean de las 5 capas de cartografia Censo 2024 deben estar en el DAG."""
+    assert rp.STAGES["download_censo"]["depends_on"] == []
+    assert rp.STAGES["clean_censo"]["depends_on"] == ["download_censo"]
+    assert "download_censo" in rp.PIPELINE_ORDER
+    assert "clean_censo" in rp.PIPELINE_ORDER
+    assert rp.PIPELINE_ORDER.index("download_censo") < rp.PIPELINE_ORDER.index("clean_censo")
+
+    download_outputs = rp.STAGES["download_censo"]["outputs"]
+    for capa in ("Comunal", "Distrital", "Zonal", "Entidades", "Manzanas"):
+        assert any(capa in out for out in download_outputs), f"Falta capa {capa} en outputs de download_censo"
+    assert any("Diccionario_variables_geograficas" in out for out in download_outputs)
+
+    clean_outputs = rp.STAGES["clean_censo"]["outputs"]
+    for capa in ("Comunal", "Distrital", "Zonal", "Entidades", "Manzanas"):
+        assert any(f"RM_{capa}" in out for out in clean_outputs), f"Falta capa RM {capa} en outputs de clean_censo"
+
+
 def test_censo_poblacion_stages_are_registered():
     """El download y clean de población comunal Censo 2024 deben estar en el DAG."""
     assert rp.STAGES["download_censo_poblacion"]["depends_on"] == []

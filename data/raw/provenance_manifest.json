@@ -100,5 +100,110 @@
     "encuesta": "Casen 2022",
     "metodologia": "Estimación para Áreas Pequeñas (SAE, Fay-Herriot)",
     "cuadro": "Estimaciones de Tasa de Pobreza por Ingresos por Comuna 2022"
+  },
+  {
+    "source_id": "censo_2024_cartografia_distrital",
+    "snapshots": [
+      {
+        "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
+        "downloaded_at": "2026-09-18T20:30:15.833235+00:00",
+        "raw_path": "data/raw/censo/Cartografia_censo2024_Pais_Distrital.parquet",
+        "raw_filename": "Cartografia_censo2024_Pais_Distrital.parquet",
+        "raw_size": 165576123,
+        "raw_sha256": "37ba9a338cdd2eb9cf336821b67019396c266039a57cb47341445f08a29ffd71",
+        "transport": {
+          "filename": "Cartografia_censo2024_Pais.zip",
+          "size": 794658978,
+          "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
+          "archive_member": "Cartografia_censo2024_Pais_Distrital.parquet"
+        }
+      }
+    ],
+    "dataset": "censo",
+    "year": 2024
+  },
+  {
+    "source_id": "censo_2024_cartografia_zonal",
+    "snapshots": [
+      {
+        "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
+        "downloaded_at": "2026-09-18T20:30:18.935124+00:00",
+        "raw_path": "data/raw/censo/Cartografia_censo2024_Pais_Zonal.parquet",
+        "raw_filename": "Cartografia_censo2024_Pais_Zonal.parquet",
+        "raw_size": 24235286,
+        "raw_sha256": "0aa79acc6cf2fad6e37a167fd004df9b3a18b25e96bb4c06876bb043e05f124b",
+        "transport": {
+          "filename": "Cartografia_censo2024_Pais.zip",
+          "size": 794658978,
+          "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
+          "archive_member": "Cartografia_censo2024_Pais_Zonal.parquet"
+        }
+      }
+    ],
+    "dataset": "censo",
+    "year": 2024
+  },
+  {
+    "source_id": "censo_2024_cartografia_entidades",
+    "snapshots": [
+      {
+        "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
+        "downloaded_at": "2026-09-18T20:30:23.742254+00:00",
+        "raw_path": "data/raw/censo/Cartografia_censo2024_Pais_Entidades.parquet",
+        "raw_filename": "Cartografia_censo2024_Pais_Entidades.parquet",
+        "raw_size": 110063816,
+        "raw_sha256": "c2dfcc2d2462246ec27a643ea921200d7671f24a12f5923248424090801acd8b",
+        "transport": {
+          "filename": "Cartografia_censo2024_Pais.zip",
+          "size": 794658978,
+          "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
+          "archive_member": "Cartografia_censo2024_Pais_Entidades.parquet"
+        }
+      }
+    ],
+    "dataset": "censo",
+    "year": 2024
+  },
+  {
+    "source_id": "censo_2024_cartografia_manzanas",
+    "snapshots": [
+      {
+        "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
+        "downloaded_at": "2026-09-18T20:30:30.329734+00:00",
+        "raw_path": "data/raw/censo/Cartografia_censo2024_Pais_Manzanas.parquet",
+        "raw_filename": "Cartografia_censo2024_Pais_Manzanas.parquet",
+        "raw_size": 203341665,
+        "raw_sha256": "81f51a582276ed19948c757c20b0d03291a564359c87e106a3802d87d6a5b081",
+        "transport": {
+          "filename": "Cartografia_censo2024_Pais.zip",
+          "size": 794658978,
+          "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
+          "archive_member": "Cartografia_censo2024_Pais_Manzanas.parquet"
+        }
+      }
+    ],
+    "dataset": "censo",
+    "year": 2024
+  },
+  {
+    "source_id": "censo_2024_diccionario_variables_geograficas",
+    "snapshots": [
+      {
+        "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
+        "downloaded_at": "2026-09-18T20:30:33.139794+00:00",
+        "raw_path": "data/raw/censo/Diccionario_variables_geograficas_CPV24.xlsx",
+        "raw_filename": "Diccionario_variables_geograficas_CPV24.xlsx",
+        "raw_size": 23553,
+        "raw_sha256": "e09d706364a0436b56854bfd3e6e0f1b045f7ea411eeb4e7142b4f7f8b2d182d",
+        "transport": {
+          "filename": "Cartografia_censo2024_Pais.zip",
+          "size": 794658978,
+          "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
+          "archive_member": "Diccionario_variables_geograficas_CPV24.xlsx"
+        }
+      }
+    ],
+    "dataset": "censo",
+    "year": 2024
   }
 ]

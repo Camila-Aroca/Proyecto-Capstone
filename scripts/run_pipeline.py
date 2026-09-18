@@ -21,7 +21,14 @@ logger = logging.getLogger(__name__)
 STAGES = {
     "download_censo": {
         "module": "src.data.download_censo",
-        "outputs": ["data/raw/censo/Cartografia_censo2024_Pais_Comunal.parquet"],
+        "outputs": [
+            "data/raw/censo/Cartografia_censo2024_Pais_Comunal.parquet",
+            "data/raw/censo/Cartografia_censo2024_Pais_Distrital.parquet",
+            "data/raw/censo/Cartografia_censo2024_Pais_Zonal.parquet",
+            "data/raw/censo/Cartografia_censo2024_Pais_Entidades.parquet",
+            "data/raw/censo/Cartografia_censo2024_Pais_Manzanas.parquet",
+            "data/raw/censo/Diccionario_variables_geograficas_CPV24.xlsx"
+        ],
         "depends_on": []
     },
     "download_censo_poblacion": {
@@ -100,7 +107,13 @@ STAGES = {
     },
     "clean_censo": {
         "module": "src.data.clean_censo_comunas",
-        "outputs": ["data/processed/censo/Cartografia_censo2024_RM_Comunal.parquet"],
+        "outputs": [
+            "data/processed/censo/Cartografia_censo2024_RM_Comunal.parquet",
+            "data/processed/censo/Cartografia_censo2024_RM_Distrital.parquet",
+            "data/processed/censo/Cartografia_censo2024_RM_Zonal.parquet",
+            "data/processed/censo/Cartografia_censo2024_RM_Entidades.parquet",
+            "data/processed/censo/Cartografia_censo2024_RM_Manzanas.parquet"
+        ],
         "depends_on": ["download_censo"]
     },
     "clean_censo_poblacion": {
