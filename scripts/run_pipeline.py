@@ -187,6 +187,20 @@ STAGES = {
         ],
         "depends_on": ["clean_urgencias", "clean_poblacion_proyecciones"]
     },
+    "build_urgencias_establecimiento_mart": {
+        "module": "src.data.build_urgencias_establecimiento_mart",
+        "outputs": [
+            "data/processed/marts/mart_urgencias_establecimiento_monthly.parquet",
+        ],
+        "depends_on": ["clean_urgencias", "build_urgencias_comuna_marts"]
+    },
+    "build_urgencias_comuna_etario_mart": {
+        "module": "src.data.build_urgencias_comuna_etario_mart",
+        "outputs": [
+            "data/processed/marts/mart_urgencias_comuna_etario_monthly.parquet",
+        ],
+        "depends_on": ["clean_urgencias", "build_urgencias_comuna_marts"]
+    },
     "build_dim_oferta_urgencia_rm": {
         "module": "src.data.build_dim_oferta_urgencia_rm",
         "outputs": ["data/processed/geo/dim_oferta_urgencia_rm.parquet"],
@@ -229,6 +243,8 @@ PIPELINE_ORDER = [
     "eda_urgencias",
     "profile_urgencias_sm_coverage",
     "build_urgencias_comuna_marts",
+    "build_urgencias_establecimiento_mart",
+    "build_urgencias_comuna_etario_mart",
     "build_dim_oferta_urgencia_rm",
     "build_mart_mvp_territorial_comuna",
     "eda_contexto_genero"

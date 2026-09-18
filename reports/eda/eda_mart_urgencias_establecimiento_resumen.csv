@@ -1,0 +1,7 @@
+metrica,valor
+filas,8857
+establecimientos_unicos,152
+comunas_unicas,51
+establecimientos_con_60_meses,139
+reconciliacion_establecimiento_comuna_ok,True
+universo_comuna_mes_identico,True
