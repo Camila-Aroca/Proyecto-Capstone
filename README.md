@@ -110,6 +110,7 @@ Se utilizará una metodología ágil basada en:
 - [Especificación de Requisitos No Funcionales (ERNF-SAAD-2026)](docs/06-requisitos/Especificacion_Requisitos_No_Funcionales.docx)
 - [Diagrama UML de casos de uso](docs/07-diagramas/casos_de_uso_saad.png) — fuente: [`casos_de_uso_saad.puml`](docs/07-diagramas/casos_de_uso_saad.puml)
 - [Diagrama UML de componentes](docs/07-diagramas/componentes_saad.png) — fuente: [`componentes_saad.puml`](docs/07-diagramas/componentes_saad.puml)
+- [Diagrama ER del modelo de base de datos PostgreSQL/PostGIS](docs/07-diagramas/15-modelo-base-datos/modelo_datos_fisico_postgresql.png) — fuente: [`modelo_datos_fisico_postgresql.mmd`](docs/07-diagramas/15-modelo-base-datos/modelo_datos_fisico_postgresql.mmd)
 
 ## Equipo
 
