@@ -1,0 +1,157 @@
+%%{init: {"theme": "neutral"}}%%
+%% Modelo fisico OBJETIVO PostgreSQL/PostGIS - Item 15 (Modelo de base de datos)
+%% Stack objetivo segun README.md raiz: "Base de Datos: PostgreSQL con extension PostGIS".
+%% PostgreSQL/PostGIS es la arquitectura de persistencia OBJETIVO; el despliegue en AWS/RDS
+%% y la capa de accesibilidad OSM/GTFS/isocronas NO estan implementados (ver README item 15,
+%% seccion 9 "Limitaciones"). Este diagrama es coherente 1:1 con db/schema_postgresql.sql.
+%% Los esquemas replican los subdirectorios de data/processed/ para trazabilidad
+%% (censo, geo, pobreza, urgencias, marts, egresos).
+
+erDiagram
+
+    censo_cartografia_comunal {
+        char_5 comuna_codigo PK "renombrado desde CUT (INTEGER en el Parquet fuente); cast+zero-pad en carga"
+        text comuna_glosa
+        smallint cod_region
+        text provincia
+        geometry_multipolygon_4674 geom "PostGIS geometry(MultiPolygon,4674), SRID real SIRGAS 2000 observado en la fuente"
+    }
+
+    censo_cartografia_distrital {
+        bigint distrito_id PK "renombrado desde ID_DISTRITO (double); cast a BIGINT"
+        char_5 comuna_codigo FK
+        smallint cod_distrito
+        text distrito_glosa
+        geometry_multipolygon_4674 geom
+    }
+
+    censo_cartografia_zonal {
+        bigint zona_id PK "renombrado desde ID_ZONA (double); cast a BIGINT"
+        bigint distrito_id FK
+        numeric n_per "poblacion censada de la zona"
+        geometry_multipolygon_4674 geom
+    }
+
+    censo_cartografia_entidades {
+        bigint entidad_id PK "renombrado desde MANZENT (double, tabla Entidades); cast a BIGINT"
+        bigint distrito_id FK
+        text entidad_glosa
+        numeric n_per
+        geometry_multipolygon_4674 geom
+    }
+
+    censo_cartografia_manzanas {
+        bigint manzana_id PK "renombrado desde MANZENT (double, tabla Manzanas); cast a BIGINT"
+        bigint distrito_id FK
+        text tipo_mz "URBANO / ALDEA"
+        numeric n_per
+        geometry_multipolygon_4674 geom
+    }
+
+    censo_dim_poblacion_comuna_censo2024 {
+        char_5 comuna_codigo PK, FK "referencia censo.cartografia_comunal"
+        smallint ano_referencia
+        bigint poblacion_censada
+        text fuente
+    }
+
+    censo_dim_poblacion_comuna_anual {
+        char_5 comuna_codigo PK, FK
+        smallint ano PK
+        text tipo_poblacion PK "unico valor observado hoy: proyeccion"
+        bigint poblacion
+        text fuente
+    }
+
+    pobreza_dim_vulnerabilidad_comuna {
+        char_5 comuna_codigo PK, FK
+        smallint ano_referencia
+        numeric indicador_vulnerabilidad
+        text direccion_indicador
+        numeric intervalo_confianza_inferior
+        numeric intervalo_confianza_superior
+    }
+
+    geo_dim_oferta_urgencia_rm {
+        bigint establecimiento_codigo PK
+        char_5 comuna_codigo FK
+        text tipo_establecimiento
+        text estado_funcionamiento
+        numeric latitud
+        numeric longitud
+        boolean reporto_id36_periodo
+    }
+
+    urgencias_mart_comuna_weekly {
+        char_5 comuna_codigo PK, FK
+        smallint ano PK
+        smallint semana PK
+        integer atenciones_id1
+        integer atenciones_id36
+        numeric tasa_atenciones_id36_por_10000
+    }
+
+    urgencias_mart_comuna_monthly {
+        char_5 comuna_codigo PK, FK
+        smallint ano PK
+        smallint mes PK
+        integer atenciones_id1
+        integer atenciones_id36
+        numeric tasa_atenciones_id36_por_10000
+    }
+
+    urgencias_mart_establecimiento_monthly {
+        bigint establecimiento_codigo PK "SIN FK fisica a geo_dim_oferta_urgencia_rm: 3/152 codigos historicos ausentes del snapshot actual"
+        smallint ano PK
+        smallint mes PK
+        char_5 comuna_codigo "denormalizado, sin FK (ver README seccion 8)"
+        integer atenciones_id36
+    }
+
+    urgencias_mart_comuna_etario_monthly {
+        char_5 comuna_codigo PK, FK
+        smallint ano PK
+        smallint mes PK
+        text grupo_etario_urgencia PK "CHECK IN 5 valores DEIS"
+        integer atenciones_id36
+    }
+
+    marts_mvp_territorial_comuna {
+        char_5 comuna_codigo PK, FK
+        boolean tiene_reporte_urgencias
+        bigint atenciones_id36_2025 "NULLABLE: NULL si no reporta, nunca 0"
+        bigint poblacion_2025
+        bigint poblacion_censada_2024
+        numeric indicador_vulnerabilidad
+        bigint n_oferta_urgencia_actual
+    }
+
+    egresos_f00_f99_nacional {
+        bigint egreso_id PK "surrogate tecnico GENERATED ALWAYS AS IDENTITY; no existe en DEIS, no identifica paciente, no habilita joins por paciente"
+        smallint ano_egreso
+        text sexo
+        text grupo_edad
+        smallint region_residencia "residencia del paciente; SIN FK (alcance nacional, no solo RM)"
+        integer comuna_residencia "residencia del paciente; SIN FK (alcance nacional, no solo RM)"
+        text diag1 "CHECK diag1 LIKE 'F%'"
+        text pertenencia_establecimiento_salud
+        integer dias_estada
+        boolean residente_rm
+    }
+
+    censo_cartografia_comunal ||--o{ censo_cartografia_distrital : "1 comuna, N distritos"
+    censo_cartografia_distrital ||--o{ censo_cartografia_zonal : "1 distrito, N zonas urbanas"
+    censo_cartografia_distrital ||--o{ censo_cartografia_entidades : "1 distrito, N entidades rurales"
+    censo_cartografia_distrital ||--o{ censo_cartografia_manzanas : "1 distrito, N manzanas"
+
+    censo_cartografia_comunal ||--o| censo_dim_poblacion_comuna_censo2024 : "1 a 1"
+    censo_cartografia_comunal ||--o{ censo_dim_poblacion_comuna_anual : "1 a N (anos)"
+    censo_cartografia_comunal ||--o| pobreza_dim_vulnerabilidad_comuna : "1 a 1"
+    censo_cartografia_comunal ||--o{ geo_dim_oferta_urgencia_rm : "1 a N (establecimientos)"
+
+    censo_cartografia_comunal ||--o{ urgencias_mart_comuna_weekly : "1 a N (si reporta)"
+    censo_cartografia_comunal ||--o{ urgencias_mart_comuna_monthly : "1 a N (si reporta)"
+    censo_cartografia_comunal ||--o{ urgencias_mart_comuna_etario_monthly : "1 a N (si reporta)"
+    censo_cartografia_comunal ||--o| marts_mvp_territorial_comuna : "1 a 1"
+
+    geo_dim_oferta_urgencia_rm |o..o{ urgencias_mart_establecimiento_monthly : "relacion documentada, NO enforced por FK fisica"

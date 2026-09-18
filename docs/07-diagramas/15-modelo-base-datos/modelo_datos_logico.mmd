@@ -1,0 +1,176 @@
+%%{init: {"theme": "neutral"}}%%
+%% Modelo logico - Item 15 (Modelo de base de datos)
+%% Describe los datos TAL COMO EXISTEN HOY en data/processed/ (archivos Parquet/CSV).
+%% Estos archivos NO tienen constraints SQL activos; las PK/FK aqui mostradas son
+%% llaves logicas inferidas y verificadas sobre los datos (ver README seccion 5 y 7),
+%% no restricciones fisicas ya implementadas.
+%% Alcance excluido deliberadamente (ver README seccion 8):
+%% - data/processed/contexto_genero/* (indicadores de genero): contexto interpretativo
+%%   externo, no se cruza automaticamente con Urgencias/Egresos (AGENTS.md, PROJECT_CONTEXT.md).
+%% - Egresos NO tiene relacion de llave con Urgencias ni con establecimientos (invariante).
+
+erDiagram
+
+    %% grain: 1 fila = 1 comuna RM (52 filas). Ancla territorial del modelo.
+    cartografia_comunal {
+        int CUT PK "codigo unico territorial comuna, 5 digitos"
+        string COMUNA "nombre comuna"
+        string PROVINCIA
+        int COD_REGION
+        binary SHAPE "geometria WKB MultiPolygon, EPSG 4674"
+    }
+
+    %% grain: 1 fila = 1 distrito censal (451 filas RM, 52/52 comunas cubiertas)
+    cartografia_distrital {
+        double ID_DISTRITO PK "identificador distrito censal"
+        int CUT FK "comuna contenedora"
+        string DISTRITO "nombre distrito"
+        int COD_DISTRITO "codigo distrito dentro de la comuna"
+        binary SHAPE
+    }
+
+    %% grain: 1 fila = 1 zona urbana (1865 filas RM, cubre 51/52 comunas: sin San Pedro)
+    cartografia_zonal {
+        double ID_ZONA PK "identificador zona urbana"
+        double ID_DISTRITO FK "distrito contenedor, 0 huerfanos verificado"
+        int CUT "comuna, denormalizado (redundante con ID_DISTRITO->CUT)"
+        double n_per "poblacion censada de la zona"
+        binary SHAPE
+    }
+
+    %% grain: 1 fila = 1 entidad poblada rural dispersa (2072 filas RM, cubre 26/52 comunas)
+    cartografia_entidades {
+        double MANZENT PK "identificador entidad, llave real (no ID_ENTIDAD: tiene 16 duplicados)"
+        double ID_DISTRITO FK "distrito contenedor, 0 huerfanos verificado"
+        int CUT "comuna, denormalizado"
+        string ENTIDAD "nombre entidad"
+        double n_per
+        binary SHAPE
+    }
+
+    %% grain: 1 fila = 1 manzana (urbana + aldea rural) (66873 filas RM, cubre 52/52 comunas)
+    cartografia_manzanas {
+        double MANZENT PK "identificador manzana, llave real"
+        double ID_DISTRITO FK "distrito contenedor, 0 huerfanos verificado"
+        int CUT "comuna, denormalizado"
+        string TIPO_MZ "URBANO / ALDEA"
+        double n_per
+        binary SHAPE
+    }
+
+    %% grain: 1 fila = 1 comuna RM, periodo unico 2024 (52 filas)
+    dim_poblacion_comuna_censo2024 {
+        string comuna_codigo PK "CUT como string; equivalente a CUT de cartografia_comunal"
+        string comuna_glosa
+        int ano_referencia "2024, periodo unico"
+        bigint poblacion_censada
+        string fuente
+    }
+
+    %% grain: 1 fila = comuna x ano (260 filas = 52 comunas x 5 anos, 2021-2025)
+    dim_poblacion_comuna_anual {
+        string comuna_codigo PK, FK
+        int ano PK "2021-2025 en este processed"
+        bigint poblacion
+        string tipo_poblacion "unico valor observado: proyeccion"
+        string fuente
+    }
+
+    %% grain: 1 fila = 1 comuna RM, periodo unico Casen 2022 (52 filas, dimension estatica)
+    dim_vulnerabilidad_comuna {
+        string comuna_codigo PK, FK
+        int ano_referencia "2022, periodo unico"
+        double indicador_vulnerabilidad "tasa de pobreza por ingresos (SAE), no indice general"
+        string direccion_indicador "mayor_valor_mayor_vulnerabilidad"
+    }
+
+    %% grain: 1 fila = 1 establecimiento con oferta de urgencia RM vigente (174 filas, snapshot actual)
+    dim_oferta_urgencia_rm {
+        bigint establecimiento_codigo PK "codigo DEIS"
+        string comuna_codigo FK
+        string tipo_establecimiento
+        double latitud
+        double longitud
+        bool reporto_id36_periodo "evidencia descriptiva 2021-2025, no criterio de inclusion"
+    }
+
+    %% grain: 1 fila = comuna x ano x semana DEIS (13362 filas, 51/52 comunas con reporte)
+    mart_urgencias_comuna_weekly {
+        string comuna_codigo PK, FK
+        int ano PK
+        int semana PK "calendario DEIS publicado, no semana ISO"
+        int atenciones_id1 "atenciones generales"
+        int atenciones_id36 "atenciones salud mental (incluye ID37/R45.8)"
+        double tasa_atenciones_id36_por_10000
+    }
+
+    %% grain: 1 fila = comuna x ano x mes (3060 filas, 51/52 comunas)
+    mart_urgencias_comuna_monthly {
+        string comuna_codigo PK, FK
+        int ano PK
+        int mes PK
+        int atenciones_id1
+        int atenciones_id36
+        double tasa_atenciones_id36_por_10000
+    }
+
+    %% grain: 1 fila = establecimiento x ano x mes (8857 filas, 152 establecimientos con reporte 2021-2025)
+    mart_urgencias_establecimiento_monthly {
+        bigint establecimiento_codigo PK "vinculo logico a dim_oferta_urgencia_rm NO garantizado al 100%: 3/152 no estan en el snapshot actual"
+        int ano PK
+        int mes PK
+        string comuna_codigo "denormalizado desde el maestro de establecimientos"
+        int atenciones_id36
+    }
+
+    %% grain: 1 fila = comuna x ano x mes x grupo etario (15300 filas, formato largo, 51/52 comunas)
+    mart_urgencias_comuna_etario_monthly {
+        string comuna_codigo PK, FK
+        int ano PK
+        int mes PK
+        string grupo_etario_urgencia PK "5 grupos publicados DEIS"
+        int atenciones_id36
+    }
+
+    %% grain: 1 fila = 1 comuna RM (52 filas, corte unico MVP; Vitacura incluida con metricas NULL, no reporta Urgencias)
+    mart_mvp_territorial_comuna {
+        string comuna_codigo PK, FK
+        bool tiene_reporte_urgencias
+        bigint atenciones_id36_2025 "NULL si no reporta, nunca 0"
+        bigint poblacion_2025
+        bigint poblacion_censada_2024
+        double indicador_vulnerabilidad
+        bigint n_oferta_urgencia_actual
+    }
+
+    %% grain: 1 fila = 1 registro de egreso hospitalario publicado DEIS (218794 filas, nacional, no pacientes unicos)
+    %% SIN clave natural (disociado: sin id de paciente ni de establecimiento).
+    %% SIN relacion de llave con ninguna otra entidad de este modelo (invariante AGENTS.md).
+    egresos_f00_f99_nacional_2020_2025 {
+        int ano_egreso "sin clave natural: grano = 1 registro publicado, no deduplicado"
+        string sexo "esquema incompatible en 2021 vs resto (no homologado)"
+        string grupo_edad "esquema incompatible en 2021 vs resto (no homologado)"
+        int region_residencia "residencia del PACIENTE, no ubicacion del hospital; alcance nacional"
+        int comuna_residencia "residencia del PACIENTE, no ubicacion del hospital; alcance nacional"
+        string diag1 "CIE-10 F00-F99 (diagnostico principal)"
+        string pertenencia_establecimiento_salud "pertenencia SNSS del establecimiento; no identifica cual establecimiento"
+        int dias_estada
+        bool residente_rm "derivada de region_residencia; NULL si region_residencia es nula en origen"
+    }
+
+    cartografia_comunal ||--o{ cartografia_distrital : "1 comuna tiene N distritos"
+    cartografia_distrital ||--o{ cartografia_zonal : "1 distrito tiene N zonas urbanas (parcial: 51/52 comunas)"
+    cartografia_distrital ||--o{ cartografia_entidades : "1 distrito tiene N entidades rurales (parcial: 26/52 comunas)"
+    cartografia_distrital ||--o{ cartografia_manzanas : "1 distrito tiene N manzanas (52/52 comunas)"
+
+    cartografia_comunal ||--o| dim_poblacion_comuna_censo2024 : "1 comuna, 1 poblacion censada 2024"
+    cartografia_comunal ||--o{ dim_poblacion_comuna_anual : "1 comuna, N anos de proyeccion"
+    cartografia_comunal ||--o| dim_vulnerabilidad_comuna : "1 comuna, 1 indicador 2022"
+    cartografia_comunal ||--o{ dim_oferta_urgencia_rm : "1 comuna, N establecimientos de urgencia"
+
+    cartografia_comunal ||--o{ mart_urgencias_comuna_weekly : "1 comuna, N semanas (si reporta)"
+    cartografia_comunal ||--o{ mart_urgencias_comuna_monthly : "1 comuna, N meses (si reporta)"
+    cartografia_comunal ||--o{ mart_urgencias_comuna_etario_monthly : "1 comuna, N meses x grupo etario (si reporta)"
+    cartografia_comunal ||--o| mart_mvp_territorial_comuna : "1 comuna, 1 fila MVP (52/52, incl. sin reporte)"
+
+    dim_oferta_urgencia_rm |o..o{ mart_urgencias_establecimiento_monthly : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (snapshot actual vs historico 2021-2025)"
