@@ -74,11 +74,11 @@ sin inventar una llave de enlace entre fuentes o dominios.
 
 ## 5. Modelo lógico
 
-Artefacto visual persistente (PNG, generado desde el `.mmd` con Mermaid CLI):
+Artefactos visuales persistentes generados desde el `.mmd` con Mermaid CLI. El SVG es la versión recomendada para inspección detallada y zoom; el PNG se mantiene como preview rasterizado de alta resolución:
 
 ![Modelo de datos lógico](modelo_datos_logico.png)
 
-Fuentes: [`modelo_datos_logico.mmd`](modelo_datos_logico.mmd) (Mermaid, editable) · [`modelo_datos_logico.svg`](modelo_datos_logico.svg) (vectorial).
+Fuentes: [`modelo_datos_logico.mmd`](modelo_datos_logico.mmd) (Mermaid, editable) · [`modelo_datos_logico.svg`](modelo_datos_logico.svg) (vectorial, recomendado para inspección detallada) · [`modelo_datos_logico.png`](modelo_datos_logico.png) (preview rasterizado).
 
 ```mermaid
 %%{init: {"theme": "neutral"}}%%
@@ -255,11 +255,11 @@ Las capas `cartografia_zonal`, `cartografia_entidades` y `cartografia_manzanas` 
 
 ## 6. Modelo físico objetivo PostgreSQL/PostGIS
 
-Artefacto visual persistente (PNG, generado desde el `.mmd` con Mermaid CLI):
+Artefactos visuales persistentes generados desde el `.mmd` con Mermaid CLI. El SVG es la versión recomendada para inspección detallada y zoom; el PNG se mantiene como preview rasterizado de alta resolución:
 
 ![Modelo de datos físico objetivo PostgreSQL/PostGIS](modelo_datos_fisico_postgresql.png)
 
-Fuentes: [`modelo_datos_fisico_postgresql.mmd`](modelo_datos_fisico_postgresql.mmd) (Mermaid, editable) · [`modelo_datos_fisico_postgresql.svg`](modelo_datos_fisico_postgresql.svg) (vectorial).
+Fuentes: [`modelo_datos_fisico_postgresql.mmd`](modelo_datos_fisico_postgresql.mmd) (Mermaid, editable) · [`modelo_datos_fisico_postgresql.svg`](modelo_datos_fisico_postgresql.svg) (vectorial, recomendado para inspección detallada) · [`modelo_datos_fisico_postgresql.png`](modelo_datos_fisico_postgresql.png) (preview rasterizado).
 
 ```mermaid
 %%{init: {"theme": "neutral"}}%%
