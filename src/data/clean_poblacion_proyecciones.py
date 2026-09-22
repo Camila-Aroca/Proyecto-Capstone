@@ -34,6 +34,7 @@ import tempfile
 from typing import Any, Final
 
 from openpyxl import load_workbook
+import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
@@ -51,6 +52,8 @@ SHEET_NAME = "Est. y Proy. de Pob. Comunal"
 REGION_METROPOLITANA_CODIGO = 13
 YEARS: Final[tuple[int, ...]] = (2021, 2022, 2023, 2024, 2025)
 FIRST_YEAR_COLUMN = 2002
+# Ultimo anio publicado por el producto INE ("2002-2035"); limita las lecturas.
+LAST_YEAR_COLUMN = 2035
 FIRST_YEAR_COLUMN_INDEX = 8
 SEXOS_ESPERADOS: Final[frozenset[int]] = frozenset({1, 2})
 EDAD_MIN = 0
@@ -89,7 +92,9 @@ def _load_comuna_glosas(catalog_path: Path) -> dict[str, str]:
     return glosas
 
 
-def _aggregate_rm_population(raw_path: Path) -> dict[tuple[str, int], int]:
+def _aggregate_rm_population(
+    raw_path: Path, years: tuple[int, ...] = YEARS
+) -> dict[tuple[str, int], int]:
     """Suma población por comuna×año desde filas sexo×edad simple, sin doble conteo."""
     workbook = load_workbook(raw_path, read_only=True, data_only=True)
     try:
@@ -105,7 +110,7 @@ def _aggregate_rm_population(raw_path: Path) -> dict[tuple[str, int], int]:
             if edad is None or not (EDAD_MIN <= edad <= EDAD_MAX):
                 raise ValueError(f"Edad simple fuera de rango esperado [{EDAD_MIN}, {EDAD_MAX}]: {edad!r}.")
             comuna_codigo = str(int(comuna_cut))
-            for year in YEARS:
+            for year in years:
                 value = row[_year_column_index(year)]
                 if value is None:
                     raise ValueError(f"Población nula en la fuente INE para comuna {comuna_codigo}, año {year}.")
@@ -116,7 +121,9 @@ def _aggregate_rm_population(raw_path: Path) -> dict[tuple[str, int], int]:
         workbook.close()
 
 
-def _validate_totals(totals: dict[tuple[str, int], int]) -> None:
+def _validate_totals(
+    totals: dict[tuple[str, int], int], years: tuple[int, ...] = YEARS
+) -> None:
     expected_codes = {str(cut) for cut in EXPECTED_RM_CUTS}
     observed_codes = {code for code, _ in totals.keys()}
     if observed_codes != expected_codes:
@@ -126,7 +133,7 @@ def _validate_totals(totals: dict[tuple[str, int], int]) -> None:
             f"Comunas RM inconsistentes con el CUT oficial. Faltantes: {sorted(missing)}, "
             f"inesperadas: {sorted(extra)}."
         )
-    expected_combinations = len(expected_codes) * len(YEARS)
+    expected_combinations = len(expected_codes) * len(years)
     if len(totals) != expected_combinations:
         raise ValueError(
             f"Cobertura comuna×año incompleta: se esperaban {expected_combinations} combinaciones, "
@@ -135,6 +142,33 @@ def _validate_totals(totals: dict[tuple[str, int], int]) -> None:
     for (comuna_codigo, year), poblacion in totals.items():
         if poblacion <= 0:
             raise ValueError(f"Población no positiva para comuna {comuna_codigo}, año {year}.")
+
+
+def load_rm_population(
+    raw_path: Path = RAW_PATH, years: tuple[int, ...] = YEARS
+) -> pd.DataFrame:
+    """Poblacion proyectada RM por comuna y anio, en memoria y validada.
+
+    Permite leer anios fuera del periodo canonico de la dimension (por ejemplo,
+    el anio en curso para evaluar un pronostico) desde el mismo cuadro oficial
+    INE y con las mismas validaciones, **sin** modificar
+    `dim_poblacion_comuna_anual.parquet`, cuyo contrato sigue siendo 2021-2025.
+    """
+    fuera = [y for y in years if not FIRST_YEAR_COLUMN <= y <= LAST_YEAR_COLUMN]
+    if fuera:
+        raise ValueError(
+            f"Anios fuera del cuadro INE ({FIRST_YEAR_COLUMN}-{LAST_YEAR_COLUMN}): {fuera}"
+        )
+    if not raw_path.exists():
+        raise FileNotFoundError(f"No existe el RAW requerido: {raw_path.as_posix()}")
+    totals = _aggregate_rm_population(raw_path, years)
+    _validate_totals(totals, years)
+    return pd.DataFrame(
+        [
+            {"comuna_codigo": comuna, "ano": ano, "poblacion": poblacion}
+            for (comuna, ano), poblacion in sorted(totals.items())
+        ]
+    )
 
 
 def build_dim_poblacion_comuna_anual(

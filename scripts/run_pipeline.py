@@ -238,6 +238,35 @@ STAGES = {
         "module": "scripts.eda_mart_contexto_genero_indicador_sexo",
         "outputs": ["reports/eda/eda_mart_contexto_genero_indicador_sexo.md"],
         "depends_on": ["build_mart_contexto_genero_indicador_sexo"]
+    },
+    "eda_series_demanda_sm": {
+        "module": "scripts.eda_series_demanda_sm",
+        "outputs": [
+            "reports/eda/eda_series_demanda_sm.md",
+            "reports/eda/eda_series_demanda_sm_resumen.csv",
+        ],
+        "depends_on": ["build_urgencias_comuna_marts"]
+    },
+    "benchmark_demanda_sm": {
+        "module": "scripts.run_demand_benchmark",
+        "outputs": [
+            "reports/modeling/benchmark_demanda_sm.md",
+            "reports/modeling/benchmark_demanda_sm_resumen.csv",
+            "reports/modeling/benchmark_demanda_sm_seleccion.json",
+        ],
+        "depends_on": ["build_urgencias_comuna_marts", "clean_establishments"]
+    },
+    "evaluate_holdout_demanda_sm": {
+        "module": "scripts.evaluate_holdout_demanda_sm",
+        "outputs": [
+            "reports/modeling/holdout_demanda_sm.md",
+            "reports/modeling/holdout_demanda_sm_resumen.csv",
+        ],
+        "depends_on": [
+            "benchmark_demanda_sm",
+            "clean_urgencias",
+            "clean_poblacion_proyecciones",
+        ]
     }
 }
 
@@ -270,7 +299,10 @@ PIPELINE_ORDER = [
     "build_dim_oferta_urgencia_rm",
     "build_mart_mvp_territorial_comuna",
     "eda_contexto_genero",
-    "eda_mart_contexto_genero_indicador_sexo"
+    "eda_mart_contexto_genero_indicador_sexo",
+    "eda_series_demanda_sm",
+    "benchmark_demanda_sm",
+    "evaluate_holdout_demanda_sm"
 ]
 
 SUPPORTED_URGENCIAS_YEARS = tuple(range(2020, 2027))
@@ -309,6 +341,10 @@ def check_outputs_exist(outputs: list[str]) -> bool:
                     workbook.close()
             elif ext == '.md':
                 if not p.read_text(encoding="utf-8").strip():
+                    return False
+            elif ext == '.json':
+                import json
+                if not json.loads(p.read_text(encoding="utf-8")):
                     return False
         except Exception as e:
             logger.warning(f"Archivo corrupto o ilegible {p}: {e}")

@@ -97,15 +97,21 @@ BASE_SOURCE_COLUMNS: Final[tuple[str, ...]] = (
 
 
 def load_urgencias_source(
-    input_dir: Path = INPUT_DIR, extra_columns: tuple[str, ...] = ()
+    input_dir: Path = INPUT_DIR,
+    extra_columns: tuple[str, ...] = (),
+    years: tuple[int, ...] = YEARS,
 ) -> pd.DataFrame:
     """Lee sólo los IDs y las columnas requeridas desde los Parquet históricos.
 
     `extra_columns` permite a los marts de establecimiento/etario pedir
     columnas adicionales (p. ej. `establecimiento_glosa` o los desgloses
     etarios) sin duplicar la lectura filtrada por `id_causa`.
+
+    `years` permite leer anios fuera del periodo canonico de los marts (por
+    ejemplo, el anio en curso para evaluar un pronostico) con exactamente la
+    misma logica de carga, sin modificar los marts publicados.
     """
-    files = [input_dir / f"urgencias_rm_{year}.parquet" for year in YEARS]
+    files = [input_dir / f"urgencias_rm_{year}.parquet" for year in years]
     absent = [path.as_posix() for path in files if not path.is_file()]
     if absent:
         raise FileNotFoundError(f"Parquet de Urgencias no disponible: {absent}")
