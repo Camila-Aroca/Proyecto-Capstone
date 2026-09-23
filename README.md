@@ -2,7 +2,7 @@
 
 ## Descripción del proyecto
 
-Este proyecto propone desarrollar una plataforma analítica que integre fuentes oficiales del DEIS/MINSAL para caracterizar, proyectar y territorializar la presión sobre la red pública de urgencia en salud mental de la Región Metropolitana.
+Este proyecto propone desarrollar una plataforma analítica que integre fuentes oficiales del DEIS/MINSAL para caracterizar, proyectar y territorializar la presión sobre la red pública de urgencia en salud mental.
 
 La plataforma busca responder:
 
@@ -13,9 +13,9 @@ La plataforma busca responder:
 
 ## Problema
 
-La planificación de la red de urgencia en salud mental es principalmente reactiva. Aunque existen datos públicos oficiales, estos se encuentran fragmentados y requieren procesamiento para transformarse en evidencia útil para la toma de decisiones.
+La planificación de la red de urgencia en salud mental es principalmente reactiva. Aunque existen datos públicos oficiales, estos se encuentran fragmentados y requieren procesamiento para transformar la información en indicadores útiles para la planificación sanitaria.
 
-Actualmente, la demanda y la accesibilidad territorial no se analizan de manera integrada. Esto dificulta observar brechas territoriales que no son visibles mediante indicadores descriptivos aislados. Además, es necesario auditar la calidad de los datos y evaluar posibles problemas de subregistro antes de comparar territorios o establecimientos.
+Actualmente, la demanda y la accesibilidad territorial no se analizan de manera integrada. Esto dificulta observar brechas territoriales que no son visibles mediante indicadores descriptivos aislados.
 
 ## Componentes propuestos
 
@@ -45,7 +45,7 @@ El proyecto se desarrollará utilizando tecnologías modernas orientadas al aná
 
 ## Público objetivo
 
-- Cliente piloto: profesional o institución accesible vinculada con salud mental, atención primaria, urgencias, planificación sanitaria, salud pública o gestión territorial. Su identificación está en proceso.
+- Cliente piloto: profesional o institución accesible vinculada con salud mental, atención primaria, urgencias, planificación sanitaria, salud pública o gestión territorial. Su identificación y validación deben confirmarse con la profesora.
 - Usuarios potenciales futuros: Servicios de Salud Metropolitanos, hospitales públicos, municipios, corporaciones de salud y unidades de planificación.
 
 Belén Guzmán participa como experta de dominio y contacto inicial, pero no está confirmada como clienta del proyecto.
@@ -124,4 +124,6 @@ Se utilizará una metodología ágil basada en:
 
 ## Licencia
 
-El uso y la licencia del repositorio están pendientes de definición por el equipo.
+Este proyecto se distribuye bajo la licencia MIT. Puedes consultar el texto completo en [LICENSE](LICENSE).
+
+Copyright (c) 2026 Camila Aroca y colaboradores.
