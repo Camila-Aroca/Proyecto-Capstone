@@ -43,12 +43,56 @@ El proyecto se desarrollará utilizando tecnologías modernas orientadas al aná
 - **Diseño y Prototipado:** Figma.
 - **IDE:** Visual Studio Code.
 
+## Ejecución local de la plataforma
+
+La plataforma tiene dos partes separadas:
+
+- **Backend** (`src/api/`): API FastAPI que sirve los datos observados y el pronóstico del modelo seleccionado por el benchmark.
+- **Frontend** (`frontend/`): tablero React que consume esa API.
+
+Requisito previo: haber ejecutado el pipeline (`python scripts/run_pipeline.py`), porque la API consume sus outputs (marts, cartografía y `reports/modeling/benchmark_demanda_sm_seleccion.json`).
+
+```bash
+# Terminal 1: backend en http://127.0.0.1:8000 (documentación en /docs)
+uvicorn src.api.main:app --reload
+
+# Terminal 2: frontend en http://localhost:5173
+cd frontend
+npm install
+npm run dev
+```
+
+Al arrancar, la API carga los datos y calcula el pronóstico en segundo plano (unos 10 segundos). Mientras tanto, los endpoints de pronóstico responden `503` con `Retry-After` y el frontend reintenta solo.
+
 ## Público objetivo
 
 - Cliente piloto: profesional o institución accesible vinculada con salud mental, atención primaria, urgencias, planificación sanitaria, salud pública o gestión territorial. Su identificación y validación deben confirmarse con la profesora.
 - Usuarios potenciales futuros: Servicios de Salud Metropolitanos, hospitales públicos, municipios, corporaciones de salud y unidades de planificación.
 
 Belén Guzmán participa como experta de dominio y contacto inicial, pero no está confirmada como clienta del proyecto.
+
+## Alcance del MVP
+
+El MVP es el alcance comprometido para la entrega final (26 de noviembre de 2026). Lo que no aparece en "Incluye" queda fuera del MVP. El detalle, con los requisitos asociados, está en la sección 1.3 de la [Especificación de Requisitos Funcionales](docs/06-requisitos/Especificacion_Requisitos_Funcionales.docx).
+
+### Incluye en el MVP
+
+- **Base de datos confiable:** ingesta, normalización y auditoría de calidad de urgencias y egresos del DEIS, con ejecución reproducible.
+- **Proyección de demanda:** pronóstico semanal de atenciones de urgencia en salud mental a 4–8 semanas, para la RM y sus comunas, con intervalos de predicción y evaluación contra un baseline estacional.
+- **Análisis territorial:** georreferenciación de la oferta pública de urgencia, isócronas por red vial y transporte público, cobertura poblacional y cruce con vulnerabilidad comunal.
+- **Caracterización de hospitalizaciones:** duración de estadía de los egresos F00–F99 y sus factores asociados (sexo, previsión y pertenencia al SNSS).
+- **Visualización de resultados:** plataforma web con series, mapas y tablas, con advertencias de interpretación.
+- **API de consulta** y **trazabilidad** de fuentes y versiones de datos.
+
+### Fuera del MVP
+
+- **Gestión de pacientes:** no se registran, siguen ni derivan pacientes, ni se tratan fichas clínicas o datos identificables.
+- **Gestión de cupos o camas en tiempo real.**
+- **Decisiones clínicas:** ni diagnóstico, ni triage, ni decisiones sobre pacientes individuales.
+- **Predicción de riesgo individual.**
+- **Integración en tiempo real con sistemas hospitalarios.**
+- **Otras regiones y sector privado de salud.**
+- **Extensiones opcionales** (reentrenamiento programado, comparación de escenarios, desagregación por subcausa, exportación de capas): solo si el avance lo permite.
 
 ## Alcance y limitaciones
 

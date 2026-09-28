@@ -1,0 +1,271 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+/* ------------------------------------------------------------------------
+   Tokens por rol. El cuerpo de la app usa roles, nunca hex sueltos: el modo
+   oscuro solo redefine estos valores. Base: paleta de referencia de datos
+   (dataviz), que la app conserva como identidad.
+   ------------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+
+  /* Superficies: pagina < panel < panel elevado (encabezados de tabla, menus). */
+  --page: #f4f4f2;
+  --surface: #fcfcfb;
+  --surface-2: #f0efec;
+  --border: rgba(11, 11, 11, 0.1);
+  --border-strong: rgba(11, 11, 11, 0.18);
+
+  /* Tinta. ink-3 cumple 4.5:1 sobre --surface para texto pequeno; --muted se
+     reserva para graficos (ejes, grillas), nunca para texto de lectura. */
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --ink-3: #64635e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+
+  /* Acento: seleccion, foco y serie principal. Nada decorativo. */
+  --accent: #2a78d6;
+  --accent-ink: #1c5cab;
+  --accent-weak: rgba(42, 120, 214, 0.1);
+  --series-1: #2a78d6;
+  --band: rgba(42, 120, 214, 0.16);
+  --focus: #2a78d6;
+
+  /* Cambio esperado (divergente) y ausencia de dato. */
+  --alza: #e34948;
+  --alza-weak: rgba(227, 73, 72, 0.12);
+  --baja: #256abf;
+  --baja-weak: rgba(37, 106, 191, 0.12);
+  --estable: #e1e0d9;
+  --sin-dato: #b9b8b0;
+
+  /* Secuencial de un tono (concentracion), claro -> oscuro. */
+  --seq-1: #cde2fb;
+  --seq-2: #9ec5f4;
+  --seq-3: #6da7ec;
+  --seq-4: #3987e5;
+  --seq-5: #1c5cab;
+
+  /* Aviso de interpretacion (no es un error). */
+  --notice-bg: #fff6e0;
+  --notice-border: rgba(160, 110, 0, 0.28);
+  --notice-ink: #5a3f00;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --surface-2: #232321;
+    --border: rgba(255, 255, 255, 0.1);
+    --border-strong: rgba(255, 255, 255, 0.18);
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --ink-3: #a8a79f;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --accent: #3987e5;
+    --accent-ink: #86b6ef;
+    --accent-weak: rgba(57, 135, 229, 0.16);
+    --series-1: #3987e5;
+    --band: rgba(57, 135, 229, 0.22);
+    --focus: #6da7ec;
+    --alza: #e66767;
+    --alza-weak: rgba(230, 103, 103, 0.16);
+    --baja: #5598e7;
+    --baja-weak: rgba(85, 152, 231, 0.16);
+    --estable: #383835;
+    --sin-dato: #6b6a64;
+    /* En oscuro, lo bajo se funde con la superficie y lo alto destaca. */
+    --seq-1: #1a3456;
+    --seq-2: #184f95;
+    --seq-3: #2a78d6;
+    --seq-4: #5598e7;
+    --seq-5: #9ec5f4;
+    --notice-bg: #2a2310;
+    --notice-border: rgba(250, 178, 25, 0.28);
+    --notice-ink: #f4d58a;
+  }
+}
+
+/* ------------------------------------------------------------------------ */
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@layer components {
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .panel-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 1rem 1.25rem 0.75rem;
+  }
+
+  .panel-title {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .text-2 { color: var(--ink-2); }
+  .text-3 { color: var(--ink-3); }
+
+  /* Control segmentado: misma forma para toda seleccion excluyente. */
+  .segmented {
+    display: inline-flex;
+    padding: 2px;
+    gap: 2px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .segmented button {
+    padding: 0.25rem 0.625rem;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    color: var(--ink-2);
+    transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
+  }
+  .segmented button:hover { color: var(--ink); }
+  .segmented button[aria-pressed="true"] {
+    background: var(--surface);
+    color: var(--ink);
+    font-weight: 600;
+    box-shadow: 0 0 0 1px var(--border-strong);
+  }
+
+  .select {
+    appearance: none;
+    padding: 0.375rem 2rem 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--ink);
+    background-color: var(--surface);
+    background-image: linear-gradient(45deg, transparent 50%, var(--ink-2) 50%),
+      linear-gradient(135deg, var(--ink-2) 50%, transparent 50%);
+    background-position: calc(100% - 15px) 55%, calc(100% - 10px) 55%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    transition: border-color 150ms var(--ease-out);
+  }
+  .select:hover { border-color: var(--ink-3); }
+
+  .link-button {
+    font-size: 0.8125rem;
+    color: var(--accent-ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* Distintivo de cambio: icono + texto, nunca solo color. */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.0625rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-alza { background: var(--alza-weak); color: var(--ink); }
+  .badge-alza .badge-icon { color: var(--alza); }
+  .badge-baja { background: var(--baja-weak); color: var(--ink); }
+  .badge-baja .badge-icon { color: var(--baja); }
+  .badge-estable { background: var(--surface-2); color: var(--ink-2); }
+  .badge-sin_pronostico { background: transparent; color: var(--ink-3); border: 1px dashed var(--border-strong); }
+
+  .skeleton {
+    background: linear-gradient(90deg, var(--surface-2) 0%, var(--grid) 50%, var(--surface-2) 100%);
+    background-size: 200% 100%;
+    border-radius: var(--radius-sm);
+    animation: skeleton 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes skeleton {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ------------------------------------------------------------------------
+   Leaflet: integrado al sistema visual en vez de su estilo por defecto.
+   ------------------------------------------------------------------------ */
+.leaflet-container {
+  background: var(--surface-2);
+  font-family: inherit;
+}
+.leaflet-tooltip {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  padding: 0.5rem 0.625rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+.leaflet-tooltip-top::before,
+.leaflet-tooltip-bottom::before,
+.leaflet-tooltip-left::before,
+.leaflet-tooltip-right::before {
+  display: none;
+}
+.leaflet-bar a {
+  background: var(--surface);
+  color: var(--ink);
+  border-bottom-color: var(--border);
+}
+.leaflet-control-attribution {
+  background: color-mix(in srgb, var(--surface) 85%, transparent) !important;
+  color: var(--ink-3);
+  font-size: 10px;
+}
+.leaflet-control-attribution a {
+  color: var(--accent-ink);
+}
