@@ -45,8 +45,8 @@ def build_cover(doc) -> None:
         project="Capstone APT · Ingeniería en Informática · Duoc UC Antonio Varas",
         meta_rows=[
             ("Código del documento", "ERF-SAAD-2026"),
-            ("Versión", "1.0"),
-            ("Fecha de emisión", "10 de septiembre de 2026"),
+            ("Versión", "1.1"),
+            ("Fecha de emisión", "28 de septiembre de 2026"),
             ("Estado", "Borrador para validación con la docente y el cliente piloto"),
             ("Clasificación", "Uso académico e interno del equipo de proyecto"),
             (
@@ -84,6 +84,13 @@ def build_control(doc) -> None:
                 "Equipo SAAD",
                 "Primera versión formal completa: catálogo de requisitos funcionales, historias "
                 "de usuario, casos de uso, reglas de negocio, exclusiones y trazabilidad.",
+            ),
+            (
+                "1.1",
+                "28-09-2026",
+                "Equipo SAAD",
+                "Se agrega la sección 1.3, Delimitación del MVP, con la lista explícita de lo "
+                "que el MVP incluye y excluye, en respuesta a la retroalimentación docente.",
             ),
         ],
         [Cm(2.0), Cm(2.6), Cm(3.6), Cm(9.5)],
@@ -155,10 +162,126 @@ def build_introduction(doc) -> None:
         doc,
         "El sistema es un **instrumento de apoyo a la planificación sanitaria territorial**. No es "
         "un sistema clínico, no gestiona pacientes ni derivaciones y no sustituye el juicio "
-        "profesional. Las exclusiones explícitas se detallan en la sección 8.",
+        "profesional. La sección 1.3 delimita explícitamente qué incluye y qué excluye el MVP; "
+        "el fundamento de cada exclusión se detalla en la sección 8.",
     )
 
-    h2(doc, "1.3 Definiciones, acrónimos y abreviaturas")
+    h2(doc, "1.3 Delimitación del MVP")
+    p(
+        doc,
+        "El MVP es el alcance comprometido para la entrega final (Fase 2.3, 26-11-2026). Esta "
+        "sección lo delimita de forma explícita: todo lo que no figura en la lista de "
+        "funcionalidades incluidas queda fuera del MVP, aunque se mencione en otras secciones "
+        "como trabajo futuro o mejora opcional.",
+    )
+
+    h3(doc, "1.3.1 Incluye en el MVP")
+    add_table(
+        doc,
+        ["Funcionalidad", "Qué entrega", "Requisitos"],
+        [
+            (
+                "Base de datos confiable",
+                "Ingesta, normalización y auditoría de calidad de las atenciones de urgencia y "
+                "los egresos hospitalarios del DEIS, con ejecución reproducible.",
+                "RF-ETL-001 a RF-ETL-012; RF-CAL-001 a RF-CAL-009",
+            ),
+            (
+                "Proyección de demanda",
+                "Pronóstico semanal de atenciones de urgencia en salud mental a 4–8 semanas, "
+                "para la Región Metropolitana y sus comunas, con intervalos de predicción, "
+                "backtesting y comparación contra un baseline estacional.",
+                "RF-DEM-001 a RF-DEM-009",
+            ),
+            (
+                "Análisis territorial",
+                "Georreferenciación de la oferta pública de urgencia, isócronas por red vial y "
+                "transporte público, cobertura poblacional y cruce con vulnerabilidad "
+                "socioeconómica comunal.",
+                "RF-ACC-001 a RF-ACC-006",
+            ),
+            (
+                "Caracterización de hospitalizaciones",
+                "Duración de estadía de los egresos F00–F99 y sus factores asociados, al menos "
+                "sexo, previsión y pertenencia del establecimiento al SNSS.",
+                "RF-HOS-001 a RF-HOS-006",
+            ),
+            (
+                "Visualización de resultados",
+                "Plataforma web con series, mapas y tablas de los tres componentes analíticos, "
+                "con advertencias de interpretación visibles.",
+                "RF-VIS-001 a RF-VIS-011",
+            ),
+            (
+                "API de consulta",
+                "Servicio que expone datos, pronósticos y capas territoriales a la plataforma.",
+                "RF-API-001 a RF-API-008",
+            ),
+            (
+                "Trazabilidad y administración",
+                "Registro de fuentes y versiones de datos, y operación básica de la plataforma.",
+                "RF-TRZ-001 a RF-TRZ-003, RF-TRZ-005; RF-ADM-001 a RF-ADM-005, RF-ADM-007",
+            ),
+        ],
+        [Cm(3.8), Cm(9.4), Cm(4.5)],
+        font_size=9,
+        first_col_bold=True,
+    )
+
+    h3(doc, "1.3.2 Fuera del MVP")
+    add_table(
+        doc,
+        ["Funcionalidad excluida", "Motivo", "Referencia"],
+        [
+            (
+                "Gestión de pacientes",
+                "El sistema no registra, sigue ni deriva pacientes, ni trata fichas clínicas o "
+                "datos identificables: trabaja solo con datos agregados o disociados.",
+                "FA-02, FA-03",
+            ),
+            (
+                "Gestión de cupos o camas en tiempo real",
+                "Requiere datos operativos de múltiples instituciones a los que el proyecto no "
+                "tiene acceso ni autoridad.",
+                "FA-01",
+            ),
+            (
+                "Decisiones clínicas",
+                "No apoya diagnóstico, triage ni decisiones sobre pacientes individuales; es una "
+                "herramienta de planificación poblacional.",
+                "FA-04",
+            ),
+            (
+                "Predicción de riesgo individual",
+                "Incompatible con la granularidad agregada de los datos y con las restricciones "
+                "éticas del proyecto.",
+                "FA-07",
+            ),
+            (
+                "Integración en tiempo real con sistemas hospitalarios",
+                "No existe acceso ni convenio institucional dentro del plazo del proyecto.",
+                "FA-08",
+            ),
+            (
+                "Otras regiones y sector privado",
+                "El MVP cubre la Región Metropolitana y la red pública, que son las que tienen "
+                "fuente oficial equivalente.",
+                "FA-05, FA-06",
+            ),
+            (
+                "Extensiones opcionales",
+                "Reentrenamiento programado, comparación de escenarios, desagregación por "
+                "subcausa, exportación de capas y demás mejoras del incremento I4: se "
+                "desarrollan solo si el avance lo permite y no condicionan la entrega.",
+                "Sección 10, incremento I4",
+            ),
+        ],
+        [Cm(4.6), Cm(9.4), Cm(3.7)],
+        font_size=9,
+        first_col_bold=True,
+    )
+
+    h2(doc, "1.4 Definiciones, acrónimos y abreviaturas")
     add_table(
         doc,
         ["Término", "Definición"],
@@ -222,7 +345,7 @@ def build_introduction(doc) -> None:
         first_col_bold=True,
     )
 
-    h2(doc, "1.4 Referencias")
+    h2(doc, "1.5 Referencias")
     add_table(
         doc,
         ["Código", "Documento o fuente"],
@@ -253,9 +376,10 @@ def build_introduction(doc) -> None:
         first_col_bold=True,
     )
 
-    h2(doc, "1.5 Estructura del documento")
+    h2(doc, "1.6 Estructura del documento")
     p(
         doc,
+        "La sección 1.3 delimita qué incluye y qué excluye el MVP. "
         "La sección 2 describe el contexto, los actores y las restricciones generales. La sección 3 "
         "fija las convenciones de identificación, prioridad y verificación. La sección 4 contiene el "
         "catálogo de requisitos funcionales, organizado en nueve módulos. Las secciones 5 y 6 "
@@ -1237,7 +1361,7 @@ def build_change_control(doc) -> None:
 
 
 def main() -> None:
-    doc = new_document("ERF-SAAD-2026 · Especificación de Requisitos Funcionales · v1.0")
+    doc = new_document("ERF-SAAD-2026 · Especificación de Requisitos Funcionales · v1.1")
     build_cover(doc)
     build_control(doc)
     add_toc(doc)
