@@ -15,6 +15,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.chile_time import current_year_chile, run_date_chile
+from src.data.raw_provenance import file_sha256, processed_raw_sha256
 
 logging.basicConfig(
     level=logging.INFO,
@@ -360,6 +361,27 @@ def check_outputs_exist(outputs: list[str]) -> bool:
     return True
 
 
+def current_urgencias_processed_is_stale(year: int, raw_sha256: str | None = None) -> bool:
+    """True si el Parquet anual no declara haberse generado desde el RAW vigente.
+
+    Compara el SHA256 del RAW actual con el metadato `raw_sha256` del footer del
+    Parquet (lectura de metadatos, sin cargar datos). Un Parquet ausente o sin
+    ese metadato se considera desalineado: no puede probarse su procedencia.
+    """
+    raw_path = Path(f"data/raw/urgencias/AtencionesUrgencia{year}.csv")
+    processed_path = Path(f"data/processed/urgencias/urgencias_rm_{year}.parquet")
+    expected = raw_sha256 or file_sha256(raw_path)
+    return processed_raw_sha256(processed_path) != expected
+
+
+def require_stage_outputs(stage_name: str, outputs: list[str]) -> None:
+    """Un stage solo es exitoso si sus outputs requeridos existen y son legibles."""
+    if not check_outputs_exist(outputs):
+        logger.error(f"[ERROR] La etapa '{stage_name}' terminó con código 0, pero sus outputs "
+                     f"requeridos no existen o no son válidos: {outputs}")
+        sys.exit(1)
+
+
 def stage_outputs(stage_name: str, year: int | None = None) -> list[str]:
     """Devuelve outputs de la etapa, acotados al año si corresponde."""
     if year is None:
@@ -407,12 +429,24 @@ def run_stage(
         if refresh_current_urgencias:
             result = json.loads(Path("data/processed/deis_ingest_summary.json").read_text(
                 encoding="utf-8"))["urgencias"][0]
+            ingest_year = int(result.get("year") or current_year_chile())
+            require_stage_outputs(
+                stage_name, [f"data/raw/urgencias/AtencionesUrgencia{ingest_year}.csv"])
             cutoff = date.fromisoformat(result["data_cutoff_date"])
             run_date = run_date_chile()
+            published = bool(result["published"])
             logger.info("Urgencias año en curso: %s; run_date=%s; data_cutoff_date=%s; lag_days=%s",
-                        "snapshot nuevo" if result["published"] else "snapshot sin cambios",
+                        "snapshot nuevo" if published else "snapshot sin cambios",
                         run_date, cutoff, (run_date - cutoff).days)
-            return bool(result["published"])
+            # Fuente idéntica al RAW, pero un clean anterior pudo fallar tras publicarlo:
+            # si el processed no corresponde al RAW vigente, se regenera igualmente.
+            stale = not published and current_urgencias_processed_is_stale(
+                ingest_year, result.get("raw_sha256"))
+            if stale:
+                logger.warning("El Parquet urgencias_rm_%s no corresponde al RAW vigente: "
+                               "se regenera aunque el snapshot no cambió.", ingest_year)
+            return published or stale
+        require_stage_outputs(stage_name, outputs)
         logger.info(f"[EXITO] Etapa '{stage_name}' finalizada correctamente.\n")
         return True
     except subprocess.CalledProcessError as e:

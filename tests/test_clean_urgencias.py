@@ -11,8 +11,10 @@ from src.data.clean_urgencias import (
     PROCESSED_URGENCIAS_DIR,
     COLUMN_MAPPING_RAW_TO_SNAKE,
     load_establishment_catalogs,
+    build_report_md,
     process_urgencias_year,
 )
+from src.data.raw_provenance import file_sha256, processed_raw_sha256
 
 
 def test_catalogs_load():
@@ -77,6 +79,13 @@ def test_process_urgencias_year_small_fixture(tmp_path: Path):
     assert table.schema.field("total").type == "int32"
     assert set(table["region_codigo"].to_pylist()) == {13}
     assert set(table["ano"].to_pylist()) == {2024}
+    # El Parquet declara el RAW exacto del que proviene; la corrida reporta controles.
+    assert result["raw_sha256"] == file_sha256(raw_path)
+    assert processed_raw_sha256(output_path) == result["raw_sha256"]
+    assert (result["fecha_min"], result["fecha_max"]) == ("01/01/2024", "01/01/2024")
+    assert result["raw_tiene_columna_region"] is True
+    assert result["controles"]["ids_establecimiento_nulos_raw"] == 0
+    assert result["controles"]["total_distinto_suma_grupos_etarios"] == 0
 
 
 def test_process_urgencias_preserves_canonical_output_on_write_failure(
@@ -159,3 +168,45 @@ def test_process_urgencias_year_2020(tmp_path: Path):
     assert "comuna_codigo" in t.column_names
     assert "region_codigo" in t.column_names
     assert "total" in t.column_names
+
+
+def _result(year: int, raw: int, rm: int, no_rm: int, sin_territorio: int, **extra) -> dict:
+    return {
+        "year": year, "raw_file": f"data/raw/urgencias/AtencionesUrgencia{year}.csv",
+        "processed_file": f"data/processed/urgencias/urgencias_rm_{year}.parquet",
+        "raw_rows": raw, "rm_rows": rm, "no_rm_rows": no_rm,
+        "sin_territorio_rows": sin_territorio, "rm_estabs_count": 3,
+        "raw_sha256": "ab" * 32, "fecha_min": f"01/01/{year}", "fecha_max": f"30/06/{year}",
+        "raw_tiene_columna_region": year >= 2023,
+        "controles": {
+            "ids_establecimiento_nulos_raw": 0, "fechas_distintas_formato_invalido": 0,
+            "semanas_fuera_de_rango_1_53": 0, "totales_negativos": 0,
+            "total_distinto_suma_grupos_etarios": 7,
+        },
+        **extra,
+    }
+
+
+def test_report_figures_come_from_results_and_have_no_historical_constants():
+    results = [_result(2022, 100, 40, 59, 1), _result(2023, 200, 80, 120, 0)]
+    report = build_report_md(results, rm_catalog_count=11, nac_catalog_count=22, current_year=2023)
+
+    # Cifras calculadas desde los resultados de la ejecución.
+    assert "| **TOTAL** | **300** | **120** | **179** | **1** |" in report
+    assert "299 de 300 (99.7%)" in report
+    assert "(11 códigos" in report and "(22 códigos" in report
+    assert "2022–2023" in report
+    assert "presente en [2023]; ausente en [2022]" in report
+    assert "| Filas RM con `Total` distinto de la suma de grupos etarios | 14 |" in report
+    assert "30/06/2023" in report  # último dato del año en curso, observado
+
+    # Ninguna fecha de ejecución ni cifra histórica fija sobrevive.
+    for constante in ("2026-08-26", "54,488,491", "40,590,691", "1,172", "5,717", "Correcto"):
+        assert constante not in report
+
+
+def test_report_is_deterministic_and_omits_current_year_note_when_absent():
+    results = [_result(2021, 10, 5, 5, 0)]
+    first = build_report_md(results, 1, 1, current_year=2030)
+    assert first == build_report_md(results, 1, 1, current_year=2030)
+    assert "Año en curso" not in first

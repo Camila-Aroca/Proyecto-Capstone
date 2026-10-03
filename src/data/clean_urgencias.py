@@ -10,6 +10,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from src.chile_time import current_year_chile
+from src.data.raw_provenance import RAW_SHA256_METADATA_KEY, file_sha256
 
 RAW_URGENCIAS_DIR = Path("data/raw/urgencias")
 PROCESSED_URGENCIAS_DIR = Path("data/processed/urgencias")
@@ -123,6 +124,15 @@ def process_urgencias_year(
     total_no_rm = 0
     total_sin_territorio = 0
     rm_estabs_set = set()
+    # Controles observados sobre los datos de esta ejecución (no verdicts fijos).
+    ids_nulos = 0
+    semana_fuera_rango = 0
+    totales_negativos = 0
+    total_distinto_suma_grupos = 0
+    fechas_rm: set[str] = set()
+    # El hash identifica el RAW exacto que origina este Parquet: permite detectar
+    # un procesado desalineado con el RAW vigente (p. ej. tras una limpieza fallida).
+    raw_sha256 = file_sha256(raw_file)
 
     # Tipos para Parquet
     schema = pa.schema([
@@ -150,7 +160,7 @@ def process_urgencias_year(
         ("de_65_y_mas", pa.int32()),
         ("latitud", pa.float64()),
         ("longitud", pa.float64()),
-    ])
+    ]).with_metadata({RAW_SHA256_METADATA_KEY: raw_sha256.encode("ascii")})
 
     # Nunca exponer un Parquet incompleto en la ruta canónica. Una ejecución
     # interrumpida sólo puede dejar un temporal, que se descarta al reintentar.
@@ -169,6 +179,8 @@ def process_urgencias_year(
         for row in reader:
             total_raw += 1
             id_estab = str(row.get("IdEstablecimiento", "")).strip()
+            if not id_estab:
+                ids_nulos += 1
 
             is_rm = False
             is_known_non_rm = False
@@ -234,6 +246,13 @@ def process_urgencias_year(
                 d5_14_val = int(row.get("De_5_a_14", 0) or 0)
                 d15_64_val = int(row.get("De_15_a_64", 0) or 0)
                 d65_val = int(row.get("De_65_y_mas", 0) or 0)
+                fechas_rm.add(fec_str)
+                if not 1 <= sem_val <= 53:
+                    semana_fuera_rango += 1
+                if tot_val < 0:
+                    totales_negativos += 1
+                if tot_val != m1_val + d1_4_val + d5_14_val + d15_64_val + d65_val:
+                    total_distinto_suma_grupos += 1
 
                 proc_row = {
                     "fecha": fec_str,
@@ -283,11 +302,16 @@ def process_urgencias_year(
 
     # Validar el footer y el esquema antes de publicar el artefacto canónico.
     validated_schema = pq.read_schema(temp_parquet)
-    if validated_schema != schema:
+    declared = (validated_schema.metadata or {}).get(RAW_SHA256_METADATA_KEY)
+    if not validated_schema.equals(schema, check_metadata=False) or declared != raw_sha256.encode("ascii"):
         raise ValueError(
             f"Esquema Parquet inesperado para {temp_parquet.as_posix()}"
         )
     temp_parquet.replace(output_parquet)
+
+    fechas = pd.to_datetime(pd.Series(sorted(fechas_rm), dtype="string"), format="%d/%m/%Y", errors="coerce")
+    fechas_invalidas = int(fechas.isna().sum())
+    fechas_validas = fechas.dropna()
 
     return {
         "year": year,
@@ -298,12 +322,191 @@ def process_urgencias_year(
         "no_rm_rows": total_no_rm,
         "sin_territorio_rows": total_sin_territorio,
         "rm_estabs_count": len(rm_estabs_set),
+        "raw_sha256": raw_sha256,
+        "fecha_min": fechas_validas.min().strftime("%d/%m/%Y") if not fechas_validas.empty else None,
+        "fecha_max": fechas_validas.max().strftime("%d/%m/%Y") if not fechas_validas.empty else None,
+        "raw_tiene_columna_region": has_region_col,
+        "controles": {
+            "ids_establecimiento_nulos_raw": ids_nulos,
+            "fechas_distintas_formato_invalido": fechas_invalidas,
+            "semanas_fuera_de_rango_1_53": semana_fuera_rango,
+            "totales_negativos": totales_negativos,
+            "total_distinto_suma_grupos_etarios": total_distinto_suma_grupos,
+        },
     }
 
 
+def _fmt(value: int) -> str:
+    return f"{value:,}"
+
+
+def _pct(part: int, whole: int) -> str:
+    return f"{part / whole * 100:.1f}%" if whole else "n/d"
+
+
+def build_report_md(
+    results: List[Dict[str, Any]],
+    rm_catalog_count: int,
+    nac_catalog_count: int,
+    current_year: int,
+) -> str:
+    """Informe de normalización: toda cifra sale de `results` y los catálogos usados.
+
+    No contiene fechas de ejecución ni valores históricos fijos, de modo que el
+    mismo input produce el mismo informe. Los controles se reportan como
+    conteos observados; los que esta etapa no calcula no se declaran.
+    """
+    years = [r["year"] for r in results]
+    total_raw = sum(r["raw_rows"] for r in results)
+    total_rm = sum(r["rm_rows"] for r in results)
+    total_no_rm = sum(r["no_rm_rows"] for r in results)
+    total_sin_terr = sum(r["sin_territorio_rows"] for r in results)
+    con_territorio = total_raw - total_sin_terr
+    con_region = [r["year"] for r in results if r.get("raw_tiene_columna_region")]
+    sin_region = [r["year"] for r in results if not r.get("raw_tiene_columna_region")]
+    rango = f"{min(years)}–{max(years)}"
+
+    fuentes = "\n".join(f"- `{r['raw_file']}`" for r in results)
+    filas_retencion = "".join(
+        f"| {r['year']} | {_fmt(r['raw_rows'])} | {_fmt(r['rm_rows'])} | {_fmt(r['no_rm_rows'])} "
+        f"| {_fmt(r['sin_territorio_rows'])} | {_fmt(r['rm_rows'])} "
+        f"| {_pct(r['raw_rows'] - r['sin_territorio_rows'], r['raw_rows'])} |\n"
+        for r in results
+    )
+    filas_cortes = "".join(
+        f"| {r['year']} | {r.get('fecha_min') or 'n/d'} | {r.get('fecha_max') or 'n/d'} "
+        f"| `{r['raw_sha256'][:12]}…` |\n"
+        for r in results
+    )
+    controles = {
+        "Registros RAW sin `IdEstablecimiento`": "ids_establecimiento_nulos_raw",
+        "Fechas distintas con formato distinto de `DD/MM/YYYY` (filas RM)": "fechas_distintas_formato_invalido",
+        "Filas RM con `semana` fuera de [1, 53]": "semanas_fuera_de_rango_1_53",
+        "Filas RM con `Total` negativo": "totales_negativos",
+        "Filas RM con `Total` distinto de la suma de grupos etarios": "total_distinto_suma_grupos_etarios",
+    }
+    filas_controles = "".join(
+        f"| {nombre} | {_fmt(sum(r['controles'][clave] for r in results))} |\n"
+        for nombre, clave in controles.items()
+    )
+    actual = next((r for r in results if r["year"] == current_year), None)
+    limite_actual = (
+        f"2. **Año en curso ({current_year}):** el RAW es una fuente mutable; el último dato observado "
+        f"en este procesamiento es {actual['fecha_max']} (ver sección 2). Su volumen no es "
+        f"comparable con el de años completos.\n"
+        if actual is not None
+        else ""
+    )
+    return f"""# Informe de Normalización y Filtrado Territorial
+## Atenciones de Urgencia DEIS {rango} (Región Metropolitana)
+
+**Fuentes RAW:** `data/raw/urgencias/AtencionesUrgencia{min(years)}.csv` a `AtencionesUrgencia{max(years)}.csv`
+**Destino Procesado:** `data/processed/urgencias/urgencias_rm_[{min(years)}-{max(years)}].parquet`
+**Identificación del snapshot:** cada Parquet declara en su metadato `raw_sha256` el SHA256 del RAW procesado (resumen en la sección 2).
+
+---
+
+## 1. Fuentes Utilizadas
+
+Se procesaron {len(results)} archivos CSV anuales de atenciones de urgencia a nivel nacional del DEIS-MINSAL:
+{fuentes}
+
+Para la homologación territorial se utilizó el catálogo procesado de la RM:
+- `data/processed/establecimientos_rm_clean.csv` ({_fmt(rm_catalog_count)} códigos de establecimiento únicos)
+- `data/processed/establecimientos_salud_clean.parquet` ({_fmt(nac_catalog_count)} códigos de establecimiento únicos nacionales)
+
+---
+
+## 2. Encoding, Separador y Cobertura Temporal
+
+- **Lectura:** `latin-1` con `errors="replace"` y separador punto y coma (`;`), según la configuración de la etapa.
+- **Columna `CodigoRegion` en el RAW:** presente en {con_region if con_region else 'ningún año'}; ausente en {sin_region if sin_region else 'ningún año'} (en ese caso el territorio se obtiene del catálogo de establecimientos).
+
+| Año | Fecha mínima (filas RM) | Fecha máxima (filas RM) | SHA256 del RAW |
+|---:|---|---|---|
+{filas_cortes}
+---
+
+## 3. Esquema y Correspondencia de Columnas (RAW → PROCESSED)
+
+| Nombre en RAW | Nombre Normalizado (`snake_case`) | Tipo de Dato |
+|---|---|---|
+| `fecha` | `fecha` | `string` (`DD/MM/YYYY`) |
+| `(calculado)` | `ano` | `int32` |
+| `semana` | `semana` | `int32` |
+| `IdEstablecimiento` | `establecimiento_codigo` | `int64` (código nuevo DEIS, homologado con el catálogo) |
+| `IdEstablecimiento` | `establecimiento_codigo_antiguo` | `string` |
+| `NEstablecimiento` | `establecimiento_glosa` | `string` |
+| `CodigoRegion` | `region_codigo` | `int32` (= 13) |
+| `NombreRegion` | `region_glosa` | `string` (= 'Metropolitana de Santiago') |
+| `CodigoComuna` | `comuna_codigo` | `string` |
+| `NombreComuna` | `comuna_glosa` | `string` |
+| `GLOSATIPOESTABLECIMIENTO` | `tipo_establecimiento_urgencia` | `string` |
+| `GLOSATIPOATENCION` | `tipo_atencion_urgencia` | `string` |
+| `GlosaTipoCampana` | `tipo_campana` | `string` |
+| `IdCausa` | `id_causa` | `int32` |
+| `GlosaCausa` | `glosa_causa` | `string` |
+| `Total` | `total` | `int32` |
+| `Menores_1` | `menores_1` | `int32` |
+| `De_1_a_4` | `de_1_a_4` | `int32` |
+| `De_5_a_14` | `de_5_a_14` | `int32` |
+| `De_15_a_64` | `de_15_a_64` | `int32` |
+| `De_65_y_mas` | `de_65_y_mas` | `int32` |
+| `(catálogo)` | `latitud` | `float64` |
+| `(catálogo)` | `longitud` | `float64` |
+
+---
+
+## 4. Transformaciones Realizadas
+
+1. **Estandarización de nombres:** conversión a `snake_case`.
+2. **Homologación de tipos:** columnas numéricas (`Total`, desgloses etarios, `semana`, `id_causa`) a `int32`; un valor vacío en esas columnas se lee como 0.
+3. **Cruce territorial:** `IdEstablecimiento` se cruza contra `establecimiento_codigo_antiguo` y `establecimiento_codigo` de `data/processed/establecimientos_rm_clean.csv`; si no hay coincidencia se usa `CodigoRegion` del RAW cuando existe, y luego el catálogo nacional para descartar lo que no es RM.
+4. **Filtro RM:** se conservan solo las filas con territorio RM.
+
+---
+
+## 5. Homologación Territorial y Filtrado RM
+
+- **Registros con territorio determinado (RM o no RM):** {_fmt(con_territorio)} de {_fmt(total_raw)} ({_pct(con_territorio, total_raw)}).
+- **Registros sin territorio determinado:** {_fmt(total_sin_terr)}.
+
+---
+
+## 6. Tabla de Retención de Registros
+
+| Año | Filas RAW | Filas RM | Filas no RM | Sin territorio | Filas PROCESSED (RM) | Territorio determinado (%) |
+|---:|---:|---:|---:|---:|---:|---:|
+{filas_retencion}| **TOTAL** | **{_fmt(total_raw)}** | **{_fmt(total_rm)}** | **{_fmt(total_no_rm)}** | **{_fmt(total_sin_terr)}** | **{_fmt(total_rm)}** | **{_pct(con_territorio, total_raw)}** |
+
+---
+
+## 7. Controles Observados
+
+Conteos calculados en esta ejecución. Esta etapa no verifica duplicados en el RAW ni la existencia de causas faltantes.
+
+| Control | Registros |
+|---|---:|
+{filas_controles}
+---
+
+## 8. Registros No Procesables o Sin Correspondencia
+
+- **Registros sin territorio determinado:** {_fmt(total_sin_terr)}.
+- **Trazabilidad:** la diferencia entre `Filas RAW` y `Filas PROCESSED` ({_fmt(total_raw - total_rm)}) corresponde a los registros no RM ({_fmt(total_no_rm)}) y a los sin territorio determinado ({_fmt(total_sin_terr)}).
+
+---
+
+## 9. Limitaciones
+
+1. **Resolución temporal:** la serie de atenciones está agrupada a nivel diario y semanal por causa y grupo etario, no a nivel de transacción de paciente individual (datos ecológicos).
+{limite_actual}3. **Cambio de causas CIE:** las glosas y agrupaciones de causas del DEIS se auditarán y homologarán específicamente para salud mental (F00–F99) en la siguiente etapa analítica.
+"""
+
+
 def run_full_normalization() -> List[Dict[str, Any]]:
-    """Ejecuta la normalización completa 2020-2026 y genera el informe Markdown."""
-    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    """Ejecuta la normalización completa 2020-año Chile actual y genera el informe Markdown."""
+    REPORT_MD_PATH.parent.mkdir(parents=True, exist_ok=True)
     PROCESSED_URGENCIAS_DIR.mkdir(parents=True, exist_ok=True)
 
     rm_antiguo, rm_nuevo, nac_antiguo, nac_nuevo = load_establishment_catalogs()
@@ -321,133 +524,7 @@ def run_full_normalization() -> List[Dict[str, Any]]:
         results.append(res)
         print(f"  Completado: RAW={res['raw_rows']:,} -> PROCESSED RM={res['rm_rows']:,}")
 
-    # Generar informe Markdown
-    total_raw_all = sum(r["raw_rows"] for r in results)
-    total_rm_all = sum(r["rm_rows"] for r in results)
-    total_no_rm_all = sum(r["no_rm_rows"] for r in results)
-    total_sin_terr_all = sum(r["sin_territorio_rows"] for r in results)
-
-    report_md = f"""# Informe de Normalización y Filtrado Territorial
-## Atenciones de Urgencia DEIS 2020–2026 (Región Metropolitana)
-
-**Fecha de ejecución:** 2026-08-26  
-**Fuentes RAW:** `data/raw/urgencias/AtencionesUrgencia2020.csv` a `AtencionesUrgencia2026.csv`  
-**Destino Procesado:** `data/processed/urgencias/urgencias_rm_[2020-2026].parquet`  
-
----
-
-## 1. Fuentes Utilizadas
-
-Se procesaron los 7 archivos CSV anuales correspondientes a las atenciones de urgencia a nivel nacional del DEIS-MINSAL:
-- `data/raw/urgencias/AtencionesUrgencia2020.csv`
-- `data/raw/urgencias/AtencionesUrgencia2021.csv`
-- `data/raw/urgencias/AtencionesUrgencia2022.csv`
-- `data/raw/urgencias/AtencionesUrgencia2023.csv`
-- `data/raw/urgencias/AtencionesUrgencia2024.csv`
-- `data/raw/urgencias/AtencionesUrgencia2025.csv`
-- `data/raw/urgencias/AtencionesUrgencia2026.csv`
-
-Para la homologación territorial se utilizó el catálogo procesado de la RM:
-- `data/processed/establecimientos_rm_clean.csv` (1,172 establecimientos)
-- `data/processed/establecimientos_salud_clean.parquet` (5,717 establecimientos nacionales)
-
----
-
-## 2. Encoding y Separador por Año
-
-- **Encoding utilizado:** `Latin-1 / CP1252` en todos los años (2020 a 2026).
-- **Separador utilizado:** Punto y coma (`;`).
-- **Verificación:** 0 errores de decodificación y 0 líneas desbalanceadas en los 54,488,491 registros nacionales.
-
----
-
-## 3. Esquema y Correspondencia de Columnas (RAW → PROCESSED)
-
-| Nombre en RAW | Nombre Normalizado (`snake_case`) | Tipo de Dato | Años Presentes |
-|---|---|---|---|
-| `fecha` | `fecha` | `string` (`DD/MM/YYYY`) | 2020–2026 |
-| `(calculado)` | `ano` | `int32` | 2020–2026 |
-| `semana` | `semana` | `int32` (1 a 53) | 2020–2026 |
-| `IdEstablecimiento` | `establecimiento_codigo` | `int64` (código nuevo DEIS) | 2020–2026 (homologado) |
-| `IdEstablecimiento` | `establecimiento_codigo_antiguo` | `string` (formato con guion) | 2020–2026 |
-| `NEstablecimiento` | `establecimiento_glosa` | `string` | 2020–2026 |
-| `CodigoRegion` | `region_codigo` | `int32` (= 13) | 2020–2026 (homologado) |
-| `NombreRegion` | `region_glosa` | `string` (= 'Metropolitana de Santiago') | 2020–2026 (homologado) |
-| `CodigoComuna` | `comuna_codigo` | `string` (CUT 5 dígitos) | 2020–2026 (homologado) |
-| `NombreComuna` | `comuna_glosa` | `string` | 2020–2026 (homologado) |
-| `GLOSATIPOESTABLECIMIENTO` | `tipo_establecimiento_urgencia` | `string` (`SAPU`, `Hospital`, `SAR`, etc.) | 2020–2026 |
-| `GLOSATIPOATENCION` | `tipo_atencion_urgencia` | `string` | 2020–2026 |
-| `GlosaTipoCampana` | `tipo_campana` | `string` | 2020–2026 |
-| `IdCausa` | `id_causa` | `int32` | 2020–2026 |
-| `GlosaCausa` | `glosa_causa` | `string` | 2020–2026 |
-| `Total` | `total` | `int32` | 2020–2026 |
-| `Menores_1` | `menores_1` | `int32` | 2020–2026 |
-| `De_1_a_4` | `de_1_a_4` | `int32` | 2020–2026 |
-| `De_5_a_14` | `de_5_a_14` | `int32` | 2020–2026 |
-| `De_15_a_64` | `de_15_a_64` | `int32` | 2020–2026 |
-| `De_65_y_mas` | `de_65_y_mas` | `int32` | 2020–2026 |
-| `(catálogo)` | `latitud` | `float64` | 2020–2026 |
-| `(catálogo)` | `longitud` | `float64` | 2020–2026 |
-
----
-
-## 4. Transformaciones Realizadas
-
-1. **Estandarización de nombres:** Conversión a minúsculas y `snake_case`.
-2. **Homologación de tipos:** Conversión de columnas numéricas (`Total`, desgloses etarios, `semana`, `id_causa`) a enteros `int32`.
-3. **Cruce Territorial (2020–2022):** Como los archivos 2020 a 2022 no incluían variables comunales ni regionales, se cruzó `IdEstablecimiento` contra `establecimiento_codigo_antiguo` de `data/processed/establecimientos_rm_clean.csv`, incorporando `comuna_codigo`, `comuna_glosa`, `region_codigo`, `latitud` y `longitud`.
-4. **Validación de consistencia (2023–2026):** Se verificó que las variables `CodigoRegion` y `CodigoComuna` en los archivos 2023 a 2026 fueran 100% consistentes con los catálogos del DEIS.
-
----
-
-## 5. Homologación Territorial y Filtrado RM
-
-- **Registros con correspondencia territorial:** **54,488,491 de 54,488,491 (100.0%)**.
-- **Registros sin correspondencia territorial:** **0**.
-- **Establecimientos no encontrados en catálogo:** **0**.
-
----
-
-## 6. Tabla de Retención de Registros
-
-| Año | Filas RAW | Filas RM | Filas no RM | Sin territorio | Filas PROCESSED (RM) | Cobertura Territorial (%) |
-|---:|---:|---:|---:|---:|---:|---:|
-"""
-    for r in results:
-        report_md += f"| {r['year']} | {r['raw_rows']:,} | {r['rm_rows']:,} | {r['no_rm_rows']:,} | {r['sin_territorio_rows']:,} | {r['rm_rows']:,} | 100.0% |\n"
-
-    report_md += f"""| **TOTAL** | **{total_raw_all:,}** | **{total_rm_all:,}** | **{total_no_rm_all:,}** | **{total_sin_terr_all:,}** | **{total_rm_all:,}** | **100.0%** |
-
----
-
-## 7. Auditoría de Integridad de Datos
-
-| Control de Calidad | Resultado | Estado |
-|---|---|---|
-| **Duplicados inesperados en RAW** | 0 | Correcto |
-| **Nulos en `IdEstablecimiento`** | 0 | Correcto |
-| **Fechas con formato inválido** | 0 (100% válidas en `DD/MM/YYYY`) | Correcto |
-| **Semanas fuera de rango [1, 53]** | 0 | Correcto |
-| **Valores negativos en `Total`** | 0 | Correcto |
-| **Discrepancias entre `Total` y suma de grupos etarios** | 0 (`Total == sum(edades)` en 100% de filas) | Consistencia interna perfecta |
-
----
-
-## 8. Registros No Procesables o Sin Correspondencia
-
-- **Cantidad de registros descartados por falta de territorio:** **0**.
-- **Cantidad de registros descartados por corrupción de formato:** **0**.
-- **Trazabilidad:** La diferencia entre `Filas RAW` y `Filas PROCESSED` corresponde única y exclusivamente al filtrado geográfico legítimo de establecimientos ubicados en regiones distintas a la RM (`Filas no RM = 40,590,691`).
-
----
-
-## 9. Limitaciones
-
-1. **Resolución temporal:** La serie de atenciones está agrupada a nivel diario y semanal por causa y grupo etario, no a nivel de transacción de paciente individual (datos ecológicos).
-2. **Disponibilidad 2026:** El archivo 2026 contiene la serie en curso (primeras semanas del año), por lo que su volumen es inferior al de años completos.
-3. **Cambio de causas CIE:** Las glosas y agrupaciones de causas del DEIS se auditarán y homologarán específicamente para salud mental (F00–F99) en la siguiente etapa analítica.
-"""
-
+    report_md = build_report_md(results, len(rm_nuevo), len(nac_nuevo), current_year_chile())
     with open(REPORT_MD_PATH, "w", encoding="utf-8") as f:
         f.write(report_md)
 

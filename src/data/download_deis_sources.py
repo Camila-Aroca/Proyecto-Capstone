@@ -282,7 +282,8 @@ def ingest_deis_source(
                                          archive_member, manifest_path, downloaded_at)
                 succeeded = True
                 return {"year": year, "raw_path": raw_path.as_posix(), "published": False,
-                        "unchanged": True, "data_cutoff_date": cutoff.isoformat() if cutoff else None}
+                        "unchanged": True, "raw_sha256": candidate_hash,
+                        "data_cutoff_date": cutoff.isoformat() if cutoff else None}
             destination_dir.mkdir(parents=True, exist_ok=True)
             publications = [(csv_path, raw_path)] + [
                 (path, destination_dir / path.name) for path in files if path != csv_path
@@ -309,7 +310,8 @@ def ingest_deis_source(
                 raise
         succeeded = True
         return {"year": year, "raw_path": raw_path.as_posix(), "archive_member": archive_member,
-                "published": True, "data_cutoff_date": cutoff.isoformat() if cutoff else None}
+                "published": True, "raw_sha256": candidate_hash,
+                "data_cutoff_date": cutoff.isoformat() if cutoff else None}
     finally:
         # Retain failed transport artifacts for diagnosis outside RAW; remove
         # them only after all validation, publication and provenance succeed.

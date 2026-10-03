@@ -148,16 +148,25 @@ def process_egresos_year(year: int, chunk_size: int = 250000) -> Dict[str, Any]:
     }
 
 def run_full_normalization() -> List[Dict[str, Any]]:
-    """Ejecuta la normalización completa 2020-2025."""
+    """Ejecuta la normalización completa 2020-2025.
+
+    Todos los años de `YEAR_CONFIG` son requeridos: el stage declara un Parquet
+    por año y `build_egresos_f00_f99` exige el conjunto completo. Si falta algún
+    RAW falla antes de procesar cualquier año, sin dejar outputs parciales.
+    """
+    faltantes = [
+        (RAW_EGRESOS_DIR / canonical_egresos_raw_path(year).name).as_posix()
+        for year in YEAR_CONFIG
+        if not (RAW_EGRESOS_DIR / canonical_egresos_raw_path(year).name).exists()
+    ]
+    if faltantes:
+        raise FileNotFoundError(f"RAW de Egresos requerido no encontrado: {faltantes}")
     results = []
-    for year in range(2020, 2026):
+    for year in YEAR_CONFIG:
         logger.info(f"Normalizando Egresos {year}...")
-        try:
-            res = process_egresos_year(year)
-            results.append(res)
-            logger.info(f"  Completado {year}: {res['total_rows']:,} filas.")
-        except FileNotFoundError as e:
-            logger.warning(f"  Omitiendo {year}: {e}")
+        res = process_egresos_year(year)
+        results.append(res)
+        logger.info(f"  Completado {year}: {res['total_rows']:,} filas.")
     return results
 
 def main():

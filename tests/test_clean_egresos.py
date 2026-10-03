@@ -1,10 +1,12 @@
 import os
+import subprocess
+import sys
 from pathlib import Path
 import pyarrow.parquet as pq
 import pytest
 from unittest.mock import patch
 import math
-from src.data.clean_egresos import try_int, process_egresos_year, YEAR_CONFIG
+from src.data.clean_egresos import try_int, process_egresos_year, run_full_normalization, YEAR_CONFIG
 from src.data.download_deis_sources import canonical_egresos_raw_path
 
 def test_try_int():
@@ -121,3 +123,30 @@ def test_process_egresos_atomic_write(tmp_path):
         # Verify temp file was cleaned up
         temp_parquet = tmp_path / "egresos_2020.parquet.tmp"
         assert not temp_parquet.exists()
+
+
+def test_run_full_normalization_fails_without_partial_outputs_when_raw_missing(tmp_path):
+    raw_dir, out_dir = tmp_path / "raw", tmp_path / "processed"
+    raw_dir.mkdir()
+    # Solo existe un año: los demás son requeridos por el contrato del stage.
+    (raw_dir / canonical_egresos_raw_path(2020).name).write_text("ANO_EGRESO\n2020\n", encoding="latin-1")
+
+    with patch("src.data.clean_egresos.RAW_EGRESOS_DIR", raw_dir),          patch("src.data.clean_egresos.PROCESSED_EGRESOS_DIR", out_dir):
+        with pytest.raises(FileNotFoundError, match="egresos_2021"):
+            run_full_normalization()
+
+    assert not out_dir.exists() or not list(out_dir.glob("*"))
+
+
+def test_clean_egresos_module_exits_nonzero_without_raw(tmp_path):
+    root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        [sys.executable, "-m", "src.data.clean_egresos"],
+        cwd=tmp_path, capture_output=True, text=True,
+        env={**os.environ, "PYTHONPATH": str(root)},
+    )
+    assert result.returncode != 0
+    assert "FileNotFoundError" in result.stderr
+    assert not (tmp_path / "data" / "processed" / "egresos").exists() or not list(
+        (tmp_path / "data" / "processed" / "egresos").glob("*.parquet")
+    )

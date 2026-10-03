@@ -62,6 +62,19 @@ IANA en Windows. El refresh no ejecuta benchmark, holdout ni serving del
 forecast; la actualización de esos componentes downstream corresponde a su
 responsable y debe hacerse después según sus contratos.
 
+Cada Parquet `urgencias_rm_<año>.parquet` declara en su metadato `raw_sha256` el
+SHA256 del RAW desde el que se generó. Si el snapshot descargado es idéntico al
+RAW pero el Parquet no declara ese mismo hash (por ejemplo, una limpieza anterior
+falló tras publicar el RAW, o el Parquet es anterior a este metadato), el refresh
+regenera `clean_urgencias` del año corriente y `eda_urgencias` aunque
+`published` sea `false`. La verificación lee solo el footer del Parquet.
+
+El orquestador considera exitoso un stage solo si el proceso termina con código 0
+y sus outputs declarados existen y son válidos (`check_outputs_exist`); en caso
+contrario termina con código distinto de cero. Con `--refresh-current-urgencias`
+se valida el RAW del año corriente. `clean_egresos` exige el RAW de todos los años
+2020-2025 y falla, sin generar outputs parciales, si falta alguno.
+
 Con `--force`, la etapa seleccionada se regenera y el cambio se propaga únicamente a sus dependencias downstream, sin ejecutar ramas no relacionadas.
 
 Por ejemplo, `--stage clean_urgencias --force` ejecuta `clean_urgencias` y posteriormente `eda_urgencias`.

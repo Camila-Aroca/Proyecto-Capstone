@@ -11,6 +11,8 @@ from typing import Any
 
 
 MANIFEST_PATH = Path("data/raw/provenance_manifest.json")
+# Metadato del Parquet procesado: SHA256 del RAW exacto desde el que se generó.
+RAW_SHA256_METADATA_KEY = b"raw_sha256"
 
 
 def file_sha256(path: Path) -> str:
@@ -20,6 +22,22 @@ def file_sha256(path: Path) -> str:
         for chunk in iter(lambda: file_handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def processed_raw_sha256(path: Path) -> str | None:
+    """SHA256 del RAW registrado en el footer del Parquet, sin leer sus datos.
+
+    Devuelve ``None`` si el archivo no existe, es ilegible o no declara el hash
+    (por ejemplo, un procesado anterior a este metadato).
+    """
+    import pyarrow.parquet as pq
+
+    try:
+        metadata = pq.read_schema(path).metadata or {}
+    except (OSError, ValueError):
+        return None
+    value = metadata.get(RAW_SHA256_METADATA_KEY)
+    return value.decode("ascii") if value else None
 
 
 def record_raw_snapshot(

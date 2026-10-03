@@ -6,7 +6,12 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch, MagicMock
 
+import pyarrow as pa
+import pyarrow.parquet as pq
+import pytest
+
 import scripts.run_pipeline as rp
+from src.data.raw_provenance import RAW_SHA256_METADATA_KEY, file_sha256
 
 
 def test_refresh_current_urgencias_only_runs_affected_branch(monkeypatch):
@@ -50,16 +55,128 @@ def test_force_refresh_with_identical_snapshot_does_not_force_downstream(monkeyp
                for _, kwargs in calls[1:])
 
 
-def test_refresh_unchanged_does_not_propagate(monkeypatch, tmp_path):
-    summary = tmp_path / "deis_ingest_summary.json"
-    summary.write_text(json.dumps({"urgencias": [{"published": False,
-        "data_cutoff_date": "2026-09-01"}]}), encoding="utf-8")
-    real_path = rp.Path
+def _write_urgencias_tree(root: Path, raw_hash_in_summary: str | None, processed_hash: str | None,
+                          published: bool = False, with_processed: bool = True) -> str:
+    """Árbol mínimo relativo al cwd: RAW, summary de ingesta y Parquet anual."""
+    raw = root / "data/raw/urgencias/AtencionesUrgencia2026.csv"
+    raw.parent.mkdir(parents=True)
+    raw.write_text("fecha;Total" + chr(10) + "01/01/2026;1" + chr(10), encoding="utf-8")
+    actual = file_sha256(raw)
+    (root / "data/processed/urgencias").mkdir(parents=True)
+    if with_processed:
+        table = pa.table({"x": [1]}).replace_schema_metadata(
+            {RAW_SHA256_METADATA_KEY: processed_hash.encode()} if processed_hash else None
+        )
+        pq.write_table(table, root / "data/processed/urgencias/urgencias_rm_2026.parquet")
+    entry = {"year": 2026, "published": published, "data_cutoff_date": "2026-09-01"}
+    if raw_hash_in_summary:
+        entry["raw_sha256"] = raw_hash_in_summary
+    (root / "data/processed/deis_ingest_summary.json").write_text(
+        json.dumps({"urgencias": [entry]}), encoding="utf-8")
+    return actual
+
+
+def _run_refresh(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(rp, "run_date_chile", lambda: date(2026, 10, 3))
-    monkeypatch.setattr(rp, "Path", lambda value: summary if value ==
-                        "data/processed/deis_ingest_summary.json" else real_path(value))
     monkeypatch.setattr(rp.subprocess, "run", lambda *args, **kwargs: None)
-    assert not rp.run_stage("download_deis", refresh_current_urgencias=True)
+    return rp.run_stage("download_deis", refresh_current_urgencias=True)
+
+
+def test_refresh_unchanged_with_aligned_processed_does_not_propagate(monkeypatch, tmp_path):
+    raw_hash = _write_urgencias_tree(tmp_path, None, None, with_processed=False)
+    # Se reescribe el Parquet con el hash real del RAW vigente.
+    (tmp_path / "data/processed/urgencias/urgencias_rm_2026.parquet").unlink(missing_ok=True)
+    pq.write_table(
+        pa.table({"x": [1]}).replace_schema_metadata({RAW_SHA256_METADATA_KEY: raw_hash.encode()}),
+        tmp_path / "data/processed/urgencias/urgencias_rm_2026.parquet",
+    )
+    assert _run_refresh(monkeypatch, tmp_path) is False
+
+
+def test_refresh_identical_raw_but_processed_from_previous_raw_forces_rebuild(monkeypatch, tmp_path):
+    """RAW nuevo publicado + clean fallido: el siguiente refresh ve RAW idéntico (published=False)."""
+    raw_hash = _write_urgencias_tree(tmp_path, None, "0" * 64)
+    summary = tmp_path / "data/processed/deis_ingest_summary.json"
+    payload = json.loads(summary.read_text(encoding="utf-8"))
+    payload["urgencias"][0]["raw_sha256"] = raw_hash
+    summary.write_text(json.dumps(payload), encoding="utf-8")
+    assert _run_refresh(monkeypatch, tmp_path) is True
+
+
+def test_refresh_identical_raw_with_processed_lacking_provenance_forces_rebuild(monkeypatch, tmp_path):
+    _write_urgencias_tree(tmp_path, None, None)
+    assert _run_refresh(monkeypatch, tmp_path) is True
+
+
+def test_refresh_identical_raw_with_missing_processed_forces_rebuild(monkeypatch, tmp_path):
+    _write_urgencias_tree(tmp_path, None, None, with_processed=False)
+    assert _run_refresh(monkeypatch, tmp_path) is True
+
+
+def test_refresh_fails_if_raw_missing_even_with_exit_zero(monkeypatch, tmp_path):
+    _write_urgencias_tree(tmp_path, None, None)
+    (tmp_path / "data/raw/urgencias/AtencionesUrgencia2026.csv").unlink()
+    with pytest.raises(SystemExit) as failure:
+        _run_refresh(monkeypatch, tmp_path)
+    assert failure.value.code == 1
+
+
+def test_failed_clean_then_identical_refresh_recovers_end_to_end(monkeypatch, tmp_path):
+    """Refresh 1 publica RAW nuevo y clean falla; refresh 2 (RAW idéntico) debe regenerar."""
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(sys, "argv", ["run_pipeline.py", "--refresh-current-urgencias"])
+    monkeypatch.setattr(rp, "current_year_chile", lambda: 2026)
+    monkeypatch.setattr(rp, "run_date_chile", lambda: date(2026, 10, 3))
+    old_hash = "1" * 64
+    raw_hash = _write_urgencias_tree(tmp_path, None, old_hash, published=True)
+    summary = tmp_path / "data/processed/deis_ingest_summary.json"
+    payload = json.loads(summary.read_text(encoding="utf-8"))
+    payload["urgencias"][0]["raw_sha256"] = raw_hash
+
+    def refresh_then_clean(cmd, **kwargs):
+        module = cmd[2]
+        if module == "src.data.download_deis_sources":
+            summary.write_text(json.dumps(payload), encoding="utf-8")
+        elif module == "src.data.clean_urgencias":
+            attempts.append(cmd)
+            if len(attempts) == 1:
+                raise subprocess.CalledProcessError(1, cmd)
+            pq.write_table(
+                pa.table({"x": [1]}).replace_schema_metadata(
+                    {RAW_SHA256_METADATA_KEY: raw_hash.encode()}),
+                tmp_path / "data/processed/urgencias/urgencias_rm_2026.parquet",
+            )
+        return None
+
+    attempts: list = []
+    monkeypatch.setattr(rp.subprocess, "run", refresh_then_clean)
+    monkeypatch.setattr(rp, "check_outputs_exist", lambda outputs: True)
+
+    with pytest.raises(SystemExit):          # 1) publica RAW; clean falla
+        rp.main()
+    assert len(attempts) == 1
+
+    payload["urgencias"][0]["published"] = False   # 2) misma fuente: RAW idéntico
+    rp.main()
+    assert len(attempts) == 2                      # clean se ejecutó de nuevo
+    assert rp.current_urgencias_processed_is_stale(2026, raw_hash) is False
+
+
+def test_stage_with_exit_zero_but_missing_outputs_is_not_success(monkeypatch):
+    monkeypatch.setattr(rp.subprocess, "run", lambda *args, **kwargs: None)
+    monkeypatch.setattr(rp, "check_outputs_exist", lambda outputs: False)
+    with pytest.raises(SystemExit) as failure:
+        rp.run_stage("clean_egresos", force=True)
+    assert failure.value.code == 1
+
+
+def test_stage_success_validates_its_declared_outputs(monkeypatch):
+    seen = []
+    monkeypatch.setattr(rp.subprocess, "run", lambda *args, **kwargs: None)
+    monkeypatch.setattr(rp, "check_outputs_exist", lambda outputs: seen.append(outputs) or True)
+    assert rp.run_stage("clean_egresos", force=True) is True
+    assert seen == [rp.STAGES["clean_egresos"]["outputs"]]
 
 
 def test_pipeline_help_command():
@@ -250,7 +367,8 @@ class TestPipelineIdempotency(unittest.TestCase):
     ):
         rp.run_stage("clean_urgencias", force=True, year=2026)
 
-        mock_check.assert_not_called()
+        # Sin chequeo previo de SKIP (force), pero sí validación posterior del output anual.
+        mock_check.assert_called_once_with(["data/processed/urgencias/urgencias_rm_2026.parquet"])
         args = mock_run.call_args[0][0]
         self.assertIn("--year", args)
         self.assertIn("2026", args)
