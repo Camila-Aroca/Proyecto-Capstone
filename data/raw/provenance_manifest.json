@@ -205,5 +205,24 @@
     ],
     "dataset": "censo",
     "year": 2024
+  },
+  {
+    "source_id": "deis_urgencias_2026",
+    "dataset": "urgencias",
+    "year": 2026,
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/SistemaAtencionesUrgencia/AtencionesUrgencia2026.zip",
+        "downloaded_at": "2026-10-03T18:05:26.052850+00:00",
+        "zip_filename": "deis_urgencias_2026_AtencionesUrgencia2026.zip",
+        "zip_size": 42283456,
+        "zip_sha256": "abcaf95cbfa9956bae69b4711bceccb431f1ddf502bda43a967324d11abd476b",
+        "archive_member": "AtencionesUrgencia2026.csv",
+        "raw_path": "data/raw/urgencias/AtencionesUrgencia2026.csv",
+        "raw_filename": "AtencionesUrgencia2026.csv",
+        "raw_size": 1512588051,
+        "raw_sha256": "73f6480f16d299efb80f37fa94cb7d136b15efaca7dec8a05e08edf8502b9f11"
+      }
+    ]
   }
 ]

@@ -35,6 +35,33 @@ python scripts/run_pipeline.py --stage clean_urgencias
 
 Si los outputs son válidos y no existen cambios upstream relevantes, las etapas correspondientes realizan `SKIP`.
 
+Para actualizar manualmente Urgencias del año calendario actual de Chile:
+
+```bash
+python scripts/run_pipeline.py --refresh-current-urgencias
+```
+
+El comando consulta nuevamente el ZIP oficial mutable, valida el CSV extraído en
+staging y compara su SHA256 con el RAW local. Registra URL, instante UTC real de
+descarga, tamaños y hashes del ZIP y del CSV en `data/raw/provenance_manifest.json`.
+Si el CSV es idéntico, conserva el RAW y las etapas downstream hacen `SKIP`.
+No duplica una entrada de provenance ya registrada; si el RAW era legado y
+carecía de registro, documenta únicamente la descarga recién verificada.
+Si cambia, reemplaza el RAW tras la validación y regenera solo el Parquet del
+año en curso y `eda_urgencias`; no recalcula los marts históricos cerrados.
+`--force` puede volver a consultar la fuente, pero tampoco regenera downstream
+cuando el contenido es idéntico. Ante una descarga o validación fallida, el
+RAW previo se conserva y el comando falla. Este mismo comando puede programarse
+más adelante; no requiere una API de hora.
+
+`run_date` es la fecha civil de `America/Santiago`; `data_cutoff_date` es la
+fecha máxima observada en el CSV. El comando informa `data_lag_days`, el
+desfase entre ambas fechas. Una fuente atrasada conserva su fecha real: no se
+agregan días hasta ayer. `tzdata` ya está declarado para disponer de la zona
+IANA en Windows. El refresh no ejecuta benchmark, holdout ni serving del
+forecast; la actualización de esos componentes downstream corresponde a su
+responsable y debe hacerse después según sus contratos.
+
 Con `--force`, la etapa seleccionada se regenera y el cambio se propaga únicamente a sus dependencias downstream, sin ejecutar ramas no relacionadas.
 
 Por ejemplo, `--stage clean_urgencias --force` ejecuta `clean_urgencias` y posteriormente `eda_urgencias`.
@@ -76,7 +103,7 @@ python scripts/run_pipeline.py --force
 La lógica reutilizable de ingesta, descarga, limpieza y normalización se organiza principalmente en `src/data/`, mientras que los ejecutables de análisis y orquestación se mantienen en `scripts/`. `scripts/run_pipeline.py` coordina las dependencias entre estas etapas.
 
 > [!WARNING]
-> La serie de atenciones del año en curso (2026) es una fuente mutable. El DEIS sobrescribe periódicamente el archivo ZIP sin versionado. Por lo tanto, ejecutar el mismo pipeline en fechas distintas descargará snapshots diferentes. Para mitigar esto, los scripts de descarga generan y actualizan un registro ligero de auditoría en `data/raw/provenance_manifest.json` con el SHA256 de lo descargado.
+> La serie de atenciones del año en curso es una fuente mutable. El DEIS sobrescribe periódicamente el ZIP sin versionado. La ejecución normal del pipeline usa el RAW local; el comando de actualización manual anterior vuelve a consultar la fuente. El historial de hashes en `data/raw/provenance_manifest.json` identifica snapshots obtenidos, aunque una URL y un hash no permiten reconstruir una versión antigua si el DEIS ya la sustituyó.
 
 La cartografía del Censo 2024 corresponde a un año cerrado: un RAW válido hace `SKIP` en la operación normal y `--force` constituye la solicitud explícita y registrada para sustituir ese snapshot. El maestro de establecimientos no representa un año cerrado sino el catálogo publicado como actualizado por DEIS; también hace `SKIP` mientras el RAW sea válido y `--force` solicita un nuevo snapshot. Ambas ingestas descargan y validan fuera de `data/raw/`, publican sólo candidatos validados y agregan al historial URL, timestamp UTC, hash, tamaño, ruta RAW y metadata de transporte en el mismo manifest.
 
@@ -119,7 +146,7 @@ La etapa `build_egresos_f00_f99` depende de `clean_egresos`, no tiene downstream
 13. `clean_poblacion_proyecciones` → (Dimensión anual de población comunal RM 2021-2025, INE proyecciones base Censo 2017)
 14. `clean_pobreza_comunal` → (Dimensión de vulnerabilidad socioeconómica comunal RM, MDS/Casen 2022, tasa de pobreza por ingresos SAE)
 15. `build_catalogs` → (Creación de catálogo F00-F99)
-16. `clean_urgencias` → (Limpieza de Urgencias 2020-2026 y unión territorial)
+16. `clean_urgencias` → (Limpieza de Urgencias desde 2020 hasta el año corriente y unión territorial)
 17. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
 18. `build_egresos_f00_f99` → (Dataset canónico nacional de Egresos F00-F99, 2020-2025, con flag de residencia RM)
 19. `eda_establishments` → (Validación EDA de Establecimientos)

@@ -1,4 +1,4 @@
-"""Módulo de normalización y filtrado territorial para Atenciones de Urgencia DEIS (2020-2026)."""
+"""Normalización territorial de Urgencias DEIS desde 2020 hasta el año Chile actual."""
 
 import argparse
 import csv
@@ -9,13 +9,23 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
+from src.chile_time import current_year_chile
+
 RAW_URGENCIAS_DIR = Path("data/raw/urgencias")
 PROCESSED_URGENCIAS_DIR = Path("data/processed/urgencias")
 ESTABLECIMIENTOS_RM_PATH = Path("data/processed/establecimientos_rm_clean.csv")
 ESTABLECIMIENTOS_NAC_PATH = Path("data/processed/establecimientos_salud_clean.parquet")
 REPORTS_DIR = Path("reports")
 REPORT_MD_PATH = REPORTS_DIR / "eda" / "eda_urgencias_normalizacion.md"
-SUPPORTED_YEARS = tuple(range(2020, 2027))
+SUPPORTED_YEARS = tuple(range(2020, current_year_chile() + 1))
+
+
+def fecha_bounds_urgencias(values: pd.Series) -> tuple[str, str]:
+    """Extremos cronológicos de fechas DEIS publicadas como DD/MM/YYYY."""
+    dates = pd.to_datetime(values.drop_duplicates(), format="%d/%m/%Y", errors="raise")
+    if dates.empty:
+        raise ValueError("No hay fechas de Urgencias para el inventario.")
+    return dates.min().strftime("%d/%m/%Y"), dates.max().strftime("%d/%m/%Y")
 
 COLUMN_MAPPING_RAW_TO_SNAKE = {
     "IdEstablecimiento": "id_establecimiento_raw",

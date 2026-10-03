@@ -6,10 +6,15 @@ asegurando la idempotencia (salto de etapas ya procesadas).
 """
 
 import argparse
+from datetime import date
+import json
 import logging
 import subprocess
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from src.chile_time import current_year_chile, run_date_chile
 
 logging.basicConfig(
     level=logging.INFO,
@@ -61,7 +66,8 @@ STAGES = {
             "data/raw/urgencias/AtencionesUrgencia2023.csv",
             "data/raw/urgencias/AtencionesUrgencia2024.csv",
             "data/raw/urgencias/AtencionesUrgencia2025.csv",
-            "data/raw/urgencias/AtencionesUrgencia2026.csv",
+            *[f"data/raw/urgencias/AtencionesUrgencia{year}.csv"
+              for year in range(2026, current_year_chile() + 1)],
             "data/raw/egresos/egresos_2020.csv",
             "data/raw/egresos/egresos_2021.csv",
             "data/raw/egresos/egresos_2022.csv",
@@ -152,7 +158,8 @@ STAGES = {
             "data/processed/urgencias/urgencias_rm_2023.parquet",
             "data/processed/urgencias/urgencias_rm_2024.parquet",
             "data/processed/urgencias/urgencias_rm_2025.parquet",
-            "data/processed/urgencias/urgencias_rm_2026.parquet"
+            *[f"data/processed/urgencias/urgencias_rm_{year}.parquet"
+              for year in range(2026, current_year_chile() + 1)],
         ],
         "depends_on": ["download_deis", "clean_establishments", "clean_censo", "build_catalogs"]
     },
@@ -305,7 +312,7 @@ PIPELINE_ORDER = [
     "evaluate_holdout_demanda_sm"
 ]
 
-SUPPORTED_URGENCIAS_YEARS = tuple(range(2020, 2027))
+SUPPORTED_URGENCIAS_YEARS = tuple(range(2020, current_year_chile() + 1))
 
 
 def check_outputs_exist(outputs: list[str]) -> bool:
@@ -367,6 +374,7 @@ def run_stage(
     force: bool = False,
     upstream_changed: bool = False,
     year: int | None = None,
+    refresh_current_urgencias: bool = False,
 ) -> bool:
     """Ejecuta una etapa específica. Devuelve True si se ejecutó, False si hizo SKIP."""
     if stage_name not in STAGES:
@@ -382,7 +390,7 @@ def run_stage(
     if upstream_changed:
         logger.info(f"[FORZADO] Dependencias upstream fueron modificadas. Se ejecutará '{stage_name}'.")
     
-    if not force and not upstream_changed and check_outputs_exist(outputs):
+    if not force and not upstream_changed and not refresh_current_urgencias and check_outputs_exist(outputs):
         logger.info(f"[SKIP] Etapa '{stage_name}' omitida. Los outputs ya existen y son válidos.")
         return False
         
@@ -393,7 +401,18 @@ def run_stage(
             cmd.extend(["--year", str(year)])
         if force:
             cmd.append("--force")
+        if refresh_current_urgencias:
+            cmd.append("--refresh-current-urgencias")
         subprocess.run(cmd, check=True)
+        if refresh_current_urgencias:
+            result = json.loads(Path("data/processed/deis_ingest_summary.json").read_text(
+                encoding="utf-8"))["urgencias"][0]
+            cutoff = date.fromisoformat(result["data_cutoff_date"])
+            run_date = run_date_chile()
+            logger.info("Urgencias año en curso: %s; run_date=%s; data_cutoff_date=%s; lag_days=%s",
+                        "snapshot nuevo" if result["published"] else "snapshot sin cambios",
+                        run_date, cutoff, (run_date - cutoff).days)
+            return bool(result["published"])
         logger.info(f"[EXITO] Etapa '{stage_name}' finalizada correctamente.\n")
         return True
     except subprocess.CalledProcessError as e:
@@ -419,7 +438,12 @@ def main():
         "--year", type=int,
         help="Año individual, disponible únicamente con --stage clean_urgencias.",
     )
+    parser.add_argument("--refresh-current-urgencias", action="store_true",
+                        help="Consulta el ZIP mutable del año Chile y actualiza la rama afectada.")
     args = parser.parse_args()
+
+    if args.refresh_current_urgencias and (args.stage != "all" or args.year is not None):
+        parser.error("--refresh-current-urgencias se usa sin --stage ni --year.")
 
     if args.year is not None:
         if args.stage != "clean_urgencias":
@@ -433,7 +457,11 @@ def main():
     logger.info("Iniciando ejecución del pipeline...")
     
     # Determinar qué etapas evaluar según el --stage indicado
-    target_stages = set(PIPELINE_ORDER) if args.stage == "all" else {args.stage}
+    target_stages = (
+        {"download_deis", "clean_urgencias", "eda_urgencias"}
+        if args.refresh_current_urgencias else
+        (set(PIPELINE_ORDER) if args.stage == "all" else {args.stage})
+    )
     if args.stage != "all" and args.year is None:
         # Propagar recursivamente dependencias downstream (transitive closure)
         added = True
@@ -454,13 +482,18 @@ def main():
             
             # Solo aplicar args.force a la etapa explícitamente solicitada o a todas si es "all"
             is_explicit_target = (args.stage == "all" or stage == args.stage)
-            stage_force = args.force if is_explicit_target else False
+            stage_force = args.force if (
+                (is_explicit_target and not args.refresh_current_urgencias)
+                or (args.refresh_current_urgencias and stage == "download_deis")
+            ) else False
             
             executed = run_stage(
                 stage,
                 force=stage_force,
                 upstream_changed=upstream_changed,
-                year=args.year if stage == "clean_urgencias" else None,
+                year=(current_year_chile() if args.refresh_current_urgencias else args.year)
+                if stage == "clean_urgencias" else None,
+                refresh_current_urgencias=args.refresh_current_urgencias and stage == "download_deis",
             )
             if executed:
                 executed_stages.add(stage)

@@ -1,10 +1,65 @@
 import subprocess
 import sys
+import json
+from datetime import date
 from pathlib import Path
 import unittest
 from unittest.mock import patch, MagicMock
 
 import scripts.run_pipeline as rp
+
+
+def test_refresh_current_urgencias_only_runs_affected_branch(monkeypatch):
+    calls = []
+    monkeypatch.setattr(sys, "argv", ["run_pipeline.py", "--refresh-current-urgencias"])
+    monkeypatch.setattr(rp, "current_year_chile", lambda: 2027)
+    monkeypatch.setattr(rp, "run_stage", lambda stage, **kwargs: calls.append((stage, kwargs)) or False)
+    rp.main()
+    assert [stage for stage, _ in calls] == [
+        "download_deis", "clean_urgencias", "eda_urgencias"
+    ]
+    assert calls[1][1]["year"] == 2027
+
+
+def test_changed_snapshot_forces_only_current_downstream(monkeypatch):
+    calls = []
+    monkeypatch.setattr(sys, "argv", ["run_pipeline.py", "--refresh-current-urgencias"])
+    monkeypatch.setattr(rp, "current_year_chile", lambda: 2026)
+
+    def stage(name, **kwargs):
+        calls.append((name, kwargs))
+        return name in {"download_deis", "clean_urgencias"}
+
+    monkeypatch.setattr(rp, "run_stage", stage)
+    rp.main()
+    assert [name for name, _ in calls] == [
+        "download_deis", "clean_urgencias", "eda_urgencias"
+    ]
+    assert all(kwargs["upstream_changed"] for _, kwargs in calls[1:])
+    assert all(not kwargs["force"] for _, kwargs in calls)
+
+
+def test_force_refresh_with_identical_snapshot_does_not_force_downstream(monkeypatch):
+    calls = []
+    monkeypatch.setattr(sys, "argv", ["run_pipeline.py", "--refresh-current-urgencias", "--force"])
+    monkeypatch.setattr(rp, "current_year_chile", lambda: 2026)
+    monkeypatch.setattr(rp, "run_stage", lambda name, **kwargs: calls.append((name, kwargs)) or False)
+    rp.main()
+    assert calls[0][1]["force"]
+    assert all(not kwargs["force"] and not kwargs["upstream_changed"]
+               for _, kwargs in calls[1:])
+
+
+def test_refresh_unchanged_does_not_propagate(monkeypatch, tmp_path):
+    summary = tmp_path / "deis_ingest_summary.json"
+    summary.write_text(json.dumps({"urgencias": [{"published": False,
+        "data_cutoff_date": "2026-09-01"}]}), encoding="utf-8")
+    real_path = rp.Path
+    monkeypatch.setattr(rp, "run_date_chile", lambda: date(2026, 10, 3))
+    monkeypatch.setattr(rp, "Path", lambda value: summary if value ==
+                        "data/processed/deis_ingest_summary.json" else real_path(value))
+    monkeypatch.setattr(rp.subprocess, "run", lambda *args, **kwargs: None)
+    assert not rp.run_stage("download_deis", refresh_current_urgencias=True)
 
 
 def test_pipeline_help_command():

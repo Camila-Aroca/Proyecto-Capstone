@@ -1,6 +1,7 @@
 """Ingesta segura de snapshots RAW DEIS de Urgencias y Egresos."""
 
 import argparse
+import csv
 import datetime as dt
 import hashlib
 import json
@@ -14,9 +15,11 @@ from typing import Any
 import urllib.request
 import zipfile
 
+from src.chile_time import current_year_chile, run_date_chile
+
 sys.stdout.reconfigure(encoding="utf-8")
 
-URGENCIAS_CONFIG = [
+_HISTORICAL_URGENCIAS_CONFIG = [
     {"year": year, "url": url}
     for year, url in (
         (2020, "https://repositoriodeis.minsal.cl/DatosAbiertos/AtencionesDeUrgencia/AtencionesUrgencia2020.zip"),
@@ -25,9 +28,26 @@ URGENCIAS_CONFIG = [
         (2023, "https://repositoriodeis.minsal.cl/SistemaAtencionesUrgencia/AtencionesUrgencia2023.zip"),
         (2024, "https://repositoriodeis.minsal.cl/SistemaAtencionesUrgencia/AtencionesUrgencia2024.zip"),
         (2025, "https://repositoriodeis.minsal.cl/SistemaAtencionesUrgencia/AtencionesUrgencia2025.zip"),
-        (2026, "https://repositoriodeis.minsal.cl/SistemaAtencionesUrgencia/AtencionesUrgencia2026.zip"),
     )
 ]
+
+
+def urgencias_sources(current_year: int) -> list[dict[str, Any]]:
+    """Fuentes conocidas y años nuevos del mismo endpoint DEIS."""
+    sources = list(_HISTORICAL_URGENCIAS_CONFIG)
+    if current_year >= 2026:
+        sources.extend(
+            {"year": year, "url": (
+                "https://repositoriodeis.minsal.cl/SistemaAtencionesUrgencia/"
+                f"AtencionesUrgencia{year}.zip"
+            )}
+            for year in range(2026, current_year + 1)
+        )
+    return sources
+
+
+CURRENT_YEAR = current_year_chile()
+URGENCIAS_CONFIG = urgencias_sources(CURRENT_YEAR)
 EGRESOS_CONFIG = [
     {"year": year, "url": f"https://repositoriodeis.minsal.cl/DatosAbiertos/EGRESOS/EGRESOS_{year}.zip"}
     for year in range(2020, 2026)
@@ -102,6 +122,21 @@ def record_deis_snapshot(
     _atomic_json_write(manifest_path, manifest)
 
 
+def _snapshot_registered(dataset: str, year: int, raw_sha256: str, manifest_path: Path) -> bool:
+    """Comprueba si este contenido ya tiene procedencia; no inventa la anterior."""
+    if not manifest_path.exists():
+        return False
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if not isinstance(manifest, list):
+        raise ValueError("El manifiesto de provenance debe ser una lista JSON.")
+    source_id = f"deis_{dataset}_{year}"
+    return any(
+        snapshot.get("raw_sha256") == raw_sha256
+        for entry in manifest if entry.get("source_id") == source_id
+        for snapshot in entry.get("snapshots", [])
+    )
+
+
 def find_single_csv_member(archive: zipfile.ZipFile) -> zipfile.ZipInfo:
     members = [member for member in archive.infolist()
                if not member.is_dir() and Path(member.filename).suffix.lower() == ".csv"]
@@ -125,6 +160,34 @@ def _validate_csv(path: Path) -> None:
         header = handle.readline()
     if not header.strip() or b";" not in header:
         raise ValueError(f"CSV DEIS inválido (sin cabecera delimitada): {path.name}")
+
+
+def urgencias_data_cutoff(path: Path, year: int) -> dt.date:
+    """Fecha máxima publicada; valida el año de cada fecha sin imputar días."""
+    maximum: dt.date | None = None
+    parsed: dict[str, dt.date] = {}
+    today = run_date_chile()
+    with path.open("r", encoding="latin-1", newline="") as source:
+        rows = csv.DictReader(source, delimiter=";")
+        required = {"IdEstablecimiento", "IdCausa", "Total", "fecha", "semana", "CodigoRegion"}
+        if not required.issubset(rows.fieldnames or []):
+            raise ValueError(f"Urgencias sin columnas requeridas: {sorted(required - set(rows.fieldnames or []))}")
+        for row in rows:
+            if None in row or any(row.get(column) is None for column in required):
+                raise ValueError("Fila de Urgencias con número de columnas inválido.")
+            value = row["fecha"]
+            if value not in parsed:
+                try:
+                    parsed[value] = dt.datetime.strptime(value, "%d/%m/%Y").date()
+                except (TypeError, ValueError) as error:
+                    raise ValueError(f"Fecha de Urgencias inválida: {value!r}") from error
+            day = parsed[value]
+            if day.year != year or day > today:
+                raise ValueError(f"Fecha de Urgencias fuera del año/corrida: {value!r}")
+            maximum = max(maximum, day) if maximum else day
+    if maximum is None:
+        raise ValueError("CSV de Urgencias sin registros.")
+    return maximum
 
 
 def _validate_supporting_file(path: Path) -> None:
@@ -194,20 +257,32 @@ def extract_canonical_egresos_csv(
 def ingest_deis_source(
     dataset: str, year: int, url: str, destination_dir: Path, force: bool = False,
     cache_dir: Path = CACHE_DOWNLOADS, manifest_path: Path = MANIFEST_PATH,
+    refresh_current: bool = False,
 ) -> dict[str, Any]:
     """Download, validate, publish and record one DEIS snapshot safely."""
     raw_name = (canonical_urgencias_raw_path(year).name if dataset == "urgencias"
                 else canonical_egresos_raw_path(year).name)
     raw_path = destination_dir / raw_name
-    if raw_path.is_file() and raw_path.stat().st_size > 0 and not force:
+    if raw_path.is_file() and raw_path.stat().st_size > 0 and not force and not refresh_current:
         return {"year": year, "raw_path": raw_path.as_posix(), "published": False, "skipped": True}
     zip_path = cache_dir / f"deis_{dataset}_{year}_{Path(url).name}"
     succeeded = False
     try:
         _download_zip(url, zip_path)
+        downloaded_at = dt.datetime.now(dt.timezone.utc).isoformat()
         with TemporaryDirectory(prefix=f"deis_{dataset}_{year}_", dir=cache_dir) as temporary:
             staging = Path(temporary)
             csv_path, files, archive_member = _extract_to_staging(zip_path, staging)
+            cutoff = urgencias_data_cutoff(csv_path, year) if dataset == "urgencias" else None
+            candidate_hash = file_sha256(csv_path)
+            if raw_path.is_file() and candidate_hash == file_sha256(raw_path):
+                if not _snapshot_registered(dataset, year, candidate_hash, manifest_path):
+                    # Registra esta descarga verificada, no una fecha atribuida al RAW previo.
+                    record_deis_snapshot(dataset, year, url, zip_path, raw_path,
+                                         archive_member, manifest_path, downloaded_at)
+                succeeded = True
+                return {"year": year, "raw_path": raw_path.as_posix(), "published": False,
+                        "unchanged": True, "data_cutoff_date": cutoff.isoformat() if cutoff else None}
             destination_dir.mkdir(parents=True, exist_ok=True)
             publications = [(csv_path, raw_path)] + [
                 (path, destination_dir / path.name) for path in files if path != csv_path
@@ -224,7 +299,7 @@ def ingest_deis_source(
                     os.replace(staged_file, destination)
                     published.append(destination)
                 record_deis_snapshot(dataset, year, url, zip_path, raw_path,
-                                     archive_member, manifest_path)
+                                     archive_member, manifest_path, downloaded_at)
             except Exception:
                 for destination in published:
                     destination.unlink(missing_ok=True)
@@ -233,7 +308,8 @@ def ingest_deis_source(
                         os.replace(backup, destination)
                 raise
         succeeded = True
-        return {"year": year, "raw_path": raw_path.as_posix(), "archive_member": archive_member, "published": True}
+        return {"year": year, "raw_path": raw_path.as_posix(), "archive_member": archive_member,
+                "published": True, "data_cutoff_date": cutoff.isoformat() if cutoff else None}
     finally:
         # Retain failed transport artifacts for diagnosis outside RAW; remove
         # them only after all validation, publication and provenance succeed.
@@ -311,13 +387,31 @@ def download_and_extract_source(source_name: str, config_list: list[dict[str, An
 def main() -> None:
     parser = argparse.ArgumentParser(description="Descarga segura de fuentes DEIS.")
     parser.add_argument("--force", action="store_true", help="Solicita explícitamente un snapshot nuevo.")
+    parser.add_argument("--refresh-current-urgencias", action="store_true")
     args = parser.parse_args()
+    if args.refresh_current_urgencias:
+        item = next(item for item in URGENCIAS_CONFIG if item["year"] == CURRENT_YEAR)
+        try:
+            result = ingest_deis_source("urgencias", CURRENT_YEAR, item["url"], DEST_URGENCIAS,
+                                        force=args.force, refresh_current=True)
+        except Exception as error:
+            result = {"year": CURRENT_YEAR, "zip_valido": False, "error": str(error)}
+            _atomic_json_write(Path("data/processed/deis_ingest_summary.json"),
+                               {"urgencias": [result], "egresos": []})
+            print(json.dumps(result, ensure_ascii=False), file=sys.stderr)
+            raise SystemExit(1) from error
+        _atomic_json_write(Path("data/processed/deis_ingest_summary.json"),
+                           {"urgencias": [result], "egresos": []})
+        print(json.dumps(result, ensure_ascii=False))
+        return
     summary = {
         "egresos_migration": migrate_legacy_egresos_raw(),
         "urgencias": download_and_extract_source("Atenciones de Urgencia", URGENCIAS_CONFIG, DEST_URGENCIAS, args.force),
         "egresos": download_and_extract_source("Egresos Hospitalarios", EGRESOS_CONFIG, DEST_EGRESOS, args.force),
     }
     _atomic_json_write(Path("data/processed/deis_ingest_summary.json"), summary)
+    if any("error" in result for source in ("urgencias", "egresos") for result in summary[source]):
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

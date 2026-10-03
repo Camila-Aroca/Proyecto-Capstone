@@ -1,4 +1,4 @@
-"""Script optimizado y reproducible para el perfilado descriptivo de la demanda de urgencias en la RM (2020-2026)."""
+"""Perfilado descriptivo de Urgencias RM desde 2020 al año Chile actual."""
 
 import json
 from pathlib import Path
@@ -7,11 +7,19 @@ import pandas as pd
 import numpy as np
 import pyarrow.dataset as ds
 
+from src.chile_time import current_year_chile
+from src.data.clean_urgencias import fecha_bounds_urgencias
+
 sys.stdout.reconfigure(encoding="utf-8")
 
 PROCESSED_DIR = Path("data/processed/urgencias")
 ESTAB_PATH = Path("data/processed/establecimientos_rm_clean.parquet")
 OUTPUT_TABLES_DIR = Path("data/processed/urgencias")
+CURRENT_YEAR = current_year_chile()
+YEARS = range(2020, CURRENT_YEAR + 1)
+ANALYSIS_YEARS = range(2021, CURRENT_YEAR + 1)
+TOTAL_COL = f"total_2021_{CURRENT_YEAR}"
+SM_TOTAL_COL = f"total_sm_2021_{CURRENT_YEAR}"
 
 # 1. Cargar maestro de establecimientos RM enriquecido
 df_estab_rm = pd.read_parquet(ESTAB_PATH)
@@ -26,7 +34,7 @@ estab_meta = df_estab_rm.set_index("establecimiento_codigo")[
 print(f"Maestro de establecimientos RM cargado: {len(df_estab_rm)} centros.")
 
 # 2. Cargar dataset PyArrow completo
-files = [PROCESSED_DIR / f"urgencias_rm_{y}.parquet" for y in range(2020, 2027)]
+files = [PROCESSED_DIR / f"urgencias_rm_{y}.parquet" for y in YEARS]
 dataset = ds.dataset(files, format="parquet")
 
 cols = ["ano", "fecha", "semana", "comuna_codigo", "comuna_glosa", 
@@ -39,16 +47,17 @@ print(f"Total registros cargados RM: {len(df):,}")
 # FASE 0: Resumen estructural por año
 print("\n=== FASE 0: INVENTARIO Y ESTRUCTURA POR AÑO ===")
 fase0_summary = []
-for y in range(2020, 2027):
+for y in YEARS:
     df_y = df[df["ano"] == y]
+    fecha_min, fecha_max = fecha_bounds_urgencias(df_y["fecha"])
     fase0_summary.append({
         "ano": y,
         "filas": len(df_y),
         "estabs_unicos": df_y["establecimiento_codigo"].nunique(),
         "comunas_unicas": df_y["comuna_codigo"].nunique(),
         "causas_unicas": df_y["id_causa"].nunique(),
-        "fecha_min": df_y["fecha"].min(),
-        "fecha_max": df_y["fecha"].max(),
+        "fecha_min": fecha_min,
+        "fecha_max": fecha_max,
         "semanas_min": df_y["semana"].min(),
         "semanas_max": df_y["semana"].max(),
         "total_atenciones_sum_todas_filas": int(df_y["total"].sum())
@@ -58,7 +67,7 @@ print(pd.DataFrame(fase0_summary).to_string(index=False))
 # FASE 1: Validación del Método de Conteo (ID 1 vs ID 34 vs ID 36)
 print("\n=== FASE 1: VALIDACIÓN DEL MÉTODO DE CONTEO ===")
 fase1_check = []
-for y in range(2020, 2027):
+for y in YEARS:
     df_y = df[df["ano"] == y]
     tot_id1 = int(df_y[df_y["id_causa"] == 1]["total"].sum())
     tot_id34 = int(df_y[df_y["id_causa"] == 34]["total"].sum())
@@ -81,7 +90,7 @@ df_id1 = df[df["id_causa"] == 1].copy()
 df_id1["fecha_dt"] = pd.to_datetime(df_id1["fecha"], format="%d/%m/%Y")
 
 tabla1 = []
-for y in range(2020, 2027):
+for y in YEARS:
     df_y = df_id1[df_id1["ano"] == y]
     w_sum = df_y.groupby("semana")["total"].sum()
     d_sum = df_y.groupby("fecha_dt")["total"].sum()
@@ -115,9 +124,9 @@ weekly_pivot = df_id1.pivot_table(
 )
 weekly_pivot.to_csv(OUTPUT_TABLES_DIR / "tabla2_demanda_semanal_rm.csv", encoding="utf-8")
 
-# FASE 5: TABLA 3 - Demanda por Comuna (2021-2026)
-print("\n=== TABLA 3: DEMANDA GENERAL POR COMUNA (2021-2026) ===")
-df_id1_p = df_id1[df_id1["ano"].between(2021, 2026)]
+# FASE 5: TABLA 3 - Demanda por Comuna desde 2021
+print(f"\n=== TABLA 3: DEMANDA GENERAL POR COMUNA (2021-{CURRENT_YEAR}) ===")
+df_id1_p = df_id1[df_id1["ano"].between(2021, CURRENT_YEAR)]
 
 comuna_piv = df_id1_p.pivot_table(
     index=["comuna_codigo", "comuna_glosa"],
@@ -127,18 +136,18 @@ comuna_piv = df_id1_p.pivot_table(
     fill_value=0
 ).reset_index()
 
-comuna_piv["total_2021_2026"] = comuna_piv[[2021, 2022, 2023, 2024, 2025, 2026]].sum(axis=1)
+comuna_piv[TOTAL_COL] = comuna_piv[list(ANALYSIS_YEARS)].sum(axis=1)
 comuna_piv["total_2021_2025_completo"] = comuna_piv[[2021, 2022, 2023, 2024, 2025]].sum(axis=1)
 
 estab_counts = df_id1_p.groupby("comuna_codigo")["establecimiento_codigo"].nunique().to_dict()
 comuna_piv["establecimientos_reportantes"] = comuna_piv["comuna_codigo"].map(estab_counts)
 
-tot_gen_period = comuna_piv["total_2021_2026"].sum()
-comuna_piv["pct_participacion_rm"] = round(comuna_piv["total_2021_2026"] / tot_gen_period * 100, 2)
-comuna_piv = comuna_piv.sort_values(by="total_2021_2026", ascending=False).reset_index(drop=True)
+tot_gen_period = comuna_piv[TOTAL_COL].sum()
+comuna_piv["pct_participacion_rm"] = round(comuna_piv[TOTAL_COL] / tot_gen_period * 100, 2)
+comuna_piv = comuna_piv.sort_values(by=TOTAL_COL, ascending=False).reset_index(drop=True)
 comuna_piv["ranking"] = comuna_piv.index + 1
 
-print(comuna_piv[["ranking", "comuna_codigo", "comuna_glosa", "total_2021_2026", "pct_participacion_rm", "establecimientos_reportantes"]].head(10))
+print(comuna_piv[["ranking", "comuna_codigo", "comuna_glosa", TOTAL_COL, "pct_participacion_rm", "establecimientos_reportantes"]].head(10))
 comuna_piv.to_csv(OUTPUT_TABLES_DIR / "tabla3_demanda_por_comuna.csv", index=False, encoding="utf-8")
 
 # FASE 6 & 7: TABLA 4 (Establecimientos) y TABLA 5 (Tipos)
@@ -151,7 +160,7 @@ estab_piv = df_id1_p.pivot_table(
     fill_value=0
 ).reset_index()
 
-estab_piv["total_2021_2026"] = estab_piv[[2021, 2022, 2023, 2024, 2025, 2026]].sum(axis=1)
+estab_piv[TOTAL_COL] = estab_piv[list(ANALYSIS_YEARS)].sum(axis=1)
 estab_piv["tipo_establecimiento_maestro"] = estab_piv["establecimiento_codigo"].apply(
     lambda c: estab_meta.get(str(c).strip(), {}).get("tipo_establecimiento_glosa", "No encontrado")
 )
@@ -164,18 +173,18 @@ estab_piv["latitud"] = estab_piv["establecimiento_codigo"].apply(
 estab_piv["longitud"] = estab_piv["establecimiento_codigo"].apply(
     lambda c: estab_meta.get(str(c).strip(), {}).get("longitud", None)
 )
-estab_piv["pct_participacion_rm"] = round(estab_piv["total_2021_2026"] / tot_gen_period * 100, 2)
-estab_piv = estab_piv.sort_values(by="total_2021_2026", ascending=False).reset_index(drop=True)
+estab_piv["pct_participacion_rm"] = round(estab_piv[TOTAL_COL] / tot_gen_period * 100, 2)
+estab_piv = estab_piv.sort_values(by=TOTAL_COL, ascending=False).reset_index(drop=True)
 estab_piv["ranking"] = estab_piv.index + 1
 
 print("Top 10 Establecimientos por Demanda:")
-print(estab_piv[["ranking", "establecimiento_codigo", "establecimiento_glosa", "tipo_establecimiento_maestro", "comuna_glosa", "total_2021_2026", "pct_participacion_rm"]].head(10))
+print(estab_piv[["ranking", "establecimiento_codigo", "establecimiento_glosa", "tipo_establecimiento_maestro", "comuna_glosa", TOTAL_COL, "pct_participacion_rm"]].head(10))
 estab_piv.to_csv(OUTPUT_TABLES_DIR / "tabla4_demanda_por_establecimiento.csv", index=False, encoding="utf-8")
 
 # TABLA 5: Tipos de Establecimiento
 tipo_piv = estab_piv.groupby("tipo_establecimiento_maestro").agg(
     establecimientos=("establecimiento_codigo", "count"),
-    atenciones_total=("total_2021_2026", "sum")
+    atenciones_total=(TOTAL_COL, "sum")
 ).reset_index()
 tipo_piv["pct_demanda_rm"] = round(tipo_piv["atenciones_total"] / tot_gen_period * 100, 2)
 tipo_piv["promedio_por_establecimiento"] = round(tipo_piv["atenciones_total"] / tipo_piv["establecimientos"], 1)
@@ -190,7 +199,7 @@ df_sm36 = df[df["id_causa"] == 36].copy()
 df_sm36["fecha_dt"] = pd.to_datetime(df_sm36["fecha"], format="%d/%m/%Y")
 
 tabla6 = []
-for y in range(2020, 2027):
+for y in YEARS:
     df_y_sm = df_sm36[df_sm36["ano"] == y]
     df_y_tot = df_id1[df_id1["ano"] == y]
     
@@ -216,8 +225,8 @@ print(df_t6.to_string(index=False))
 df_t6.to_csv(OUTPUT_TABLES_DIR / "tabla6_demanda_f00_f99_anual.csv", index=False, encoding="utf-8")
 
 # TABLA 8: F00-F99 por Comuna
-print("\n=== TABLA 8: F00-F99 POR COMUNA (2021-2026) ===")
-df_sm36_p = df_sm36[df_sm36["ano"].between(2021, 2026)]
+print(f"\n=== TABLA 8: F00-F99 POR COMUNA (2021-{CURRENT_YEAR}) ===")
+df_sm36_p = df_sm36[df_sm36["ano"].between(2021, CURRENT_YEAR)]
 
 comuna_sm_piv = df_sm36_p.pivot_table(
     index=["comuna_codigo", "comuna_glosa"],
@@ -227,21 +236,21 @@ comuna_sm_piv = df_sm36_p.pivot_table(
     fill_value=0
 ).reset_index()
 
-comuna_sm_piv["total_sm_2021_2026"] = comuna_sm_piv[[2021, 2022, 2023, 2024, 2025, 2026]].sum(axis=1)
+comuna_sm_piv[SM_TOTAL_COL] = comuna_sm_piv[list(ANALYSIS_YEARS)].sum(axis=1)
 
 comuna_sm_piv = comuna_sm_piv.merge(
-    comuna_piv[["comuna_codigo", "total_2021_2026", "establecimientos_reportantes"]],
+    comuna_piv[["comuna_codigo", TOTAL_COL, "establecimientos_reportantes"]],
     on="comuna_codigo",
     how="left"
-).rename(columns={"total_2021_2026": "atenciones_totales_comuna"})
+).rename(columns={TOTAL_COL: "atenciones_totales_comuna"})
 
-tot_sm_period = comuna_sm_piv["total_sm_2021_2026"].sum()
-comuna_sm_piv["pct_de_salud_mental_rm"] = round(comuna_sm_piv["total_sm_2021_2026"] / tot_sm_period * 100, 2)
-comuna_sm_piv["prop_sm_en_comuna_pct"] = round(comuna_sm_piv["total_sm_2021_2026"] / comuna_sm_piv["atenciones_totales_comuna"] * 100, 2)
-comuna_sm_piv = comuna_sm_piv.sort_values(by="total_sm_2021_2026", ascending=False).reset_index(drop=True)
+tot_sm_period = comuna_sm_piv[SM_TOTAL_COL].sum()
+comuna_sm_piv["pct_de_salud_mental_rm"] = round(comuna_sm_piv[SM_TOTAL_COL] / tot_sm_period * 100, 2)
+comuna_sm_piv["prop_sm_en_comuna_pct"] = round(comuna_sm_piv[SM_TOTAL_COL] / comuna_sm_piv["atenciones_totales_comuna"] * 100, 2)
+comuna_sm_piv = comuna_sm_piv.sort_values(by=SM_TOTAL_COL, ascending=False).reset_index(drop=True)
 comuna_sm_piv["ranking_volumen_sm"] = comuna_sm_piv.index + 1
 
-print(comuna_sm_piv[["ranking_volumen_sm", "comuna_codigo", "comuna_glosa", "total_sm_2021_2026", "pct_de_salud_mental_rm", "prop_sm_en_comuna_pct"]].head(10))
+print(comuna_sm_piv[["ranking_volumen_sm", "comuna_codigo", "comuna_glosa", SM_TOTAL_COL, "pct_de_salud_mental_rm", "prop_sm_en_comuna_pct"]].head(10))
 comuna_sm_piv.to_csv(OUTPUT_TABLES_DIR / "tabla8_f00_f99_por_comuna.csv", index=False, encoding="utf-8")
 
 # TABLA 9: F00-F99 por Establecimiento
@@ -254,26 +263,26 @@ estab_sm_piv = df_sm36_p.pivot_table(
     fill_value=0
 ).reset_index()
 
-estab_sm_piv["total_sm_2021_2026"] = estab_sm_piv[[2021, 2022, 2023, 2024, 2025, 2026]].sum(axis=1)
+estab_sm_piv[SM_TOTAL_COL] = estab_sm_piv[list(ANALYSIS_YEARS)].sum(axis=1)
 estab_sm_piv = estab_sm_piv.merge(
-    estab_piv[["establecimiento_codigo", "total_2021_2026", "tipo_establecimiento_maestro", "servicio_salud", "latitud", "longitud"]],
+    estab_piv[["establecimiento_codigo", TOTAL_COL, "tipo_establecimiento_maestro", "servicio_salud", "latitud", "longitud"]],
     on="establecimiento_codigo",
     how="left"
-).rename(columns={"total_2021_2026": "atenciones_totales_estab"})
+).rename(columns={TOTAL_COL: "atenciones_totales_estab"})
 
-estab_sm_piv["pct_de_salud_mental_rm"] = round(estab_sm_piv["total_sm_2021_2026"] / tot_sm_period * 100, 2)
-estab_sm_piv["prop_sm_en_estab_pct"] = round(estab_sm_piv["total_sm_2021_2026"] / estab_sm_piv["atenciones_totales_estab"] * 100, 2)
-estab_sm_piv = estab_sm_piv.sort_values(by="total_sm_2021_2026", ascending=False).reset_index(drop=True)
+estab_sm_piv["pct_de_salud_mental_rm"] = round(estab_sm_piv[SM_TOTAL_COL] / tot_sm_period * 100, 2)
+estab_sm_piv["prop_sm_en_estab_pct"] = round(estab_sm_piv[SM_TOTAL_COL] / estab_sm_piv["atenciones_totales_estab"] * 100, 2)
+estab_sm_piv = estab_sm_piv.sort_values(by=SM_TOTAL_COL, ascending=False).reset_index(drop=True)
 estab_sm_piv["ranking_volumen_sm"] = estab_sm_piv.index + 1
 
 print("Top 10 Establecimientos por Volumen de Salud Mental:")
-print(estab_sm_piv[["ranking_volumen_sm", "establecimiento_codigo", "establecimiento_glosa", "tipo_establecimiento_maestro", "comuna_glosa", "total_sm_2021_2026", "prop_sm_en_estab_pct"]].head(10))
+print(estab_sm_piv[["ranking_volumen_sm", "establecimiento_codigo", "establecimiento_glosa", "tipo_establecimiento_maestro", "comuna_glosa", SM_TOTAL_COL, "prop_sm_en_estab_pct"]].head(10))
 estab_sm_piv.to_csv(OUTPUT_TABLES_DIR / "tabla9_f00_f99_por_establecimiento.csv", index=False, encoding="utf-8")
 
 # FASE 11: TABLA 10 - Desagregación de Causas de Salud Mental
 print("\n=== TABLA 10: DESAGREGACIÓN DE CAUSAS DE SALUD MENTAL ===")
 sm_ids = [36, 38, 39, 40, 41, 37, 35, 42]
-df_sm_all = df[df["id_causa"].isin(sm_ids) & df["ano"].between(2021, 2026)]
+df_sm_all = df[df["id_causa"].isin(sm_ids) & df["ano"].between(2021, CURRENT_YEAR)]
 
 t10 = df_sm_all.pivot_table(
     index="id_causa",
@@ -295,15 +304,15 @@ map_glosa_std = {
 }
 
 t10["glosa_estandar"] = t10["id_causa"].map(map_glosa_std)
-t10["total_2021_2026"] = t10[[2021, 2022, 2023, 2024, 2025, 2026]].sum(axis=1)
-t10["pct_sobre_id36"] = round(t10["total_2021_2026"] / tot_sm_period * 100, 2)
-print(t10[["id_causa", "glosa_estandar", "total_2021_2026", "pct_sobre_id36"]].to_string(index=False))
+t10[TOTAL_COL] = t10[list(ANALYSIS_YEARS)].sum(axis=1)
+t10["pct_sobre_id36"] = round(t10[TOTAL_COL] / tot_sm_period * 100, 2)
+print(t10[["id_causa", "glosa_estandar", TOTAL_COL, "pct_sobre_id36"]].to_string(index=False))
 t10.to_csv(OUTPUT_TABLES_DIR / "tabla10_desagregacion_salud_mental.csv", index=False, encoding="utf-8")
 
 # FASE 12: TABLA 12 - Controles de Consistencia y Doble Conteo
 print("\n=== TABLA 12: CONTROLES DE CONSISTENCIA Y DOBLE CONTEO ===")
 check_results = []
-for y in range(2021, 2027):
+for y in ANALYSIS_YEARS:
     df_y = df[df["ano"] == y]
     
     t_id1 = df_y[df_y["id_causa"] == 1]["total"].sum()
@@ -335,7 +344,7 @@ print("\n=== TABLA 11: COBERTURA DE ESTABLECIMIENTOS CONTRA MAESTRO ===")
 estab_cods_maestro = set(df_estab_rm["establecimiento_codigo"].astype(str).str.strip())
 
 t11_rows = []
-for y in range(2020, 2027):
+for y in YEARS:
     df_y = df[df["ano"] == y]
     unique_estabs = df_y["establecimiento_codigo"].astype(str).unique()
     found = [c for c in unique_estabs if c in estab_cods_maestro]
