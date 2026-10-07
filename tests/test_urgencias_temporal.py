@@ -61,6 +61,19 @@ def test_cutoff_comes_from_csv_not_run_date(tmp_path: Path) -> None:
         assert urgencias_data_cutoff(path, 2026) == date(2026, 9, 8)
 
 
+def test_cutoff_accepts_legacy_schema_without_geography(tmp_path: Path) -> None:
+    path = tmp_path / "legacy.csv"
+    path.write_bytes((
+        "IdEstablecimiento;NEstablecimiento;IdCausa;GlosaCausa;Total;Menores_1;"
+        "De_1_a_4;De_5_a_14;De_15_a_64;De_65_y_mas;fecha;semana;"
+        "GLOSATIPOESTABLECIMIENTO;GLOSATIPOATENCION;GlosaTipoCampana\n"
+        "01-100;Hospital;36;Salud mental;1;0;0;0;1;0;05/01/2020;2;Hospital;Urgencia;\n"
+        "01-100;Hospital;36;Salud mental;2;0;0;0;2;0;28/12/2020;53;Hospital;Urgencia;\n"
+    ).encode("latin-1"))
+    with patch("src.data.download_deis_sources.run_date_chile", return_value=date(2026, 10, 3)):
+        assert urgencias_data_cutoff(path, 2020) == date(2020, 12, 28)
+
+
 def test_eda_bounds_parse_dd_mm_yyyy_chronologically() -> None:
     assert fecha_bounds_urgencias(pd.Series([
         "31/08/2026", "01/09/2026", "02/10/2026"

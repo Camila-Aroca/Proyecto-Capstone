@@ -169,7 +169,9 @@ def urgencias_data_cutoff(path: Path, year: int) -> dt.date:
     today = run_date_chile()
     with path.open("r", encoding="latin-1", newline="") as source:
         rows = csv.DictReader(source, delimiter=";")
-        required = {"IdEstablecimiento", "IdCausa", "Total", "fecha", "semana", "CodigoRegion"}
+        # Los ZIP 2020-2022 no publican geografía; el territorio lo resuelve
+        # clean_urgencias contra el catálogo de establecimientos.
+        required = {"IdEstablecimiento", "IdCausa", "Total", "fecha", "semana"}
         if not required.issubset(rows.fieldnames or []):
             raise ValueError(f"Urgencias sin columnas requeridas: {sorted(required - set(rows.fieldnames or []))}")
         for row in rows:
