@@ -78,7 +78,13 @@ OUTPUT_SUMMARY: Final[Path] = Path("reports/modeling/benchmark_demanda_sm_resume
 # y la API la leen para instanciar exactamente el modelo elegido aqui.
 OUTPUT_SELECTION: Final[Path] = Path("reports/modeling/benchmark_demanda_sm_seleccion.json")
 
-HORIZONS: Final[tuple[int, ...]] = (4, 5, 6, 7, 8)
+# 4-8 es el horizonte comprometido en el objetivo APT. Se agregan 1-3 porque entre la
+# ultima semana completa publicada y el primer horizonte comprometido quedaban tres
+# semanas sin dato observado ni pronostico; son horizontes operativos, no un cambio del
+# compromiso. Cada horizonte se evalua y calibra por separado, de modo que su desempeno
+# se mide en vez de suponerse.
+HORIZONS: Final[tuple[int, ...]] = (1, 2, 3, 4, 5, 6, 7, 8)
+HORIZONTES_COMPROMETIDOS: Final[tuple[int, ...]] = (4, 5, 6, 7, 8)
 N_ORIGINS: Final[int] = 13
 STEP: Final[int] = 4
 NIVEL_INTERVALO: Final[float] = 0.80

@@ -43,7 +43,9 @@ from src.models.features import (
 )
 from src.models.holdout import holdout_years, load_holdout_weekly
 
-HORIZONTES_DEFECTO: Final[tuple[int, ...]] = (4, 5, 6, 7, 8)
+# 1-3 cubren el tramo entre la ultima semana completa publicada y el primer horizonte
+# comprometido del objetivo APT (4-8), que de otro modo queda sin dato ni pronostico.
+HORIZONTES_DEFECTO: Final[tuple[int, ...]] = (1, 2, 3, 4, 5, 6, 7, 8)
 
 
 @dataclass

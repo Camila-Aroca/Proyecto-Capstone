@@ -4,6 +4,9 @@
   "criterio": "Menor MASE promedio entre los modelos que superan al baseline y tienen cobertura compatible con el nominal en region y comunas.",
   "nivel_intervalo": 0.8,
   "horizontes": [
+    1,
+    2,
+    3,
     4,
     5,
     6,
@@ -20,9 +23,9 @@
     "t_ultimo_origen": 251
   },
   "metricas_backtest": {
-    "mase_region": 0.5953,
-    "mase_comuna": 0.6755,
-    "cobertura_region": 0.8769,
-    "cobertura_comuna": 0.8087
+    "mase_region": 0.6107,
+    "mase_comuna": 0.6694,
+    "cobertura_region": 0.875,
+    "cobertura_comuna": 0.8079
   }
 }
