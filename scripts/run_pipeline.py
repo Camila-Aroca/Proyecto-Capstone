@@ -9,6 +9,7 @@ import argparse
 from datetime import date
 import json
 import logging
+import pathlib
 import subprocess
 import sys
 from pathlib import Path
@@ -317,7 +318,7 @@ SUPPORTED_URGENCIAS_YEARS = tuple(range(2020, current_year_chile() + 1))
 
 
 def check_outputs_exist(outputs: list[str]) -> bool:
-    """Verifica que todos los archivos de salida existan, tengan tamaño > 0 y sean legibles."""
+    """Comprueba existencia, legibilidad y esquema mínimo de outputs conocidos."""
     if not outputs:
         return False
     
@@ -354,6 +355,9 @@ def check_outputs_exist(outputs: list[str]) -> bool:
                 import json
                 if not json.loads(p.read_text(encoding="utf-8")):
                     return False
+            if isinstance(p, pathlib.Path):
+                from src.data.output_contracts import validate_expected_schema
+                validate_expected_schema(p)
         except Exception as e:
             logger.warning(f"Archivo corrupto o ilegible {p}: {e}")
             return False
@@ -375,7 +379,7 @@ def current_urgencias_processed_is_stale(year: int, raw_sha256: str | None = Non
 
 
 def require_stage_outputs(stage_name: str, outputs: list[str]) -> None:
-    """Un stage solo es exitoso si sus outputs requeridos existen y son legibles."""
+    """Un stage solo es exitoso si sus outputs cumplen los mismos controles de SKIP."""
     if not check_outputs_exist(outputs):
         logger.error(f"[ERROR] La etapa '{stage_name}' terminó con código 0, pero sus outputs "
                      f"requeridos no existen o no son válidos: {outputs}")

@@ -1,0 +1,547 @@
+{
+  "checked_at_utc": "2026-10-08T01:29:41.992811+00:00",
+  "count": 77,
+  "valid": 77,
+  "invalid": [],
+  "outputs": [
+    {
+      "stage": "download_censo",
+      "path": "data/raw/censo/Cartografia_censo2024_Pais_Comunal.parquet",
+      "exists": true,
+      "bytes": 125790972,
+      "valid": true
+    },
+    {
+      "stage": "download_censo",
+      "path": "data/raw/censo/Cartografia_censo2024_Pais_Distrital.parquet",
+      "exists": true,
+      "bytes": 165576123,
+      "valid": true
+    },
+    {
+      "stage": "download_censo",
+      "path": "data/raw/censo/Cartografia_censo2024_Pais_Zonal.parquet",
+      "exists": true,
+      "bytes": 24235286,
+      "valid": true
+    },
+    {
+      "stage": "download_censo",
+      "path": "data/raw/censo/Cartografia_censo2024_Pais_Entidades.parquet",
+      "exists": true,
+      "bytes": 110063816,
+      "valid": true
+    },
+    {
+      "stage": "download_censo",
+      "path": "data/raw/censo/Cartografia_censo2024_Pais_Manzanas.parquet",
+      "exists": true,
+      "bytes": 203341665,
+      "valid": true
+    },
+    {
+      "stage": "download_censo",
+      "path": "data/raw/censo/Diccionario_variables_geograficas_CPV24.xlsx",
+      "exists": true,
+      "bytes": 23553,
+      "valid": true
+    },
+    {
+      "stage": "download_censo_poblacion",
+      "path": "data/raw/censo/D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx",
+      "exists": true,
+      "bytes": 505437,
+      "valid": true
+    },
+    {
+      "stage": "download_poblacion_proyecciones",
+      "path": "data/raw/poblacion/ine_estimaciones_proyecciones_2002_2035_comunas.xlsx",
+      "exists": true,
+      "bytes": 11057485,
+      "valid": true
+    },
+    {
+      "stage": "download_pobreza_comunal",
+      "path": "data/raw/pobreza/mds_casen_2022_tasa_pobreza_ingresos_comunal.xlsx",
+      "exists": true,
+      "bytes": 53824,
+      "valid": true
+    },
+    {
+      "stage": "download_deis",
+      "path": "data/raw/urgencias/AtencionesUrgencia2020.csv",
+      "exists": true,
+      "bytes": 796227186,
+      "valid": true
+    },
+    {
+      "stage": "download_deis",
+      "path": "data/raw/urgencias/AtencionesUrgencia2021.csv",
+      "exists": true,
+      "bytes": 1130831814,
+      "valid": true
+    },
+    {
+      "stage": "download_deis",
+      "path": "data/raw/urgencias/AtencionesUrgencia2022.csv",
+      "exists": true,
+      "bytes": 1144770884,
+      "valid": true
+    },
+    {
+      "stage": "download_deis",
+      "path": "data/raw/urgencias/AtencionesUrgencia2023.csv",
+      "exists": true,
+      "bytes": 1598833998,
+      "valid": true
+    },
+    {
+      "stage": "download_deis",
+      "path": "data/raw/urgencias/AtencionesUrgencia2024.csv",
+      "exists": true,
+      "bytes": 1608911448,
+      "valid": true
+    },
+    {
+      "stage": "download_deis",
+      "path": "data/raw/urgencias/AtencionesUrgencia2025.csv",
+      "exists": true,
+      "bytes": 1956418531,
+      "valid": true
+    },
+    {
+      "stage": "download_deis",
+      "path": "data/raw/urgencias/AtencionesUrgencia2026.csv",
+      "exists": true,
+      "bytes": 1512588051,
+      "valid": true
+    },
+    {
+      "stage": "download_deis",
+      "path": "data/raw/egresos/egresos_2020.csv",
+      "exists": true,
+      "bytes": 245975785,
+      "valid": true
+    },
+    {
+      "stage": "download_deis",
+      "path": "data/raw/egresos/egresos_2021.csv",
+      "exists": true,
+      "bytes": 219500927,
+      "valid": true
+    },
+    {
+      "stage": "download_deis",
+      "path": "data/raw/egresos/egresos_2022.csv",
+      "exists": true,
+      "bytes": 357942502,
+      "valid": true
+    },
+    {
+      "stage": "download_deis",
+      "path": "data/raw/egresos/egresos_2023.csv",
+      "exists": true,
+      "bytes": 278312188,
+      "valid": true
+    },
+    {
+      "stage": "download_deis",
+      "path": "data/raw/egresos/egresos_2024.csv",
+      "exists": true,
+      "bytes": 291175891,
+      "valid": true
+    },
+    {
+      "stage": "download_deis",
+      "path": "data/raw/egresos/egresos_2025.csv",
+      "exists": true,
+      "bytes": 302672065,
+      "valid": true
+    },
+    {
+      "stage": "download_establishments",
+      "path": "data/raw/deis/establecimientos_salud_actualizado.csv",
+      "exists": true,
+      "bytes": 2500290,
+      "valid": true
+    },
+    {
+      "stage": "download_contexto_genero",
+      "path": "data/raw/contexto_genero/egresos_intento_suicida_sexo_anio.xlsx",
+      "exists": true,
+      "bytes": 23828,
+      "valid": true
+    },
+    {
+      "stage": "download_contexto_genero",
+      "path": "data/raw/contexto_genero/suicidio_ratio_hm_tasas_nacional_regional.xlsx",
+      "exists": true,
+      "bytes": 76887,
+      "valid": true
+    },
+    {
+      "stage": "download_contexto_genero",
+      "path": "data/raw/contexto_genero/ansiedad_depresion_sintomas_18_mas_sexo.xlsx",
+      "exists": true,
+      "bytes": 143526,
+      "valid": true
+    },
+    {
+      "stage": "download_contexto_genero",
+      "path": "data/raw/contexto_genero/prevalencia_sintomas_depresivos_sexo.xlsx",
+      "exists": true,
+      "bytes": 18039,
+      "valid": true
+    },
+    {
+      "stage": "normalize_contexto_genero",
+      "path": "data/processed/contexto_genero/egresos_intento_suicida_sexo_anio.parquet",
+      "exists": true,
+      "bytes": 4776,
+      "valid": true
+    },
+    {
+      "stage": "normalize_contexto_genero",
+      "path": "data/processed/contexto_genero/suicidio_ratio_hm_tasas_nacional_regional.parquet",
+      "exists": true,
+      "bytes": 30310,
+      "valid": true
+    },
+    {
+      "stage": "normalize_contexto_genero",
+      "path": "data/processed/contexto_genero/ansiedad_depresion_sintomas_18_mas_sexo.parquet",
+      "exists": true,
+      "bytes": 4075,
+      "valid": true
+    },
+    {
+      "stage": "normalize_contexto_genero",
+      "path": "data/processed/contexto_genero/prevalencia_sintomas_depresivos_sexo.parquet",
+      "exists": true,
+      "bytes": 3579,
+      "valid": true
+    },
+    {
+      "stage": "build_mart_contexto_genero_indicador_sexo",
+      "path": "data/processed/marts/mart_contexto_genero_indicador_sexo.parquet",
+      "exists": true,
+      "bytes": 32302,
+      "valid": true
+    },
+    {
+      "stage": "clean_establishments",
+      "path": "data/processed/establecimientos_rm_clean.csv",
+      "exists": true,
+      "bytes": 515921,
+      "valid": true
+    },
+    {
+      "stage": "clean_establishments",
+      "path": "data/processed/establecimientos_rm_clean.parquet",
+      "exists": true,
+      "bytes": 114696,
+      "valid": true
+    },
+    {
+      "stage": "clean_establishments",
+      "path": "data/processed/establecimientos_salud_clean.parquet",
+      "exists": true,
+      "bytes": 447870,
+      "valid": true
+    },
+    {
+      "stage": "clean_censo",
+      "path": "data/processed/censo/Cartografia_censo2024_RM_Comunal.parquet",
+      "exists": true,
+      "bytes": 2232994,
+      "valid": true
+    },
+    {
+      "stage": "clean_censo",
+      "path": "data/processed/censo/Cartografia_censo2024_RM_Distrital.parquet",
+      "exists": true,
+      "bytes": 5436570,
+      "valid": true
+    },
+    {
+      "stage": "clean_censo",
+      "path": "data/processed/censo/Cartografia_censo2024_RM_Zonal.parquet",
+      "exists": true,
+      "bytes": 5455911,
+      "valid": true
+    },
+    {
+      "stage": "clean_censo",
+      "path": "data/processed/censo/Cartografia_censo2024_RM_Entidades.parquet",
+      "exists": true,
+      "bytes": 5719205,
+      "valid": true
+    },
+    {
+      "stage": "clean_censo",
+      "path": "data/processed/censo/Cartografia_censo2024_RM_Manzanas.parquet",
+      "exists": true,
+      "bytes": 51044243,
+      "valid": true
+    },
+    {
+      "stage": "clean_censo_poblacion",
+      "path": "data/processed/censo/dim_poblacion_comuna_censo2024.parquet",
+      "exists": true,
+      "bytes": 3710,
+      "valid": true
+    },
+    {
+      "stage": "clean_poblacion_proyecciones",
+      "path": "data/processed/censo/dim_poblacion_comuna_anual.parquet",
+      "exists": true,
+      "bytes": 5957,
+      "valid": true
+    },
+    {
+      "stage": "clean_pobreza_comunal",
+      "path": "data/processed/pobreza/dim_vulnerabilidad_comuna.parquet",
+      "exists": true,
+      "bytes": 7004,
+      "valid": true
+    },
+    {
+      "stage": "build_catalogs",
+      "path": "data/processed/urgencias/catalogo_f00_f99.csv",
+      "exists": true,
+      "bytes": 3551,
+      "valid": true
+    },
+    {
+      "stage": "clean_urgencias",
+      "path": "data/processed/urgencias/urgencias_rm_2020.parquet",
+      "exists": true,
+      "bytes": 10300306,
+      "valid": true
+    },
+    {
+      "stage": "clean_urgencias",
+      "path": "data/processed/urgencias/urgencias_rm_2021.parquet",
+      "exists": true,
+      "bytes": 6501206,
+      "valid": true
+    },
+    {
+      "stage": "clean_urgencias",
+      "path": "data/processed/urgencias/urgencias_rm_2022.parquet",
+      "exists": true,
+      "bytes": 23633757,
+      "valid": true
+    },
+    {
+      "stage": "clean_urgencias",
+      "path": "data/processed/urgencias/urgencias_rm_2023.parquet",
+      "exists": true,
+      "bytes": 24964115,
+      "valid": true
+    },
+    {
+      "stage": "clean_urgencias",
+      "path": "data/processed/urgencias/urgencias_rm_2024.parquet",
+      "exists": true,
+      "bytes": 5092713,
+      "valid": true
+    },
+    {
+      "stage": "clean_urgencias",
+      "path": "data/processed/urgencias/urgencias_rm_2025.parquet",
+      "exists": true,
+      "bytes": 5194654,
+      "valid": true
+    },
+    {
+      "stage": "clean_urgencias",
+      "path": "data/processed/urgencias/urgencias_rm_2026.parquet",
+      "exists": true,
+      "bytes": 3882629,
+      "valid": true
+    },
+    {
+      "stage": "clean_egresos",
+      "path": "data/processed/egresos/egresos_2020.parquet",
+      "exists": true,
+      "bytes": 7082582,
+      "valid": true
+    },
+    {
+      "stage": "clean_egresos",
+      "path": "data/processed/egresos/egresos_2021.parquet",
+      "exists": true,
+      "bytes": 4098790,
+      "valid": true
+    },
+    {
+      "stage": "clean_egresos",
+      "path": "data/processed/egresos/egresos_2022.parquet",
+      "exists": true,
+      "bytes": 8119837,
+      "valid": true
+    },
+    {
+      "stage": "clean_egresos",
+      "path": "data/processed/egresos/egresos_2023.parquet",
+      "exists": true,
+      "bytes": 5005665,
+      "valid": true
+    },
+    {
+      "stage": "clean_egresos",
+      "path": "data/processed/egresos/egresos_2024.parquet",
+      "exists": true,
+      "bytes": 14852688,
+      "valid": true
+    },
+    {
+      "stage": "clean_egresos",
+      "path": "data/processed/egresos/egresos_2025.parquet",
+      "exists": true,
+      "bytes": 15165682,
+      "valid": true
+    },
+    {
+      "stage": "build_egresos_f00_f99",
+      "path": "data/processed/egresos/egresos_f00_f99_nacional_2020_2025.parquet",
+      "exists": true,
+      "bytes": 1315191,
+      "valid": true
+    },
+    {
+      "stage": "build_egresos_f00_f99",
+      "path": "data/processed/egresos/catalogo_cie10_f00_f99.csv",
+      "exists": true,
+      "bytes": 100015,
+      "valid": true
+    },
+    {
+      "stage": "eda_establishments",
+      "path": "reports/eda/registros_sin_coordenadas.csv",
+      "exists": true,
+      "bytes": 11735,
+      "valid": true
+    },
+    {
+      "stage": "eda_urgencias",
+      "path": "data/processed/urgencias/tabla1_demanda_anual_rm.csv",
+      "exists": true,
+      "bytes": 823,
+      "valid": true
+    },
+    {
+      "stage": "profile_urgencias_sm_coverage",
+      "path": "data/processed/urgencias/perfil_cobertura_sm_comuna_semanal_2021_2025.parquet",
+      "exists": true,
+      "bytes": 15800,
+      "valid": true
+    },
+    {
+      "stage": "build_urgencias_comuna_marts",
+      "path": "data/processed/marts/mart_urgencias_comuna_weekly.parquet",
+      "exists": true,
+      "bytes": 565645,
+      "valid": true
+    },
+    {
+      "stage": "build_urgencias_comuna_marts",
+      "path": "data/processed/marts/mart_urgencias_comuna_monthly.parquet",
+      "exists": true,
+      "bytes": 231644,
+      "valid": true
+    },
+    {
+      "stage": "build_urgencias_establecimiento_mart",
+      "path": "data/processed/marts/mart_urgencias_establecimiento_monthly.parquet",
+      "exists": true,
+      "bytes": 271845,
+      "valid": true
+    },
+    {
+      "stage": "build_urgencias_comuna_etario_mart",
+      "path": "data/processed/marts/mart_urgencias_comuna_etario_monthly.parquet",
+      "exists": true,
+      "bytes": 133969,
+      "valid": true
+    },
+    {
+      "stage": "build_dim_oferta_urgencia_rm",
+      "path": "data/processed/geo/dim_oferta_urgencia_rm.parquet",
+      "exists": true,
+      "bytes": 18154,
+      "valid": true
+    },
+    {
+      "stage": "build_mart_mvp_territorial_comuna",
+      "path": "data/processed/marts/mart_mvp_territorial_comuna.parquet",
+      "exists": true,
+      "bytes": 27843,
+      "valid": true
+    },
+    {
+      "stage": "eda_contexto_genero",
+      "path": "reports/eda/eda_contexto_genero_estadisticas_genero.md",
+      "exists": true,
+      "bytes": 6754,
+      "valid": true
+    },
+    {
+      "stage": "eda_mart_contexto_genero_indicador_sexo",
+      "path": "reports/eda/eda_mart_contexto_genero_indicador_sexo.md",
+      "exists": true,
+      "bytes": 2363,
+      "valid": true
+    },
+    {
+      "stage": "eda_series_demanda_sm",
+      "path": "reports/eda/eda_series_demanda_sm.md",
+      "exists": true,
+      "bytes": 9712,
+      "valid": true
+    },
+    {
+      "stage": "eda_series_demanda_sm",
+      "path": "reports/eda/eda_series_demanda_sm_resumen.csv",
+      "exists": true,
+      "bytes": 390,
+      "valid": true
+    },
+    {
+      "stage": "benchmark_demanda_sm",
+      "path": "reports/modeling/benchmark_demanda_sm.md",
+      "exists": true,
+      "bytes": 11511,
+      "valid": true
+    },
+    {
+      "stage": "benchmark_demanda_sm",
+      "path": "reports/modeling/benchmark_demanda_sm_resumen.csv",
+      "exists": true,
+      "bytes": 285966,
+      "valid": true
+    },
+    {
+      "stage": "benchmark_demanda_sm",
+      "path": "reports/modeling/benchmark_demanda_sm_seleccion.json",
+      "exists": true,
+      "bytes": 673,
+      "valid": true
+    },
+    {
+      "stage": "evaluate_holdout_demanda_sm",
+      "path": "reports/modeling/holdout_demanda_sm.md",
+      "exists": true,
+      "bytes": 8335,
+      "valid": true
+    },
+    {
+      "stage": "evaluate_holdout_demanda_sm",
+      "path": "reports/modeling/holdout_demanda_sm_resumen.csv",
+      "exists": true,
+      "bytes": 86508,
+      "valid": true
+    }
+  ]
+}

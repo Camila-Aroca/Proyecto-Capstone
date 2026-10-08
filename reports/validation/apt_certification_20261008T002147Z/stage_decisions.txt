@@ -1,0 +1,34 @@
+﻿2026-10-07 21:28:33,628 [INFO] [SKIP] Etapa 'download_censo' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:33,693 [INFO] [SKIP] Etapa 'download_censo_poblacion' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:33,716 [INFO] [SKIP] Etapa 'download_poblacion_proyecciones' omitida. Los outputs ya existen y son 
+2026-10-07 21:28:33,763 [INFO] [SKIP] Etapa 'download_pobreza_comunal' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:34,966 [INFO] [SKIP] Etapa 'download_deis' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:34,986 [INFO] [SKIP] Etapa 'download_establishments' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,140 [INFO] [SKIP] Etapa 'download_contexto_genero' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,220 [INFO] [SKIP] Etapa 'normalize_contexto_genero' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,220 [INFO] [SKIP] Etapa 'build_mart_contexto_genero_indicador_sexo' omitida. Los outputs ya 
+2026-10-07 21:28:35,239 [INFO] [SKIP] Etapa 'clean_establishments' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,283 [INFO] [SKIP] Etapa 'clean_censo' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,289 [INFO] [SKIP] Etapa 'clean_censo_poblacion' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,299 [INFO] [SKIP] Etapa 'clean_poblacion_proyecciones' omitida. Los outputs ya existen y son 
+2026-10-07 21:28:35,299 [INFO] [SKIP] Etapa 'clean_pobreza_comunal' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,299 [INFO] [SKIP] Etapa 'build_catalogs' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,330 [INFO] [SKIP] Etapa 'clean_urgencias' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,362 [INFO] [SKIP] Etapa 'clean_egresos' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,419 [INFO] [SKIP] Etapa 'build_egresos_f00_f99' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,425 [INFO] [SKIP] Etapa 'eda_establishments' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,425 [INFO] [SKIP] Etapa 'eda_urgencias' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,425 [INFO] [SKIP] Etapa 'profile_urgencias_sm_coverage' omitida. Los outputs ya existen y son 
+2026-10-07 21:28:35,450 [INFO] [SKIP] Etapa 'build_urgencias_comuna_marts' omitida. Los outputs ya existen y son 
+2026-10-07 21:28:35,454 [INFO] [SKIP] Etapa 'build_urgencias_establecimiento_mart' omitida. Los outputs ya existen y 
+2026-10-07 21:28:35,457 [INFO] [SKIP] Etapa 'build_urgencias_comuna_etario_mart' omitida. Los outputs ya existen y son 
+2026-10-07 21:28:35,460 [INFO] [SKIP] Etapa 'build_dim_oferta_urgencia_rm' omitida. Los outputs ya existen y son 
+2026-10-07 21:28:35,462 [INFO] [SKIP] Etapa 'build_mart_mvp_territorial_comuna' omitida. Los outputs ya existen y son 
+2026-10-07 21:28:35,462 [INFO] [SKIP] Etapa 'eda_contexto_genero' omitida. Los outputs ya existen y son v�lidos.
+2026-10-07 21:28:35,469 [INFO] [SKIP] Etapa 'eda_mart_contexto_genero_indicador_sexo' omitida. Los outputs ya existen 
+2026-10-07 21:28:35,471 [INFO] [EJECUTANDO] Etapa 'eda_series_demanda_sm' -> M�dulo: scripts.eda_series_demanda_sm
+2026-10-07 21:28:41,602 [INFO] [EXITO] Etapa 'eda_series_demanda_sm' finalizada correctamente.
+2026-10-07 21:28:41,602 [INFO] [EJECUTANDO] Etapa 'benchmark_demanda_sm' -> M�dulo: scripts.run_demand_benchmark
+2026-10-07 22:02:14,204 [INFO] [EXITO] Etapa 'benchmark_demanda_sm' finalizada correctamente.
+2026-10-07 22:02:14,204 [INFO] [EJECUTANDO] Etapa 'evaluate_holdout_demanda_sm' -> M�dulo: 
+2026-10-07 22:28:50,908 [INFO] [EXITO] Etapa 'evaluate_holdout_demanda_sm' finalizada correctamente.

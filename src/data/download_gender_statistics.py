@@ -120,25 +120,31 @@ def download_source(source: dict[str, str], force: bool = False) -> bool:
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     downloaded_at = dt.datetime.now(dt.timezone.utc).isoformat()
-    with tempfile.NamedTemporaryFile(
-        delete=False, dir=CACHE_DIR, prefix=f"{source['id']}.", suffix=".xlsx"
-    ) as temporary:
-        temporary_path = Path(temporary.name)
-    try:
+    with tempfile.TemporaryDirectory(dir=CACHE_DIR, prefix=f"{source['id']}.") as staging:
+        temporary_path = Path(staging) / source["filename"]
+        backup_path = Path(staging) / "previous.xlsx"
         request = urllib.request.Request(
             source["url"], headers={"User-Agent": "curl/8.0.1"}
         )
         with urllib.request.urlopen(request, timeout=120) as response, temporary_path.open("wb") as target:
             shutil.copyfileobj(response, target, length=1024 * 1024)
         validate_workbook(temporary_path)
-        # Registrar el hash del snapshot validado antes de publicar el RAW.
-        append_provenance(source, temporary_path, raw_path, downloaded_at)
-        temporary_path.replace(raw_path)
+        had_previous = raw_path.exists()
+        try:
+            if had_previous:
+                raw_path.replace(backup_path)
+            temporary_path.replace(raw_path)
+            # Solo un RAW publicado puede figurar como snapshot en el historial.
+            append_provenance(source, raw_path, raw_path, downloaded_at)
+        except Exception:
+            if had_previous and backup_path.exists():
+                raw_path.unlink(missing_ok=True)
+                backup_path.replace(raw_path)
+            elif not had_previous:
+                raw_path.unlink(missing_ok=True)
+            raise
         logger.info("RAW publicado: %s", raw_path.as_posix())
         return True
-    except Exception:
-        temporary_path.unlink(missing_ok=True)
-        raise
 
 
 def run_downloads(force: bool = False) -> dict[str, bool]:

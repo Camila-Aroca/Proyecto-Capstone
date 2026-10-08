@@ -1,0 +1,15 @@
+metrica,valor
+periodos_modelables,260.0
+comunas,51.0
+semanas_fragmentarias_excluidas,2.0
+share_semana_53_pct,0.29
+share_id37_sobre_id36_pct,5.62
+adf_p_nivel,0.0014
+kpss_p_nivel,0.01
+acf_rezago_1,0.7979
+acf_rezago_52,0.264
+stl_fuerza_estacional,0.2308
+stl_fuerza_tendencia,0.62
+baseline_rm_mape_medio_pct,9.68
+baseline_comuna_mape_mediano_pct,34.34
+comunas_80pct_demanda,24.0

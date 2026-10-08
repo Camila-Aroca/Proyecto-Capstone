@@ -1,0 +1,18 @@
+﻿utc=2026-10-08T00:22:05.9621907Z
+head=cf8627d93f4592a5d1713032279f631487ef6d89
+branch=main
+python=Python 3.12.6
+raw_2026_sha256=73f6480f16d299efb80f37fa94cb7d136b15efaca7dec8a05e08edf8502b9f11
+manifest_sha256=8434926dd70efd5b4a996b8d6390df3294ec9e2a505b22276888bf7a6f9673dd
+old_processed_sha256=ca9c7e92c31bbc7ebfe71bbc07dbed9fca5a223cc600a095134df824fd110bfe
+output_contracts_sha256=93ef39398ec30cce71ce6af4f4032594601021bb23f227605b3323b905246b47
+test_output_contracts_sha256=bf10fa3908bd6664611e5450450bb6de012975262e03edbaa53bb8bea5218914
+ M scripts/run_pipeline.py
+ M src/data/clean_urgencias.py
+ M src/data/download_deis_sources.py
+ M src/data/download_gender_statistics.py
+ M tests/test_gender_statistics.py
+ M tests/test_pipeline_orchestration.py
+?? reports/validation/
+?? src/data/output_contracts.py
+?? tests/test_output_contracts.py

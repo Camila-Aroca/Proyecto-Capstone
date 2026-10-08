@@ -57,6 +57,7 @@ DEST_URGENCIAS = Path("data/raw/urgencias")
 DEST_EGRESOS = Path("data/raw/egresos")
 CACHE_DOWNLOADS = Path(".cache/downloads")
 MANIFEST_PATH = Path("data/raw/provenance_manifest.json")
+URGENCIAS_REQUIRED_COLUMNS = {"IdEstablecimiento", "IdCausa", "Total", "fecha", "semana"}
 
 ssl_context = ssl.create_default_context()
 ssl_context.check_hostname = False
@@ -171,7 +172,7 @@ def urgencias_data_cutoff(path: Path, year: int) -> dt.date:
         rows = csv.DictReader(source, delimiter=";")
         # Los ZIP 2020-2022 no publican geografía; el territorio lo resuelve
         # clean_urgencias contra el catálogo de establecimientos.
-        required = {"IdEstablecimiento", "IdCausa", "Total", "fecha", "semana"}
+        required = URGENCIAS_REQUIRED_COLUMNS
         if not required.issubset(rows.fieldnames or []):
             raise ValueError(f"Urgencias sin columnas requeridas: {sorted(required - set(rows.fieldnames or []))}")
         for row in rows:

@@ -1,0 +1,261 @@
+diff --git a/scripts/run_pipeline.py b/scripts/run_pipeline.py
+index 87882e7..4844036 100644
+--- a/scripts/run_pipeline.py
++++ b/scripts/run_pipeline.py
+@@ -9,6 +9,7 @@ import argparse
+ from datetime import date
+ import json
+ import logging
++import pathlib
+ import subprocess
+ import sys
+ from pathlib import Path
+@@ -317,7 +318,7 @@ SUPPORTED_URGENCIAS_YEARS = tuple(range(2020, current_year_chile() + 1))
+ 
+ 
+ def check_outputs_exist(outputs: list[str]) -> bool:
+-    """Verifica que todos los archivos de salida existan, tengan tamaño > 0 y sean legibles."""
++    """Comprueba existencia, legibilidad y esquema mínimo de outputs conocidos."""
+     if not outputs:
+         return False
+     
+@@ -354,6 +355,9 @@ def check_outputs_exist(outputs: list[str]) -> bool:
+                 import json
+                 if not json.loads(p.read_text(encoding="utf-8")):
+                     return False
++            if isinstance(p, pathlib.Path):
++                from src.data.output_contracts import validate_expected_schema
++                validate_expected_schema(p)
+         except Exception as e:
+             logger.warning(f"Archivo corrupto o ilegible {p}: {e}")
+             return False
+@@ -375,7 +379,7 @@ def current_urgencias_processed_is_stale(year: int, raw_sha256: str | None = Non
+ 
+ 
+ def require_stage_outputs(stage_name: str, outputs: list[str]) -> None:
+-    """Un stage solo es exitoso si sus outputs requeridos existen y son legibles."""
++    """Un stage solo es exitoso si sus outputs cumplen los mismos controles de SKIP."""
+     if not check_outputs_exist(outputs):
+         logger.error(f"[ERROR] La etapa '{stage_name}' terminó con código 0, pero sus outputs "
+                      f"requeridos no existen o no son válidos: {outputs}")
+diff --git a/src/data/clean_urgencias.py b/src/data/clean_urgencias.py
+index 3bf3399..a823fe5 100644
+--- a/src/data/clean_urgencias.py
++++ b/src/data/clean_urgencias.py
+@@ -19,6 +19,32 @@ ESTABLECIMIENTOS_NAC_PATH = Path("data/processed/establecimientos_salud_clean.pa
+ REPORTS_DIR = Path("reports")
+ REPORT_MD_PATH = REPORTS_DIR / "eda" / "eda_urgencias_normalizacion.md"
+ SUPPORTED_YEARS = tuple(range(2020, current_year_chile() + 1))
++OUTPUT_SCHEMA = pa.schema([
++    ("fecha", pa.string()),
++    ("ano", pa.int32()),
++    ("semana", pa.int32()),
++    ("establecimiento_codigo", pa.int64()),
++    ("establecimiento_codigo_antiguo", pa.string()),
++    ("establecimiento_glosa", pa.string()),
++    ("region_codigo", pa.int32()),
++    ("region_glosa", pa.string()),
++    ("comuna_codigo", pa.string()),
++    ("comuna_glosa", pa.string()),
++    ("tipo_establecimiento_glosa", pa.string()),
++    ("tipo_establecimiento_urgencia", pa.string()),
++    ("tipo_atencion_urgencia", pa.string()),
++    ("tipo_campana", pa.string()),
++    ("id_causa", pa.int32()),
++    ("glosa_causa", pa.string()),
++    ("total", pa.int32()),
++    ("menores_1", pa.int32()),
++    ("de_1_a_4", pa.int32()),
++    ("de_5_a_14", pa.int32()),
++    ("de_15_a_64", pa.int32()),
++    ("de_65_y_mas", pa.int32()),
++    ("latitud", pa.float64()),
++    ("longitud", pa.float64()),
++])
+ 
+ 
+ def fecha_bounds_urgencias(values: pd.Series) -> tuple[str, str]:
+@@ -135,32 +161,7 @@ def process_urgencias_year(
+     raw_sha256 = file_sha256(raw_file)
+ 
+     # Tipos para Parquet
+-    schema = pa.schema([
+-        ("fecha", pa.string()),
+-        ("ano", pa.int32()),
+-        ("semana", pa.int32()),
+-        ("establecimiento_codigo", pa.int64()),
+-        ("establecimiento_codigo_antiguo", pa.string()),
+-        ("establecimiento_glosa", pa.string()),
+-        ("region_codigo", pa.int32()),
+-        ("region_glosa", pa.string()),
+-        ("comuna_codigo", pa.string()),
+-        ("comuna_glosa", pa.string()),
+-        ("tipo_establecimiento_glosa", pa.string()),
+-        ("tipo_establecimiento_urgencia", pa.string()),
+-        ("tipo_atencion_urgencia", pa.string()),
+-        ("tipo_campana", pa.string()),
+-        ("id_causa", pa.int32()),
+-        ("glosa_causa", pa.string()),
+-        ("total", pa.int32()),
+-        ("menores_1", pa.int32()),
+-        ("de_1_a_4", pa.int32()),
+-        ("de_5_a_14", pa.int32()),
+-        ("de_15_a_64", pa.int32()),
+-        ("de_65_y_mas", pa.int32()),
+-        ("latitud", pa.float64()),
+-        ("longitud", pa.float64()),
+-    ]).with_metadata({RAW_SHA256_METADATA_KEY: raw_sha256.encode("ascii")})
++    schema = OUTPUT_SCHEMA.with_metadata({RAW_SHA256_METADATA_KEY: raw_sha256.encode("ascii")})
+ 
+     # Nunca exponer un Parquet incompleto en la ruta canónica. Una ejecución
+     # interrumpida sólo puede dejar un temporal, que se descarta al reintentar.
+diff --git a/src/data/download_deis_sources.py b/src/data/download_deis_sources.py
+index 364cd0c..58339e8 100644
+--- a/src/data/download_deis_sources.py
++++ b/src/data/download_deis_sources.py
+@@ -57,6 +57,7 @@ DEST_URGENCIAS = Path("data/raw/urgencias")
+ DEST_EGRESOS = Path("data/raw/egresos")
+ CACHE_DOWNLOADS = Path(".cache/downloads")
+ MANIFEST_PATH = Path("data/raw/provenance_manifest.json")
++URGENCIAS_REQUIRED_COLUMNS = {"IdEstablecimiento", "IdCausa", "Total", "fecha", "semana"}
+ 
+ ssl_context = ssl.create_default_context()
+ ssl_context.check_hostname = False
+@@ -171,7 +172,7 @@ def urgencias_data_cutoff(path: Path, year: int) -> dt.date:
+         rows = csv.DictReader(source, delimiter=";")
+         # Los ZIP 2020-2022 no publican geografía; el territorio lo resuelve
+         # clean_urgencias contra el catálogo de establecimientos.
+-        required = {"IdEstablecimiento", "IdCausa", "Total", "fecha", "semana"}
++        required = URGENCIAS_REQUIRED_COLUMNS
+         if not required.issubset(rows.fieldnames or []):
+             raise ValueError(f"Urgencias sin columnas requeridas: {sorted(required - set(rows.fieldnames or []))}")
+         for row in rows:
+diff --git a/src/data/download_gender_statistics.py b/src/data/download_gender_statistics.py
+index 3806fdd..c3467a5 100644
+--- a/src/data/download_gender_statistics.py
++++ b/src/data/download_gender_statistics.py
+@@ -120,25 +120,31 @@ def download_source(source: dict[str, str], force: bool = False) -> bool:
+     RAW_DIR.mkdir(parents=True, exist_ok=True)
+     CACHE_DIR.mkdir(parents=True, exist_ok=True)
+     downloaded_at = dt.datetime.now(dt.timezone.utc).isoformat()
+-    with tempfile.NamedTemporaryFile(
+-        delete=False, dir=CACHE_DIR, prefix=f"{source['id']}.", suffix=".xlsx"
+-    ) as temporary:
+-        temporary_path = Path(temporary.name)
+-    try:
++    with tempfile.TemporaryDirectory(dir=CACHE_DIR, prefix=f"{source['id']}.") as staging:
++        temporary_path = Path(staging) / source["filename"]
++        backup_path = Path(staging) / "previous.xlsx"
+         request = urllib.request.Request(
+             source["url"], headers={"User-Agent": "curl/8.0.1"}
+         )
+         with urllib.request.urlopen(request, timeout=120) as response, temporary_path.open("wb") as target:
+             shutil.copyfileobj(response, target, length=1024 * 1024)
+         validate_workbook(temporary_path)
+-        # Registrar el hash del snapshot validado antes de publicar el RAW.
+-        append_provenance(source, temporary_path, raw_path, downloaded_at)
+-        temporary_path.replace(raw_path)
++        had_previous = raw_path.exists()
++        try:
++            if had_previous:
++                raw_path.replace(backup_path)
++            temporary_path.replace(raw_path)
++            # Solo un RAW publicado puede figurar como snapshot en el historial.
++            append_provenance(source, raw_path, raw_path, downloaded_at)
++        except Exception:
++            if had_previous and backup_path.exists():
++                raw_path.unlink(missing_ok=True)
++                backup_path.replace(raw_path)
++            elif not had_previous:
++                raw_path.unlink(missing_ok=True)
++            raise
+         logger.info("RAW publicado: %s", raw_path.as_posix())
+         return True
+-    except Exception:
+-        temporary_path.unlink(missing_ok=True)
+-        raise
+ 
+ 
+ def run_downloads(force: bool = False) -> dict[str, bool]:
+diff --git a/tests/test_gender_statistics.py b/tests/test_gender_statistics.py
+index 871dd95..3f7f351 100644
+--- a/tests/test_gender_statistics.py
++++ b/tests/test_gender_statistics.py
+@@ -4,6 +4,7 @@ import io
+ import json
+ from pathlib import Path
+ 
++import pytest
+ from openpyxl import Workbook
+ import pyarrow.parquet as pq
+ 
+@@ -76,6 +77,53 @@ def test_append_provenance_preserves_snapshot_history(tmp_path, monkeypatch):
+     assert manifest_rows[0]["sha256"] != manifest_rows[1]["sha256"]
+ 
+ 
++def test_publication_failure_does_not_append_provenance(tmp_path, monkeypatch):
++    fixture = tmp_path / "fixture.xlsx"
++    _save_workbook(fixture, {"NACIONAL": [["dato"]]})
++    raw_dir = tmp_path / "raw"
++    cache_dir = tmp_path / "cache"
++    manifest = raw_dir / "provenance_manifest.json"
++    raw_dir.mkdir()
++    raw_path = raw_dir / "test.xlsx"
++    raw_path.write_bytes(b"previous")
++    old_entry = {"source_id": "older", "sha256": "known"}
++    manifest.write_text(json.dumps([old_entry]), encoding="utf-8")
++    monkeypatch.setattr(download, "RAW_DIR", raw_dir)
++    monkeypatch.setattr(download, "CACHE_DIR", cache_dir)
++    monkeypatch.setattr(download, "MANIFEST_PATH", manifest)
++    monkeypatch.setattr(download.urllib.request, "urlopen", lambda *a, **k: io.BytesIO(fixture.read_bytes()))
++    original_replace = Path.replace
++
++    def fail_publication(path, target):
++        if target == raw_path and path.name == "test.xlsx":
++            raise OSError("publication failed")
++        return original_replace(path, target)
++
++    monkeypatch.setattr(Path, "replace", fail_publication)
++    source = {"id": "test", "filename": "test.xlsx", "url": "https://example.test/test.xlsx"}
++    with pytest.raises(OSError, match="publication failed"):
++        download.download_source(source, force=True)
++    assert raw_path.read_bytes() == b"previous"
++    assert json.loads(manifest.read_text(encoding="utf-8")) == [old_entry]
++
++
++def test_provenance_failure_restores_previous_raw(tmp_path, monkeypatch):
++    fixture = tmp_path / "fixture.xlsx"
++    _save_workbook(fixture, {"NACIONAL": [["dato"]]})
++    raw_dir = tmp_path / "raw"
++    raw_dir.mkdir()
++    raw_path = raw_dir / "test.xlsx"
++    raw_path.write_bytes(b"previous")
++    monkeypatch.setattr(download, "RAW_DIR", raw_dir)
++    monkeypatch.setattr(download, "CACHE_DIR", tmp_path / "cache")
++    monkeypatch.setattr(download.urllib.request, "urlopen", lambda *a, **k: io.BytesIO(fixture.read_bytes()))
++    monkeypatch.setattr(download, "append_provenance", lambda *a: (_ for _ in ()).throw(OSError("manifest failed")))
++    source = {"id": "test", "filename": "test.xlsx", "url": "https://example.test/test.xlsx"}
++    with pytest.raises(OSError, match="manifest failed"):
++        download.download_source(source, force=True)
++    assert raw_path.read_bytes() == b"previous"
++
++
+ def test_parse_suicidio_regional_preserves_symbol_and_column_offset(tmp_path, monkeypatch):
+     raw_dir = tmp_path / "raw"
+     raw_dir.mkdir()
+diff --git a/tests/test_pipeline_orchestration.py b/tests/test_pipeline_orchestration.py
+index bc42ab3..dda82a5 100644
+--- a/tests/test_pipeline_orchestration.py
++++ b/tests/test_pipeline_orchestration.py
+@@ -60,7 +60,10 @@ def _write_urgencias_tree(root: Path, raw_hash_in_summary: str | None, processed
+     """Árbol mínimo relativo al cwd: RAW, summary de ingesta y Parquet anual."""
+     raw = root / "data/raw/urgencias/AtencionesUrgencia2026.csv"
+     raw.parent.mkdir(parents=True)
+-    raw.write_text("fecha;Total" + chr(10) + "01/01/2026;1" + chr(10), encoding="utf-8")
++    raw.write_text(
++        "IdEstablecimiento;IdCausa;Total;fecha;semana\n"
++        "01-100;36;1;01/09/2026;36\n", encoding="latin-1"
++    )
+     actual = file_sha256(raw)
+     (root / "data/processed/urgencias").mkdir(parents=True)
+     if with_processed:

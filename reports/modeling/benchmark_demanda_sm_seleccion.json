@@ -1,0 +1,28 @@
+{
+  "modelo_recomendado": "hibrido_glm_region_lgbm_comuna_conformal",
+  "construible": true,
+  "criterio": "Menor MASE promedio entre los modelos que superan al baseline y tienen cobertura compatible con el nominal en region y comunas.",
+  "nivel_intervalo": 0.8,
+  "horizontes": [
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "semilla": 42,
+  "periodo_backtest": {
+    "ano_min": 2021,
+    "ano_max": 2025,
+    "origenes": 13,
+    "paso": 4,
+    "t_primer_origen": 203,
+    "t_ultimo_origen": 251
+  },
+  "metricas_backtest": {
+    "mase_region": 0.5953,
+    "mase_comuna": 0.6755,
+    "cobertura_region": 0.8769,
+    "cobertura_comuna": 0.8087
+  }
+}

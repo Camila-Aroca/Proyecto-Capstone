@@ -60,7 +60,10 @@ def _write_urgencias_tree(root: Path, raw_hash_in_summary: str | None, processed
     """Árbol mínimo relativo al cwd: RAW, summary de ingesta y Parquet anual."""
     raw = root / "data/raw/urgencias/AtencionesUrgencia2026.csv"
     raw.parent.mkdir(parents=True)
-    raw.write_text("fecha;Total" + chr(10) + "01/01/2026;1" + chr(10), encoding="utf-8")
+    raw.write_text(
+        "IdEstablecimiento;IdCausa;Total;fecha;semana\n"
+        "01-100;36;1;01/09/2026;36\n", encoding="latin-1"
+    )
     actual = file_sha256(raw)
     (root / "data/processed/urgencias").mkdir(parents=True)
     if with_processed:

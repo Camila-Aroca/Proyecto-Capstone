@@ -1,0 +1,4 @@
+﻿command=.venv\Scripts\python.exe -B scripts\run_pipeline.py
+started_utc=2026-10-08T00:28:30.8650614Z
+ended_utc=2026-10-08T01:28:51.5065779Z
+exit_code=0

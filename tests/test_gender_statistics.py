@@ -4,6 +4,7 @@ import io
 import json
 from pathlib import Path
 
+import pytest
 from openpyxl import Workbook
 import pyarrow.parquet as pq
 
@@ -74,6 +75,53 @@ def test_append_provenance_preserves_snapshot_history(tmp_path, monkeypatch):
     manifest_rows = json.loads(manifest.read_text(encoding="utf-8"))
     assert len(manifest_rows) == 2
     assert manifest_rows[0]["sha256"] != manifest_rows[1]["sha256"]
+
+
+def test_publication_failure_does_not_append_provenance(tmp_path, monkeypatch):
+    fixture = tmp_path / "fixture.xlsx"
+    _save_workbook(fixture, {"NACIONAL": [["dato"]]})
+    raw_dir = tmp_path / "raw"
+    cache_dir = tmp_path / "cache"
+    manifest = raw_dir / "provenance_manifest.json"
+    raw_dir.mkdir()
+    raw_path = raw_dir / "test.xlsx"
+    raw_path.write_bytes(b"previous")
+    old_entry = {"source_id": "older", "sha256": "known"}
+    manifest.write_text(json.dumps([old_entry]), encoding="utf-8")
+    monkeypatch.setattr(download, "RAW_DIR", raw_dir)
+    monkeypatch.setattr(download, "CACHE_DIR", cache_dir)
+    monkeypatch.setattr(download, "MANIFEST_PATH", manifest)
+    monkeypatch.setattr(download.urllib.request, "urlopen", lambda *a, **k: io.BytesIO(fixture.read_bytes()))
+    original_replace = Path.replace
+
+    def fail_publication(path, target):
+        if target == raw_path and path.name == "test.xlsx":
+            raise OSError("publication failed")
+        return original_replace(path, target)
+
+    monkeypatch.setattr(Path, "replace", fail_publication)
+    source = {"id": "test", "filename": "test.xlsx", "url": "https://example.test/test.xlsx"}
+    with pytest.raises(OSError, match="publication failed"):
+        download.download_source(source, force=True)
+    assert raw_path.read_bytes() == b"previous"
+    assert json.loads(manifest.read_text(encoding="utf-8")) == [old_entry]
+
+
+def test_provenance_failure_restores_previous_raw(tmp_path, monkeypatch):
+    fixture = tmp_path / "fixture.xlsx"
+    _save_workbook(fixture, {"NACIONAL": [["dato"]]})
+    raw_dir = tmp_path / "raw"
+    raw_dir.mkdir()
+    raw_path = raw_dir / "test.xlsx"
+    raw_path.write_bytes(b"previous")
+    monkeypatch.setattr(download, "RAW_DIR", raw_dir)
+    monkeypatch.setattr(download, "CACHE_DIR", tmp_path / "cache")
+    monkeypatch.setattr(download.urllib.request, "urlopen", lambda *a, **k: io.BytesIO(fixture.read_bytes()))
+    monkeypatch.setattr(download, "append_provenance", lambda *a: (_ for _ in ()).throw(OSError("manifest failed")))
+    source = {"id": "test", "filename": "test.xlsx", "url": "https://example.test/test.xlsx"}
+    with pytest.raises(OSError, match="manifest failed"):
+        download.download_source(source, force=True)
+    assert raw_path.read_bytes() == b"previous"
 
 
 def test_parse_suicidio_regional_preserves_symbol_and_column_offset(tmp_path, monkeypatch):

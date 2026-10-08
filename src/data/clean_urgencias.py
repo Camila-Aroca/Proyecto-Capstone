@@ -19,6 +19,32 @@ ESTABLECIMIENTOS_NAC_PATH = Path("data/processed/establecimientos_salud_clean.pa
 REPORTS_DIR = Path("reports")
 REPORT_MD_PATH = REPORTS_DIR / "eda" / "eda_urgencias_normalizacion.md"
 SUPPORTED_YEARS = tuple(range(2020, current_year_chile() + 1))
+OUTPUT_SCHEMA = pa.schema([
+    ("fecha", pa.string()),
+    ("ano", pa.int32()),
+    ("semana", pa.int32()),
+    ("establecimiento_codigo", pa.int64()),
+    ("establecimiento_codigo_antiguo", pa.string()),
+    ("establecimiento_glosa", pa.string()),
+    ("region_codigo", pa.int32()),
+    ("region_glosa", pa.string()),
+    ("comuna_codigo", pa.string()),
+    ("comuna_glosa", pa.string()),
+    ("tipo_establecimiento_glosa", pa.string()),
+    ("tipo_establecimiento_urgencia", pa.string()),
+    ("tipo_atencion_urgencia", pa.string()),
+    ("tipo_campana", pa.string()),
+    ("id_causa", pa.int32()),
+    ("glosa_causa", pa.string()),
+    ("total", pa.int32()),
+    ("menores_1", pa.int32()),
+    ("de_1_a_4", pa.int32()),
+    ("de_5_a_14", pa.int32()),
+    ("de_15_a_64", pa.int32()),
+    ("de_65_y_mas", pa.int32()),
+    ("latitud", pa.float64()),
+    ("longitud", pa.float64()),
+])
 
 
 def fecha_bounds_urgencias(values: pd.Series) -> tuple[str, str]:
@@ -135,32 +161,7 @@ def process_urgencias_year(
     raw_sha256 = file_sha256(raw_file)
 
     # Tipos para Parquet
-    schema = pa.schema([
-        ("fecha", pa.string()),
-        ("ano", pa.int32()),
-        ("semana", pa.int32()),
-        ("establecimiento_codigo", pa.int64()),
-        ("establecimiento_codigo_antiguo", pa.string()),
-        ("establecimiento_glosa", pa.string()),
-        ("region_codigo", pa.int32()),
-        ("region_glosa", pa.string()),
-        ("comuna_codigo", pa.string()),
-        ("comuna_glosa", pa.string()),
-        ("tipo_establecimiento_glosa", pa.string()),
-        ("tipo_establecimiento_urgencia", pa.string()),
-        ("tipo_atencion_urgencia", pa.string()),
-        ("tipo_campana", pa.string()),
-        ("id_causa", pa.int32()),
-        ("glosa_causa", pa.string()),
-        ("total", pa.int32()),
-        ("menores_1", pa.int32()),
-        ("de_1_a_4", pa.int32()),
-        ("de_5_a_14", pa.int32()),
-        ("de_15_a_64", pa.int32()),
-        ("de_65_y_mas", pa.int32()),
-        ("latitud", pa.float64()),
-        ("longitud", pa.float64()),
-    ]).with_metadata({RAW_SHA256_METADATA_KEY: raw_sha256.encode("ascii")})
+    schema = OUTPUT_SCHEMA.with_metadata({RAW_SHA256_METADATA_KEY: raw_sha256.encode("ascii")})
 
     # Nunca exponer un Parquet incompleto en la ruta canónica. Una ejecución
     # interrumpida sólo puede dejar un temporal, que se descarta al reintentar.
