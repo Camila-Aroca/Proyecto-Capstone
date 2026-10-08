@@ -1,27 +1,39 @@
-import type { CambioEsperado, CoberturaNivel, SerieConPronostico } from "../api";
+import type { CambioEsperado, CoberturaNivel, SemanaParcial, SerieConPronostico } from "../api";
 import { fmtEntero, fmtFechaLarga, fmtPct } from "../format";
 import type { Tokens } from "../tokens";
 import { BadgeCambio } from "./BadgeCambio";
-import { GraficoSerie, LeyendaSerie } from "./GraficoSerie";
+import { GraficoSerie, LeyendaSerie, TablaSerie } from "./GraficoSerie";
 
 interface Props {
   serie: SerieConPronostico | null;
   tokens: Tokens;
   nivelIntervalo: number | null;
   cobertura: CoberturaNivel[] | null;
+  /** Umbral de alza/baja declarado por la API, para no fijarlo aqui tambien. */
+  umbralCambioPct: number | null;
+  /** Semana en curso (parcial). Es un dato regional: solo se usa en la serie de la RM. */
+  semanaParcial: SemanaParcial | null;
 }
 
 const VENTANA_RECIENTE = 4;
 
 const promedio = (xs: number[]) => (xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : null);
 
-// Misma regla que el backend (`clasificar_cambio`): solo hay alza o baja si el
-// nivel reciente queda fuera del intervalo medio del pronostico.
-function clasificar(reciente: number | null, inferior: number | null, superior: number | null): CambioEsperado {
-  if (reciente == null || inferior == null || superior == null) return "sin_pronostico";
-  if (reciente < inferior) return "alza";
-  if (reciente > superior) return "baja";
+// Mismas dos etiquetas que el backend. `clasificar` mide el tamano del cambio
+// contra el umbral declarado por la API; `fueraDelIntervalo` dice si ademas se
+// distingue de la fluctuacion semanal.
+function clasificar(variacion: number | null, umbralPct: number | null): CambioEsperado {
+  if (variacion == null || umbralPct == null) return "sin_pronostico";
+  if (variacion >= umbralPct) return "alza";
+  if (variacion <= -umbralPct) return "baja";
   return "estable";
+}
+
+function fueraDelIntervalo(
+  reciente: number | null, inferior: number | null, superior: number | null,
+): boolean | null {
+  if (reciente == null || inferior == null || superior == null) return null;
+  return reciente < inferior || reciente > superior;
 }
 
 function Esqueleto() {
@@ -36,7 +48,7 @@ function Esqueleto() {
   );
 }
 
-export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura }: Props) {
+export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura, umbralCambioPct, semanaParcial }: Props) {
   const intervalo = nivelIntervalo ? `${Math.round(nivelIntervalo * 100)}%` : "";
   const pronostico = serie?.pronostico ?? [];
   const primero = pronostico[0];
@@ -45,8 +57,15 @@ export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura }: Props) 
   const inferior = promedio(pronostico.map((p) => p.limite_inferior));
   const superior = promedio(pronostico.map((p) => p.limite_superior));
   const variacion = reciente && medio != null ? (medio / reciente - 1) * 100 : null;
-  const cambio = clasificar(reciente, inferior, superior);
+  const cambio = clasificar(variacion, umbralCambioPct);
+  const fuera = fueraDelIntervalo(reciente, inferior, superior);
   const coberturaNivel = cobertura?.find((c) => c.nivel === serie?.nivel);
+  // El dato parcial es de toda la RM: mostrarlo en una comuna seria atribuirle
+  // un volumen que no es suyo.
+  const parcialAplicable = serie?.nivel === "region" ? semanaParcial : null;
+  const rango = pronostico.length
+    ? `${pronostico[0].horizonte} a ${pronostico[pronostico.length - 1].horizonte} semanas`
+    : "";
 
   return (
     <section className="panel" aria-labelledby="serie-titulo">
@@ -76,30 +95,31 @@ export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura }: Props) 
           <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4 sm:flex sm:flex-wrap sm:gap-0 sm:divide-x sm:divide-(--border)">
             <div className="sm:px-6 sm:first:pl-0">
               <dt className="text-[12px] text-3">Nivel reciente</dt>
-              <dd className="mt-0.5 text-xl font-semibold tracking-tight num">{fmtEntero(reciente)}</dd>
+              <dd className="mt-0.5 text-xl font-semibold tracking-tight">{fmtEntero(reciente)}</dd>
               <dd className="text-[12px] text-3">promedio de las últimas {VENTANA_RECIENTE} semanas</dd>
             </div>
             <div className="sm:px-6 sm:first:pl-0">
-              <dt className="text-[12px] text-3">Pronóstico medio, 4 a 8 semanas</dt>
-              <dd className="mt-0.5 text-xl font-semibold tracking-tight num">{fmtEntero(medio)}</dd>
+              <dt className="text-[12px] text-3">Pronóstico medio, {rango}</dt>
+              <dd className="mt-0.5 text-xl font-semibold tracking-tight">{fmtEntero(medio)}</dd>
               <dd className="text-[12px] text-3 num">{fmtPct(variacion)} frente al nivel reciente</dd>
             </div>
             <div className="sm:px-6 sm:first:pl-0">
               <dt className="text-[12px] text-3">Cambio esperado</dt>
               <dd className="mt-1.5">
-                <BadgeCambio
-                  cambio={cambio}
-                  titulo="Alza o baja solo si el nivel reciente queda fuera del intervalo del pronóstico."
-                />
+                <BadgeCambio cambio={cambio} fueraDelIntervalo={fuera} />
               </dd>
               <dd className="mt-1 text-[12px] text-3">
-                {cambio === "estable" ? "la variación cabe en el ruido semanal" : "fuera del intervalo del pronóstico"}
+                {cambio === "estable"
+                  ? `variación menor a ${umbralCambioPct ?? "—"}%`
+                  : fuera
+                    ? "se distingue de la fluctuación semanal"
+                    : "cabe dentro de la fluctuación semanal"}
               </dd>
             </div>
             {coberturaNivel && (
               <div className="sm:px-6 sm:first:pl-0">
                 <dt className="text-[12px] text-3">Confiabilidad del intervalo</dt>
-                <dd className="mt-0.5 text-xl font-semibold tracking-tight num">
+                <dd className="mt-0.5 text-xl font-semibold tracking-tight">
                   {Math.round(coberturaNivel.cobertura_observada * 100)}%
                 </dd>
                 <dd className="text-[12px] text-3">cubrió fuera de muestra (declarado {intervalo})</dd>
@@ -108,7 +128,8 @@ export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura }: Props) 
           </dl>
 
           <div className="mt-5">
-            <GraficoSerie serie={serie} tokens={tokens} intervalo={intervalo} />
+            <GraficoSerie serie={serie} tokens={tokens} intervalo={intervalo} semanaParcial={parcialAplicable} />
+            <TablaSerie serie={serie} intervalo={intervalo} semanaParcial={parcialAplicable} />
           </div>
         </div>
       )}

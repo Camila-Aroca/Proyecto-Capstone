@@ -3,7 +3,8 @@ import type { CambioEsperado, ResumenComuna } from "../api";
 import { fmtDecimal, fmtEntero, fmtPct } from "../format";
 import { BadgeCambio } from "./BadgeCambio";
 
-const CAMBIO_AYUDA = "Alza o baja solo si el nivel reciente queda fuera del intervalo del pronóstico.";
+const CAMBIO_AYUDA =
+  "Alza o baja según el tamaño del cambio esperado. El signo ≈ marca los que caben dentro de la fluctuación semanal.";
 
 interface Props {
   filas: ResumenComuna[];
@@ -18,7 +19,7 @@ const COLUMNAS: { clave: Clave; titulo: string; ayuda?: string; texto?: boolean 
   { clave: "nombre", titulo: "Comuna", texto: true },
   { clave: "promedio_ultimas_semanas", titulo: "Reciente", ayuda: "Promedio semanal de las últimas 4 semanas observadas" },
   { clave: "pronostico_promedio", titulo: "Pronóstico", ayuda: "Promedio semanal pronosticado, 4 a 8 semanas" },
-  { clave: "cambio_esperado", titulo: "Cambio", ayuda: "Alza o baja solo si el nivel reciente queda fuera del intervalo del pronóstico", texto: true },
+  { clave: "cambio_esperado", titulo: "Cambio", ayuda: CAMBIO_AYUDA, texto: true },
   { clave: "tasa_pronostico_por_10000", titulo: "Tasa", ayuda: "Atenciones pronosticadas por 10.000 habitantes a la semana; no es prevalencia" },
   { clave: "indicador_vulnerabilidad", titulo: "Pobreza", ayuda: "Tasa de pobreza por ingresos, Casen 2022" },
   { clave: "oferta_urgencia_actual", titulo: "Oferta", ayuda: "Establecimientos de urgencia vigentes en la comuna" },
@@ -125,7 +126,12 @@ export function TablaComunal({ filas, seleccion, onSeleccionar }: Props) {
                     <td className="px-2.5 py-1.5 text-right">{fila.tiene_pronostico ? fmtEntero(fila.pronostico_promedio) : <span className="text-3">—</span>}</td>
                     <td className="px-2.5 py-1.5 text-left">
                       <span className="inline-flex items-center gap-2">
-                        <BadgeCambio cambio={fila.cambio_esperado} compacto titulo={fila.motivo_sin_pronostico ?? CAMBIO_AYUDA} />
+                        <BadgeCambio
+                          cambio={fila.cambio_esperado}
+                          fueraDelIntervalo={fila.fuera_del_intervalo}
+                          compacto
+                          titulo={fila.motivo_sin_pronostico ?? undefined}
+                        />
                         {fila.tiene_pronostico && <span className="text-[12px] text-3">{fmtPct(fila.variacion_pct)}</span>}
                       </span>
                     </td>

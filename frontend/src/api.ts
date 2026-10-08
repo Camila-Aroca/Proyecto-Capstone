@@ -39,6 +39,15 @@ export interface Territorio {
   motivo_sin_pronostico: string | null;
 }
 
+export interface SemanaParcial {
+  ano: number;
+  semana: number;
+  dias_observados: number;
+  dias_esperados: number;
+  /** Acumulado de los dias ya publicados, no el total de la semana. */
+  atenciones: number;
+}
+
 export interface ResumenComuna {
   series_id: string;
   nombre: string;
@@ -50,6 +59,8 @@ export interface ResumenComuna {
   limite_inferior_promedio: number | null;
   limite_superior_promedio: number | null;
   cambio_esperado: CambioEsperado;
+  /** True si el cambio queda fuera del intervalo: se distingue del ruido semanal. */
+  fuera_del_intervalo: boolean | null;
   tasa_pronostico_por_10000: number | null;
   indicador_vulnerabilidad: number | null;
   oferta_urgencia_actual: number | null;
@@ -62,12 +73,19 @@ export interface CoberturaNivel {
   dentro_de_tolerancia: boolean;
 }
 
+export type OrigenPronostico = "persistido" | "en_memoria";
+
 export interface Meta {
   modelo: string | null;
   horizontes: number[];
+  /** Variacion a partir de la cual el resumen comunal declara alza o baja. */
+  umbral_cambio_pct: number;
+  /** Semana regional en curso, parcial: no comparable con semanas completas. */
+  semana_en_curso: SemanaParcial | null;
   nivel_intervalo: number | null;
   ultima_semana_observada: PuntoHistorico | null;
   pronostico_calculado_en: string | null;
+  origen_pronostico: OrigenPronostico | null;
   comunas_con_pronostico: number;
   metricas_backtest: Record<string, number> | null;
   cobertura_holdout: CoberturaNivel[] | null;

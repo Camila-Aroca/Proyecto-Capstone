@@ -20,8 +20,11 @@ export function BarraSuperior({ meta, estadoPronostico }: Props) {
   return (
     <header className="border-b" style={{ borderColor: "var(--border)", background: "var(--surface)" }}>
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3 sm:px-6">
-        <div className="flex items-baseline gap-3">
-          <span className="text-base font-bold tracking-tight" style={{ color: "var(--accent-ink)" }}>SAAD</span>
+        <div className="flex items-center gap-3">
+          {/* El logo vuelve a la pagina de entrada: es el camino de regreso esperado. */}
+          <a href="#/" aria-label="Ir al inicio" className="shrink-0">
+            <img src="/marca/saad-logo.svg" alt="SAAD" className="h-6 w-auto" />
+          </a>
           <h1 className="text-[15px] font-semibold tracking-tight">
             Demanda de urgencia en salud mental
             <span className="text-2 font-normal"> · Región Metropolitana</span>

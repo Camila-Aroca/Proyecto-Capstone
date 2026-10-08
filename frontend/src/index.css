@@ -9,100 +9,123 @@
 :root {
   color-scheme: light;
 
+  /* Identidad: kit de marca SAAD (saad-branding-kit). Los roles se mantienen
+     para que los componentes no cambien; lo que cambia es de donde sale el color.
+     Los tokens de datos NO se toman tal cual del kit: su escala secuencial no era
+     de un solo tono (65 grados de dispersion) y su extremo claro quedaba en 1,10:1
+     contra el fondo. Se re-escalonaron desde el mismo azul petroleo de la marca y
+     se validaron con el script de la skill dataviz. */
+
   /* Superficies: pagina < panel < panel elevado (encabezados de tabla, menus). */
-  --page: #f4f4f2;
-  --surface: #fcfcfb;
-  --surface-2: #f0efec;
-  --border: rgba(11, 11, 11, 0.1);
-  --border-strong: rgba(11, 11, 11, 0.18);
+  --page: #f6f9fa;
+  --surface: #ffffff;
+  --surface-2: #eef3f6;
+  --border: #d5e0e6;
+  --border-strong: #b3c5cf;
 
-  /* Tinta. ink-3 cumple 4.5:1 sobre --surface para texto pequeno; --muted se
-     reserva para graficos (ejes, grillas), nunca para texto de lectura. */
-  --ink: #0b0b0b;
-  --ink-2: #52514e;
-  --ink-3: #64635e;
-  --muted: #898781;
-  --grid: #e1e0d9;
-  --axis: #c3c2b7;
+  /* Tinta. Verificada sobre --surface: ink 14,9:1, ink-2 8,5:1, ink-3 4,8:1.
+     --muted se reserva para graficos (ejes, grillas), nunca para texto. */
+  --ink: #0f2a38;
+  --ink-2: #34505f;
+  --ink-3: #5e7685;
+  --muted: #6b8391;
+  --grid: #e3eaee;
+  --axis: #c3d2d9;
 
-  /* Acento: seleccion, foco y serie principal. Nada decorativo. */
-  --accent: #2a78d6;
-  --accent-ink: #1c5cab;
-  --accent-weak: rgba(42, 120, 214, 0.1);
-  --series-1: #2a78d6;
-  --band: rgba(42, 120, 214, 0.16);
-  --focus: #2a78d6;
+  /* Acento: azul petroleo de la marca. Seleccion, foco y serie principal. */
+  --accent: #0f5a78;
+  --accent-ink: #0b4660;
+  --accent-weak: rgba(15, 90, 120, 0.1);
+  --series-1: #0f5a78;
+  --band: rgba(74, 159, 207, 0.22);
+  --focus: #0f5a78;
 
-  /* Cambio esperado (divergente) y ausencia de dato. */
-  --alza: #e34948;
-  --alza-weak: rgba(227, 73, 72, 0.12);
-  --baja: #256abf;
-  --baja-weak: rgba(37, 106, 191, 0.12);
-  --estable: #e1e0d9;
-  --sin-dato: #b9b8b0;
+  /* Cambio esperado (divergente, calido/frio) y ausencia de dato. Par validado:
+     delta E 24,8 en vision normal. */
+  --alza: #b3412f;
+  --alza-weak: rgba(179, 65, 47, 0.12);
+  --baja: #2f74a8;
+  --baja-weak: rgba(47, 116, 168, 0.12);
+  --estable: #e6ecef;
+  --sin-dato: #6b8391;
 
-  /* Secuencial de un tono (concentracion), claro -> oscuro. */
-  --seq-1: #cde2fb;
-  --seq-2: #9ec5f4;
-  --seq-3: #6da7ec;
-  --seq-4: #3987e5;
-  --seq-5: #1c5cab;
+  /* Secuencial de un tono (concentracion), claro -> oscuro, anclado al petroleo
+     de la marca. Extremo claro a 2,14:1 de la superficie. */
+  --seq-1: #85b8d4;
+  --seq-2: #679cb7;
+  --seq-3: #487f9a;
+  --seq-4: #2a637d;
+  --seq-5: #0b4660;
 
-  /* Aviso de interpretacion (no es un error). */
-  --notice-bg: #fff6e0;
-  --notice-border: rgba(160, 110, 0, 0.28);
-  --notice-ink: #5a3f00;
+  /* Aviso de interpretacion (no es un error). Ambar de marca, 6,4:1. */
+  --notice-bg: #fcf1dc;
+  --notice-border: rgba(235, 168, 69, 0.45);
+  --notice-ink: #7a4f0a;
 
   --radius: 12px;
   --radius-sm: 8px;
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:where(:not([data-theme="light"])) {
     color-scheme: dark;
-    --page: #0d0d0d;
-    --surface: #1a1a19;
-    --surface-2: #232321;
-    --border: rgba(255, 255, 255, 0.1);
-    --border-strong: rgba(255, 255, 255, 0.18);
-    --ink: #ffffff;
-    --ink-2: #c3c2b7;
-    --ink-3: #a8a79f;
-    --muted: #898781;
-    --grid: #2c2c2a;
-    --axis: #383835;
-    --accent: #3987e5;
-    --accent-ink: #86b6ef;
-    --accent-weak: rgba(57, 135, 229, 0.16);
-    --series-1: #3987e5;
-    --band: rgba(57, 135, 229, 0.22);
-    --focus: #6da7ec;
-    --alza: #e66767;
-    --alza-weak: rgba(230, 103, 103, 0.16);
-    --baja: #5598e7;
-    --baja-weak: rgba(85, 152, 231, 0.16);
-    --estable: #383835;
-    --sin-dato: #6b6a64;
-    /* En oscuro, lo bajo se funde con la superficie y lo alto destaca. */
-    --seq-1: #1a3456;
-    --seq-2: #184f95;
-    --seq-3: #2a78d6;
-    --seq-4: #5598e7;
-    --seq-5: #9ec5f4;
-    --notice-bg: #2a2310;
-    --notice-border: rgba(250, 178, 25, 0.28);
-    --notice-ink: #f4d58a;
+
+    /* El kit no define modo oscuro. Estos escalones se derivaron de los mismos
+       tonos de marca y se validaron por separado contra la superficie oscura:
+       nunca son un volteo automatico del modo claro. */
+    --page: #0a141a;
+    --surface: #0e1b22;
+    --surface-2: #16262f;
+    --border: rgba(255, 255, 255, 0.12);
+    --border-strong: rgba(255, 255, 255, 0.22);
+    --ink: #e8f1f5;
+    --ink-2: #b7cad4;
+    --ink-3: #93aab6;
+    --muted: #7b94a1;
+    --grid: #1b2d37;
+    --axis: #2a414d;
+    --accent: #4a9fcf;
+    --accent-ink: #7cc0e2;
+    --accent-weak: rgba(74, 159, 207, 0.18);
+    --series-1: #4a9fcf;
+    --band: rgba(74, 159, 207, 0.24);
+    --focus: #7cc0e2;
+    --alza: #e07a62;
+    --alza-weak: rgba(224, 122, 98, 0.18);
+    --baja: #6aa9d8;
+    --baja-weak: rgba(106, 169, 216, 0.18);
+    --estable: #2a414d;
+    --sin-dato: #7b94a1;
+
+    /* En oscuro la magnitud va de oscuro a claro; el extremo quieto despega
+       2,05:1 de la superficie. */
+    --seq-1: #335060;
+    --seq-2: #517182;
+    --seq-3: #6e92a4;
+    --seq-4: #8cb3c6;
+    --seq-5: #a9d4e8;
+
+    --notice-bg: #2a2110;
+    --notice-border: rgba(235, 168, 69, 0.32);
+    --notice-ink: #f0cf96;
   }
 }
 
 /* ------------------------------------------------------------------------ */
 
+/* Titulares y cifras destacadas en la tipografia de titulo del kit; el resto en
+   Inter, que es la del kit para texto y datos. */
+h1, h2, h3, .panel-title, .cifra {
+  font-family: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+
 body {
   margin: 0;
   background: var(--page);
   color: var(--ink);
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -195,6 +218,26 @@ h1, h2, h3 {
     text-underline-offset: 2px;
   }
 
+  /* Accion principal de la pagina de entrada. Un solo acento, sin degradados ni
+     sombras de color: el sistema usa el color para datos, no para decoracion. */
+  .boton-primario {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.5rem;
+    padding: 0 1.125rem;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: background 120ms var(--ease-out);
+  }
+
+  .boton-primario:hover {
+    background: var(--accent-ink);
+  }
+
   /* Distintivo de cambio: icono + texto, nunca solo color. */
   .badge {
     display: inline-flex;
@@ -212,6 +255,10 @@ h1, h2, h3 {
   .badge-baja .badge-icon { color: var(--baja); }
   .badge-estable { background: var(--surface-2); color: var(--ink-2); }
   .badge-sin_pronostico { background: transparent; color: var(--ink-3); border: 1px dashed var(--border-strong); }
+  /* Movimiento que no se distingue de la fluctuacion semanal: se muestra, pero
+     atenuado y con "≈", para no leerlo como senal demostrada. */
+  .badge-ruido { opacity: 0.72; border: 1px dashed var(--border-strong); }
+  .badge-ruido-marca { color: var(--ink-3); font-weight: 600; margin-left: 0.125rem; }
 
   .skeleton {
     background: linear-gradient(90deg, var(--surface-2) 0%, var(--grid) 50%, var(--surface-2) 100%);

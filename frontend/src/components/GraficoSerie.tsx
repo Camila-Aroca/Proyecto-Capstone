@@ -8,7 +8,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import type { SerieConPronostico } from "../api";
+import type { SemanaParcial, SerieConPronostico } from "../api";
 import { fmtEntero, fmtFechaCorta, fmtFechaLarga } from "../format";
 import type { Tokens } from "../tokens";
 
@@ -16,6 +16,8 @@ interface Props {
   serie: SerieConPronostico;
   tokens: Tokens;
   intervalo: string;
+  /** Semana en curso, parcial. Solo aplica a la serie regional: el dato es de toda la RM. */
+  semanaParcial?: SemanaParcial | null;
 }
 
 interface Punto {
@@ -25,6 +27,9 @@ interface Punto {
   pronostico: number | null;
   banda: [number, number] | null;
   sinPronostico: boolean;
+  /** Acumulado de los dias ya publicados de la semana en curso; no es la semana completa. */
+  parcial: number | null;
+  diasParciales: number | null;
 }
 
 const DIA_MS = 86_400_000;
@@ -32,7 +37,7 @@ const DIA_MS = 86_400_000;
 // Une historia y pronostico en un solo eje temporal. Las semanas entre la ultima
 // observada y el primer horizonte (h < 4) se incluyen vacias: el modelo no las
 // pronostica, y ocultarlas acortaria visualmente el horizonte real.
-function construirPuntos(serie: SerieConPronostico): Punto[] {
+function construirPuntos(serie: SerieConPronostico, parcial?: SemanaParcial | null): Punto[] {
   const puntos: Punto[] = serie.historico.map((h) => ({
     fecha: h.fecha_inicio ?? "",
     semana: h.semana,
@@ -40,6 +45,8 @@ function construirPuntos(serie: SerieConPronostico): Punto[] {
     pronostico: null,
     banda: null,
     sinPronostico: false,
+    parcial: null,
+    diasParciales: null,
   }));
   const pronostico = serie.pronostico ?? [];
   const ultima = serie.historico.at(-1);
@@ -53,6 +60,8 @@ function construirPuntos(serie: SerieConPronostico): Punto[] {
         pronostico: null,
         banda: null,
         sinPronostico: true,
+        parcial: null,
+        diasParciales: null,
       });
     }
   }
@@ -64,7 +73,27 @@ function construirPuntos(serie: SerieConPronostico): Punto[] {
       pronostico: p.pronostico,
       banda: [p.limite_inferior, p.limite_superior],
       sinPronostico: false,
+      parcial: null,
+      diasParciales: null,
     });
+  }
+  if (parcial) {
+    const existente = puntos.find((p) => p.semana === parcial.semana);
+    if (existente) {
+      existente.parcial = parcial.atenciones;
+      existente.diasParciales = parcial.dias_observados;
+    } else {
+      puntos.push({
+        fecha: "",
+        semana: parcial.semana,
+        observado: null,
+        pronostico: null,
+        banda: null,
+        sinPronostico: false,
+        parcial: parcial.atenciones,
+        diasParciales: parcial.dias_observados,
+      });
+    }
   }
   return puntos;
 }
@@ -84,12 +113,88 @@ export function LeyendaSerie({ tokens, intervalo }: { tokens: Tokens; intervalo:
         <svg width="20" height="10" aria-hidden><rect width="20" height="10" rx="2" fill={tokens.band} /></svg>
         Intervalo {intervalo}
       </li>
+      <li className="inline-flex items-center gap-1.5">
+        <svg width="20" height="10" aria-hidden>
+          <circle cx="10" cy="5" r="4" fill={tokens.surface} stroke={tokens["ink-3"]} strokeWidth="2" strokeDasharray="2 2" />
+        </svg>
+        Semana en curso (parcial)
+      </li>
     </ul>
   );
 }
 
-export function GraficoSerie({ serie, tokens, intervalo }: Props) {
-  const puntos = construirPuntos(serie);
+// Equivalente en tabla del grafico: ningun valor queda accesible solo por hover
+// ni solo por color. Va plegada para no competir con el grafico, pero existe
+// siempre y es navegable por teclado.
+export function TablaSerie({ serie, intervalo, semanaParcial }: {
+  serie: SerieConPronostico;
+  intervalo: string;
+  semanaParcial?: SemanaParcial | null;
+}) {
+  const observadas = serie.historico.slice(-12);
+  const pronosticadas = serie.pronostico ?? [];
+  return (
+    <details className="mt-4 border-t border-[var(--border)] pt-3">
+      <summary className="cursor-pointer text-[13px] text-2 select-none">
+        Ver los datos en tabla
+      </summary>
+      <div className="mt-3 max-h-72 overflow-auto">
+        <table className="w-full border-collapse text-[13px] num">
+          <caption className="sr-only">
+            Atenciones semanales observadas y pronosticadas de {serie.nombre}
+          </caption>
+          <thead>
+            <tr className="text-left text-[12px] text-3">
+              <th scope="col" className="px-2.5 py-1.5 font-medium">Semana</th>
+              <th scope="col" className="px-2.5 py-1.5 font-medium">Inicio</th>
+              <th scope="col" className="px-2.5 py-1.5 text-right font-medium">Atenciones</th>
+              <th scope="col" className="px-2.5 py-1.5 text-right font-medium">Intervalo {intervalo}</th>
+              <th scope="col" className="px-2.5 py-1.5 font-medium">Tipo</th>
+            </tr>
+          </thead>
+          <tbody>
+            {observadas.map((h) => (
+              <tr key={`o-${h.ano}-${h.semana}`} className="border-t border-[var(--border)]">
+                <td className="px-2.5 py-1.5">{h.ano}-S{String(h.semana).padStart(2, "0")}</td>
+                <td className="px-2.5 py-1.5">{h.fecha_inicio ? fmtFechaCorta(h.fecha_inicio) : "—"}</td>
+                <td className="px-2.5 py-1.5 text-right">{fmtEntero(h.atenciones)}</td>
+                <td className="px-2.5 py-1.5 text-right text-3">—</td>
+                <td className="px-2.5 py-1.5 text-2">Observado</td>
+              </tr>
+            ))}
+            {semanaParcial && (
+              <tr className="border-t border-[var(--border)]">
+                <td className="px-2.5 py-1.5">
+                  {semanaParcial.ano}-S{String(semanaParcial.semana).padStart(2, "0")}
+                </td>
+                <td className="px-2.5 py-1.5 text-3">—</td>
+                <td className="px-2.5 py-1.5 text-right">{fmtEntero(semanaParcial.atenciones)}</td>
+                <td className="px-2.5 py-1.5 text-right text-3">—</td>
+                <td className="px-2.5 py-1.5 text-2">
+                  Parcial: {semanaParcial.dias_observados} de {semanaParcial.dias_esperados} días
+                </td>
+              </tr>
+            )}
+            {pronosticadas.map((p) => (
+              <tr key={`p-${p.horizonte}`} className="border-t border-[var(--border)]">
+                <td className="px-2.5 py-1.5">{p.ano}-S{String(p.semana).padStart(2, "0")}</td>
+                <td className="px-2.5 py-1.5">{p.fecha_inicio ? fmtFechaCorta(p.fecha_inicio) : "—"}</td>
+                <td className="px-2.5 py-1.5 text-right">{fmtEntero(p.pronostico)}</td>
+                <td className="px-2.5 py-1.5 text-right">
+                  {fmtEntero(p.limite_inferior)} – {fmtEntero(p.limite_superior)}
+                </td>
+                <td className="px-2.5 py-1.5 text-2">Pronóstico (h+{p.horizonte})</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </details>
+  );
+}
+
+export function GraficoSerie({ serie, tokens, intervalo, semanaParcial }: Props) {
+  const puntos = construirPuntos(serie, semanaParcial);
   return (
     <div className="h-72" role="img" aria-label={`Atenciones semanales observadas y pronosticadas de ${serie.nombre}`}>
       <ResponsiveContainer width="100%" height="100%">
@@ -127,8 +232,14 @@ export function GraficoSerie({ serie, tokens, intervalo }: Props) {
                       <p className="text-2">Intervalo {intervalo}: {fmtEntero(p.banda[0])} – {fmtEntero(p.banda[1])}</p>
                     </>
                   )}
+                  {p.parcial != null && (
+                    <p className="text-2">
+                      Semana en curso: {fmtEntero(p.parcial)} atenciones en {p.diasParciales} de 7 días.
+                      Parcial, no comparable con semanas completas.
+                    </p>
+                  )}
                   {p.sinPronostico && (
-                    <p className="text-2">Sin pronóstico: el modelo cubre de 4 a 8 semanas.</p>
+                    <p className="text-2">Semana sin dato observado ni pronóstico.</p>
                   )}
                 </div>
               );
@@ -142,6 +253,14 @@ export function GraficoSerie({ serie, tokens, intervalo }: Props) {
             strokeWidth={2}
             strokeDasharray="5 4"
             dot={{ r: 4, fill: tokens.surface, stroke: tokens["series-1"], strokeWidth: 2 }}
+            activeDot={{ r: 5 }}
+            isAnimationActive={false}
+            connectNulls={false}
+          />
+          <Line
+            dataKey="parcial"
+            stroke="none"
+            dot={{ r: 4, fill: tokens.surface, stroke: tokens["ink-3"], strokeWidth: 2, strokeDasharray: "2 2" }}
             activeDot={{ r: 5 }}
             isAnimationActive={false}
             connectNulls={false}
