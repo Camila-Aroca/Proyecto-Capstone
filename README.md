@@ -1,173 +1,138 @@
 # SAAD: Sistema de Análisis y Anticipación de Demanda de Urgencia en Salud Mental para la Región Metropolitana
 
-## Descripción del proyecto
+> **Corte de estado: jueves 8 de octubre de 2026.** Este README describe el avance **a una semana de la entrega de Fase 2.1, programada para el jueves 15 de octubre de 2026**. La plataforma ya está funcional y cuenta con modelo predictivo, API y frontend. Los entregables documentales bajo responsabilidad de la jefatura de proyecto están creados y en revisión final antes de subirse al repositorio. Quedan por completar los ajustes visuales según los lineamientos de identidad del proyecto y el cierre de las evidencias de evaluación.
 
-Este proyecto propone desarrollar una plataforma analítica que integre fuentes oficiales del DEIS/MINSAL para caracterizar, proyectar y territorializar la presión sobre la red pública de urgencia en salud mental.
+## Descripción y problema
 
-La plataforma busca responder:
+SAAD es una plataforma analítica para apoyar la planificación de la red pública de urgencia en salud mental en la Región Metropolitana de Chile, a partir de fuentes oficiales como DEIS/MINSAL. Su objetivo es facilitar el análisis territorial de la demanda, la anticipación de presión asistencial y, en el alcance previsto, el estudio de accesibilidad y hospitalizaciones psiquiátricas.
 
-- ¿Dónde se concentra la demanda de urgencia en salud mental?
-- ¿Cuándo podría aumentar la presión sobre la red?
-- ¿Qué territorios presentan menor accesibilidad?
-- ¿Qué factores se relacionan con la duración de las hospitalizaciones psiquiátricas?
+Los datos disponibles se encuentran distribuidos en distintas fuentes y requieren procesamiento y análisis para convertirse en indicadores útiles para la planificación. SAAD es una herramienta de apoyo analítico: no toma decisiones clínicas, diagnostica personas ni gestiona pacientes.
 
-## Problema
+## Componentes y alcance
 
-La planificación de la red de urgencia en salud mental es principalmente reactiva. Aunque existen datos públicos oficiales, estos se encuentran fragmentados y requieren procesamiento para transformar la información en indicadores útiles para la planificación sanitaria.
+| Componente | Estado al 8 de octubre de 2026 |
+|---|---|
+| **Pronóstico semanal de demanda** | Modelo implementado; benchmark y holdout publicados. Permite trabajar con proyecciones de 4 a 8 semanas y sus intervalos. |
+| **API de consulta** | Código disponible en `src/api/` y plataforma funcional según el equipo. |
+| **Interfaz web** | Código en `frontend/`; plataforma funcional. **Pendiente adecuación estética al logo, paleta y demás lineamientos visuales del proyecto.** |
+| **Pipeline y datos** | Certificación documentada en un entorno, con 77/77 outputs reportados como válidos; el equipo confirma además una **instalación limpia en otro computador**. |
+| **Accesibilidad geoespacial avanzada** | Objetivo del alcance posterior: análisis por red vial/transporte público, isócronas, cobertura y vulnerabilidad. No se presenta como módulo completamente demostrado. |
+| **Caracterización de hospitalización psiquiátrica** | Objetivo del alcance posterior: análisis de estadía y factores asociados a egresos F00–F99. No se presenta como módulo completamente demostrado. |
 
-Actualmente, la demanda y la accesibilidad territorial no se analizan de manera integrada. Esto dificulta observar brechas territoriales que no son visibles mediante indicadores descriptivos aislados.
+El **alcance objetivo para el 26 de noviembre de 2026** incluye progresivamente los componentes territoriales y de hospitalización consignados en los requisitos funcionales. Se distingue de las capacidades efectivamente implementadas y demostrables en Fase 2.1.
 
-## Componentes propuestos
+**Fuera de alcance:** gestión de pacientes, cupos/camas en tiempo real, integración clínica en tiempo real, diagnóstico, triage, predicción de riesgo individual y decisiones sobre pacientes concretos. El trabajo se centra en la Región Metropolitana y en fuentes agregadas o disociadas.
 
-1. Modelo de demanda
-   Proyección de atenciones de urgencia por salud mental para una ventana de 4 a 8 semanas, con intervalos de predicción y evaluación mediante backtesting contra un baseline estacional.
+## Evidencia técnica disponible
 
-2. Accesibilidad geoespacial
-   Georreferenciación de establecimientos, cálculo de accesibilidad mediante red vial y transporte público, y estimación de cobertura territorial cruzada con vulnerabilidad socioeconómica.
+- [Resultados de modelamiento](reports/modeling/): benchmark, holdout y selección del modelo.
+- [Certificación del pipeline](reports/validation/apt_certification_20261008T002147Z/): registro con código de salida 0 y 77/77 outputs válidos en el entorno evaluado. Parte de las etapas reutilizaron outputs existentes; no corresponde presentar este registro como una reconstrucción limpia independiente.
+- **Instalación limpia en un segundo computador:** realizada, según confirmación del equipo el 8 de octubre. Para la entrega se debe conservar evidencia del procedimiento, versiones, commit, resultados y ejecución funcional.
+- **Advertencias analíticas del holdout 2026:** MASE regional **0,5096** y comunal **0,6587**; cobertura de intervalos regional **69,68 %** y comunal **76,84 %** frente a **80 % nominal**. El reporte identifica diferencias de procedencia en el RAW 2026 respecto de lo registrado anteriormente. Estas limitaciones deben exponerse junto con los resultados.
 
-3. Caracterización de la hospitalización psiquiátrica
-   Análisis de los factores relacionados con la duración de estadía para diagnósticos F00-F99, considerando diagnóstico, edad, previsión, pertenencia al SNSS y condición de egreso.
+La existencia de código, la certificación de outputs, la instalación limpia y la demostración end-to-end son evidencias distintas. La publicación o producción de un servicio no se presume por la ejecución local.
 
-Estos componentes están sujetos a validación académica y a validación con el futuro cliente piloto.
+## Estado del proyecto: a siete días de Fase 2.1
 
-## Stack Tecnológico
+| Área | Estado actual | Próximo cierre |
+|---|---|---|
+| Definición del problema y entrevistas | Base desarrollada y entrevista inicial realizada | Confirmar el alcance y observaciones académicas |
+| Modelo de demanda | Implementado, con resultados publicados | Preparar exposición y advertencias de interpretación |
+| Datos y pipeline | Certificación disponible | Adjuntar evidencia y documentación técnica de la segunda instalación |
+| API y frontend | **Plataforma funcional** | Registrar demostración, manejo de estados de carga y casos sin datos |
+| Apariencia de la plataforma | **Por ajustar al branding** | Aplicar identidad visual a la interfaz existente, sin asumir rediseño funcional |
+| Entregables bajo responsabilidad de la jefatura de proyecto | **Todos creados localmente, en revisión final** | Homologar formato y contenido, después hacer commit y push |
+| Requisitos, backlog y diagramas | Existen diversos artefactos en GitHub, con revisiones pendientes | Alinear artefactos con código y demo; completar evidencias faltantes |
+| Presentación y video | En preparación | Acordar alcance y formato con la profesora; grabar y revisar |
+| Validación de usuario y cliente institucional | Sin confirmación institucional definitiva | Acordar procedimiento de validación; no declarar aprobaciones aún no obtenidas |
 
-El proyecto se desarrollará utilizando tecnologías modernas orientadas al análisis de datos y la escalabilidad:
+La ausencia temporal de un documento en la rama `main` **no significa que no haya sido creado**: los documentos asignados a la jefatura de proyecto ya existen localmente y se encuentran pendientes de revisión final y publicación. Los artefactos que dependan de otros integrantes deben cotejarse de manera separada con sus responsables.
 
-- **Frontend & UI:** React, Tailwind CSS, Recharts (visualización de datos), React Leaflet (mapas espaciales).
-- **Backend & API:** Python con FastAPI.
-- **Modelamiento Predictivo:** LightGBM, TensorFlow, Prophet/SARIMAX (para evaluación baseline).
-- **Base de Datos:** PostgreSQL con extensión PostGIS (para análisis de rutas y polígonos geoespaciales).
-- **Infraestructura y Entorno:** Docker Compose (despliegue local), WSL2 (Linux), automatización con Cron.
-- **Gestión y Control de Versiones:** Git, GitHub, GitHub Projects (Metodología Kanban).
-- **Diseño y Prototipado:** Figma.
-- **IDE:** Visual Studio Code.
+### Prioridades del 8 al 15 de octubre
 
-## Ejecución local de la plataforma
+1. Concluir la revisión de todos los entregables propios ya elaborados, resolver inconsistencias entre documentos y preparar su publicación en GitHub.
+2. Adaptar la apariencia de la plataforma funcional a los lineamientos visuales del proyecto: logo, paleta, tipografía y componentes.
+3. Documentar la instalación limpia realizada en un segundo computador y respaldar el flujo ejecutable con capturas o registro técnico.
+4. Verificar un recorrido demostrable: selección de RM/comuna, serie histórica, pronóstico 4–8 semanas, intervalos, fecha de corte y advertencias; incluir un caso sin datos cuando corresponda.
+5. Validar API, endpoints, manejo de respuestas temporales `503` y consistencia entre selección del modelo y resultados publicados.
+6. Cerrar con la profesora los requisitos de la presentación, video, validación de usuario y arquitectura/despliegue; preparar la entrega y actualizar el tablero de seguimiento.
 
-La plataforma tiene dos partes separadas:
+## Stack tecnológico
 
-- **Backend** (`src/api/`): API FastAPI que sirve los datos observados y el pronóstico del modelo seleccionado por el benchmark.
-- **Frontend** (`frontend/`): tablero React que consume esa API.
+**Implementación existente:** frontend React, API Python/FastAPI, procesamiento y modelamiento de datos en Python, gestión de código mediante GitHub. El proyecto contempla herramientas de visualización, análisis geoespacial y gestión de datos como Tailwind CSS, Recharts, React Leaflet y PostgreSQL/PostGIS según el alcance técnico. La sola inclusión de una tecnología en el stack previsto no implica que esté implementada o desplegada.
 
-Requisito previo: haber ejecutado el pipeline (`python scripts/run_pipeline.py`), porque la API consume sus outputs (marts, cartografía y `reports/modeling/benchmark_demanda_sm_seleccion.json`).
+## Ejecución local
+
+La solución se organiza en dos servicios: backend en `src/api/` y frontend en `frontend/`. La API necesita los outputs correspondientes del pipeline, incluidos marts, cartografía y `reports/modeling/benchmark_demanda_sm_seleccion.json`. Consultar [PIPELINE.md](PIPELINE.md) para requisitos y procedimientos de generación de los datos.
 
 ```bash
-# Terminal 1: backend en http://127.0.0.1:8000 (documentación en /docs)
+# Desde la raíz del repositorio: dependencias Python
+python -m pip install -r requirements.txt
+
+# Si faltan los outputs de datos, preparar y ejecutar el pipeline según PIPELINE.md:
+python scripts/run_pipeline.py
+
+# Terminal 1: backend, desde la raíz del repositorio
 uvicorn src.api.main:app --reload
 
-# Terminal 2: frontend en http://localhost:5173
+# Terminal 2: frontend
 cd frontend
 npm install
 npm run dev
 ```
 
-Al arrancar, la API carga los datos y calcula el pronóstico en segundo plano (unos 10 segundos). Mientras tanto, los endpoints de pronóstico responden `503` con `Retry-After` y el frontend reintenta solo.
+- API local: `http://127.0.0.1:8000`; documentación interactiva: `http://127.0.0.1:8000/docs`.
+- Frontend local: `http://localhost:5173`.
+- El pronóstico puede inicializarse en segundo plano. Durante ese proceso, algunos endpoints pueden responder `503` y encabezado `Retry-After`; el frontend reintenta la consulta. El tiempo de inicio depende del equipo y los outputs disponibles.
 
-## Público objetivo
+**Instalación en otro equipo:** al 8 de octubre se confirma una instalación limpia en un segundo computador. La evidencia de versiones, comandos, logs y recorrido funcional se consolidará como parte de la preparación para Fase 2.1. No se declara despliegue público.
 
-- Cliente piloto: profesional o institución accesible vinculada con salud mental, atención primaria, urgencias, planificación sanitaria, salud pública o gestión territorial. Su identificación y validación deben confirmarse con la profesora.
-- Usuarios potenciales futuros: Servicios de Salud Metropolitanos, hospitales públicos, municipios, corporaciones de salud y unidades de planificación.
+## Usuarios y validaciones
 
-Belén Guzmán participa como experta de dominio y contacto inicial, pero no está confirmada como clienta del proyecto.
+Entre los usuarios potenciales están las unidades de planificación sanitaria, los Servicios de Salud Metropolitanos, hospitales públicos y equipos de análisis territorial. **No hay cliente piloto institucional confirmado.** Belén Guzmán participa como experta de dominio y contacto inicial, no como cliente institucional confirmada. El alcance definitivo y el procedimiento de validación deben acordarse con la profesora.
 
-## Alcance del MVP
+## Metodología y seguimiento
 
-El MVP es el alcance comprometido para la entrega final (26 de noviembre de 2026). Lo que no aparece en "Incluye" queda fuera del MVP. El detalle, con los requisitos asociados, está en la sección 1.3 de la [Especificación de Requisitos Funcionales](docs/06-requisitos/Especificacion_Requisitos_Funcionales.docx).
-
-### Incluye en el MVP
-
-- **Base de datos confiable:** ingesta, normalización y auditoría de calidad de urgencias y egresos del DEIS, con ejecución reproducible.
-- **Proyección de demanda:** pronóstico semanal de atenciones de urgencia en salud mental a 4–8 semanas, para la RM y sus comunas, con intervalos de predicción y evaluación contra un baseline estacional.
-- **Análisis territorial:** georreferenciación de la oferta pública de urgencia, isócronas por red vial y transporte público, cobertura poblacional y cruce con vulnerabilidad comunal.
-- **Caracterización de hospitalizaciones:** duración de estadía de los egresos F00–F99 y sus factores asociados (sexo, previsión y pertenencia al SNSS).
-- **Visualización de resultados:** plataforma web con series, mapas y tablas, con advertencias de interpretación.
-- **API de consulta** y **trazabilidad** de fuentes y versiones de datos.
-
-### Fuera del MVP
-
-- **Gestión de pacientes:** no se registran, siguen ni derivan pacientes, ni se tratan fichas clínicas o datos identificables.
-- **Gestión de cupos o camas en tiempo real.**
-- **Decisiones clínicas:** ni diagnóstico, ni triage, ni decisiones sobre pacientes individuales.
-- **Predicción de riesgo individual.**
-- **Integración en tiempo real con sistemas hospitalarios.**
-- **Otras regiones y sector privado de salud.**
-- **Extensiones opcionales** (reentrenamiento programado, comparación de escenarios, desagregación por subcausa, exportación de capas): solo si el avance lo permite.
-
-## Alcance y limitaciones
-
-- Territorio: Región Metropolitana.
-- Foco: red pública de urgencia en salud mental.
-- Uso de datos agregados o disociados, sin tratamiento de información personal.
-- Proyecciones destinadas al apoyo de la planificación, no al diagnóstico clínico ni a decisiones individuales.
-- El cruce entre urgencias y egresos hospitalarios será ecológico, porque las bases no se pueden unir individualmente.
-- La extensión de la serie histórica y el nivel de resolución de los datos pueden limitar las conclusiones.
-- El alcance definitivo debe validarse con la profesora.
-
-## Metodología de trabajo
-
-Se utilizará una metodología ágil basada en:
-
-- Tablero Kanban en GitHub Projects.
-- Backlog de tareas.
-- Asignación de responsables y fechas.
-- Revisión periódica de avances.
-- Documentación y control de versiones mediante GitHub.
-
-## Estado actual
-
-| Actividad | Estado |
-|---|---|
-| Definición preliminar del problema | Completada |
-| Entrevista inicial con experta de dominio | Completada |
-| Definición preliminar del alcance | Completada |
-| Validación del alcance con la profesora | Pendiente |
-| Confirmación del cliente piloto | En proceso |
-| Roadmap y carta Gantt | Pendiente |
-| División de tareas y roles | Pendiente |
-| Desarrollo del backlog técnico | Pendiente |
-
-## Próximos pasos
-
-1. Validar la definición y el alcance con la profesora.
-2. Incorporar las observaciones recibidas.
-3. Confirmar el perfil y representante del cliente piloto.
-4. Elaborar el roadmap y la carta Gantt.
-5. Dividir el proyecto en entregables y tareas.
-6. Asignar responsables y fechas concretas.
-7. Configurar el tablero Kanban en GitHub Projects.
-8. Iniciar la exploración y auditoría de las fuentes de datos.
+El equipo trabaja con una metodología ágil apoyada en el [GitHub Project #12](https://github.com/users/Camila-Aroca/projects/12), backlog, asignación de responsables, reuniones de seguimiento y control de versiones. El estado del tablero y el avance documental deben verificarse contra el repositorio: un issue abierto o un archivo todavía no publicado no es, por sí solo, evidencia de trabajo sin realizar.
 
 ## Hitos académicos
 
-- Fase 1 — Presentación del proyecto: 3 de septiembre de 2026.
-- Fase 2.1 — Avance y documentación: 15 de octubre de 2026.
-- Fase 2.3 — Presentación y entrega final: 26 de noviembre de 2026.
-- Fase 3 — Comisión final: entre el 30 de noviembre y el 4 de diciembre de 2026, por confirmar.
+| Hito | Fecha |
+|---|---|
+| Fase 1: presentación del proyecto | 3 de septiembre de 2026 |
+| **Fase 2.1: avance y documentación** | **15 de octubre de 2026** |
+| Fase 2.3: presentación y entrega final | 26 de noviembre de 2026 |
+| Fase 3: comisión final | 30 de noviembre al 4 de diciembre de 2026, por confirmar |
 
-## Documentación
+## Documentación y código
 
+- [Contexto del proyecto](PROJECT_CONTEXT.md)
+- [Guía del pipeline](PIPELINE.md)
 - [Definición del proyecto APT - Fase 1](docs/01-definicion-proyecto/Definicion_Proyecto_APT_Fase_1.docx)
 - [Bitácora de entrevista con Belén Guzmán](docs/02-entrevistas/Bitacora_Entrevista_Belen_Guzman.docx)
 - [Bitácora de reunión de definición y alcance](docs/03-bitacoras/Bitacora_Reunion_Definicion_Alcance.docx)
-- [Especificación de Requisitos Funcionales (ERF-SAAD-2026)](docs/06-requisitos/Especificacion_Requisitos_Funcionales.docx)
-- [Especificación de Requisitos No Funcionales (ERNF-SAAD-2026)](docs/06-requisitos/Especificacion_Requisitos_No_Funcionales.docx)
-- [Diagrama UML de casos de uso](docs/07-diagramas/casos_de_uso_saad.png) — fuente: [`casos_de_uso_saad.puml`](docs/07-diagramas/casos_de_uso_saad.puml)
-- [Diagrama UML de componentes](docs/07-diagramas/componentes_saad.png) — fuente: [`componentes_saad.puml`](docs/07-diagramas/componentes_saad.puml)
-- [Diagrama UML de clases](docs/07-diagramas/clases_saad.png) — fuente: [`clases_saad.puml`](docs/07-diagramas/clases_saad.puml)
-- [Diagrama ER del modelo de base de datos PostgreSQL/PostGIS](docs/07-diagramas/15-modelo-base-datos/modelo_datos_fisico_postgresql.png) — fuente: [`modelo_datos_fisico_postgresql.mmd`](docs/07-diagramas/15-modelo-base-datos/modelo_datos_fisico_postgresql.mmd)
+- [Especificación de Requisitos Funcionales](docs/06-requisitos/Especificacion_Requisitos_Funcionales.docx)
+- [Especificación de Requisitos No Funcionales](docs/06-requisitos/Especificacion_Requisitos_No_Funcionales.docx)
+- [UML casos de uso](docs/07-diagramas/casos_de_uso_saad.png) · [Fuente PlantUML](docs/07-diagramas/casos_de_uso_saad.puml)
+- [UML componentes](docs/07-diagramas/componentes_saad.png) · [Fuente PlantUML](docs/07-diagramas/componentes_saad.puml)
+- [UML clases](docs/07-diagramas/clases_saad.png) · [Fuente PlantUML](docs/07-diagramas/clases_saad.puml)
+- [Modelo físico PostgreSQL/PostGIS](docs/07-diagramas/15-modelo-base-datos/modelo_datos_fisico_postgresql.png)
+- [Modelo predictivo](src/models/) · [API](src/api/) · [Frontend](frontend/)
+- [Resultados](reports/modeling/) · [Validación de pipeline](reports/validation/)
+
+Los enlaces a entregables adicionales en revisión se añadirán cuando se publiquen sus versiones definitivas. No se enlazan archivos locales como si ya estuvieran en `main`.
 
 ## Equipo
 
-| Integrante | Rol | Responsabilidades |
+| Integrante | Rol | Responsabilidades principales |
 |---|---|---|
-| Camila A. | Jefa de Proyecto (PM) | Gestión ágil en Kanban, coordinación con cliente piloto/expertos y documentación. |
-| Felipe R. | Data Engineer | Extracción, limpieza y auditoría de datos del DEIS, gestión de BD PostgreSQL/PostGIS. |
-| Cristopher R. | Data Scientist | Desarrollo, entrenamiento y *benchmarking* de modelos predictivos de demanda. |
-| Catalina | Full Stack / Geoespacial | Desarrollo de la plataforma visual en React, integración con API y análisis espacial. |
+| Camila A. | Jefatura de Proyecto (PM) | Coordinación, gestión ágil, documentación y relación con expertos o futuros usuarios |
+| Felipe R. | Data Engineer | Ingesta, limpieza, auditoría y gestión de datos |
+| Cristopher R. | Data Scientist | Modelos predictivos, entrenamiento, benchmark y evaluación |
+| Catalina | Full Stack / Geoespacial | Plataforma React, integración API y componente espacial |
 
 ## Licencia
 
-Este proyecto se distribuye bajo la licencia MIT. Puedes consultar el texto completo en [LICENSE](LICENSE).
+Consultar el archivo [LICENCIA.md](LICENCIA.md).
 
-Copyright (c) 2026 Camila Aroca y colaboradores.
+Copyright (c) 2026 Camila Aroca, Cristopher Rojas, Felipe Rivera, Catalina Rodríguez
