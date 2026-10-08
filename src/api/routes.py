@@ -24,12 +24,14 @@ from src.api.schemas import (
     Territorio,
 )
 from src.api.service import (
+    UMBRAL_CAMBIO_PCT,
     ServicioDemanda,
     cobertura_holdout,
     formatear_pronostico,
     historico,
     registros,
     resumen_comunal,
+    semana_en_curso,
 )
 from src.models.features import RM_SERIES_ID
 
@@ -113,16 +115,23 @@ def meta(servicio: Servicio) -> Meta:
             f"{len(servicio.motivos)} comuna(s) sin pronóstico por falta de datos; "
             "se muestran como 'sin pronóstico', nunca como cero."
         )
+    if servicio.aviso_pronostico:
+        advertencias.append(servicio.aviso_pronostico)
 
     return Meta(
         modelo=modelo,
         horizontes=seleccion.get("horizontes", []),
+        umbral_cambio_pct=UMBRAL_CAMBIO_PCT,
+        semana_en_curso=semana_en_curso(datos.diagnostico),
         nivel_intervalo=nivel,
         ultima_semana_observada=registros(ultima)[0] if not ultima.empty else None,
         pronostico_calculado_en=(
-            servicio.estado_pronostico.actualizado_en
+            servicio.pronostico_generado_en
             if servicio.estado_pronostico.estado == "listo"
             else None
+        ),
+        origen_pronostico=(
+            servicio.origen_pronostico if servicio.estado_pronostico.estado == "listo" else None
         ),
         comunas_con_pronostico=int(panel.loc[panel["nivel"] == "comuna", "series_id"].nunique()),
         metricas_backtest=seleccion.get("metricas_backtest"),

@@ -82,6 +82,7 @@ Fuentes: [`modelo_datos_logico.mmd`](modelo_datos_logico.mmd) (Mermaid, editable
 
 ```mermaid
 %%{init: {"theme": "neutral"}}%%
+
 erDiagram
 
     cartografia_comunal {
@@ -203,11 +204,11 @@ erDiagram
     }
 
     mart_contexto_genero_indicador_sexo {
-        string source_id "uno de los cuatro inputs processed; contrato de origen"
+        string source_id "uno de los cuatro inputs processed; contrato original"
         string source_sheet
         string geography_level "nacional o regional"
         string geography
-        int region_code "NULL en nacional"
+        int region_code "NULL en nacional; codigo publicado en regional"
         string period "texto publicado; no se fuerza a ano"
         int year "NULL para PHQ-4 y periodos no anuales"
         string sex "incluye Total, razones y brechas publicadas"
@@ -229,6 +230,22 @@ erDiagram
         bool residente_rm "derivada de region_residencia; NULL si region_residencia es nula en origen"
     }
 
+    pronostico_demanda_sm {
+        string series_id PK "comuna RM o agregado regional"
+        int horizonte PK "semanas despues de la ultima semana observada (1-8; 4-8 es el horizonte comprometido)"
+        string nivel "region o comuna"
+        string nombre "glosa legible de la serie"
+        int origen "indice temporal de la ultima semana observada"
+        int ano
+        int semana
+        date fecha_inicio_semana "inicio de la semana pronosticada"
+        double y_pred "atenciones esperadas (eventos), no personas unicas"
+        double y_inferior "limite inferior del intervalo del modelo"
+        double y_superior "limite superior del intervalo del modelo"
+        double poblacion_anual "proyeccion INE del anio objetivo; no es poblacion atendida"
+        string modelo "configuracion de la seleccion congelada que lo genero"
+    }
+
     cartografia_comunal ||--o{ cartografia_distrital : "1 comuna tiene N distritos"
     cartografia_distrital ||--o{ cartografia_zonal : "1 distrito tiene N zonas urbanas (parcial: 51/52 comunas)"
     cartografia_distrital ||--o{ cartografia_entidades : "1 distrito tiene N entidades rurales (parcial: 26/52 comunas)"
@@ -243,8 +260,9 @@ erDiagram
     cartografia_comunal ||--o{ mart_urgencias_comuna_monthly : "1 comuna, N meses (si reporta)"
     cartografia_comunal ||--o{ mart_urgencias_comuna_etario_monthly : "1 comuna, N meses x grupo etario (si reporta)"
     cartografia_comunal ||--o| mart_mvp_territorial_comuna : "1 comuna, 1 fila MVP (52/52, incl. sin reporte)"
+    mart_urgencias_comuna_weekly ||--o{ pronostico_demanda_sm : "panel semanal -> N horizontes por serie (+1 serie regional sin comuna)"
 
-    dim_oferta_urgencia_rm |o..o{ mart_urgencias_establecimiento_monthly : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada"
+    dim_oferta_urgencia_rm |o..o{ mart_urgencias_establecimiento_monthly : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (snapshot actual vs historico 2021-2025)"
 ```
 
 Fuente independiente (idéntica): [`modelo_datos_logico.mmd`](modelo_datos_logico.mmd).
@@ -263,6 +281,7 @@ Fuentes: [`modelo_datos_fisico_postgresql.mmd`](modelo_datos_fisico_postgresql.m
 
 ```mermaid
 %%{init: {"theme": "neutral"}}%%
+
 erDiagram
 
     censo_cartografia_comunal {
@@ -360,7 +379,7 @@ erDiagram
         bigint establecimiento_codigo PK "SIN FK fisica a geo_dim_oferta_urgencia_rm: 3/152 codigos historicos ausentes del snapshot actual"
         smallint ano PK
         smallint mes PK
-        char_5 comuna_codigo "denormalizado, sin FK (ver seccion 8)"
+        char_5 comuna_codigo "denormalizado, sin FK (ver README seccion 8)"
         integer atenciones_id36
     }
 
@@ -380,6 +399,22 @@ erDiagram
         bigint poblacion_censada_2024
         numeric indicador_vulnerabilidad
         bigint n_oferta_urgencia_actual
+    }
+
+    modeling_pronostico_demanda_sm {
+        text series_id PK "comuna RM o agregado regional; sin FK: la fila regional no es una comuna"
+        smallint horizonte PK "CHECK BETWEEN 1 AND 8"
+        text nivel "CHECK IN (region, comuna)"
+        text nombre "glosa legible de la serie"
+        integer origen "indice temporal de la ultima semana observada"
+        smallint ano
+        smallint semana
+        date fecha_inicio_semana
+        double_precision y_pred "atenciones esperadas (eventos), no personas unicas"
+        double_precision y_inferior
+        double_precision y_superior
+        double_precision poblacion_anual "NULLABLE: proyeccion INE del anio objetivo"
+        text modelo "configuracion de la seleccion congelada"
     }
 
     contexto_genero_indicador_por_sexo {
@@ -425,6 +460,8 @@ erDiagram
     censo_cartografia_comunal ||--o{ urgencias_mart_comuna_monthly : "1 a N (si reporta)"
     censo_cartografia_comunal ||--o{ urgencias_mart_comuna_etario_monthly : "1 a N (si reporta)"
     censo_cartografia_comunal ||--o| marts_mvp_territorial_comuna : "1 a 1"
+
+    urgencias_mart_comuna_weekly |o..o{ modeling_pronostico_demanda_sm : "panel de entrada, NO enforced por FK fisica"
 
     geo_dim_oferta_urgencia_rm |o..o{ urgencias_mart_establecimiento_monthly : "relacion documentada, NO enforced por FK fisica"
 ```

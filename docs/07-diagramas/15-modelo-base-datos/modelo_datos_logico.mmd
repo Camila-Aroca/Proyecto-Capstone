@@ -173,6 +173,25 @@ erDiagram
         bool residente_rm "derivada de region_residencia; NULL si region_residencia es nula en origen"
     }
 
+    %% grain: 1 fila = 1 serie x horizonte pronosticado desde la ultima semana observada.
+    %% series_id es una comuna RM o el agregado regional; la fila regional no tiene comuna.
+    %% Output del modelo, no dato observado: se regenera cuando cambia el panel o la seleccion.
+    pronostico_demanda_sm {
+        string series_id PK "comuna RM o agregado regional"
+        int horizonte PK "semanas despues de la ultima semana observada (1-8; 4-8 es el horizonte comprometido)"
+        string nivel "region o comuna"
+        string nombre "glosa legible de la serie"
+        int origen "indice temporal de la ultima semana observada"
+        int ano
+        int semana
+        date fecha_inicio_semana "inicio de la semana pronosticada"
+        double y_pred "atenciones esperadas (eventos), no personas unicas"
+        double y_inferior "limite inferior del intervalo del modelo"
+        double y_superior "limite superior del intervalo del modelo"
+        double poblacion_anual "proyeccion INE del anio objetivo; no es poblacion atendida"
+        string modelo "configuracion de la seleccion congelada que lo genero"
+    }
+
     cartografia_comunal ||--o{ cartografia_distrital : "1 comuna tiene N distritos"
     cartografia_distrital ||--o{ cartografia_zonal : "1 distrito tiene N zonas urbanas (parcial: 51/52 comunas)"
     cartografia_distrital ||--o{ cartografia_entidades : "1 distrito tiene N entidades rurales (parcial: 26/52 comunas)"
@@ -187,5 +206,6 @@ erDiagram
     cartografia_comunal ||--o{ mart_urgencias_comuna_monthly : "1 comuna, N meses (si reporta)"
     cartografia_comunal ||--o{ mart_urgencias_comuna_etario_monthly : "1 comuna, N meses x grupo etario (si reporta)"
     cartografia_comunal ||--o| mart_mvp_territorial_comuna : "1 comuna, 1 fila MVP (52/52, incl. sin reporte)"
+    mart_urgencias_comuna_weekly ||--o{ pronostico_demanda_sm : "panel semanal -> N horizontes por serie (+1 serie regional sin comuna)"
 
     dim_oferta_urgencia_rm |o..o{ mart_urgencias_establecimiento_monthly : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (snapshot actual vs historico 2021-2025)"

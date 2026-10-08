@@ -185,6 +185,30 @@ package "Marts e informacion hospitalaria" {
 }
 
 '---------------------------------------------------------------------
+' Salida del modelo de demanda
+'---------------------------------------------------------------------
+package "Pronostico de demanda" {
+  class PronosticoDemandaSM <<salida de modelo>> {
+    +seriesId: String
+    +horizonte: Integer [1..8]
+    +nivel: String [region|comuna]
+    +nombre: String
+    +origen: Integer
+    +ano: Integer
+    +semana: Integer
+    +fechaInicioSemana: Date [0..1]
+    +pronostico: Decimal
+    +limiteInferior: Decimal
+    +limiteSuperior: Decimal
+    +poblacionAnual: Decimal [0..1]
+    +modelo: String
+    --
+    +estaVigente(entradas): Boolean
+    +obtenerIntervalo(): Intervalo
+  }
+}
+
+'---------------------------------------------------------------------
 ' Contexto interpretativo oficial por sexo/genero
 '---------------------------------------------------------------------
 package "Contexto oficial por sexo/genero" {
@@ -220,9 +244,20 @@ Comuna "1" -- "0..1" MartMVPTerritorialComuna : resume >
 
 EstablecimientoUrgencia "0..1" .. "0..*" UrgenciasEstablecimientoMonthly : establecimientoCodigo
 
+UrgenciasComunaWeekly "0..*" ..> "0..*" PronosticoDemandaSM : panel de entrada >
+
 '---------------------------------------------------------------------
 ' Restricciones semanticas que no se expresan como asociaciones
 '---------------------------------------------------------------------
+note right of PronosticoDemandaSM
+  Salida del modelo, no dato observado:
+  atenciones esperadas (eventos), no personas
+  unicas ni prevalencia. La serie regional no
+  es una comuna. No se persisten modelos
+  entrenados: la interfaz es fit_predict, de
+  modo que no hay estimador reutilizable.
+end note
+
 note right of UrgenciasEstablecimientoMonthly
   Vinculo logico por establecimientoCodigo.
   No es FK garantizada: el mart historico

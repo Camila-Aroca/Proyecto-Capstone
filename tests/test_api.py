@@ -255,9 +255,12 @@ class TestEstadosIntermedios:
 
 
 class TestClasificacionDelCambio:
-    def _resumen(self, reciente, inferior, superior, tiene=True):
+    """Dos etiquetas: `cambio_esperado` mide el tamano, `fuera_del_intervalo` la senal."""
+
+    def _resumen(self, variacion, reciente=15.0, inferior=10.0, superior=20.0, tiene=True):
         return pd.DataFrame(
             {
+                "variacion_pct": [variacion],
                 "promedio_ultimas_semanas": [reciente],
                 "limite_inferior_promedio": [inferior],
                 "limite_superior_promedio": [superior],
@@ -266,25 +269,91 @@ class TestClasificacionDelCambio:
         )
 
     @pytest.mark.parametrize(
-        ("reciente", "esperado"),
-        [(5.0, "alza"), (15.0, "estable"), (25.0, "baja")],
+        ("variacion", "esperado"),
+        [(12.0, "alza"), (7.0, "alza"), (6.9, "estable"), (0.0, "estable"),
+         (-6.9, "estable"), (-7.0, "baja"), (-12.0, "baja")],
     )
-    def test_solo_declara_cambio_fuera_del_intervalo(self, reciente, esperado):
+    def test_declara_cambio_segun_el_umbral(self, variacion, esperado):
+        from src.api.service import UMBRAL_CAMBIO_PCT, clasificar_cambio
+
+        assert UMBRAL_CAMBIO_PCT == 7.0
+        assert clasificar_cambio(self._resumen(variacion)).iloc[0] == esperado
+
+    def test_el_umbral_es_configurable(self):
         from src.api.service import clasificar_cambio
 
-        assert clasificar_cambio(self._resumen(reciente, 10.0, 20.0)).iloc[0] == esperado
+        assert clasificar_cambio(self._resumen(8.0), umbral_pct=10.0).iloc[0] == "estable"
 
     def test_sin_pronostico_nunca_es_estable(self):
         from src.api.service import clasificar_cambio
 
-        fila = self._resumen(15.0, None, None, tiene=False)
+        fila = self._resumen(None, inferior=None, superior=None, tiene=False)
         assert clasificar_cambio(fila).iloc[0] == "sin_pronostico"
+
+    @pytest.mark.parametrize(
+        ("reciente", "esperado"),
+        [(5.0, True), (25.0, True), (15.0, False)],
+    )
+    def test_fuera_del_intervalo_distingue_la_senal_del_ruido(self, reciente, esperado):
+        from src.api.service import fuera_del_intervalo
+
+        fila = self._resumen(12.0, reciente=reciente)
+        assert fuera_del_intervalo(fila).iloc[0] is esperado
+
+    def test_fuera_del_intervalo_es_nulo_sin_pronostico(self):
+        from src.api.service import fuera_del_intervalo
+
+        fila = self._resumen(None, inferior=None, superior=None, tiene=False)
+        assert fuera_del_intervalo(fila).iloc[0] is None
+
+    def test_un_cambio_grande_puede_caber_en_el_ruido(self):
+        """Comuna chica: +12% supera el umbral pero no sale del intervalo."""
+        from src.api.service import clasificar_cambio, fuera_del_intervalo
+
+        fila = self._resumen(12.0, reciente=2.5, inferior=0.5, superior=6.0)
+        assert clasificar_cambio(fila).iloc[0] == "alza"
+        assert fuera_del_intervalo(fila).iloc[0] is False
 
     def test_el_resumen_expone_la_clasificacion(self, cliente):
         filas = {f["series_id"]: f for f in cliente.get("/api/v1/resumen-comunal").json()}
         assert filas["13132"]["cambio_esperado"] == "sin_pronostico"
         assert filas["13101"]["cambio_esperado"] in {"alza", "baja", "estable"}
+        assert filas["13132"]["fuera_del_intervalo"] is None
+        assert filas["13101"]["fuera_del_intervalo"] in {True, False}
         assert filas["13101"]["limite_inferior_promedio"] <= filas["13101"]["limite_superior_promedio"]
+
+
+class TestSemanaEnCurso:
+    """La semana parcial se expone aparte: nunca entra en la serie observada."""
+
+    def _diagnostico(self, filas):
+        return {"semanas_incompletas": pd.DataFrame(filas)}
+
+    def test_devuelve_la_semana_parcial_mas_reciente(self):
+        from src.api.service import semana_en_curso
+
+        parcial = semana_en_curso(self._diagnostico([
+            {"ano": 2026, "semana": 39, "dias": 5, "atenciones_id36": 1500.0},
+            {"ano": 2026, "semana": 40, "dias": 3, "atenciones_id36": 655.0},
+        ]))
+        assert parcial == {
+            "ano": 2026, "semana": 40, "dias_observados": 3,
+            "dias_esperados": 7, "atenciones": 655.0,
+        }
+
+    def test_sin_semanas_incompletas_devuelve_nulo(self):
+        from src.api.service import semana_en_curso
+
+        assert semana_en_curso({}) is None
+        assert semana_en_curso(self._diagnostico([])) is None
+
+    def test_la_meta_la_expone_y_no_contamina_el_historico(self, cliente):
+        meta = cliente.get("/api/v1/meta").json()
+        assert "semana_en_curso" in meta
+        assert meta["umbral_cambio_pct"] == 7.0
+        # El servicio de prueba no declara semanas incompletas: la serie observada
+        # no debe inventarse un punto parcial.
+        assert meta["semana_en_curso"] is None
 
 
 class TestFuncionesPuras:

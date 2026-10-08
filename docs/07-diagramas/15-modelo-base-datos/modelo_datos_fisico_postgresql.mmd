@@ -5,7 +5,7 @@
 %% y la capa de accesibilidad OSM/GTFS/isocronas NO estan implementados (ver README item 15,
 %% seccion 9 "Limitaciones"). Este diagrama es coherente 1:1 con db/schema_postgresql.sql.
 %% Los esquemas replican los subdirectorios de data/processed/ para trazabilidad
-%% (censo, geo, pobreza, urgencias, marts, egresos, contexto_genero).
+%% (censo, geo, pobreza, urgencias, marts, egresos, contexto_genero, modeling).
 
 erDiagram
 
@@ -126,6 +126,22 @@ erDiagram
         bigint n_oferta_urgencia_actual
     }
 
+    modeling_pronostico_demanda_sm {
+        text series_id PK "comuna RM o agregado regional; sin FK: la fila regional no es una comuna"
+        smallint horizonte PK "CHECK BETWEEN 1 AND 8"
+        text nivel "CHECK IN (region, comuna)"
+        text nombre "glosa legible de la serie"
+        integer origen "indice temporal de la ultima semana observada"
+        smallint ano
+        smallint semana
+        date fecha_inicio_semana
+        double_precision y_pred "atenciones esperadas (eventos), no personas unicas"
+        double_precision y_inferior
+        double_precision y_superior
+        double_precision poblacion_anual "NULLABLE: proyeccion INE del anio objetivo"
+        text modelo "configuracion de la seleccion congelada"
+    }
+
     contexto_genero_indicador_por_sexo {
         bigint indicador_contexto_genero_id PK "surrogate tecnico de persistencia del mart; no existe en la fuente"
         text source_id "uno de los cuatro inputs processed; contrato de origen"
@@ -169,5 +185,7 @@ erDiagram
     censo_cartografia_comunal ||--o{ urgencias_mart_comuna_monthly : "1 a N (si reporta)"
     censo_cartografia_comunal ||--o{ urgencias_mart_comuna_etario_monthly : "1 a N (si reporta)"
     censo_cartografia_comunal ||--o| marts_mvp_territorial_comuna : "1 a 1"
+
+    urgencias_mart_comuna_weekly |o..o{ modeling_pronostico_demanda_sm : "panel de entrada, NO enforced por FK fisica"
 
     geo_dim_oferta_urgencia_rm |o..o{ urgencias_mart_establecimiento_monthly : "relacion documentada, NO enforced por FK fisica"

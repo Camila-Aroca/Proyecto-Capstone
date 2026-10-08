@@ -36,21 +36,28 @@ import pyarrow.parquet as pq
 import shapely
 from shapely.geometry import mapping
 
-from src.models.features import RM_SERIES_ID
-from src.models.forecast import (
-    HORIZONTES_DEFECTO,
-    DatosActuales,
-    append_future_rows,
-    forecast_future,
-    load_current_panel,
-)
+from src.models.features import RM_SERIES_ID, TARGET
+from src.models.forecast import DatosActuales, load_current_panel
+from src.models.holdout import DIAS_SEMANA_COMPLETA
 from src.models.metrics import coverage_tolerance
-from src.models.registry import build_model
+from src.models.persistence import (
+    RUTA_MANIFIESTO,
+    RUTA_PRONOSTICO,
+    leer_manifiesto,
+    motivo_desactualizacion,
+    nombres_series,
+)
+from src.models.persistence import calcular_pronostico as ajustar_pronostico
+from src.models.persistence import cargar as cargar_pronostico_persistido
 
 logger = logging.getLogger(__name__)
 
 # Semanas observadas que definen el nivel reciente contra el que se compara el pronostico.
 VENTANA_RECIENTE: Final[int] = 4
+# Cambio relativo a partir del cual el tablero declara alza o baja. Umbral de producto:
+# fija que tan grande debe ser el movimiento para destacarlo, no si es estadisticamente
+# distinguible, que es lo que responde `fuera_del_intervalo`.
+UMBRAL_CAMBIO_PCT: Final[float] = 7.0
 # Tolerancia de simplificacion de poligonos, en grados (~100 m): suficiente para
 # un mapa comunal y reduce el GeoJSON a una fraccion de su tamano.
 TOLERANCIA_GEOMETRIA: Final[float] = 0.001
@@ -64,6 +71,8 @@ class Rutas:
     cartografia: Path = Path("data/processed/censo/Cartografia_censo2024_RM_Comunal.parquet")
     seleccion: Path = Path("reports/modeling/benchmark_demanda_sm_seleccion.json")
     holdout_resumen: Path = Path("reports/modeling/holdout_demanda_sm_resumen.csv")
+    pronostico: Path = RUTA_PRONOSTICO
+    manifiesto_pronostico: Path = RUTA_MANIFIESTO
 
 
 @dataclass
@@ -91,14 +100,6 @@ def registros(frame: pd.DataFrame) -> list[dict[str, Any]]:
     return salida.to_dict("records")
 
 
-def nombres_series(panel: pd.DataFrame) -> dict[str, str]:
-    """Nombre legible de cada serie; la region se muestra como tal."""
-    nombres = panel.drop_duplicates("series_id").set_index("series_id")["comuna_glosa"]
-    nombres = nombres.to_dict()
-    nombres[RM_SERIES_ID] = "Región Metropolitana"
-    return nombres
-
-
 def exclusiones(diagnostico: dict[str, pd.DataFrame]) -> dict[str, str]:
     """Comunas sin pronostico y el motivo, tomadas del diagnostico del holdout."""
     motivos: dict[str, str] = {}
@@ -114,6 +115,27 @@ def exclusiones(diagnostico: dict[str, pd.DataFrame]) -> dict[str, str]:
             "ausencia de dato, no demanda cero."
         )
     return motivos
+
+
+def semana_en_curso(diagnostico: dict[str, pd.DataFrame]) -> dict[str, Any] | None:
+    """Semana parcial mas reciente: ya publicada, todavia incompleta.
+
+    El modelo la excluye y debe seguir excluida: compararla con semanas completas
+    exagera una caida inexistente, porque tres de siete dias publicados se leen como
+    un descenso del 60%. Se expone aparte y etiquetada, para que el producto pueda
+    mostrar que hay dato en curso sin mezclarlo con la serie observada.
+    """
+    incompletas = diagnostico.get("semanas_incompletas", pd.DataFrame())
+    if incompletas.empty:
+        return None
+    fila = incompletas.sort_values(["ano", "semana"]).iloc[-1]
+    return {
+        "ano": int(fila["ano"]),
+        "semana": int(fila["semana"]),
+        "dias_observados": int(fila["dias"]),
+        "dias_esperados": DIAS_SEMANA_COMPLETA,
+        "atenciones": float(fila[TARGET]),
+    }
 
 
 def historico(
@@ -149,34 +171,50 @@ def formatear_pronostico(pronostico: pd.DataFrame, nombres: dict[str, str]) -> p
     ]
 
 
-def clasificar_cambio(resumen: pd.DataFrame) -> pd.Series:
-    """Alza o baja solo cuando el cambio se distingue del ruido semanal.
+def clasificar_cambio(resumen: pd.DataFrame, umbral_pct: float = UMBRAL_CAMBIO_PCT) -> pd.Series:
+    """Alza o baja segun el tamano del cambio esperado, con umbral explicito.
 
-    Una variacion porcentual grande en una comuna chica (de 9 a 13 atenciones)
-    puede ser pura fluctuacion. Se declara `alza` o `baja` solo si el nivel
-    reciente queda fuera del intervalo medio del pronostico; si queda dentro, el
-    pronostico es compatible con que no cambie nada y se declara `estable`.
-
-    Es una regla aproximada y deliberadamente conservadora: compara el promedio
-    de varias semanas observadas con el intervalo de una semana pronosticada.
+    Es una decision de producto, no estadistica: fija que tan grande debe ser el
+    cambio para destacarlo en el tablero. Si se distingue o no del ruido semanal
+    lo responde `fuera_del_intervalo`, que acompana a esta etiqueta.
     """
     # Conversion explicita: un ausente como None deja la columna como objeto y
     # la comparacion fallaria; como NaN, cualquier comparacion es falsa.
-    reciente = pd.to_numeric(resumen["promedio_ultimas_semanas"], errors="coerce")
-    inferior = pd.to_numeric(resumen["limite_inferior_promedio"], errors="coerce")
-    superior = pd.to_numeric(resumen["limite_superior_promedio"], errors="coerce")
+    variacion = pd.to_numeric(resumen["variacion_pct"], errors="coerce")
     return pd.Series(
         np.select(
             [
-                ~resumen["tiene_pronostico"].astype(bool) | reciente.isna(),
-                reciente < inferior,
-                reciente > superior,
+                ~resumen["tiene_pronostico"].astype(bool) | variacion.isna(),
+                variacion >= umbral_pct,
+                variacion <= -umbral_pct,
             ],
             ["sin_pronostico", "alza", "baja"],
             default="estable",
         ),
         index=resumen.index,
     )
+
+
+def fuera_del_intervalo(resumen: pd.DataFrame) -> pd.Series:
+    """Si el nivel reciente queda fuera del intervalo medio del pronostico.
+
+    Segunda etiqueta del cambio. Un movimiento puede superar el umbral y aun asi
+    ser compatible con la fluctuacion semanal: en comunas de bajo volumen el
+    intervalo supera el 100% del nivel reciente, de modo que pasar de 2,5 a 3
+    atenciones cumple cualquier umbral porcentual sin ser una senal. Separar
+    ambas cosas permite mostrar movimiento sin presentarlo como demostrado.
+    """
+    reciente = pd.to_numeric(resumen["promedio_ultimas_semanas"], errors="coerce")
+    inferior = pd.to_numeric(resumen["limite_inferior_promedio"], errors="coerce")
+    superior = pd.to_numeric(resumen["limite_superior_promedio"], errors="coerce")
+    evaluable = (
+        resumen["tiene_pronostico"].astype(bool)
+        & reciente.notna()
+        & inferior.notna()
+        & superior.notna()
+    )
+    fuera = (reciente < inferior) | (reciente > superior)
+    return pd.Series(np.where(evaluable, fuera, None), index=resumen.index, dtype=object)
 
 
 def resumen_comunal(
@@ -218,6 +256,7 @@ def resumen_comunal(
     ).where(resumen["promedio_ultimas_semanas"] > 0)
     resumen["tiene_pronostico"] = resumen["pronostico_promedio"].notna()
     resumen["cambio_esperado"] = clasificar_cambio(resumen)
+    resumen["fuera_del_intervalo"] = fuera_del_intervalo(resumen)
     resumen["motivo_sin_pronostico"] = [
         None if tiene else motivos.get(s, "Sin serie modelable en el período evaluado.")
         for s, tiene in zip(resumen.index, resumen["tiene_pronostico"])
@@ -297,6 +336,9 @@ class ServicioDemanda:
     geojson: dict[str, Any] | None = None
     seleccion: dict[str, Any] | None = None
     pronostico: pd.DataFrame | None = None
+    origen_pronostico: str | None = None
+    pronostico_generado_en: datetime | None = None
+    aviso_pronostico: str | None = None
     nombres: dict[str, str] = field(default_factory=dict)
     motivos: dict[str, str] = field(default_factory=dict)
     estado_datos: Estado = field(default_factory=Estado)
@@ -334,8 +376,44 @@ class ServicioDemanda:
         self.motivos = exclusiones(datos.diagnostico)
         self.estado_datos.marcar("listo")
 
+    def _motivo_recalculo(self) -> str | None:
+        """Por que no se puede reutilizar el pronostico persistido, o None si sirve."""
+        if not (self.rutas.pronostico.exists() and self.rutas.manifiesto_pronostico.exists()):
+            return "no hay un pronóstico persistido"
+        try:
+            return motivo_desactualizacion(leer_manifiesto(self.rutas.manifiesto_pronostico))
+        except (OSError, ValueError, KeyError) as error:
+            return f"el manifiesto del pronóstico no es legible ({error})"
+
+    def _obtener_pronostico(self) -> tuple[pd.DataFrame, str, datetime, str | None]:
+        """Reutiliza el pronostico del disco; si no sirve, lo recalcula y lo informa."""
+        motivo = self._motivo_recalculo()
+        if motivo is None:
+            pronostico, manifiesto = cargar_pronostico_persistido(
+                self.rutas.pronostico, self.rutas.manifiesto_pronostico
+            )
+            generado = datetime.fromisoformat(
+                str(manifiesto["generado_en_utc"]).replace("Z", "+00:00")
+            )
+            logger.info("Pronostico reutilizado desde %s", self.rutas.pronostico.as_posix())
+            return pronostico, "persistido", generado, None
+
+        logger.info("Se recalcula el pronostico en memoria: %s", motivo)
+        return (
+            ajustar_pronostico(self.datos, self.seleccion),
+            "en_memoria",
+            datetime.now(timezone.utc),
+            f"El pronóstico se calculó en memoria porque {motivo}. Ejecute el stage "
+            "`forecast_demanda_sm` del pipeline para persistirlo y evitar recalcularlo.",
+        )
+
     def calcular_pronostico(self) -> None:
-        """Ajusta el modelo seleccionado y guarda el pronostico. Idempotente y seguro entre hilos."""
+        """Deja el pronostico listo. Idempotente y seguro entre hilos.
+
+        Ajustar el modelo toma segundos. El stage `forecast_demanda_sm` lo hace una vez
+        y deja el resultado en disco con su manifiesto; aqui solo se recalcula cuando ese
+        output falta o quedo desactualizado respecto del panel o de la seleccion.
+        """
         if not self._bloqueo.acquire(blocking=False):
             return
         try:
@@ -350,12 +428,12 @@ class ServicioDemanda:
                 )
                 return
             self.estado_pronostico.marcar("calculando")
-            horizontes = tuple(self.seleccion.get("horizontes", HORIZONTES_DEFECTO))
-            modelo = build_model(
-                self.seleccion["modelo_recomendado"], float(self.seleccion["nivel_intervalo"])
-            )
-            extendido = append_future_rows(self.datos.panel, max(horizontes), self.datos.calendario)
-            self.pronostico = forecast_future(extendido, modelo, horizontes)
+            (
+                self.pronostico,
+                self.origen_pronostico,
+                self.pronostico_generado_en,
+                self.aviso_pronostico,
+            ) = self._obtener_pronostico()
             self.estado_pronostico.marcar("listo")
         except Exception as error:  # noqa: BLE001 - se informa por /salud
             logger.exception("Fallo el calculo del pronostico")

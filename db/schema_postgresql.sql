@@ -45,6 +45,7 @@ CREATE SCHEMA IF NOT EXISTS urgencias;
 CREATE SCHEMA IF NOT EXISTS marts;
 CREATE SCHEMA IF NOT EXISTS egresos;
 CREATE SCHEMA IF NOT EXISTS contexto_genero;
+CREATE SCHEMA IF NOT EXISTS modeling;
 
 -- =============================================================================
 -- censo.cartografia_comunal
@@ -520,3 +521,46 @@ COMMENT ON COLUMN egresos.egresos_f00_f99_nacional.comuna_residencia IS
 CREATE INDEX ix_egresos_f00_f99_nacional_ano ON egresos.egresos_f00_f99_nacional (ano_egreso);
 CREATE INDEX ix_egresos_f00_f99_nacional_comuna_residencia ON egresos.egresos_f00_f99_nacional (comuna_residencia);
 CREATE INDEX ix_egresos_f00_f99_nacional_diag1 ON egresos.egresos_f00_f99_nacional (diag1);
+
+
+-- =============================================================================
+-- modeling.pronostico_demanda_sm
+-- Grain: 1 fila = 1 serie x horizonte pronosticado desde la ultima semana observada.
+-- Output del modelo, no dato observado: se reemplaza por completo cuando cambia el
+-- panel semanal o la seleccion congelada del benchmark (stage forecast_demanda_sm).
+-- =============================================================================
+CREATE TABLE modeling.pronostico_demanda_sm (
+    series_id                       TEXT        NOT NULL,
+    horizonte                       SMALLINT    NOT NULL,
+    nivel                           TEXT        NOT NULL,
+    nombre                          TEXT        NOT NULL,
+    origen                          INTEGER     NOT NULL,
+    ano                             SMALLINT    NOT NULL,
+    semana                          SMALLINT    NOT NULL,
+    fecha_inicio_semana             DATE,
+    y_pred                          DOUBLE PRECISION NOT NULL,
+    y_inferior                      DOUBLE PRECISION NOT NULL,
+    y_superior                      DOUBLE PRECISION NOT NULL,
+    poblacion_anual                 DOUBLE PRECISION,
+    modelo                          TEXT        NOT NULL,
+    CONSTRAINT pk_pronostico_demanda_sm PRIMARY KEY (series_id, horizonte),
+    CONSTRAINT ck_pronostico_demanda_sm_nivel CHECK (nivel IN ('region', 'comuna')),
+    CONSTRAINT ck_pronostico_demanda_sm_horizonte CHECK (horizonte BETWEEN 1 AND 8),
+    CONSTRAINT ck_pronostico_demanda_sm_intervalo CHECK (y_inferior <= y_pred AND y_pred <= y_superior)
+);
+
+COMMENT ON TABLE modeling.pronostico_demanda_sm IS
+    'Pronostico vigente de atenciones de urgencia en salud mental, persistido para '
+    'no reajustar el modelo en cada arranque de la API. Son atenciones (eventos), '
+    'no personas unicas ni prevalencia. No se persisten modelos entrenados: la '
+    'interfaz de los modelos es fit_predict, de modo que no existe un estimador '
+    'ajustado reutilizable con predict. La procedencia (fecha, modelo, versiones y '
+    'SHA256 de las entradas) vive en el manifiesto que acompana al output.';
+COMMENT ON COLUMN modeling.pronostico_demanda_sm.series_id IS
+    'Comuna RM o agregado regional. Sin FK a censo.cartografia_comunal: la fila '
+    'regional no es una comuna y esa FK invalidaria el agregado.';
+COMMENT ON COLUMN modeling.pronostico_demanda_sm.poblacion_anual IS
+    'Proyeccion INE del anio pronosticado; denominador para tasas, no poblacion atendida.';
+
+CREATE INDEX ix_pronostico_demanda_sm_nivel ON modeling.pronostico_demanda_sm (nivel);
+CREATE INDEX ix_pronostico_demanda_sm_periodo ON modeling.pronostico_demanda_sm (ano, semana);

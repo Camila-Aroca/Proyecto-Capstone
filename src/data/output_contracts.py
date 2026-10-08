@@ -109,6 +109,25 @@ def _require_report(path: Path, title: str) -> None:
         raise ValueError(f"{path.name}: encabezado inesperado")
 
 
+def _require_forecast_manifest(path: Path) -> None:
+    """Valida el manifiesto del pronóstico persistido, incluida su vigencia.
+
+    La vigencia es parte del contrato: un pronóstico generado sobre un panel o una
+    selección que ya cambiaron no es un output válido, y el orquestador debe
+    regenerarlo en lugar de conservarlo.
+    """
+    from src.models.persistence import motivo_desactualizacion
+
+    manifiesto = json.loads(path.read_text(encoding="utf-8"))
+    requeridas = {"generado_en_utc", "modelo", "nivel_intervalo", "horizontes", "entradas", "filas"}
+    faltantes = requeridas - set(manifiesto)
+    if faltantes:
+        raise ValueError(f"{path.name}: faltan claves {sorted(faltantes)}")
+    motivo = motivo_desactualizacion(manifiesto)
+    if motivo is not None:
+        raise ValueError(f"{path.name}: pronóstico desactualizado ({motivo})")
+
+
 def validate_expected_schema(path: Path) -> bool:
     """Valida outputs conocidos; False deja el control genérico al orquestador."""
     name = path.name
@@ -138,6 +157,13 @@ def validate_expected_schema(path: Path) -> bool:
         return True
     if name == "benchmark_demanda_sm_seleccion.json":
         _require_selection(path)
+        return True
+    if name == "pronostico_demanda_sm.parquet":
+        from src.models.persistence import ESQUEMA
+        _require_parquet(path, {campo.name: campo.type for campo in ESQUEMA})
+        return True
+    if name == "pronostico_demanda_sm_manifest.json":
+        _require_forecast_manifest(path)
         return True
 
     if name.startswith("AtencionesUrgencia") and name.endswith(".csv"):

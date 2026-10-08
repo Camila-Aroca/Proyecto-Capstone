@@ -276,6 +276,17 @@ STAGES = {
             "clean_urgencias",
             "clean_poblacion_proyecciones",
         ]
+    },
+    "forecast_demanda_sm": {
+        "module": "scripts.run_forecast_demanda_sm",
+        "outputs": [
+            "data/processed/modeling/pronostico_demanda_sm.parquet",
+            "data/processed/modeling/pronostico_demanda_sm_manifest.json",
+        ],
+        "depends_on": [
+            "benchmark_demanda_sm",
+            "build_urgencias_comuna_marts",
+        ]
     }
 }
 
@@ -311,7 +322,8 @@ PIPELINE_ORDER = [
     "eda_mart_contexto_genero_indicador_sexo",
     "eda_series_demanda_sm",
     "benchmark_demanda_sm",
-    "evaluate_holdout_demanda_sm"
+    "evaluate_holdout_demanda_sm",
+    "forecast_demanda_sm"
 ]
 
 SUPPORTED_URGENCIAS_YEARS = tuple(range(2020, current_year_chile() + 1))
