@@ -12,10 +12,12 @@ from pathlib import Path
 from docx.shared import Cm
 
 from docx_builder import (
-    add_cover,
+    BRAND_THEME,
+    add_brand_cover,
     add_definition_block,
     add_table,
     add_toc,
+    apply_theme,
     bullets,
     h1,
     h2,
@@ -35,8 +37,9 @@ REQ_HEADERS = ["ID", "Requisito", "Descripción funcional", "Criterio de aceptac
 
 
 def build_cover(doc) -> None:
-    add_cover(
+    add_brand_cover(
         doc,
+        kicker="Requisitos funcionales",
         title="Especificación de Requisitos Funcionales",
         subtitle=(
             "SAAD — Sistema de Análisis y Anticipación de Demanda de Urgencia "
@@ -1361,6 +1364,8 @@ def build_change_control(doc) -> None:
 
 
 def main() -> None:
+    # Identidad visual SAAD, la misma del documento de arquitectura.
+    apply_theme(BRAND_THEME)
     doc = new_document("ERF-SAAD-2026 · Especificación de Requisitos Funcionales · v1.1")
     build_cover(doc)
     build_control(doc)

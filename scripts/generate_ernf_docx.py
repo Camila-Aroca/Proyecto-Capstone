@@ -13,9 +13,11 @@ from pathlib import Path
 from docx.shared import Cm
 
 from docx_builder import (
-    add_cover,
+    BRAND_THEME,
+    add_brand_cover,
     add_table,
     add_toc,
+    apply_theme,
     bullets,
     h1,
     h2,
@@ -33,8 +35,9 @@ RNF_HEADERS = ["ID", "Requisito", "Métrica y valor objetivo", "Prio. / Ver."]
 
 
 def build_cover(doc) -> None:
-    add_cover(
+    add_brand_cover(
         doc,
+        kicker="Requisitos no funcionales",
         title="Especificación de Requisitos No Funcionales",
         subtitle=(
             "SAAD — Sistema de Análisis y Anticipación de Demanda de Urgencia "
@@ -760,6 +763,8 @@ def build_change_control(doc) -> None:
 
 
 def main() -> None:
+    # Identidad visual SAAD, la misma del documento de arquitectura.
+    apply_theme(BRAND_THEME)
     doc = new_document("ERNF-SAAD-2026 · Especificación de Requisitos No Funcionales · v1.0")
     build_cover(doc)
     build_control(doc)
