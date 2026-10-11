@@ -45,6 +45,12 @@ venv/
 
 data/processed/*
 !data/processed/.gitkeep
+# Excepcion: el pronostico vigente y su manifiesto se versionan para que un clon
+# no tenga que recalcularlo. El resto de data/processed/ sigue siendo regenerable.
+!data/processed/modeling/
+data/processed/modeling/*
+!data/processed/modeling/pronostico_demanda_sm.parquet
+!data/processed/modeling/pronostico_demanda_sm_manifest.json
 data/raw/*
 !data/raw/.gitkeep
 !data/raw/provenance_manifest.json

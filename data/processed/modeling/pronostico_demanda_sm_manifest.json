@@ -1,0 +1,48 @@
+{
+  "dataset": "pronostico_demanda_sm",
+  "generado_en_utc": "2026-10-11T04:42:26.138181Z",
+  "generado_en_chile": "2026-10-11T01:42:26.141571-03:00",
+  "modelo": "hibrido_glm_region_lgbm_comuna_conformal",
+  "nivel_intervalo": 0.8,
+  "horizontes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "semilla": 42,
+  "ultima_semana_observada": {
+    "t": 298,
+    "ano": 2026,
+    "semana": 39
+  },
+  "series": {
+    "total": 51,
+    "region": 1,
+    "comuna": 50
+  },
+  "filas": 408,
+  "entradas": {
+    "mart_urgencias_comuna_weekly": {
+      "ruta": "data/processed/marts/mart_urgencias_comuna_weekly.parquet",
+      "sha256": "a608b466bbdd490cabcd53262b82cf5dffef3bee8aa770d80e7652657a607bde"
+    },
+    "seleccion_benchmark": {
+      "ruta": "reports/modeling/benchmark_demanda_sm_seleccion.json",
+      "sha256": "e072f33cd0ac06b898355cd56acf1276f3ce38deafbd5cff857be4b49b6e9db7"
+    }
+  },
+  "versiones": {
+    "python": "3.12.5",
+    "pandas": "3.0.5",
+    "numpy": "2.5.2",
+    "pyarrow": "25.0.1",
+    "scikit-learn": "1.9.1",
+    "statsmodels": "0.15.0",
+    "lightgbm": "4.7.0"
+  }
+}
