@@ -1,0 +1,39 @@
+{
+  "family": "saad-pipeline",
+  "requiresCompatibilities": ["FARGATE"],
+  "networkMode": "awsvpc",
+  "cpu": "4096",
+  "memory": "16384",
+  "ephemeralStorage": {
+    "sizeInGiB": 50
+  },
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/saad-ecs-execution",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/saad-pipeline-task",
+  "containerDefinitions": [
+    {
+      "name": "pipeline",
+      "image": "<ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/saad-pipeline:<VERSION>",
+      "essential": true,
+      "command": ["python", "-m", "src.cloud.pipeline_task", "--modo", "semanal"],
+      "environment": [
+        {"name": "SAAD_S3_BUCKET", "value": "<BUCKET>"},
+        {"name": "SAAD_S3_PREFIX", "value": ""},
+        {"name": "SAAD_ECS_CLUSTER", "value": "saad"},
+        {"name": "SAAD_ECS_SERVICE", "value": "saad-api"}
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/saad-pipeline",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "pipeline",
+          "awslogs-create-group": "true"
+        }
+      }
+    }
+  ]
+}

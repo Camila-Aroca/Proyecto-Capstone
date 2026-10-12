@@ -427,7 +427,7 @@ def build_decisions(doc) -> None:
             "reconstrucción completa y el benchmark siguen en el equipo.",
             "A favor: mismas imágenes que en el as-is, sin servidores, con HTTPS y con datos que se "
             "actualizan solos. En contra: ≈ US$57 al mes, la mayor parte fija por el balanceador; exige "
-            "resolver R-01, R-09 y R-10 antes de desplegar.",
+            "resolver R-01 antes de desplegar.",
         ),
         (
             "ADR-11 · Una sola nube y sin servicios propietarios en el código",
@@ -462,7 +462,7 @@ def build_demo(doc) -> None:
             "imágenes que irían a AWS; la plataforma completa se muestra sin depender de la nube.",
             "**El to-be se justifica para el acceso público**, por ejemplo la validación con un usuario "
             "piloto fuera del equipo: da una URL HTTPS estable sin exponer el equipo de un integrante.",
-            "**Antes de desplegar** deben resolverse R-01, R-09 y R-10 (sección 10).",
+            "**Antes de desplegar** debe resolverse R-01 (sección 10); R-09 y R-10 ya están resueltos en la imagen del pipeline.",
         ],
     )
 
@@ -475,7 +475,7 @@ def build_risks(doc) -> None:
         [
             ("R-01", "Al arrancar, la API lee también RAW de Urgencias y de población (~12 GB), no solo outputs procesados.",
              "Desplegarla exige llevar el RAW completo a la nube: más almacenamiento y arranques lentos.",
-             "Que la API consuma solo outputs procesados (~200 MB) antes de desplegar."),
+             "Que la API consuma solo outputs procesados (~200 MB) y los baje desde S3 al arrancar."),
             ("R-02", "Si el pronóstico persistido no está vigente, la API lo recalcula al arrancar.",
              "Hoy toma ~15 min con 12 núcleos; con 0,5 vCPU serían horas sin pronóstico.",
              "La tarea pipeline semanal regenera el pronóstico antes de publicar (sección 3.3)."),
@@ -499,10 +499,12 @@ def build_risks(doc) -> None:
              "El as-is cubre la demo; el to-be se activa solo si se aprueba su costo."),
             ("R-09", "El pipeline asume `data/` en disco local.",
              "La tarea programada no puede leer ni escribir S3 directamente.",
-             "Sincronizar `data/` y `reports/` con S3 antes y después de la ejecución, sin cambiar el pipeline."),
+             "Implementado: la imagen `saad-pipeline` (`src/cloud/pipeline_task.py`) sincroniza `data/` "
+             "y `reports/` con S3 antes y después, sin cambiar el pipeline; si un paso falla no sube nada."),
             ("R-10", "La API toma datos nuevos solo al reiniciarse.",
              "Tras la actualización semanal seguiría sirviendo los datos anteriores.",
-             "Que la tarea termine forzando un nuevo despliegue del servicio `saad-api`."),
+             "Implementado: al terminar con cambios, la tarea fuerza un nuevo despliegue del servicio "
+             "`saad-api` (variables `SAAD_ECS_CLUSTER` y `SAAD_ECS_SERVICE`)."),
             ("R-11", "La frecuencia del DEIS se infirió de dos snapshots, no de un calendario oficial.",
              "La ejecución del lunes podría no tomar la semana más reciente.",
              "Registrar `data_lag_days` durante unas semanas y ajustar el día de ejecución."),

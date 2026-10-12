@@ -93,9 +93,24 @@ Requiere Docker con Compose v2 y los datos en `data/` (RAW y outputs del pipelin
 # Construir y levantar API + frontend
 docker compose up -d --build
 
-# Opcional: ejecutar el pipeline dentro del contenedor (escribe en data/ y reports/)
+# Opcional: pipeline completo en su propio contenedor (escribe en data/ y reports/)
 docker compose --profile pipeline run --rm pipeline
+
+# Opcional: solo la actualización semanal (Urgencias del año en curso + pronóstico)
+docker compose --profile pipeline run --rm pipeline python -m src.cloud.pipeline_task --modo semanal
 ```
+
+La API y el pipeline son contenedores independientes, construidos desde el mismo `Dockerfile` con targets distintos: `saad-api` (target `api`, servidor web) y `saad-pipeline` (target `pipeline`, tarea por lotes que termina al acabar). El pipeline no necesita la API encendida.
+
+**Pipeline como tarea programada (Fargate).** La imagen `saad-pipeline` ejecuta `src/cloud/pipeline_task.py`, que con estas variables trabaja contra S3 en lugar del disco local:
+
+| Variable | Uso |
+|---|---|
+| `SAAD_S3_BUCKET` | Bucket con `data/` y `reports/`. Sin ella, la tarea usa el disco local. |
+| `SAAD_S3_PREFIX` | Prefijo opcional dentro del bucket. |
+| `SAAD_ECS_CLUSTER`, `SAAD_ECS_SERVICE` | Si están, al terminar con cambios fuerza un nuevo despliegue de la API para que tome los datos nuevos. |
+
+La tarea baja `data/` y `reports/`, ejecuta el modo pedido, sube solo los archivos nuevos o modificados y, si algún paso falla, no sube nada. La definición de la tarea para ECS está en `infra/aws/pipeline-task-definition.json` (4 vCPU, 16 GB y 50 GiB de disco efímero, porque los 20 GiB por defecto de Fargate no alcanzan para el RAW); antes de descargar, la tarea verifica el espacio libre y falla con un mensaje claro si no alcanza. Necesita un rol con permisos de lectura y escritura sobre el bucket y `ecs:UpdateService` sobre el servicio de la API. La primera vez, el bucket debe poblarse con `aws s3 sync data/ s3://<bucket>/data/` y `aws s3 sync reports/ s3://<bucket>/reports/`, o ejecutando la tarea con `--modo completo`.
 
 - Frontend: `http://localhost:8080` (nginx sirve el build y reenvía `/api` a la API).
 - API: `http://localhost:8000/docs`.

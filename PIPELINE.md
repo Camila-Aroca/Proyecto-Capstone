@@ -54,6 +54,19 @@ cuando el contenido es idéntico. Ante una descarga o validación fallida, el
 RAW previo se conserva y el comando falla. Este mismo comando puede programarse
 más adelante; no requiere una API de hora.
 
+**Ejecución programada en contenedor.** `src/cloud/pipeline_task.py` es el punto de
+entrada de la imagen `saad-pipeline` (target `pipeline` del `Dockerfile`). En
+`--modo semanal` ejecuta `--refresh-current-urgencias` y luego
+`--stage forecast_demanda_sm --force`: el pronóstico se fuerza porque usa las
+semanas del año en curso, pero su vigencia solo vigila el mart cerrado y la
+selección del modelo. En `--modo completo` ejecuta el pipeline completo. Sin
+`SAAD_S3_BUCKET` opera sobre el disco local; con esa variable baja `data/` y
+`reports/` desde S3, ejecuta el modo, sube solo los archivos nuevos o modificados
+(los borrados locales no se propagan) y, si cambió algo y están `SAAD_ECS_CLUSTER`
+y `SAAD_ECS_SERVICE`, fuerza un nuevo despliegue de la API. Si un paso falla no
+sube nada, de modo que S3 conserva el último estado completo. Sus pruebas están
+en `tests/test_pipeline_task.py`.
+
 `run_date` es la fecha civil de `America/Santiago`; `data_cutoff_date` es la
 fecha máxima observada en el CSV. El comando informa `data_lag_days`, el
 desfase entre ambas fechas. Una fuente atrasada conserva su fecha real: no se

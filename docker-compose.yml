@@ -2,7 +2,9 @@ name: saad
 
 services:
   api:
-    build: .
+    build:
+      context: .
+      target: api
     image: saad-api
     restart: unless-stopped
     volumes:
@@ -22,12 +24,16 @@ services:
     ports:
       - "${SAAD_WEB_PORT:-8080}:80"
 
-  # Ejecucion opcional del pipeline: docker compose --profile pipeline run --rm pipeline
+  # Pipeline completo sobre el volumen local: docker compose --profile pipeline run --rm pipeline
+  # Actualizacion semanal: ... run --rm pipeline python -m src.cloud.pipeline_task --modo semanal
+  # Con SAAD_S3_BUCKET definido trabaja contra S3, igual que la tarea programada en Fargate.
   pipeline:
-    image: saad-api
-    build: .
+    build:
+      context: .
+      target: pipeline
+    image: saad-pipeline
     profiles: ["pipeline"]
     volumes:
       - ./data:/app/data
       - ./reports:/app/reports
-    command: ["python", "scripts/run_pipeline.py"]
+    command: ["python", "-m", "src.cloud.pipeline_task", "--modo", "completo"]
