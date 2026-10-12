@@ -137,6 +137,7 @@ def validate_expected_schema(path: Path) -> bool:
         "eda_series_demanda_sm.md": "# EDA de series temporales: demanda de urgencia en salud mental (RM)",
         "benchmark_demanda_sm.md": "# Benchmark de modelos de demanda de urgencia en salud mental (RM)",
         "holdout_demanda_sm.md": "# Evaluacion en holdout del modelo de demanda de urgencia en salud mental",
+        "cobertura_urgencia_comuna.md": "# Cobertura territorial simple de la oferta de urgencia (RM)",
     }
     if name in reports:
         _require_report(path, reports[name])
@@ -245,6 +246,11 @@ def validate_expected_schema(path: Path) -> bool:
         _require_parquet(path, {field.name: field.type for field in SCHEMA})
         if epsg(crs_geoparquet(path, "geometry")) != EPSG_TRABAJO:
             raise ValueError(f"{path.name}: CRS distinto de EPSG:{EPSG_TRABAJO}")
+        return True
+
+    if name == "cobertura_urgencia_comuna.parquet":
+        from src.geo.build_cobertura_urgencia_comuna import SCHEMA
+        _require_parquet(path, {field.name: field.type for field in SCHEMA})
         return True
 
     if name == "egresos_f00_f99_nacional_2020_2025.parquet":

@@ -30,6 +30,7 @@ Se realizó una búsqueda dirigida antes de crear cualquier artefacto:
 - `dim_oferta_urgencia_rm` (`data/processed/geo/`).
 - `mart_urgencias_comuna_weekly`, `mart_urgencias_comuna_monthly`, `mart_urgencias_establecimiento_monthly`, `mart_urgencias_comuna_etario_monthly` (`data/processed/marts/`).
 - `mart_mvp_territorial_comuna` (`data/processed/marts/`).
+- `cobertura_urgencia_comuna` (`data/processed/geo/`): cobertura territorial simple por distancia en línea recta (NEXT-032).
 - `egresos_f00_f99_nacional_2020_2025` (`data/processed/egresos/`).
 - `mart_contexto_genero_indicador_sexo` (`data/processed/marts/`), derivado
   de los cuatro Parquet independientes de `data/processed/contexto_genero/`.
@@ -42,7 +43,7 @@ Se realizó una búsqueda dirigida antes de crear cualquier artefacto:
 ## 4. Convenciones
 
 - **Modelo lógico** (`modelo_datos_logico.mmd`): describe los datos **tal como existen hoy**. Los archivos Parquet/CSV en `data/processed/` **no tienen constraints SQL activos**; las PK/FK del diagrama lógico son llaves **lógicas**, verificadas empíricamente sobre los datos (sin duplicados, sin nulos, dominios subconjunto), no restricciones físicas ya implementadas.
-- **Modelo físico** (`modelo_datos_fisico_postgresql.mmd` + `db/schema_postgresql.sql`): diseño **objetivo** para PostgreSQL/PostGIS. Es el stack de base de datos que el proyecto ya definió (`README.md` raíz, sección de stack tecnológico: *"Base de Datos: PostgreSQL con extensión PostGIS"*). **PostgreSQL/PostGIS es la arquitectura de persistencia objetivo, no una alternativa a futuro por decidir.** Lo que sí permanece sin implementar es el **despliegue** (AWS/RDS, Docker) y la **capa de accesibilidad geoespacial** (OSM/GTFS, isócronas, cobertura poblacional): ninguna de las dos cosas es requisito para modelar correctamente las geometrías censales que ya existen en los Parquet fuente.
+- **Modelo físico** (`modelo_datos_fisico_postgresql.mmd` + `db/schema_postgresql.sql`): diseño **objetivo** para PostgreSQL/PostGIS. Es el stack de base de datos que el proyecto ya definió (`README.md` raíz, sección de stack tecnológico: *"Base de Datos: PostgreSQL con extensión PostGIS"*). **PostgreSQL/PostGIS es la arquitectura de persistencia objetivo, no una alternativa a futuro por decidir.** Lo que sí permanece sin implementar es el **despliegue** (AWS/RDS, Docker) y la **capa de accesibilidad geoespacial** (OSM/GTFS, isócronas; la cobertura simple por distancia en línea recta sí existe como `cobertura_urgencia_comuna`): ninguna de las dos cosas es requisito para modelar correctamente las geometrías censales que ya existen en los Parquet fuente.
 - Distinción de llaves en ambos modelos:
   - **clave natural real**: existe en la fuente y es verificablemente única (ej. `CUT`/`comuna_codigo`, `establecimiento_codigo`, `ID_DISTRITO`, `ID_ZONA`, `MANZENT`).
   - **clave lógica**: combinación de columnas de grano verificada sin duplicados (ej. `comuna_codigo + ano + semana`).
@@ -203,6 +204,16 @@ erDiagram
         bigint n_oferta_urgencia_actual
     }
 
+    cobertura_urgencia_comuna {
+        string comuna_codigo PK, FK
+        bigint poblacion_unidades_censales "manzanas + entidades con n_per > 0"
+        bigint n_oferta_urgencia_en_comuna
+        double distancia_mediana_km "ponderada por poblacion"
+        double distancia_p90_km
+        double proporcion_poblacion_a_5km
+        double distancia_mediana_id36_km "solo oferta que reporto ID36"
+    }
+
     mart_contexto_genero_indicador_sexo {
         string source_id "uno de los cuatro inputs processed; contrato original"
         string source_sheet
@@ -260,6 +271,7 @@ erDiagram
     cartografia_comunal ||--o{ mart_urgencias_comuna_monthly : "1 comuna, N meses (si reporta)"
     cartografia_comunal ||--o{ mart_urgencias_comuna_etario_monthly : "1 comuna, N meses x grupo etario (si reporta)"
     cartografia_comunal ||--o| mart_mvp_territorial_comuna : "1 comuna, 1 fila MVP (52/52, incl. sin reporte)"
+    cartografia_comunal ||--o| cobertura_urgencia_comuna : "1 comuna, 1 fila de cobertura (52/52)"
     mart_urgencias_comuna_weekly ||--o{ pronostico_demanda_sm : "panel semanal -> N horizontes por serie (+1 serie regional sin comuna)"
 
     dim_oferta_urgencia_rm |o..o{ mart_urgencias_establecimiento_monthly : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (snapshot actual vs historico 2021-2025)"
@@ -355,6 +367,17 @@ erDiagram
         numeric latitud
         numeric longitud
         boolean reporto_id36_periodo
+    }
+
+    geo_cobertura_urgencia_comuna {
+        char_5 comuna_codigo PK, FK
+        bigint poblacion_censada_2024
+        bigint poblacion_unidades_censales
+        bigint n_oferta_urgencia_en_comuna
+        numeric distancia_mediana_km
+        numeric distancia_p90_km
+        numeric proporcion_poblacion_a_5km
+        numeric distancia_mediana_id36_km
     }
 
     urgencias_mart_comuna_weekly {
@@ -460,6 +483,7 @@ erDiagram
     censo_cartografia_comunal ||--o{ urgencias_mart_comuna_monthly : "1 a N (si reporta)"
     censo_cartografia_comunal ||--o{ urgencias_mart_comuna_etario_monthly : "1 a N (si reporta)"
     censo_cartografia_comunal ||--o| marts_mvp_territorial_comuna : "1 a 1"
+    censo_cartografia_comunal ||--o| geo_cobertura_urgencia_comuna : "1 a 1"
 
     urgencias_mart_comuna_weekly |o..o{ modeling_pronostico_demanda_sm : "panel de entrada, NO enforced por FK fisica"
 
@@ -496,6 +520,7 @@ Los esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egres
 | `mart_urgencias_establecimiento_monthly` | establecimiento × año × mes (8857 filas, 152 establec. 2021-2025) | `establecimiento_codigo, ano, mes` | `comuna_codigo` → `cartografia_comunal`; vínculo lógico (no FK) a `dim_oferta_urgencia_rm` | N → 1 comuna |
 | `mart_urgencias_comuna_etario_monthly` | comuna × año × mes × grupo etario (15300 filas, 51/52 comunas) | `comuna_codigo, ano, mes, grupo_etario_urgencia` | `comuna_codigo` → `cartografia_comunal` | N → 1 comuna |
 | `mart_mvp_territorial_comuna` | 1 comuna, corte único MVP (52 filas) | `comuna_codigo` | `comuna_codigo` → `cartografia_comunal` | 1 → 1 comuna |
+| `cobertura_urgencia_comuna` | 1 comuna, corte único (52 filas) | `comuna_codigo` | `comuna_codigo` → `cartografia_comunal` | 1 → 1 comuna |
 | `mart_contexto_genero_indicador_sexo` | 1 observación publicada por sexo/género, fuente, geografía, período e indicador (3956 filas) | clave lógica: `source_id, source_sheet, geography_level, geography, region_code, period, sex, indicator, unit`; físico: `indicador_contexto_genero_id` técnico | ninguna | mart contextual aislado |
 | `egresos_f00_f99_nacional_2020_2025` | 1 registro de egreso publicado, nacional (218794 filas) | sin clave natural (físico: `egreso_id` técnico) | ninguna (invariante: sin enlace por paciente/establecimiento; alcance nacional, sin FK a dimensiones exclusivas RM) | entidad aislada |
 

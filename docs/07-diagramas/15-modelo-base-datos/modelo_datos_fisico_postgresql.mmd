@@ -82,6 +82,17 @@ erDiagram
         boolean reporto_id36_periodo
     }
 
+    geo_cobertura_urgencia_comuna {
+        char_5 comuna_codigo PK, FK
+        bigint poblacion_censada_2024
+        bigint poblacion_unidades_censales
+        bigint n_oferta_urgencia_en_comuna
+        numeric distancia_mediana_km
+        numeric distancia_p90_km
+        numeric proporcion_poblacion_a_5km
+        numeric distancia_mediana_id36_km
+    }
+
     urgencias_mart_comuna_weekly {
         char_5 comuna_codigo PK, FK
         smallint ano PK
@@ -185,6 +196,7 @@ erDiagram
     censo_cartografia_comunal ||--o{ urgencias_mart_comuna_monthly : "1 a N (si reporta)"
     censo_cartografia_comunal ||--o{ urgencias_mart_comuna_etario_monthly : "1 a N (si reporta)"
     censo_cartografia_comunal ||--o| marts_mvp_territorial_comuna : "1 a 1"
+    censo_cartografia_comunal ||--o| geo_cobertura_urgencia_comuna : "1 a 1"
 
     urgencias_mart_comuna_weekly |o..o{ modeling_pronostico_demanda_sm : "panel de entrada, NO enforced por FK fisica"
 

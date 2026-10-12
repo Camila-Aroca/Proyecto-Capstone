@@ -140,6 +140,17 @@ erDiagram
         bigint n_oferta_urgencia_actual
     }
 
+    %% grain: 1 fila = 1 comuna RM (52). Proximidad en linea recta de la poblacion censal 2024 a la oferta; no es accesibilidad (sin red vial ni GTFS)
+    cobertura_urgencia_comuna {
+        string comuna_codigo PK, FK
+        bigint poblacion_unidades_censales "manzanas + entidades con n_per > 0"
+        bigint n_oferta_urgencia_en_comuna
+        double distancia_mediana_km "ponderada por poblacion"
+        double distancia_p90_km
+        double proporcion_poblacion_a_5km
+        double distancia_mediana_id36_km "solo oferta que reporto ID36"
+    }
+
     %% grain: 1 fila = 1 observacion publicada de un indicador contextual por sexo/genero.
     %% Normaliza la maquetacion, no homologa semanticas: source_id conserva los 4 contratos.
     %% Sin FK ni relacion con Urgencias/Egresos, aunque coincidan sexo, ano o geografia.
@@ -206,6 +217,7 @@ erDiagram
     cartografia_comunal ||--o{ mart_urgencias_comuna_monthly : "1 comuna, N meses (si reporta)"
     cartografia_comunal ||--o{ mart_urgencias_comuna_etario_monthly : "1 comuna, N meses x grupo etario (si reporta)"
     cartografia_comunal ||--o| mart_mvp_territorial_comuna : "1 comuna, 1 fila MVP (52/52, incl. sin reporte)"
+    cartografia_comunal ||--o| cobertura_urgencia_comuna : "1 comuna, 1 fila de cobertura (52/52)"
     mart_urgencias_comuna_weekly ||--o{ pronostico_demanda_sm : "panel semanal -> N horizontes por serie (+1 serie regional sin comuna)"
 
     dim_oferta_urgencia_rm |o..o{ mart_urgencias_establecimiento_monthly : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (snapshot actual vs historico 2021-2025)"

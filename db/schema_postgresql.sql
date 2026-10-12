@@ -289,6 +289,52 @@ COMMENT ON TABLE geo.dim_oferta_urgencia_rm IS
 CREATE INDEX ix_dim_oferta_urgencia_rm_comuna ON geo.dim_oferta_urgencia_rm (comuna_codigo);
 
 -- =============================================================================
+-- geo.cobertura_urgencia_comuna
+-- Grain: 1 fila = 1 comuna RM (52 filas, corte unico). Cobertura territorial
+-- simple: distancia en linea recta (haversine) de la poblacion censal 2024
+-- (manzanas + entidades ponderadas por n_per) a la oferta de urgencia actual.
+-- No es accesibilidad: sin red vial, GTFS ni tiempos de viaje.
+-- =============================================================================
+CREATE TABLE geo.cobertura_urgencia_comuna (
+    comuna_codigo                        CHAR(5)     NOT NULL,
+    poblacion_censada_2024               BIGINT      NOT NULL,
+    poblacion_unidades_censales          BIGINT      NOT NULL,
+    proporcion_poblacion_representada    NUMERIC     NOT NULL,
+    n_unidades_censales_pobladas         BIGINT      NOT NULL,
+    n_oferta_urgencia_en_comuna          BIGINT      NOT NULL,
+    habitantes_por_establecimiento       NUMERIC,
+    distancia_media_km                   NUMERIC     NOT NULL,
+    distancia_mediana_km                 NUMERIC     NOT NULL,
+    distancia_p90_km                     NUMERIC     NOT NULL,
+    proporcion_poblacion_a_2km           NUMERIC     NOT NULL,
+    proporcion_poblacion_a_5km           NUMERIC     NOT NULL,
+    proporcion_poblacion_a_10km          NUMERIC     NOT NULL,
+    distancia_mediana_id36_km            NUMERIC     NOT NULL,
+    proporcion_poblacion_a_5km_id36      NUMERIC     NOT NULL,
+    CONSTRAINT pk_cobertura_urgencia_comuna PRIMARY KEY (comuna_codigo),
+    CONSTRAINT fk_cobertura_urgencia_comuna_comuna FOREIGN KEY (comuna_codigo)
+        REFERENCES censo.cartografia_comunal (comuna_codigo),
+    CONSTRAINT ck_cobertura_urgencia_comuna_distancias CHECK (
+        distancia_media_km >= 0 AND distancia_mediana_km >= 0
+        AND distancia_p90_km >= distancia_mediana_km
+        AND distancia_mediana_id36_km >= distancia_mediana_km
+    ),
+    CONSTRAINT ck_cobertura_urgencia_comuna_proporciones CHECK (
+        proporcion_poblacion_a_2km BETWEEN 0 AND 1
+        AND proporcion_poblacion_a_5km BETWEEN proporcion_poblacion_a_2km AND 1
+        AND proporcion_poblacion_a_10km BETWEEN proporcion_poblacion_a_5km AND 1
+        AND proporcion_poblacion_a_5km_id36 BETWEEN 0 AND 1
+    ),
+    CONSTRAINT ck_cobertura_urgencia_comuna_oferta CHECK (n_oferta_urgencia_en_comuna >= 0)
+);
+
+COMMENT ON TABLE geo.cobertura_urgencia_comuna IS
+    'Proximidad en linea recta, no accesibilidad. habitantes_por_establecimiento '
+    'es NULL (no infinito ni 0) si la comuna no tiene oferta. Las proporciones '
+    'usan poblacion_unidades_censales como denominador; la brecha con la '
+    'poblacion oficial queda en proporcion_poblacion_representada.';
+
+-- =============================================================================
 -- urgencias.mart_comuna_weekly
 -- Grain: 1 fila = comuna x ano x semana, calendario DEIS (no ISO). 13362
 -- filas; 51/52 comunas reportan (Vitacura sin reporte de Urgencias).

@@ -240,6 +240,17 @@ STAGES = {
         "outputs": ["data/processed/geo/establecimientos_coordenadas_resolucion.csv"],
         "depends_on": ["clean_establishments", "clean_censo", "build_dim_oferta_urgencia_rm"]
     },
+    "build_cobertura_urgencia_comuna": {
+        "module": "src.geo.build_cobertura_urgencia_comuna",
+        "outputs": [
+            "data/processed/geo/cobertura_urgencia_comuna.parquet",
+            "reports/geo/cobertura_urgencia_comuna.md",
+        ],
+        "depends_on": [
+            "clean_censo", "clean_censo_poblacion", "build_dim_oferta_urgencia_rm",
+            "build_capa_oferta_urgencia_rm",
+        ]
+    },
     "build_mart_mvp_territorial_comuna": {
         "module": "src.data.build_mart_mvp_territorial_comuna",
         "outputs": ["data/processed/marts/mart_mvp_territorial_comuna.parquet"],
@@ -329,6 +340,7 @@ PIPELINE_ORDER = [
     "build_dim_oferta_urgencia_rm",
     "build_capa_oferta_urgencia_rm",
     "resolve_coordenadas_establecimientos",
+    "build_cobertura_urgencia_comuna",
     "build_mart_mvp_territorial_comuna",
     "eda_contexto_genero",
     "eda_mart_contexto_genero_indicador_sexo",
