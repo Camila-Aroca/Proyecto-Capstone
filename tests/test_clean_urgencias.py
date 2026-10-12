@@ -7,6 +7,7 @@ import pyarrow.parquet as pq
 import pandas as pd
 
 from src.data.clean_urgencias import (
+    ESTABLECIMIENTOS_RM_PATH,
     RAW_URGENCIAS_DIR,
     PROCESSED_URGENCIAS_DIR,
     COLUMN_MAPPING_RAW_TO_SNAKE,
@@ -20,7 +21,9 @@ from src.data.raw_provenance import file_sha256, processed_raw_sha256
 def test_catalogs_load():
     """Verifica que los catálogos de establecimientos se carguen con datos."""
     rm_antiguo, rm_nuevo, nac_antiguo, nac_nuevo = load_establishment_catalogs()
-    assert len(rm_nuevo) == 1172
+    # El maestro DEIS se actualiza: el tamaño se contrasta con el CSV vigente, no con una cifra fija.
+    maestro_rm = pd.read_csv(ESTABLECIMIENTOS_RM_PATH, dtype=str, usecols=["establecimiento_codigo"])
+    assert len(rm_nuevo) == maestro_rm["establecimiento_codigo"].str.strip().nunique() > 0
     assert len(rm_antiguo) > 0
     assert len(nac_nuevo) > 0
 
@@ -152,10 +155,13 @@ def test_process_urgencias_year_2020(tmp_path: Path):
         chunk_size=50000
     )
 
+    # 2020 es un año cerrado: el RAW y las filas RM no cambian aunque cambie el maestro.
     assert res["raw_rows"] == 6446646
     assert res["rm_rows"] == 1720000
-    assert res["sin_territorio_rows"] == 0
-    assert res["no_rm_rows"] == 4726646
+    # El reparto entre no-RM y sin territorio sí depende del maestro vigente: el CSV 2020
+    # no trae región y un código antiguo que el maestro deja de publicar (p. ej. 01-802,
+    # SAPU de Arica) pasa a sin territorio. Se exige que toda fila quede clasificada.
+    assert res["rm_rows"] + res["no_rm_rows"] + res["sin_territorio_rows"] == res["raw_rows"]
 
     # Verificar que el parquet generado se puede leer y tiene las columnas esperadas
     parquet_file = tmp_path / "urgencias_rm_2020.parquet"
