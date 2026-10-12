@@ -284,6 +284,14 @@ def validate_expected_schema(path: Path) -> bool:
         _require_csv(path, {"establecimiento_codigo", "region_codigo", "comuna_codigo", "latitud", "longitud"},
                      floating={"latitud", "longitud"})
         return True
+    if name == "establecimientos_coordenadas_resolucion.csv":
+        _require_csv(path, {
+            "establecimiento_codigo", "comuna_codigo", "estado_funcionamiento", "latitud", "longitud",
+            "en_oferta_urgencia", "problema_coordenadas", "resolucion", "justificacion",
+        }, numeric={"establecimiento_codigo"}, floating={"latitud", "longitud"},
+            text={"problema_coordenadas", "resolucion", "justificacion"},
+            all_rows=True, allow_empty=True)
+        return True
     if name == "registros_sin_coordenadas.csv":
         _require_csv(path, {
             "establecimiento_codigo", "establecimiento_codigo_antiguo",
