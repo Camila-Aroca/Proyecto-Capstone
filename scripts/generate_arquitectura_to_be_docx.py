@@ -159,7 +159,7 @@ def build_deployment(doc) -> None:
             ("Amazon S3 · datos", "RAW y manifest (~12 GB), outputs (`data/processed/`) y `reports/`.",
              "Un solo bucket con prefijos: la tarea pipeline lo lee y escribe; la API lee los outputs al "
              "arrancar."),
-            ("ECS con Fargate · tarea pipeline", "Tarea programada con la misma imagen `saad-api` (4 vCPU, 16 GB).",
+            ("ECS con Fargate · tarea pipeline", "Tarea programada con la imagen `saad-pipeline`, independiente de la API (4 vCPU, 16 GB, 50 GiB de disco).",
              "Cómputo solo durante la ejecución semanal (~1 h); sin máquina encendida el resto del tiempo."),
             ("EventBridge Scheduler", "Disparo semanal de la tarea pipeline.",
              "Programación gestionada, sin un servidor con cron."),
@@ -261,18 +261,18 @@ def build_costs(doc) -> None:
             ("Fargate · tarea api", "Linux x86, 1 tarea, 0,5 vCPU, 2 GB, 730 h, 20 GB efímeros",
              "0,04048 por vCPU·h; 0,004445 por GB·h", "21,27"),
             ("Fargate · tarea pipeline", "Linux x86, 4 vCPU, 16 GB, 1 h × 4,35 semanas, 50 GB efímeros",
-             "Ídem; 0,000111 por GB·h efímero sobre 20 GB", "1,02"),
+             "Ídem; 0,000111 por GiB·h sobre los 30 GiB que exceden los 20 gratuitos", "1,03"),
             ("Application Load Balancer", "1 balanceador, 730 h, 1 LCU", "0,0225 por h; 0,008 por LCU·h", "22,27"),
             ("IPv4 públicas", "3 direcciones 730 h (2 del balanceador, 1 de la API) y 1 de la tarea "
              "pipeline ~4 h", "0,005 por IP·h", "10,97"),
             ("Amazon CloudFront", "Menos de 1 TB de salida y 10 millones de solicitudes",
              "Capa gratuita permanente", "0,00"),
             ("Amazon S3 Standard", "~12,5 GB (RAW, outputs, reportes y sitio)", "0,023 por GB-mes", "0,29"),
-            ("Amazon ECR", "~2 GB (dos versiones de una imagen de 840 MB)", "0,10 por GB-mes", "0,20"),
+            ("Amazon ECR", "~3,5 GB (imágenes saad-api y saad-pipeline, ~865 MB cada una, dos versiones de cada una)", "0,10 por GB-mes", "0,35"),
             ("CloudWatch Logs", "~1 GB ingerido al mes", "0,50 por GB", "0,53"),
             ("EventBridge Scheduler", "~4 invocaciones al mes", "Capa gratuita", "0,00"),
             ("AWS Certificate Manager", "Certificados públicos", "Sin costo", "0,00"),
-            ("**Total base**", "", "", "**≈ 56,55**"),
+            ("**Total base**", "", "", "**≈ 56,71**"),
             ("Aurora Serverless v2 (opcional)", "0,5 ACU durante 60 h al mes, pausada el resto; 1 GB",
              "0,12 por ACU·h; 0,10 por GB-mes", "≈ 3,70"),
             ("Aurora Serverless v2 sin pausa", "0,5 ACU durante 730 h; 1 GB", "Ídem", "≈ 43,90"),
@@ -284,7 +284,7 @@ def build_costs(doc) -> None:
     bullets(
         doc,
         [
-            "**Base: ≈ US$57 al mes (≈ US$679 al año).** Casi el 60 % es costo fijo del balanceador y "
+            "**Base: ≈ US$57 al mes (≈ US$680 al año).** Casi el 60 % es costo fijo del balanceador y "
             "de las IPv4, que se paga aunque no haya visitas. La actualización semanal de datos agrega "
             "poco más de US$1.",
             "**Con base de datos:** ≈ US$60 si Aurora se pausa fuera de uso; ≈ US$100 si queda encendida.",
@@ -385,7 +385,7 @@ def build_technologies(doc) -> None:
         ["Tecnología", "Uso", "Por qué", "Alternativa descartada"],
         [
             ("Docker", "Empaquetado de la API y el pipeline.",
-             "La misma imagen corre en el equipo y en Fargate; elimina diferencias de entorno.",
+             "Dos imágenes independientes (`saad-api` y `saad-pipeline`) que corren igual en el equipo y en Fargate.",
              "Instalar dependencias en cada servidor."),
             ("ECS con AWS Fargate", "Ejecución de la API y de la tarea pipeline.",
              "La API como contenedor siempre encendido y el pipeline como tarea que solo cobra mientras "
