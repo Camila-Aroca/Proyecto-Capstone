@@ -1,0 +1,24 @@
+﻿Estimate summary
+Upfront cost,Monthly cost,Total 12 months cost,Currency
+0,107.62,1291.44,USD
+,,* Includes upfront cost
+
+
+Detailed Estimate
+Group hierarchy,Region,Description,Service,Upfront,Monthly,First 12 months total,Currency,Status,Configuration summary
+My Estimate,US East (N. Virginia),Fargate - tarea api,AWS Fargate,0,21.27,255.24,USD,,"Operating system (Linux), CPU Architecture (x86), Average duration (24 hours), Number of tasks or pods (1 per day), Amount of ephemeral storage allocated for Amazon ECS (20 GB), Amount of memory allocated (2 GB)"
+My Estimate,US East (N. Virginia),Fargate - tarea pipeline,AWS Fargate,0,4.97,59.64,USD,,"Operating system (Linux), CPU Architecture (x86), Average duration (5 hours), Number of tasks or pods (5 per month), Amount of ephemeral storage allocated for Amazon ECS (30 GB), Amount of memory allocated (8 GB)"
+My Estimate,US East (N. Virginia),Application Load Balancer,Application Load Balancer,0,22.27,267.24,USD,,Number of Application Load Balancers (1)
+My Estimate,US East (N. Virginia),Amazon CloudFront,Amazon CloudFront,0,10.5,126.00,USD,,"Data transfer out to internet (100 GB per month), Number of requests (HTTPS) ( per month), Data transfer out to origin (100 GB per month)"
+My Estimate,US East (N. Virginia),,S3 Standard,0,0.29,3.48,USD,,S3 Standard storage (12.5 GB per month)
+My Estimate,US East (N. Virginia),,Data Transfer,0,0,0.00,USD,,
+My Estimate,US East (N. Virginia),,Amazon Elastic Container Registry,0,0.35,4.20,USD,,Amount of data stored (3.5 GB per month)
+My Estimate,US East (N. Virginia),,Amazon CloudWatch,0,1.259,15.11,USD,,"Number of mobile OTEL events and spans or spans per visit (70), Mobile sampling rate (1), Standard Logs: Data Ingested (1 GB), Standard Logs Delivered to CloudWatch Logs (1 GB), Logs Delivered to S3: Data Ingested (1 GB)"
+My Estimate,US East (N. Virginia),,Amazon EventBridge,0,0,0.00,USD,,"Size of the payload (1 KB), Number of invocations (10 per month)"
+My Estimate,US East (N. Virginia),,AWS Certificate Manager,0,0,0.00,USD,,"Number of fully qualified domain names (FQDNs) (), Number of wildcard domain names ()"
+My Estimate,US East (N. Virginia),,Amazon Aurora PostgreSQL-Compatible DB,0,46.709999999999994,560.52,USD,,"Aurora PostgreSQL Cluster Configuration Options (Aurora Standard), Aurora PostgreSQL Serverless Version (Serverless), Database Engine (Aurora PostgreSQL), Number of Aurora Capacity Units (ACUs) (1), Pricing strategy (OnDemand), Additional backup storage (1 GB), Storage amount (1 GB)"
+
+
+
+Acknowledgement
+"* AWS Pricing Calculator provides only an estimate of your AWS fees and doesn't include any taxes that might apply. Your actual fees depend on a variety of factors, including your actual usage of AWS services."

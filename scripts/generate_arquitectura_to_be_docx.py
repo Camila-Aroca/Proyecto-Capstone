@@ -251,8 +251,11 @@ def build_costs(doc) -> None:
         doc,
         "Estimación mensual en us-east-1 con precios de lista a la fecha de redacción, 730 horas "
         "al mes y tráfico bajo (uso académico y de validación). Son valores **estimados, no "
-        "medidos**: deben confirmarse ingresando estas mismas configuraciones en AWS Pricing "
-        "Calculator y adjuntando el enlace como evidencia.",
+        "medidos**. Se contrastaron con AWS Pricing Calculator (exportación en "
+        "`docs/08-arquitectura/estimacion-costos-aws.pdf`; enlace: https://calculator.aws/#/estimate?id=1da7b171122c6261d3c64797db55485928d23129): las tareas Fargate de la API, el balanceador, "
+        "S3 y ECR coinciden; las diferencias del total del calculador (US$107,62) se deben a "
+        "Aurora, a la capa gratuita de CloudFront que el calculador no aplica y a servicios fuera del "
+        "diseño, y están conciliadas en `costos_aws_verificacion.md`.",
     )
     add_table(
         doc,
