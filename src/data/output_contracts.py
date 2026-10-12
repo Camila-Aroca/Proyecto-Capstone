@@ -239,6 +239,14 @@ def validate_expected_schema(path: Path) -> bool:
         _require_parquet(path, {field.name: field.type for field in schemas[name]})
         return True
 
+    if name == "capa_oferta_urgencia_rm.parquet":
+        from src.geo.build_capa_oferta_urgencia_rm import SCHEMA
+        from src.geo.capas import EPSG_TRABAJO, crs_geoparquet, epsg
+        _require_parquet(path, {field.name: field.type for field in SCHEMA})
+        if epsg(crs_geoparquet(path, "geometry")) != EPSG_TRABAJO:
+            raise ValueError(f"{path.name}: CRS distinto de EPSG:{EPSG_TRABAJO}")
+        return True
+
     if name == "egresos_f00_f99_nacional_2020_2025.parquet":
         from src.data.build_egresos_f00_f99 import COLUMNS
         from src.data.clean_egresos import SCHEMA_PARQUET
