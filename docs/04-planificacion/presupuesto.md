@@ -35,7 +35,7 @@ Fórmula: horas/semana × semanas × valor hora.
 | Full Stack / Geoespacial | 180 h | $5.500 / h | $990.000 | Único |
 | **Subtotal RRHH** | 720 h | | **$4.140.000** | |
 
-Referencia mensual equivalente: ~$250.000 CLP por persona al mes (18 semanas ≈ 4,1 meses), consistente con media jornada parcial respecto de un sueldo junior de jornada completa ($700.000 – $1.200.000 CLP).
+Referencia mensual equivalente: ~$250.000 CLP por persona al mes (18 semanas ≈ 4,1 meses), consistente con ~1/4 de jornada (10 de 45 h) de un sueldo junior de jornada completa ($700.000 – $1.200.000 CLP).
 
 ---
 
