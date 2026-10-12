@@ -63,7 +63,7 @@ La ausencia temporal de un documento en la rama `main` **no significa que no hay
 
 ## Ejecución local
 
-La solución se organiza en dos servicios: backend en `src/api/` y frontend en `frontend/`. La API necesita los outputs correspondientes del pipeline, incluidos marts, cartografía y `reports/modeling/benchmark_demanda_sm_seleccion.json`. Consultar [PIPELINE.md](PIPELINE.md) para requisitos y procedimientos de generación de los datos.
+La solución se organiza en dos servicios: backend en `src/api/` y frontend en `frontend/`. La API necesita los outputs correspondientes del pipeline, incluidos marts, cartografía y `reports/modeling/benchmark_demanda_sm_seleccion.json`. Consultar [PIPELINE.md](PIPELINE.md) para requisitos y procedimientos de generación de los datos. Las fuentes oficiales, URLs, períodos, el procedimiento de descarga, el manifest con hashes y la política de no versionar datos RAW están en [docs/09-fuentes-de-datos](docs/09-fuentes-de-datos/README.md).
 
 ```bash
 # Desde la raíz del repositorio: dependencias Python
