@@ -1,0 +1,6 @@
+**
+!requirements.txt
+!src/
+!scripts/
+**/__pycache__
+**/*.py[cod]

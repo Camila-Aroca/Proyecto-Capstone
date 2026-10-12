@@ -1,0 +1,33 @@
+name: saad
+
+services:
+  api:
+    build: .
+    image: saad-api
+    restart: unless-stopped
+    volumes:
+      # Se monta data/ completo: al arrancar, la API tambien lee RAW de Urgencias
+      # y poblacion para el holdout reciente.
+      - ./data:/app/data:ro
+      - ./reports:/app/reports:ro
+    ports:
+      - "${SAAD_API_PORT:-8000}:8000"
+
+  web:
+    build: ./frontend
+    image: saad-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "${SAAD_WEB_PORT:-8080}:80"
+
+  # Ejecucion opcional del pipeline: docker compose --profile pipeline run --rm pipeline
+  pipeline:
+    image: saad-api
+    build: .
+    profiles: ["pipeline"]
+    volumes:
+      - ./data:/app/data
+      - ./reports:/app/reports
+    command: ["python", "scripts/run_pipeline.py"]

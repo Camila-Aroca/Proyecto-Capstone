@@ -60,3 +60,6 @@ data/raw/*
 ._*
 
 scratch/
+
+# Notas locales
+PENDIENTES_DOCKER.md

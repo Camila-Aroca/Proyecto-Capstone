@@ -85,6 +85,23 @@ npm run dev
 - Frontend local: `http://localhost:5173`.
 - El pronóstico puede inicializarse en segundo plano. Durante ese proceso, algunos endpoints pueden responder `503` y encabezado `Retry-After`; el frontend reintenta la consulta. El tiempo de inicio depende del equipo y los outputs disponibles.
 
+### Ejecución con Docker
+
+Requiere Docker con Compose v2 y los datos en `data/` (RAW y outputs del pipeline) y `reports/`. Los datos no se copian en las imágenes: `data/` y `reports/` se montan en solo lectura en la API.
+
+```bash
+# Construir y levantar API + frontend
+docker compose up -d --build
+
+# Opcional: ejecutar el pipeline dentro del contenedor (escribe en data/ y reports/)
+docker compose --profile pipeline run --rm pipeline
+```
+
+- Frontend: `http://localhost:8080` (nginx sirve el build y reenvía `/api` a la API).
+- API: `http://localhost:8000/docs`.
+- Puertos configurables con `SAAD_WEB_PORT` y `SAAD_API_PORT`, por ejemplo `SAAD_API_PORT=8001 docker compose up -d`.
+- Si el pronóstico versionado no está vigente, la API lo recalcula en memoria al arrancar; mientras tanto los endpoints de pronóstico responden `503` y el frontend reintenta.
+
 **Instalación en otro equipo:** al 8 de octubre se confirma una instalación limpia en un segundo computador. La evidencia de versiones, comandos, logs y recorrido funcional se consolidará como parte de la preparación para Fase 2.1. No se declara despliegue público.
 
 ## Usuarios y validaciones
