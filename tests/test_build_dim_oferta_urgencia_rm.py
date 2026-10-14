@@ -288,6 +288,7 @@ def test_stage_is_registered_after_establishments_and_urgencias() -> None:
     )
 
 
+@pytest.mark.data_integration
 def test_official_output_exists() -> None:
     """Verifica que el output canónico ya haya sido generado por el pipeline oficial."""
     from src.data.build_dim_oferta_urgencia_rm import OUTPUT_PATH

@@ -307,5 +307,28 @@ Los reportes en Markdown dentro de la carpeta `reports/eda/` (ej: `eda_demanda_u
 Para ejecutar las pruebas unitarias y de validación de arquitectura:
 
 ```bash
-pytest tests/
+python -m pytest tests/
 ```
+
+`pytest.ini` excluye por defecto las pruebas marcadas `data_integration`, que
+comprueban snapshots oficiales RAW o procesados disponibles localmente. La suite
+habitual usa fixtures sintéticos mínimos versionados y puede ejecutarse sin
+datasets masivos ni descargas. Los archivos de prueba se generan en temporales.
+
+Para ejecutar solo las integraciones, con los snapshots requeridos disponibles:
+
+```bash
+python -m pytest tests/ -m data_integration
+```
+
+Para ejecutar toda la suite, incluidas las integraciones:
+
+```bash
+python -m pytest tests/ -o addopts=
+```
+
+Si el entorno restringe el temporal del sistema, se puede agregar
+`--basetemp=.cache/pytest-tests` usando una carpeta dedicada: pytest puede
+reemplazar su contenido. El método de aislamiento sin datasets y la evidencia
+de cierre de #40 están en
+[`reports/validation/issue40_fixtures.md`](reports/validation/issue40_fixtures.md).

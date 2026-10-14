@@ -301,6 +301,7 @@ def test_stage_is_registered_after_its_dependencies() -> None:
         )
 
 
+@pytest.mark.data_integration
 def test_official_output_exists() -> None:
     """Verifica que el output canónico ya haya sido generado por el pipeline oficial."""
     from src.data.build_mart_mvp_territorial_comuna import OUTPUT_PATH

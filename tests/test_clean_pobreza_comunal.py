@@ -155,6 +155,7 @@ def test_missing_raw_raises_file_not_found(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.data_integration
 def test_official_raw_exists() -> None:
     """Verifica que el snapshot RAW oficial esté presente para reproducibilidad local."""
     assert RAW_PATH.exists(), f"Falta archivo raw: {RAW_PATH}"

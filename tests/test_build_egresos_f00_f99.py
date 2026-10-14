@@ -112,6 +112,7 @@ def test_validate_grain_rejects_empty_dataset() -> None:
         validate_grain(empty)
 
 
+@pytest.mark.data_integration
 def test_load_catalog_f00_f99_matches_official_diccionario() -> None:
     catalog = load_catalog_f00_f99(DICCIONARIO_PATH)
     assert len(catalog) == EXPECTED_F00_F99_SUBCATEGORIAS
@@ -119,6 +120,7 @@ def test_load_catalog_f00_f99_matches_official_diccionario() -> None:
     assert (catalog["CAPITULO"] == "F00-F99").all()
 
 
+@pytest.mark.data_integration
 def test_build_dataset_reconciles_against_real_egresos_processed() -> None:
     combined, per_year_counts, catalog = build_dataset()
     catalog_codes = set(catalog["CODIGO SUBCATEGORIA"])

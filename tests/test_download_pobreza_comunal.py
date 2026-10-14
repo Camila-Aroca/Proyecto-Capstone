@@ -100,6 +100,7 @@ def test_validate_rejects_undersized_sheet(tmp_path: Path) -> None:
         validate_pobreza_comunal_workbook(path)
 
 
+@pytest.mark.data_integration
 def test_official_raw_exists() -> None:
     """Verifica que el snapshot RAW oficial esté presente para reproducibilidad local."""
     assert module.FINAL_OUTPUT_PATH.exists(), f"Falta archivo raw: {module.FINAL_OUTPUT_PATH}"

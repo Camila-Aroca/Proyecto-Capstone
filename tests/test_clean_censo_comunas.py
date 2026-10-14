@@ -25,15 +25,16 @@ from src.data.clean_censo_comunas import (
 )
 
 
+@pytest.mark.data_integration
 def test_raw_censo_comunal_exists():
     """Verifica que el archivo raw exista."""
     assert RAW_CENSO_COMUNAL.exists(), f"Falta archivo raw: {RAW_CENSO_COMUNAL}"
 
 
-def test_process_censo_comunal_rm(tmp_path: Path):
+def test_process_censo_comunal_rm(tmp_path: Path, censo_comunal_raw: Path):
     """Prueba la función de procesamiento y validación en un directorio temporal."""
     output_tmp = tmp_path / "Cartografia_censo2024_RM_Comunal.parquet"
-    res = process_censo_comunal_rm(raw_path=RAW_CENSO_COMUNAL, output_path=output_tmp)
+    res = process_censo_comunal_rm(raw_path=censo_comunal_raw, output_path=output_tmp)
 
     assert res["filas"] == 52
     assert res["comunas_unicas"] == 52
@@ -48,6 +49,24 @@ def test_process_censo_comunal_rm(tmp_path: Path):
     t = pq.read_table(output_tmp)
     assert t.num_rows == 52
     assert set(t["CUT"].to_pylist()) == EXPECTED_RM_CUTS
+    assert t.schema.metadata == pq.read_schema(censo_comunal_raw).metadata
+    assert res["crs"] == "SIRGAS 2000 (EPSG:4674)"
+
+
+def test_process_censo_comunal_rejects_incomplete_rm(tmp_path: Path, censo_comunal_raw: Path):
+    table = pq.read_table(censo_comunal_raw)
+    incomplete = tmp_path / "incompleto.parquet"
+    pq.write_table(table.slice(1), incomplete)
+    with pytest.raises(ValueError, match="52 comunas"):
+        process_censo_comunal_rm(incomplete, tmp_path / "out.parquet")
+
+
+@pytest.mark.data_integration
+def test_process_censo_comunal_against_real_raw(tmp_path: Path):
+    """Mantiene la comprobación de las 52 comunas del snapshot oficial."""
+    result = process_censo_comunal_rm(RAW_CENSO_COMUNAL, tmp_path / "comunal.parquet")
+    assert result["filas"] == 52
+    assert result["validacion_exitosa"] is True
 
 
 def _write_geoparquet(path: Path, rows: list[dict], *, demografia: bool = False,
@@ -142,6 +161,7 @@ def test_process_censo_subcomunal_rm_reports_sex_mismatch_without_failing(tmp_pa
     assert result["validacion_exitosa"] is True
 
 
+@pytest.mark.data_integration
 @pytest.mark.parametrize("raw_path,func", [
     (RAW_CENSO_DISTRITAL, process_censo_distrital_rm),
     (RAW_CENSO_ZONAL, process_censo_zonal_rm),

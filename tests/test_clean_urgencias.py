@@ -18,6 +18,7 @@ from src.data.clean_urgencias import (
 from src.data.raw_provenance import file_sha256, processed_raw_sha256
 
 
+@pytest.mark.data_integration
 def test_catalogs_load():
     """Verifica que los catálogos de establecimientos se carguen con datos."""
     rm_antiguo, rm_nuevo, nac_antiguo, nac_nuevo = load_establishment_catalogs()
@@ -26,6 +27,54 @@ def test_catalogs_load():
     assert len(rm_nuevo) == maestro_rm["establecimiento_codigo"].str.strip().nunique() > 0
     assert len(rm_antiguo) > 0
     assert len(nac_nuevo) > 0
+
+
+def test_catalogs_load_small_fixture(catalogos_urgencias: dict[str, Path]):
+    """Carga realmente CSV/Parquet mínimos y homologa ambas llaves de catálogo."""
+    rm_antiguo, rm_nuevo, nac_antiguo, nac_nuevo = load_establishment_catalogs()
+    assert set(rm_antiguo) == {"OLD-RM"}
+    assert set(rm_nuevo) == {"100"}
+    assert rm_antiguo["OLD-RM"] == rm_nuevo["100"]
+    assert rm_nuevo["100"]["comuna_codigo"] == "13101"
+    assert rm_nuevo["100"]["establecimiento_codigo"] == 100
+    assert set(nac_antiguo) == {"OLD-RM", "OLD-NON-RM"}
+    assert set(nac_nuevo) == {"100", "200"}
+    assert nac_antiguo["OLD-NON-RM"] == nac_nuevo["200"]
+    assert nac_nuevo["200"]["region_codigo"] == 15
+
+
+@pytest.mark.parametrize("chunk_size", [1, 10])
+def test_process_urgencias_legacy_small_fixture(
+    tmp_path: Path,
+    catalogos_urgencias: dict[str, Path],
+    urgencias_legacy_raw: tuple[int, Path],
+    chunk_size: int,
+):
+    """Sin región publicada, clasifica por catálogo sin perder filas desconocidas."""
+    year, raw_dir = urgencias_legacy_raw
+    rm_antiguo, rm_nuevo, nac_antiguo, nac_nuevo = load_establishment_catalogs()
+    result = process_urgencias_year(
+        year, rm_antiguo, rm_nuevo, nac_antiguo, nac_nuevo,
+        raw_dir=raw_dir, output_dir=tmp_path / "processed", chunk_size=chunk_size,
+    )
+    assert result["raw_rows"] == 6
+    assert result["rm_rows"] == 2
+    assert result["no_rm_rows"] == 2
+    assert result["sin_territorio_rows"] == 2
+    assert result["raw_tiene_columna_region"] is False
+    assert result["controles"]["ids_establecimiento_nulos_raw"] == 1
+    assert result["controles"]["total_distinto_suma_grupos_etarios"] == 0
+    output = tmp_path / "processed" / f"urgencias_rm_{year}.parquet"
+    table = pq.read_table(output)
+    assert table.num_rows == 2
+    assert table["establecimiento_codigo"].to_pylist() == [100, 100]
+    assert table["comuna_codigo"].to_pylist() == ["13101", "13101"]
+    assert table["region_codigo"].to_pylist() == [13, 13]
+    assert table["total"].to_pylist() == [10, 10]
+    assert table.schema.field("region_codigo").type == "int32"
+    assert table.schema.field("total").type == "int32"
+    raw_hash = file_sha256(raw_dir / f"AtencionesUrgencia{year}.csv")
+    assert result["raw_sha256"] == processed_raw_sha256(output) == raw_hash
 
 
 def test_process_urgencias_year_small_fixture(tmp_path: Path):
@@ -139,6 +188,7 @@ def test_process_urgencias_preserves_canonical_output_on_write_failure(
     assert canonical.read_bytes() == b"previous-canonical-output"
 
 
+@pytest.mark.data_integration
 def test_process_urgencias_year_2020(tmp_path: Path):
     """Prueba el procesamiento de un año (ej. 2020) en directorio temporal."""
     rm_antiguo, rm_nuevo, nac_antiguo, nac_nuevo = load_establishment_catalogs()
