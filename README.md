@@ -8,6 +8,14 @@ SAAD es una plataforma analítica para apoyar la planificación de la red públi
 
 Los datos disponibles se encuentran distribuidos en distintas fuentes y requieren procesamiento y análisis para convertirse en indicadores útiles para la planificación. SAAD es una herramienta de apoyo analítico: no toma decisiones clínicas, diagnostica personas ni gestiona pacientes.
 
+## Demostración de la plataforma
+
+Video demostrativo del proyecto APT y su plataforma SAAD.
+
+**[Abrir o descargar el video demostrativo](https://github.com/Camila-Aroca/Proyecto-Capstone/releases/download/demo-saad-2026-10-14/VideoDemo.mp4)** · MP4 · 2 min 21 s · 71,74 MiB.
+
+El video está disponible como archivo adjunto en la [Release de demostración de SAAD](https://github.com/Camila-Aroca/Proyecto-Capstone/releases/tag/demo-saad-2026-10-14). Según el navegador, el enlace puede abrir el archivo o iniciar su descarga.
+
 ## Componentes y alcance
 
 | Componente | Estado al 8 de octubre de 2026 |
