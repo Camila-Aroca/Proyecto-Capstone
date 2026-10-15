@@ -444,3 +444,489 @@ Debe concentrarse en cierre: validación con usuario/cliente piloto, refinamient
 ## Apéndice B. Conclusión de auditoría
 
 El repositorio está en una etapa de transición entre definición académica y construcción técnica. La capa de datos tiene avances importantes y evidencia documental abundante, pero la reproducibilidad completa no queda demostrada desde el estado actual del repositorio porque los datasets canónicos no están presentes y la suite de pruebas no pudo ejecutarse sin instalar dependencias. Para convertir el avance en producto Capstone verificable, primero conviene cerrar alcance, cliente/perfil validador y organización de Fase 1; luego estabilizar entorno/pipeline y construir los componentes centrales todavía ausentes: baseline/modelo, accesibilidad y plataforma.
+
+## Apéndice C. Verificación dirigida de #42 y #41 (14-10-2026)
+
+Base: `main`, HEAD `ace017728ad3180fd265c405dca646fcf1be5651`, árbol inicialmente limpio.
+Este apéndice actualiza exclusivamente NEXT-016 (#42) y NEXT-015 (#41); no modifica
+las conclusiones históricas de agosto ni certifica de nuevo el pipeline completo.
+
+### #42: documentación frente al HEAD
+
+`PIPELINE.md` se contrastó con `STAGES`, `PIPELINE_ORDER`, `main`, `run_stage`,
+`check_outputs_exist` y los contratos vigentes de `src/data/output_contracts.py`.
+Los 35 stages y su orden coinciden. Se corrigieron consumidores directos del mart
+semanal, oferta, capa geográfica y benchmark; output JSON del benchmark; alcance
+de `--stage` (descendientes, sin upstream); bootstrap, refresh, `--year` y fuerza.
+El ejemplo `clean_urgencias --force` alcanza 15 stages, incluidos benchmark,
+holdout y pronóstico. La propagación registra ejecución y no cambios de bytes;
+no garantiza invalidación general por cambios previos de inputs/código. Los
+contratos de SKIP son controles mínimos, sin certificación de todas las filas.
+No se modificaron DAG, contratos ni código productivo.
+
+### #41: alcance, inputs, outputs y ejecución
+
+Se incluyen los siete `clean_*` del DAG y `normalize_contexto_genero` como
+normalización equivalente. Se excluyen descargas, catálogos, marts, EDA y modelos.
+La certificación `reports/validation/apt_certification_20261008T002147Z/`
+registra SKIP para esas ocho etapas en `stage_decisions.txt`; su `pipeline_meta.txt`
+con salida 0 **no acredita ejecución de sus productores**. Urgencias 2026 tiene
+además ejecución efectiva histórica: `processed_comparison.txt`, `hashes.csv` y
+el log local `clean_urgencias_2026.log` (no versionado). Los hashes actuales de
+RAW y processed 2026 coinciden con `hashes.csv`; su metadato RAW también coincide.
+
+La verificación actual usa tests existentes con RAW real y diagnósticos aislados
+de los productores existentes. Las reproducciones escriben exclusivamente en
+temporales nuevos bajo `.cache/`; no son una publicación oficial ni una corrida
+del DAG. Se comparan schemas y valores con los canónicos ignorando metadata de
+Parquet, no se exige igualdad binaria del contenedor. Los canónicos permanecen
+sin regenerar. Los conteos siguientes son filas, no pacientes únicos.
+
+| Stage | Inputs efectivos | Outputs esperados y conteos actuales | Controles y evidencia de ejecución |
+|---|---|---|---|
+| `clean_establishments` | `data/raw/deis/establecimientos_salud_actualizado.csv` | `data/processed/establecimientos_rm_clean.csv` y `.parquet`: 1.172 cada uno; `establecimientos_salud_clean.parquet`: 5.717 | Contratos, RM=13, códigos únicos, CSV/Parquet concordantes; reproducción real aislada igual en valores y CSV idéntico |
+| `clean_censo` | Cinco `data/raw/censo/Cartografia_censo2024_Pais_<Capa>.parquet` | `data/processed/censo/Cartografia_censo2024_RM_<Capa>.parquet`: Comunal 52; Distrital 451; Zonal 1.865; Entidades 2.072; Manzanas 66.873 | Cinco integraciones reales; llaves únicas/no nulas, CUT RM, EPSG:4674, jerarquía sin huérfanos, demografía no negativa; anomalías preservadas abajo |
+| `clean_censo_poblacion` | `data/raw/censo/D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx`, hojas 1/2 | `data/processed/censo/dim_poblacion_comuna_censo2024.parquet`: 52 | Schema, cobertura CUT, población positiva, suma contra total regional independiente; reproducción real aislada |
+| `clean_poblacion_proyecciones` | `data/raw/poblacion/ine_estimaciones_proyecciones_2002_2035_comunas.xlsx` y dimensión censal anterior para glosas | `data/processed/censo/dim_poblacion_comuna_anual.parquet`: 260 | Schema, unicidad comuna×año, 52 comunas×2021–2025, población positiva; reproducción real aislada |
+| `clean_pobreza_comunal` | `data/raw/pobreza/mds_casen_2022_tasa_pobreza_ingresos_comunal.xlsx` y dimensión censal para glosas | `data/processed/pobreza/dim_vulnerabilidad_comuna.parquet`: 52 | Schema, CUT, tasa e intervalo coherentes en [0,1]; reproducción real aislada ejecuta también validación de muestra de fuente |
+| `clean_urgencias` | CSV `data/raw/urgencias/AtencionesUrgencia<2020..2026>.csv`, maestro RM CSV y nacional Parquet | `data/processed/urgencias/urgencias_rm_<año>.parquet`: 2020 1.720.000; 2021 2.130.680; 2022 2.140.040; 2023 2.148.520; 2024 2.141.400; 2025 2.177.404; 2026 1.672.431 | Schema, todas las filas RM, total no negativo e igual a suma etaria; integración real 2020; reproducción aislada 2021–2026; certificación 2026 vinculada por hashes |
+| `clean_egresos` | `data/raw/egresos/egresos_<2020..2025>.csv` | `data/processed/egresos/egresos_<año>.parquet`: 2020 1.330.477; 2021 1.467.062; 2022 1.597.118; 2023 1.612.267; 2024 1.667.349; 2025 1.705.514 | Schema por año, lectura completa por bloques; reproducción aislada de los seis años; tests preservan nulos/cero, columnas ausentes y publicación atómica |
+| `normalize_contexto_genero` | Cuatro XLSX de `data/raw/contexto_genero/`, nombres base iguales a outputs | `data/processed/contexto_genero/`: `egresos_intento_suicida_sexo_anio.parquet` 120; `suicidio_ratio_hm_tasas_nacional_regional.parquet` 3.790; `ansiedad_depresion_sintomas_18_mas_sexo.parquet` 40; `prevalencia_sintomas_depresivos_sexo.parquet` 6 | Schema y clave natural, valores publicados presentes; PHQ-4 conserva 40 años nulos, ratios 7 símbolos `-`, depresivos períodos 2003/2009-10/2016-17; reproducción real aislada de las cuatro fuentes |
+
+Los upstream declarados del DAG se imprimen en el diagnóstico siguiente. No son
+idénticos a inputs efectivos: `clean_urgencias` declara también Censo y catálogos,
+pero su productor lee CSV anual y maestros; `download_deis` declara ambas fuentes,
+sin que ello implique enlace de Urgencias con Egresos. No se cruzaron registros.
+
+### Limitaciones y dependencia NEXT-012
+
+- NEXT-012 pertenece a QA: crear entorno e instalar dependencias. `.venv` existe,
+  los tests dirigidos y CLI funcionan, y `pip check` no informa conflictos. Eso no
+  prueba reinstalación completa: al contrastar las 57 entradas aplicables de
+  `requirements.txt` faltan `boto3`, `botocore`, `jmespath`, `s3transfer`, `urllib3`.
+  No se instalaron paquetes ni se cambió el entorno compartido. La limpieza local
+  funciona con sus dependencias; NEXT-012 global sigue sin certificación completa.
+- Censo: Manzanas conserva 6 geometrías inválidas; Entidades conserva 2 filas con
+  inconsistencia población/sexo. Ninguna capa tiene geometrías nulas. Cobertura
+  de CUT: 52/52/51/26/52, respectivamente. Son anomalías/alcances de la fuente,
+  reportados por el productor; no se repararon ni imputaron. Pasar el test no
+  convierte `validacion_exitosa=False` por geometrías inválidas en éxito total.
+- Urgencias 2020–2025 no declara `raw_sha256` en sus canónicos legados. La
+  reproducción aislada acredita valores, sin añadir metadata a esos archivos.
+  2026 sí declara el hash y corresponde al RAW local certificado, no a una
+  consulta de la fuente web actual. No se ejecutó refresh.
+- No se certifican bootstrap desde Internet, cloud, forecasting, API, frontend
+  ni consumidores downstream. No se ejecutaron pipeline integral, benchmark o
+  holdout. No hay cambios de esquema, granularidad, dependencias o arquitectura.
+
+### Pruebas y reproducción
+
+Desde la raíz, con el Python de `.venv` (en Unix: `.venv/bin/python`):
+
+```powershell
+.venv/Scripts/python.exe -B -m pytest tests/test_pipeline_orchestration.py tests/test_output_contracts.py -q -p no:cacheprovider --basetemp=.cache/pytest-issues41-42-orchestration
+.venv/Scripts/python.exe -B -m pytest tests/test_clean_censo_comunas.py tests/test_clean_censo_poblacion.py tests/test_clean_poblacion_proyecciones.py tests/test_clean_pobreza_comunal.py tests/test_clean_establishments.py tests/test_clean_egresos.py tests/test_clean_urgencias.py tests/test_gender_statistics.py -o addopts= -q -p no:cacheprovider --basetemp=.cache/pytest-issue41-clean
+.venv/Scripts/python.exe -B scripts/run_pipeline.py --help
+.venv/Scripts/python.exe -B -m pip check
+git diff --check
+```
+
+Resultado: 43 tests de orquestación/contratos aprobados; limpiezas 61 aprobados
+y 4 fallidos por `PermissionError` al leer RAW Distrital dentro del sandbox.
+Repetidos exclusivamente esos 4 tests con acceso de lectura habilitado:
+**4 aprobados**. Sin SKIP. No se corrigió código para encubrir los errores.
+Los temporales indicados son exclusivos de pruebas y pytest puede reemplazarlos.
+
+Los bloques siguientes son la fuente reproducible de conteos/controles y del
+diagnóstico aislado. Para ejecutarlos sin depender de archivos locales no
+versionados, extraer cada bloque por su marcador desde este mismo documento:
+
+```powershell
+@'
+from pathlib import Path
+report = Path('reports/project/PROJECT_STATUS_AUDIT_2026-08-31.md').read_text(encoding='utf-8')
+marker = '<!-- issue41-readonly -->'  # Cambiar a issue41-replay para reproducir productores.
+code = report.split(marker, 1)[1].split('```python', 1)[1].split('```', 1)[0]
+exec(compile(code, marker, 'exec'))
+'@ | .venv/Scripts/python.exe -B -
+```
+
+El diagnóstico `readonly` solo lee datos. `replay` requiere espacio temporal
+para los Parquet generados; elimina su directorio al terminar y nunca publica
+resultados canónicos. Ambos requieren acceso de lectura a los snapshots locales.
+
+
+<!-- issue41-readonly -->
+```python
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path.cwd()))
+import pandas as pd
+import pyarrow.parquet as pq
+from scripts.run_pipeline import STAGES, check_outputs_exist
+from src.data import clean_censo_comunas as geo
+from src.data import clean_censo_poblacion as census
+from src.data import clean_poblacion_proyecciones as population
+from src.data import clean_pobreza_comunal as poverty
+from src.data import normalize_gender_statistics as gender
+from src.data.raw_provenance import file_sha256, processed_raw_sha256
+
+# Read-only: output rows from footer; contract checks do not invoke producers.
+for stage, config in STAGES.items():
+    if not (stage.startswith('clean_') or stage == 'normalize_contexto_genero'):
+        continue
+    print('STAGE', stage, 'UPSTREAM', config['depends_on'])
+    for output in config['outputs']:
+        path = Path(output)
+        rows = (pq.ParquetFile(path).metadata.num_rows if path.suffix == '.parquet'
+                else len(pd.read_csv(path)))
+        print('OUTPUT', output, 'rows', rows, 'contract', check_outputs_exist([output]))
+    print('INPUTS', [p for dep in config['depends_on'] for p in STAGES[dep]['outputs']])
+
+# Read only selected columns for content controls; preserve observed anomalies.
+districts = set(pq.read_table(geo.PROCESSED_CENSO_RM_DISTRITAL,
+                            columns=['ID_DISTRITO'])['ID_DISTRITO'].to_pylist())
+keys = {'Comunal': 'CUT', 'Distrital': 'ID_DISTRITO', 'Zonal': 'ID_ZONA',
+        'Entidades': 'MANZENT', 'Manzanas': 'MANZENT'}
+for path in map(Path, STAGES['clean_censo']['outputs']):
+    layer = path.stem.rsplit('_', 1)[-1]
+    names = pq.read_schema(path).names
+    columns = list(dict.fromkeys(['CUT', 'COD_REGION', 'SHAPE', keys[layer]] +
+                   [c for c in ['ID_DISTRITO', *geo.DEMOGRAFIA_COLUMNS] if c in names]))
+    table = pq.read_table(path, columns=columns)
+    cuts = set(table['CUT'].to_pylist())
+    print('GEO', layer, 'cuts', len(cuts), 'domain', cuts <= geo.EXPECTED_RM_CUTS,
+          'key_null_dup', geo._validate_key(table, keys[layer]),
+          'geometry_null_invalid', geo._validate_geometries(table['SHAPE']),
+          'crs', geo._extract_crs(table), 'demography', geo._validate_demografia(table),
+          'orphan_districts', len(set(table['ID_DISTRITO'].to_pylist()) - districts)
+          if 'ID_DISTRITO' in table.column_names else 0)
+
+census._validate_records(pq.read_table(census.OUTPUT_PATH).to_pylist(),
+                         census._read_region_total(census.RAW_PATH))
+frame = pq.read_table(population.OUTPUT_PATH).to_pandas()
+assert not frame.duplicated(['comuna_codigo', 'ano']).any()
+population._validate_totals({(r.comuna_codigo, r.ano): r.poblacion
+                            for r in frame.itertuples()})
+poverty_rows = pq.read_table(poverty.OUTPUT_PATH).to_pylist()
+assert {r['comuna_codigo'] for r in poverty_rows} == {str(c) for c in geo.EXPECTED_RM_CUTS}
+assert all(0 <= r['intervalo_confianza_inferior'] <= r['indicador_vulnerabilidad']
+           <= r['intervalo_confianza_superior'] <= 1 for r in poverty_rows)
+print('DIMENSIONS census/population/poverty validators OK')
+for output in STAGES['normalize_contexto_genero']['outputs']:
+    records = pq.read_table(output).to_pylist()
+    gender.validate_records(records, records[0]['source_id'])
+    print('CONTEXT', Path(output).name, 'year_null', sum(r['year'] is None for r in records),
+          'dash', sum(r['value_text'] == '-' for r in records),
+          'periods', sorted({r['period'] for r in records}))
+
+for output in STAGES['clean_urgencias']['outputs']:
+    path = Path(output)
+    year = int(path.stem.rsplit('_', 1)[-1])
+    raw = Path(f'data/raw/urgencias/AtencionesUrgencia{year}.csv')
+    checks = {'region_not_13': 0, 'negative_total': 0, 'age_sum_mismatch': 0}
+    for batch in pq.ParquetFile(path).iter_batches(columns=[
+            'region_codigo', 'total', 'menores_1', 'de_1_a_4', 'de_5_a_14',
+            'de_15_a_64', 'de_65_y_mas']):
+        df = batch.to_pandas()
+        checks['region_not_13'] += int((df.region_codigo != 13).sum())
+        checks['negative_total'] += int((df.total < 0).sum())
+        checks['age_sum_mismatch'] += int((df.total != df.iloc[:, 2:].sum(axis=1)).sum())
+    recorded = processed_raw_sha256(path)
+    print('URGENCIAS', year, checks, 'raw_sha_metadata', recorded,
+          'raw_sha_match', recorded == file_sha256(raw))
+
+for output in STAGES['clean_egresos']['outputs']:
+    path = Path(output)
+    rows = 0
+    for batch in pq.ParquetFile(path).iter_batches():
+        rows += batch.num_rows  # Decode all row groups, bounded memory.
+    print('EGRESOS', path.name, 'decoded_rows', rows)
+
+rm = pd.read_parquet('data/processed/establecimientos_rm_clean.parquet')
+csv = pd.read_csv('data/processed/establecimientos_rm_clean.csv', dtype=str,
+                  keep_default_na=False)
+print('ESTABLISHMENTS', 'rm_regions', sorted(rm.region_codigo.unique()),
+      'duplicate_codes', int(rm.establecimiento_codigo.duplicated().sum()),
+      'csv_parquet_codes_equal', csv.establecimiento_codigo.tolist() ==
+      rm.establecimiento_codigo.tolist())
+
+# Compare declared environment requirements without installing anything.
+from importlib.metadata import version, PackageNotFoundError
+from packaging.requirements import Requirement
+failures, checked = [], 0
+for line in Path('requirements.txt').read_text(encoding='utf-8-sig').splitlines():
+    if not line.strip() or line.lstrip().startswith('#'):
+        continue
+    req = Requirement(line.strip())
+    if req.marker and not req.marker.evaluate():
+        continue
+    checked += 1
+    try:
+        installed = version(req.name)
+        if installed not in req.specifier:
+            failures.append((req.name, installed, str(req.specifier)))
+    except PackageNotFoundError:
+        failures.append((req.name, 'missing'))
+print('REQUIREMENTS', checked, failures)
+
+# Link the historical 2026 execution to the exact current local snapshot.
+import csv as csv_reader
+cert = Path('reports/validation/apt_certification_20261008T002147Z/hashes.csv')
+with cert.open(encoding='utf-8-sig') as handle:
+    for row in csv_reader.DictReader(handle):
+        path = Path(row['Path'])
+        if path.name in {'AtencionesUrgencia2026.csv', 'urgencias_rm_2026.parquet'}:
+            print('CERTIFIED_HASH', path.as_posix(),
+                  file_sha256(path).lower() == row['Hash'].lower())
+
+
+```
+
+<!-- issue41-replay -->
+```python
+from pathlib import Path
+import sys
+import tempfile
+from unittest.mock import patch
+from itertools import zip_longest
+sys.path.insert(0, str(Path.cwd()))
+import pandas as pd
+import pyarrow.parquet as pq
+from src.data import clean_establishments as est
+from src.data import clean_censo_poblacion as census
+from src.data import clean_poblacion_proyecciones as population
+from src.data import clean_pobreza_comunal as poverty
+from src.data import normalize_gender_statistics as gender
+from src.data import clean_egresos as egresos
+from src.data import clean_urgencias as urgencias
+
+
+def compare(actual, canonical):
+    actual, canonical = Path(actual), Path(canonical)
+    rows = pq.ParquetFile(actual).metadata.num_rows
+    equal = pq.read_schema(actual).equals(pq.read_schema(canonical), check_metadata=False)
+    for left, right in zip_longest(pq.ParquetFile(actual).iter_batches(),
+                                 pq.ParquetFile(canonical).iter_batches()):
+        if left is None or right is None or not left.equals(right, check_metadata=False):
+            equal = False
+            break
+    print('REPLAY', canonical.as_posix(), 'rows', rows, 'values_equal', equal, flush=True)
+    return equal
+
+
+# Every producer writes only into this fresh diagnostic directory, never canonical paths.
+Path('.cache').mkdir(exist_ok=True)
+with tempfile.TemporaryDirectory(prefix='issue41-replay-', dir='.cache') as tmp:
+    root = Path(tmp)
+    _, _, audit = est.process_and_save_establishments(
+        output_csv_path=root/'rm.csv', output_parquet_path=root/'rm.parquet',
+        output_nacional_path=root/'national.parquet')
+    compare(root/'rm.parquet', est.OUTPUT_PARQUET_RM)
+    compare(root/'national.parquet', est.OUTPUT_PARQUET_NACIONAL)
+    print('REPLAY CSV rows', len(pd.read_csv(root/'rm.csv')), 'bytes_equal',
+          (root/'rm.csv').read_bytes() == est.OUTPUT_CSV_RM.read_bytes(), flush=True)
+    census.build_dim_poblacion_comuna_censo2024(output_path=root/'census.parquet')
+    compare(root/'census.parquet', census.OUTPUT_PATH)
+    population.build_dim_poblacion_comuna_anual(output_path=root/'population.parquet')
+    compare(root/'population.parquet', population.OUTPUT_PATH)
+    poverty.build_dim_vulnerabilidad_comuna(output_path=root/'poverty.parquet')
+    compare(root/'poverty.parquet', poverty.OUTPUT_PATH)
+    with patch.object(gender, 'PROCESSED_DIR', root/'gender'):
+        results = gender.run_normalization()
+        for source_id, output in results.items():
+            compare(output, Path('data/processed/contexto_genero')/gender.OUTPUT_FILES[source_id])
+    # Censo and Urgencias 2020 already executed on real RAW by existing integration tests.
+    with patch.object(egresos, 'PROCESSED_EGRESOS_DIR', root/'egresos'):
+        for result in egresos.run_full_normalization():
+            output = Path(result['processed_file'])
+            compare(output, Path('data/processed/egresos')/output.name)
+    catalogs = urgencias.load_establishment_catalogs()
+    for year in urgencias.SUPPORTED_YEARS:
+        if year == 2020:
+            continue
+        result = urgencias.process_urgencias_year(year, *catalogs, output_dir=root/'urgencias')
+        output = Path(result['processed_file'])
+        compare(output, urgencias.PROCESSED_URGENCIAS_DIR/output.name)
+        print('REPLAY RAW', year, result['raw_rows'], 'RM', result['rm_rows'], flush=True)
+
+```
+
+### Ampliación solicitada: seis geometrías y consumidores geoespaciales
+
+Se acepta conservar la limitación de fuente, sin corregir geometrías ni relajar
+contratos. Se identificaron los seis registros de Manzanas por `MANZENT`; en cada
+uno, CUT, población y WKB coinciden exactamente con el RAW nacional filtrado por
+esa llave. La geometría RAW también es inválida: en los seis casos Shapely informa
+`Ring Self-intersection`. Esto respalda origen en el snapshot fuente, no una
+alteración de la limpieza. `validacion_exitosa=False` sigue significando rechazo
+de la validación topológica; el código 0 y el contrato mínimo no lo reemplazan.
+
+| CUT | MANZENT | n_per | Centroide cubierto por la geometría original |
+|---|---|---:|---|
+| 13107 | 13107011008032 | 1.694 | No |
+| 13301 | 13301021004050 | 48 | Sí |
+| 13122 | 13122091002024 | 382 | No |
+| 13115 | 13115011008006 | 297 | Sí |
+| 13605 | 13605011002013 | 0 | Sí |
+| 13202 | 13202011001001 | 0 | Sí |
+
+Cuatro unidades pobladas suman 2.421 personas; dos con población cero se excluyen
+del cálculo de cobertura conforme al productor. Todos sus centroides son finitos,
+pero dos quedan fuera del polígono: no se presentan como puntos interiores válidos.
+La prueba `covers` sobre una geometría inválida es un diagnóstico, no una garantía
+de corrección topológica. No se reparó ni sustituyó ninguna geometría.
+
+Revisión dirigida de consumidores:
+
+- `build_capa_oferta_urgencia_rm` y `resolve_coordenadas_establecimientos` usan
+  `src.geo.capas.cargar_comunas`, que rechaza geometrías nulas, vacías o inválidas.
+  La capa Comunal local pasa esta carga con sus 52 geometrías válidas. No consumen
+  las seis Manzanas para sus joins.
+- `build_cobertura_urgencia_comuna.cargar_unidades_poblacion` detecta las inválidas,
+  conserva el conteo `manzanas_invalidas_pobladas=4` y usa centroides, sin reparar.
+  `render_reporte` publica ese número y la aproximación; el reporte versionado
+  `reports/geo/cobertura_urgencia_comuna.md` ya declara cuatro unidades pobladas
+  inválidas representadas por centroides. El uso no es silencioso, pero no demuestra
+  exactitud espacial de esos dos puntos exteriores ni del resultado de proximidad.
+- El snapshot local de `dim_oferta_urgencia_rm` tiene el establecimiento `202306`,
+  comuna `13302`, sin coordenadas. La función pura de capa lo identifica como
+  `sin_coordenadas`. El consumidor oficial de cobertura rechaza puntos faltantes
+  antes de calcular distancias. No existen localmente
+  `data/processed/geo/capa_oferta_urgencia_rm.parquet` ni
+  `data/processed/geo/cobertura_urgencia_comuna.parquet`; por ello no se certifican
+  valores persistidos de cobertura ni se interpreta el reporte histórico como
+  una ejecución del HEAD con estos inputs.
+
+Las 28 pruebas existentes de `tests/test_geo_capas.py` y
+`tests/test_geo_cobertura.py` pasaron con fixtures temporales; acreditan reglas
+del consumidor, no la generación de sus outputs actuales:
+
+```powershell
+.venv/Scripts/python.exe -B -m pytest tests/test_geo_capas.py tests/test_geo_cobertura.py -q -p no:cacheprovider --basetemp=.cache/pytest-issue41-geo-consumers
+```
+
+**Hallazgos downstream fuera del criterio de #41:** la ausencia de coordenadas de
+oferta impide certificar la cobertura local y los centroides exteriores limitan
+su exactitud espacial. Esos hallazgos corresponden al frente geoespacial; sus
+outputs no son outputs obligatorios de los stages de limpieza. No bloquean la
+aceptación literal de #41 ni se consideran resueltos al cerrarla. Se conservan
+los datos y las advertencias para su responsable, sin inventar coordenadas,
+excluir unidades pobladas ni modificar contratos. La conclusión previa que los
+consideró bloqueantes para #41 amplió indebidamente el alcance de la issue.
+
+El siguiente bloque reproduce esta identificación y el bloqueo, sin escribir
+datos. Se ejecuta mediante el mismo extractor anterior, usando el marcador
+`<!-- issue41-geometry -->`.
+
+
+<!-- issue41-geometry -->
+```python
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path.cwd()))
+import numpy as np
+import pyarrow.parquet as pq
+import shapely
+from src.geo import build_cobertura_urgencia_comuna as coverage
+from src.geo.capas import cargar_comunas
+from src.data.raw_provenance import file_sha256
+import json
+
+processed = Path('data/processed/censo/Cartografia_censo2024_RM_Manzanas.parquet')
+raw = Path('data/raw/censo/Cartografia_censo2024_Pais_Manzanas.parquet')
+columns = ['CUT', 'MANZENT', 'n_per', 'SHAPE']
+manifest = json.loads(Path('data/raw/provenance_manifest.json').read_text(encoding='utf-8'))
+entry = next(r for r in manifest if r['source_id'] == 'censo_2024_cartografia_manzanas')
+digest = file_sha256(raw)
+assert digest == entry['snapshots'][-1]['raw_sha256']
+print('RAW_MANZANAS_SHA256', digest, 'provenance_match', True)
+table = pq.read_table(processed, columns=columns)
+geometries = shapely.from_wkb(table['SHAPE'].to_pylist())
+bad = table.filter(~shapely.is_valid(geometries)).to_pylist()
+source = pq.read_table(raw, columns=columns,
+                       filters=[('MANZENT', 'in', [r['MANZENT'] for r in bad])]).to_pylist()
+source_by_key = {r['MANZENT']: r for r in source}
+assert len(source) == len(source_by_key) == len(bad) == 6
+for record in bad:
+    original = source_by_key[record['MANZENT']]
+    geom = shapely.from_wkb(record['SHAPE'])
+    point = shapely.centroid(geom)
+    assert original == record
+    assert not shapely.is_valid(shapely.from_wkb(original['SHAPE']))
+    print('INVALID', int(record['CUT']), int(record['MANZENT']), 'n_per', record['n_per'],
+          'source_identical', original == record, 'reason', shapely.is_valid_reason(geom),
+          'centroid_finite', bool(np.isfinite([point.x, point.y]).all()),
+          'centroid_covered', bool(shapely.covers(geom, point)))
+print('COMUNAL_validated', len(cargar_comunas()))
+units, summary = coverage.cargar_unidades_poblacion()
+assert np.isfinite(units[['longitud', 'latitud']].to_numpy()).all()
+print('UNITS', summary)
+print('INVALID_POPULATION', sum(r['n_per'] for r in bad if r['n_per'] > 0))
+from src.geo.build_capa_oferta_urgencia_rm import build_capa_oferta_urgencia_rm
+capa = build_capa_oferta_urgencia_rm()  # Pure in-memory function; no output published.
+missing = shapely.is_missing(capa.geometry.to_numpy())
+print('OFFER_MISSING_POINTS', capa.loc[missing, [
+    'establecimiento_codigo', 'comuna_codigo', 'resultado_join_comuna']].to_dict('records'))
+print('CANONICAL_GEO_OUTPUTS', coverage.CAPA_OFERTA_PATH.is_file(), coverage.OUTPUT_PATH.is_file())
+if missing.any():
+    print('COVERAGE_BLOCKED: official build rejects missing offer points before distances.')
+
+```
+
+### Resultado de cierre
+
+- **#42 lista para Done:** orden y cierre transitivo contrastados con el HEAD;
+  documentación corregida sin garantías de invalidación o validación inexistentes.
+- **#41 lista para Done con limitaciones documentadas:** los 28 outputs
+  declarados de limpieza/normalización tienen conteos y contratos comprobados.
+  Hay ejecución real aislada de todos sus productores: cinco integraciones de
+  Censo y la de Urgencias 2020; el resto produjo 21 Parquet iguales en esquema y
+  valores a los canónicos, más el CSV RM idéntico. Ningún SKIP se contó como
+  ejecución. Las seis geometrías se conservan como limitación de fuente aceptada,
+  con rechazo topológico explícito. La exactitud geoespacial de los consumidores
+  sigue sin certificarse y corresponde a sus tareas downstream; no es condición
+  de aceptación de #41. No se cambiaron datos ni código ajeno.
+- Pruebas: 43 de orquestación/contratos, 65 de limpiezas (cuatro requirieron
+  repetir con acceso de lectura) y 28 geoespaciales aprobadas, sin SKIP.
+  CLI `--help`, comprobación del orden de 35 stages y cierre de 15 stages del
+  ejemplo, y `git diff --check` sin errores. NEXT-012 global sigue con las cinco
+  dependencias declaradas faltantes; no se certifica instalación completa.
+- Git: únicamente `PIPELINE.md` y este apéndice modificados. Sin commits, push,
+  cambios de rama, descargas, refresh ni publicación de outputs canónicos.
+
+### Comprobación final del alcance literal de #41
+
+Fuente del criterio: `docs/04-gestion-proyecto/github_project_tasks.json`, registro
+NEXT-015 y su `issue_body`: **«Cada stage produce outputs esperados con conteos
+documentados»**. Declara NEXT-012 como dependencia. No exige generar todos los
+descendientes del DAG ni certificar exactitud geoespacial. Se reutiliza la evidencia
+anterior; esta comprobación no vuelve a ejecutar productores, pipeline ni tests.
+
+- En `scripts/run_pipeline.py`, `clean_censo` depende de `download_censo` y declara
+  cinco GeoParquet. `build_capa_oferta_urgencia_rm` y
+  `build_cobertura_urgencia_comuna` son stages separados de `src/geo/` que dependen
+  de limpiezas, no a la inversa. El catálogo de tareas separa el módulo geográfico
+  (NEXT-031, dependiente de NEXT-015) y la cobertura (NEXT-032, de NEXT-031).
+- `src/data/clean_censo_comunas.py` rechaza incumplimientos de dominio, llaves,
+  cobertura exigida, jerarquía o demografía negativa. La invalidez topológica se
+  detecta y reporta, pero no impide publicar la capa ni provoca excepción en ese
+  stage. `src/data/output_contracts.py` exige columnas/tipos para sus outputs,
+  sin imponer cero geometrías inválidas. Por tanto, los seis casos de fuente
+  preservados no incumplen una condición obligatoria de publicación del HEAD.
+  `validacion_exitosa=False` conserva su significado: la validación topológica
+  no está aprobada; no equivale a ausencia, ilegibilidad o falta de ejecución.
+- NEXT-012 exige «Entorno reproduce dependencias declaradas sin errores» como
+  criterio propio de QA. Su certificación global sigue incompleta por los cinco
+  paquetes identificados. #41 no añade una condición de instalación de todo el
+  entorno cloud ni de cierre formal de NEXT-012. Su prerrequisito operativo local
+  está acreditado por la ejecución efectiva de todos los productores de limpieza;
+  ninguno requirió esos paquetes ausentes. No se declara NEXT-012 terminada ni se
+  trasladan sus pendientes globales al criterio de outputs de #41.
+
+Conclusión binaria: **#41 cumple su criterio literal y puede marcarse Done con las
+limitaciones documentadas**. Validez conforme al contrato de salida, ejecución
+acreditada y exactitud geoespacial son afirmaciones distintas: se acreditan las
+dos primeras en el alcance de limpieza; no se certifica la tercera. No queda una
+acción técnica adicional obligatoria dentro de #41.
