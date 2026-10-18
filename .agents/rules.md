@@ -339,3 +339,12 @@
 - El artefacto debe ser reproducible cuando corresponda y permitir identificar la evidencia, método, resultados, limitaciones y archivos que la respaldan.
 
 - No crear documentación adicional solo para cumplir esta regla si la evidencia ya queda correctamente respaldada por un artefacto existente.
+
+## 11. Commits
+
+- **No hacer `git commit` (ni `push`, `amend` u otras operaciones que escriban historial) sin una instrucción explícita del usuario en el turno actual.** Una autorización previa no se extiende a tareas posteriores. Por defecto, dejar los cambios sin commitear e informar el estado con `git status --short`.
+- Cuando el usuario lo pida, el commit debe estar en **español**, con título y cuerpo, y seguir buenas prácticas:
+  - Título en formato `tipo(ámbito): resumen`, como en el historial del repositorio (`docs`, `feat`, `fix`, `test`, `refactor`, `chore`), en modo imperativo o presente, sin punto final y de hasta ~72 caracteres.
+  - Línea en blanco entre título y cuerpo.
+  - Cuerpo breve y conciso (líneas de hasta ~72 caracteres) que explique qué cambia y por qué, no cómo.
+  - Un cambio lógico por commit; incluir solo los archivos pertinentes (evitar `git add -A` a ciegas).
