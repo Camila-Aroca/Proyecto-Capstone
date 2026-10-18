@@ -56,10 +56,12 @@
 - No leer automáticamente todos los archivos de `reports/`, `data/`, `src/` o `PIPELINE.md`.
   Inspeccionar únicamente los archivos necesarios para la tarea actual.
 
-- Consultar `PIPELINE.md` cuando la tarea:
-  - cree o modifique código ejecutable;
+- Consultar `PIPELINE.md` cuando la tarea afecte la lógica del pipeline, sus stages, dependencias, ejecución, transformaciones, contratos de datos o arquitectura relacionada:
   - agregue o modifique stages;
-  - cambie inputs, outputs o dependencias del DAG.
+  - cambie inputs, outputs o dependencias del DAG;
+  - cree o modifique código que intervenga en el pipeline (al crear un archivo Python, evaluar primero si interviene).
+  - No es obligatorio para cambios ajenos al pipeline.
+  - Priorizar las secciones relevantes antes que cargar el documento completo, salvo que la tarea requiera comprenderlo íntegramente.
 
 - Consultar reports únicamente cuando sean evidencia necesaria para la tarea actual.
 
@@ -219,9 +221,17 @@
 
 - Antes de considerar completa una tarea que modifica código ejecutar:
   - `python scripts/run_pipeline.py --help`;
-  - `pytest tests/`;
+  - los tests según la política de testing de esta sección;
   - `git status --short`;
   - verificar si cambiaron el DAG, `PIPELINE.md` o `requirements.txt`.
+
+- Política de testing, proporcional al alcance y riesgo del cambio:
+  - ejecutar los tests directamente relacionados con el cambio;
+  - ampliar las pruebas cuando afecte componentes compartidos, contratos, dependencias o comportamientos transversales;
+  - ejecutar la suite completa (`pytest tests/`) cuando el impacto sea amplio, el riesgo lo justifique o sea necesaria una validación integral;
+  - no omitir pruebas pertinentes para ahorrar tokens;
+  - no afirmar que un cambio está completamente validado si solo se ejecutaron pruebas parciales;
+  - si una prueba necesaria no puede ejecutarse, informar la limitación.
 
 - Ninguna tarea está completa si su reproducción requiere recordar manualmente una secuencia de scripts que no esté representada por el DAG.
 
