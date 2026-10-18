@@ -3,7 +3,6 @@
 import argparse
 import csv
 import datetime as dt
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -16,6 +15,7 @@ import urllib.request
 import zipfile
 
 from src.chile_time import current_year_chile, run_date_chile
+from src.data.raw_provenance import file_sha256 as _file_sha256
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -73,11 +73,8 @@ def canonical_egresos_raw_path(year: int) -> Path:
 
 
 def file_sha256(file_path: Path) -> str:
-    digest = hashlib.sha256()
-    with file_path.open("rb") as handle:
-        for block in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest()
+    """Mantiene la firma pública histórica; delega en `raw_provenance.file_sha256`."""
+    return _file_sha256(file_path)
 
 
 def _atomic_json_write(path: Path, payload: Any) -> None:
