@@ -1,0 +1,190 @@
+@startuml componentes_saad
+'=====================================================================
+' SAAD - Diagrama de Componentes (UML 2.5)
+'
+' Proyecto : Sistema de Analisis y Anticipacion de Demanda de Urgencia
+'            en Salud Mental para la Region Metropolitana
+' Fuente   : ERF-SAAD-2026 / ERNF-SAAD-2026 (docs/06-requisitos/),
+'            PROJECT_CONTEXT.md, PIPELINE.md y el codigo vigente.
+'
+' IMPORTANTE: el diagrama representa la ARQUITECTURA OBJETIVO y
+' distingue explicitamente los componentes ya implementados de los
+' planificados. Verificado contra src/, scripts/ y requirements.txt.
+'
+' Render   : java -jar plantuml.jar -charset UTF-8 -Playout=smetana
+'=====================================================================
+
+title Sistema SAAD — Diagrama de Componentes (arquitectura objetivo)
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam titleFontSize 18
+skinparam titleFontColor #1F3B63
+skinparam componentStyle uml2
+skinparam ArrowColor #44546A
+skinparam linetype ortho
+skinparam nodesep 30
+skinparam ranksep 55
+
+skinparam component {
+  FontColor #1A1A1A
+  BackgroundColor<<implementado>> #DDF0D8
+  BorderColor<<implementado>> #4E8C3F
+  BackgroundColor<<planificado>> #FDF3E2
+  BorderColor<<planificado>> #C08B2F
+  BackgroundColor<<externo>> #EAF0F6
+  BorderColor<<externo>> #1F3B63
+}
+skinparam package {
+  BackgroundColor #FCFCFD
+  BorderColor #1F3B63
+  FontColor #1F3B63
+  FontStyle bold
+}
+skinparam database {
+  FontColor #1A1A1A
+  BackgroundColor<<implementado>> #DDF0D8
+  BorderColor<<implementado>> #4E8C3F
+  BackgroundColor<<planificado>> #FDF3E2
+  BorderColor<<planificado>> #C08B2F
+}
+skinparam interface {
+  BackgroundColor #FFFFFF
+  BorderColor #2E5E8C
+}
+skinparam note {
+  BackgroundColor #FFF4E5
+  BorderColor #C08B2F
+}
+
+'---------------------------------------------------------------------
+' Fuentes oficiales (sistemas externos, consumidos por lotes)
+'---------------------------------------------------------------------
+package "Fuentes oficiales externas" as PKG_EXT {
+  component "DEIS / MINSAL\nUrgencias, Egresos\ny Establecimientos" as SRC_DEIS <<externo>>
+  component "INE / Censo 2024\nCartografia y poblacion" as SRC_INE <<externo>>
+  component "MDS / Casen 2022\nVulnerabilidad comunal" as SRC_MDS <<externo>>
+  component "Estadisticas de Genero\n(contexto interpretativo)" as SRC_GEN <<externo>>
+  component "OpenStreetMap\nRed vial" as SRC_OSM <<externo>>
+  component "GTFS RM\nTransporte publico" as SRC_GTFS <<externo>>
+}
+
+'---------------------------------------------------------------------
+' Capa de datos (implementada)
+'---------------------------------------------------------------------
+package "Capa de datos — src/data/ + scripts/" as PKG_DATA {
+  component "Orquestador del DAG\nscripts/run_pipeline.py" as C_ORQ <<implementado>>
+  component "Ingesta y provenance\ndownload_*, raw_provenance" as C_ING <<implementado>>
+  component "Normalizacion y tipado\nclean_*, normalize_*" as C_CLEAN <<implementado>>
+  component "Catalogos y dimensiones\nbuild_catalogs, build_dim_*" as C_DIM <<implementado>>
+  component "Marts analiticos\nbuild_*_marts" as C_MART <<implementado>>
+}
+
+'---------------------------------------------------------------------
+' Almacenamiento
+'---------------------------------------------------------------------
+database "data/raw/\nsnapshot inmutable" as S_RAW <<implementado>>
+database "data/processed/\nParquet / GeoParquet\n(marts y dimensiones)" as S_PROC <<implementado>>
+database "PostgreSQL / PostGIS\ncapa de servicio" as S_PG <<planificado>>
+
+'---------------------------------------------------------------------
+' Capa analitica
+'---------------------------------------------------------------------
+package "Capa analitica — src/" as PKG_ANA {
+  component "Reportes y EDA\nscripts/eda_*, reports/" as C_EDA <<implementado>>
+  component "Forecasting de demanda\nsrc/models/ — 4-8 semanas,\nbacktesting y baseline" as C_FC <<planificado>>
+  component "Accesibilidad territorial\nsrc/geo/ — isocronas OSM/GTFS\ny cobertura poblacional" as C_GEO <<planificado>>
+  component "Hospitalizacion F00-F99\nsrc/hospitalization/ —\nduracion de estadia" as C_HOS <<planificado>>
+}
+
+'---------------------------------------------------------------------
+' Servicios y presentacion
+'---------------------------------------------------------------------
+package "Capa de servicios" as PKG_API {
+  component "API REST\nsrc/api/ (FastAPI)" as C_API <<planificado>>
+}
+
+package "Capa de presentacion" as PKG_UI {
+  component "Aplicacion web SPA\nReact — mapa, series,\nbrechas y fichas" as C_SPA <<planificado>>
+}
+
+'---------------------------------------------------------------------
+' Interfaces provistas por la API y requeridas por la SPA
+'---------------------------------------------------------------------
+interface "IDemanda" as I_DEM
+interface "IAccesibilidad" as I_ACC
+interface "IHospitalizacion" as I_HOS
+interface "IMetadatos" as I_MET
+
+C_API -up- I_DEM
+C_API -up- I_ACC
+C_API -up- I_HOS
+C_API -up- I_MET
+
+C_SPA ..> I_DEM : usa
+C_SPA ..> I_ACC : usa
+C_SPA ..> I_HOS : usa
+C_SPA ..> I_MET : usa
+
+'---------------------------------------------------------------------
+' Flujo de datos
+'---------------------------------------------------------------------
+SRC_DEIS --> C_ING
+SRC_INE --> C_ING
+SRC_MDS --> C_ING
+SRC_GEN --> C_ING
+SRC_OSM ..> C_GEO : planificado
+SRC_GTFS ..> C_GEO : planificado
+
+C_ING --> S_RAW : escribe snapshot
+S_RAW --> C_CLEAN : lectura inmutable
+C_CLEAN --> S_PROC
+S_PROC --> C_DIM
+C_DIM --> C_MART
+C_MART --> S_PROC : marts comunales
+
+C_ORQ --> C_ING
+C_ORQ --> C_CLEAN
+C_ORQ --> C_DIM
+C_ORQ --> C_MART
+
+S_PROC --> C_EDA
+S_PROC ..> C_FC : planificado
+S_PROC ..> C_GEO : planificado
+S_PROC ..> C_HOS : planificado
+
+C_FC ..> C_API
+C_GEO ..> C_API
+C_HOS ..> C_API
+S_PG ..> C_API
+C_MART ..> S_PG : carga planificada
+
+'---------------------------------------------------------------------
+' Restricciones arquitectonicas
+'---------------------------------------------------------------------
+note right of C_MART
+  Urgencias y Egresos mantienen
+  granularidades separadas. Toda
+  relacion entre fuentes es
+  ecologico-territorial (RN-05),
+  nunca a nivel de paciente.
+end note
+
+note bottom of PKG_EXT
+  Consumo por lotes, no en linea.
+  Fuera de alcance (FA-01 / FA-08):
+  integracion en tiempo real con
+  sistemas hospitalarios.
+end note
+
+legend right
+  |= Color |= Estado del componente |
+  |<#DDF0D8>   | Implementado y verificado en el repositorio |
+  |<#FDF3E2>   | Planificado (especificado, aun no implementado) |
+  |<#EAF0F6>   | Sistema o fuente externa |
+endlegend
+
+footer ERF/ERNF-SAAD-2026 · docs/07-diagramas/componentes_saad.puml
+@enduml

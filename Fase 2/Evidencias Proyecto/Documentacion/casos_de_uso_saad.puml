@@ -1,0 +1,150 @@
+@startuml casos_de_uso_saad
+'=====================================================================
+' SAAD - Diagrama de Casos de Uso (UML 2.5)
+'
+' Proyecto : Sistema de Analisis y Anticipacion de Demanda de Urgencia
+'            en Salud Mental para la Region Metropolitana
+' Fuente   : ERF-SAAD-2026 (docs/06-requisitos/)
+'            Actores AC-01..AC-07 y casos de uso CU-01..CU-04 de la ERF
+' Render   : java -jar plantuml.jar -charset UTF-8 -Playout=smetana
+'=====================================================================
+
+title Sistema SAAD — Diagrama de Casos de Uso
+
+left to right direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam linetype ortho
+skinparam nodesep 25
+skinparam ranksep 65
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+skinparam titleFontSize 18
+skinparam titleFontColor #1F3B63
+
+skinparam actor {
+  BackgroundColor #EAF0F6
+  BorderColor #1F3B63
+  FontColor #1A1A1A
+}
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #2E5E8C
+  FontColor #1A1A1A
+  BackgroundColor<<consulta>> #EAF0F6
+  BorderColor<<consulta>> #1F3B63
+  BackgroundColor<<operacion>> #FDF3E2
+  BorderColor<<operacion>> #C08B2F
+  BackgroundColor<<comun>> #F3F3F3
+  BorderColor<<comun>> #808080
+}
+skinparam rectangle {
+  BackgroundColor #FCFCFD
+  BorderColor #1F3B63
+  FontColor #1F3B63
+  FontStyle bold
+}
+skinparam note {
+  BackgroundColor #FFF4E5
+  BorderColor #C08B2F
+}
+
+'---------------------------------------------------------------------
+' Actores
+'---------------------------------------------------------------------
+actor "AC-05\nAdministrador de datos" as AC05
+actor "AC-06\nDocente /\nComision evaluadora" as AC06
+actor "AC-01\nGestor de red /\nPlanificador sanitario" as AC01
+actor "AC-02\nReferente comunal\nde salud mental" as AC02
+actor "Usuario consultor" as USR
+actor "AC-03\nAnalista /\nEpidemiologo de servicio" as AC03
+actor "AC-04\nJefatura de urgencia" as AC04
+actor "AC-07\nFuentes de datos oficiales\n(DEIS, INE, MDS, OSM, GTFS)" as AC07 <<sistema externo>>
+
+' Generalizacion: los cuatro perfiles de consulta comparten los mismos
+' casos de uso de exploracion analitica.
+AC01 --|> USR
+AC02 --|> USR
+AC03 --|> USR
+AC04 --|> USR
+
+'---------------------------------------------------------------------
+' Frontera del sistema
+'---------------------------------------------------------------------
+rectangle "Sistema SAAD" as SYS {
+
+  usecase "CU-01\nConsultar proyeccion de\ndemanda de urgencia" as CU01 <<consulta>>
+  usecase "CU-02\nIdentificar brechas de\naccesibilidad territorial" as CU02 <<consulta>>
+  usecase "CU-03\nConsultar caracterizacion de\nhospitalizacion F00-F99" as CU03 <<consulta>>
+  usecase "CU-04\nComparar comunas\ny rankings" as CU04 <<consulta>>
+
+  usecase "CU-05\nEjecutar y auditar\nactualizacion de datos" as CU05 <<operacion>>
+  usecase "CU-06\nGestionar publicacion\ny version vigente" as CU06 <<operacion>>
+
+  usecase "CU-07\nReproducir un\nresultado publicado" as CU07 <<consulta>>
+  usecase "CU-08\nConsumir indicadores\nmediante la API" as CU08 <<consulta>>
+
+  usecase "Ver estado y advertencias\nde los datos" as INC01 <<comun>>
+  usecase "Validar calidad\nde los datos" as INC02 <<comun>>
+  usecase "Autenticarse" as INC03 <<comun>>
+  usecase "Exportar datos\ny capas" as EXT01 <<comun>>
+}
+
+'---------------------------------------------------------------------
+' Asociaciones actor - caso de uso
+'---------------------------------------------------------------------
+USR --> CU01
+USR --> CU02
+USR --> CU03
+USR --> CU04
+
+AC03 --> CU08
+AC05 --> CU05
+AC05 --> CU06
+AC06 --> CU07
+AC03 --> CU07
+
+' Actor secundario: el sistema consume las fuentes oficiales por lotes.
+CU05 --> AC07
+
+'---------------------------------------------------------------------
+' Relaciones entre casos de uso
+'---------------------------------------------------------------------
+' RF-VIS-008: ninguna vista analitica se presenta sin su estado de
+' vigencia ni sus advertencias de calidad.
+CU01 ..> INC01 : <<include>>
+CU02 ..> INC01 : <<include>>
+CU03 ..> INC01 : <<include>>
+CU04 ..> INC01 : <<include>>
+
+' RF-CAL-001..006: la publicacion se detiene si un control falla.
+CU05 ..> INC02 : <<include>>
+
+' RF-ADM-001: las funciones administrativas exigen autenticacion.
+CU05 ..> INC03 : <<include>>
+CU06 ..> INC03 : <<include>>
+
+' RF-VIS-011 / RF-ACC-007: la exportacion es opcional sobre la consulta.
+EXT01 ..> CU01 : <<extend>>
+EXT01 ..> CU02 : <<extend>>
+EXT01 ..> CU03 : <<extend>>
+
+'---------------------------------------------------------------------
+' Restricciones de alcance declaradas
+'---------------------------------------------------------------------
+note bottom of SYS
+  **Restricciones de alcance declaradas**
+  FA-01: fuera de alcance la gestion de cupos o camas en tiempo real.
+  RN-05: la relacion entre Urgencias y Egresos es exclusivamente
+  ecologico-territorial; nunca a nivel de paciente.
+end note
+
+legend right
+  |= Color |= Tipo de caso de uso |
+  |<#EAF0F6>   | Consulta analitica |
+  |<#FDF3E2>   | Operacion del pipeline |
+  |<#F3F3F3>   | Comportamiento comun (include / extend) |
+endlegend
+
+footer ERF-SAAD-2026 · docs/07-diagramas/casos_de_uso_saad.puml
+@enduml
