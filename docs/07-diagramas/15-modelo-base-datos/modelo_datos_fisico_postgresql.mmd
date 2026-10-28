@@ -5,7 +5,7 @@
 %% y la capa de accesibilidad OSM/GTFS/isocronas NO estan implementados (ver README item 15,
 %% seccion 9 "Limitaciones"). Este diagrama es coherente 1:1 con db/schema_postgresql.sql.
 %% Los esquemas replican los subdirectorios de data/processed/ para trazabilidad
-%% (censo, geo, pobreza, urgencias, marts, egresos, contexto_genero, modeling).
+%% (censo, geo, pobreza, urgencias, marts, egresos, contexto_genero, modeling, camas).
 
 erDiagram
 
@@ -182,6 +182,28 @@ erDiagram
         boolean residente_rm
     }
 
+    camas_dotacion_snss {
+        text servicio_salud PK
+        bigint establecimiento_codigo PK "SIN FK fisica a geo_dim_oferta_urgencia_rm: solo 34/196 estan en la oferta"
+        smallint area_funcional_codigo PK "100 = Total del hospital"
+        smallint ano PK "la carga transpone las columnas camas_AAAA a filas"
+        text tipo_establecimiento
+        text establecimiento_nombre
+        text area_funcional
+        integer camas "NULL = blanco, no cero"
+    }
+
+    camas_dotacion_no_snss {
+        bigint dotacion_id PK "surrogate tecnico de persistencia; no existe en la fuente"
+        smallint ano
+        text seremi
+        bigint establecimiento_codigo "SIN FK fisica a geo_dim_oferta_urgencia_rm: solo 10/144 estan en la oferta"
+        text establecimiento_nombre
+        smallint area_funcional_codigo "NULL en la fila de total del hospital"
+        text area_funcional
+        integer camas "NULL = blanco, no cero"
+    }
+
     censo_cartografia_comunal ||--o{ censo_cartografia_distrital : "1 comuna, N distritos"
     censo_cartografia_distrital ||--o{ censo_cartografia_zonal : "1 distrito, N zonas urbanas"
     censo_cartografia_distrital ||--o{ censo_cartografia_entidades : "1 distrito, N entidades rurales"
@@ -201,3 +223,7 @@ erDiagram
     urgencias_mart_comuna_weekly |o..o{ modeling_pronostico_demanda_sm : "panel de entrada, NO enforced por FK fisica"
 
     geo_dim_oferta_urgencia_rm |o..o{ urgencias_mart_establecimiento_monthly : "relacion documentada, NO enforced por FK fisica"
+
+    geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_snss : "relacion documentada, NO enforced por FK fisica"
+    geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_no_snss : "relacion documentada, NO enforced por FK fisica"
+

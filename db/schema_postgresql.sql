@@ -46,6 +46,7 @@ CREATE SCHEMA IF NOT EXISTS marts;
 CREATE SCHEMA IF NOT EXISTS egresos;
 CREATE SCHEMA IF NOT EXISTS contexto_genero;
 CREATE SCHEMA IF NOT EXISTS modeling;
+CREATE SCHEMA IF NOT EXISTS camas;
 
 -- =============================================================================
 -- censo.cartografia_comunal
@@ -610,3 +611,77 @@ COMMENT ON COLUMN modeling.pronostico_demanda_sm.poblacion_anual IS
 
 CREATE INDEX ix_pronostico_demanda_sm_nivel ON modeling.pronostico_demanda_sm (nivel);
 CREATE INDEX ix_pronostico_demanda_sm_periodo ON modeling.pronostico_demanda_sm (ano, semana);
+
+-- =============================================================================
+-- camas.dotacion_snss
+-- Grain: 1 fila = 1 area funcional de 1 hospital del SNSS en 1 ano, o su fila
+-- Total (area 100). Replica el libro DEIS/DIGERA de establecimientos del SNSS
+-- (2010-2025); la carga transpone sus columnas camas_AAAA a filas y conserva las
+-- celdas en blanco como NULL. PK natural. Sin FK a establecimientos: solo 34 de
+-- los 196 codigos estan en geo.dim_oferta_urgencia_rm.
+-- =============================================================================
+CREATE TABLE camas.dotacion_snss (
+    servicio_salud          TEXT       NOT NULL,
+    establecimiento_codigo  BIGINT     NOT NULL,
+    area_funcional_codigo   SMALLINT   NOT NULL,
+    ano                     SMALLINT   NOT NULL,
+    tipo_establecimiento    TEXT       NOT NULL,
+    establecimiento_nombre  TEXT       NOT NULL,
+    area_funcional          TEXT       NOT NULL,
+    camas                   INTEGER,
+    CONSTRAINT pk_dotacion_snss
+        PRIMARY KEY (servicio_salud, establecimiento_codigo, area_funcional_codigo, ano),
+    CONSTRAINT ck_dotacion_snss_camas_no_negativas
+        CHECK (camas IS NULL OR camas >= 0)
+);
+
+COMMENT ON TABLE camas.dotacion_snss IS
+    'Dotacion anual declarada de camas hospitalarias de establecimientos del SNSS '
+    '(DEIS, DIGERA), 2010-2025. NO es ocupacion ni disponibilidad en tiempo real. '
+    'La fila con area_funcional_codigo = 100 es el total del hospital: no sumarla con las areas.';
+COMMENT ON COLUMN camas.dotacion_snss.camas IS
+    'NULL = celda en blanco en el origen (no es cero); 0 = cero explicito del origen.';
+
+CREATE INDEX ix_dotacion_snss_establecimiento ON camas.dotacion_snss (establecimiento_codigo, ano);
+
+-- =============================================================================
+-- camas.dotacion_no_snss
+-- Grain: 1 fila = 1 area funcional de 1 establecimiento no perteneciente al SNSS
+-- en 1 ano, o su fila de total (sin area). Replica las hojas anuales 2019-2025
+-- del libro DEIS/DIGERA, apiladas ("dato referencial" segun la fuente). Sin
+-- clave natural sin nulos: el area es NULL en la fila de total, por lo que la PK
+-- es tecnica y la llave logica se verifica con un indice unico. Sin FK a
+-- establecimientos: solo 10 de los 144 codigos estan en geo.dim_oferta_urgencia_rm.
+-- =============================================================================
+CREATE TABLE camas.dotacion_no_snss (
+    dotacion_id             BIGINT     GENERATED ALWAYS AS IDENTITY,
+    ano                     SMALLINT   NOT NULL,
+    seremi                  TEXT       NOT NULL,
+    establecimiento_codigo  BIGINT     NOT NULL,
+    establecimiento_nombre  TEXT       NOT NULL,
+    area_funcional_codigo   SMALLINT,
+    area_funcional          TEXT,
+    camas                   INTEGER,
+    CONSTRAINT pk_dotacion_no_snss PRIMARY KEY (dotacion_id),
+    CONSTRAINT ck_dotacion_no_snss_area_coherente
+        CHECK ((area_funcional_codigo IS NULL) = (area_funcional IS NULL)),
+    CONSTRAINT ck_dotacion_no_snss_camas_no_negativas
+        CHECK (camas IS NULL OR camas >= 0)
+);
+
+CREATE UNIQUE INDEX ux_dotacion_no_snss_llave
+    ON camas.dotacion_no_snss (ano, seremi, establecimiento_codigo, COALESCE(area_funcional_codigo, -1));
+
+COMMENT ON TABLE camas.dotacion_no_snss IS
+    'Dotacion anual declarada de camas de establecimientos no pertenecientes al SNSS '
+    '(DEIS, DIGERA; dato referencial segun la fuente), 2019-2025. NO es ocupacion ni '
+    'disponibilidad en tiempo real. La fila con area_funcional_codigo NULL es el total '
+    'del establecimiento: no sumarla con las areas.';
+COMMENT ON COLUMN camas.dotacion_no_snss.dotacion_id IS
+    'Clave tecnica de persistencia; no existe en la fuente.';
+COMMENT ON COLUMN camas.dotacion_no_snss.seremi IS
+    'Grafia del origen: Metropolitana y Metropolitano coexisten.';
+COMMENT ON COLUMN camas.dotacion_no_snss.camas IS
+    'NULL = celda en blanco en el origen (no es cero); 0 = cero explicito del origen.';
+
+CREATE INDEX ix_dotacion_no_snss_establecimiento ON camas.dotacion_no_snss (establecimiento_codigo, ano);

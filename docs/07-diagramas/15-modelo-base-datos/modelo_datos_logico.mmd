@@ -203,6 +203,30 @@ erDiagram
         string modelo "configuracion de la seleccion congelada que lo genero"
     }
 
+    %% grain: 1 fila = 1 area funcional de 1 hospital del SNSS, o su fila Total (1694 filas, 196 hospitales; una columna camas_AAAA por ano 2010-2025)
+    dotacion_camas_snss {
+        string servicio_salud PK
+        bigint establecimiento_codigo PK "vinculo logico a dim_oferta_urgencia_rm, parcial: 34/196 estan en la oferta"
+        int area_funcional_codigo PK "100 = Total del hospital"
+        string tipo_establecimiento
+        string establecimiento_nombre
+        string area_funcional
+        int camas_2010 "una columna camas_AAAA por ano (16, 2010-2025); NULL = blanco, no cero"
+        int camas_2025
+    }
+
+    %% grain: 1 fila = 1 area funcional de 1 establecimiento no SNSS en 1 ano, o su fila de total (4631 filas, 144 establecimientos, 2019-2025; hojas anuales apiladas)
+    %% sin clave logica valida: area_funcional_codigo es NULL en la fila de total (fisico: dotacion_id tecnico)
+    dotacion_camas_no_snss {
+        int ano
+        string seremi
+        bigint establecimiento_codigo "vinculo logico a dim_oferta_urgencia_rm, parcial: 10/144 estan en la oferta"
+        string establecimiento_nombre
+        int area_funcional_codigo "NULL en la fila de total del hospital"
+        string area_funcional
+        int camas "NULL = blanco, no cero"
+    }
+
     cartografia_comunal ||--o{ cartografia_distrital : "1 comuna tiene N distritos"
     cartografia_distrital ||--o{ cartografia_zonal : "1 distrito tiene N zonas urbanas (parcial: 51/52 comunas)"
     cartografia_distrital ||--o{ cartografia_entidades : "1 distrito tiene N entidades rurales (parcial: 26/52 comunas)"
@@ -221,3 +245,7 @@ erDiagram
     mart_urgencias_comuna_weekly ||--o{ pronostico_demanda_sm : "panel semanal -> N horizontes por serie (+1 serie regional sin comuna)"
 
     dim_oferta_urgencia_rm |o..o{ mart_urgencias_establecimiento_monthly : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (snapshot actual vs historico 2021-2025)"
+
+    dim_oferta_urgencia_rm |o..o{ dotacion_camas_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 34/196 hospitales estan en la oferta)"
+    dim_oferta_urgencia_rm |o..o{ dotacion_camas_no_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 10/144 establecimientos estan en la oferta)"
+
