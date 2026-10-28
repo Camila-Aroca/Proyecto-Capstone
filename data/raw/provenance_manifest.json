@@ -660,5 +660,54 @@
     "downloaded_at": "2026-10-07T22:20:32.811147+00:00",
     "file_size": 18039,
     "sha256": "864462a83e93d97cb9da4abb2b4611def6dd629784372377ab8556065b391cfa"
+  },
+  {
+    "source_id": "deis_dotacion_camas_snss",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/Estadisticas/DOTACION_CAMAS/Dotaci%C3%B3n%20de%20camas%202010-2025%20Establecimientos%20Pertenecientes%20al%20SNSS_01-12-2025.xlsx",
+        "downloaded_at": "2026-10-28T22:40:50.021379+00:00",
+        "raw_path": "data/raw/camas/dotacion_camas_snss_2010_2025.xlsx",
+        "raw_filename": "dotacion_camas_snss_2010_2025.xlsx",
+        "raw_size": 179409,
+        "raw_sha256": "9f4257b69c6f5370a3ac5b6ad8ecbfef85ac071e09416c6f8623b063750bfac8",
+        "transport": {
+          "filename": "dotacion_camas_snss_2010_2025.xlsx",
+          "size": 179409,
+          "sha256": "9f4257b69c6f5370a3ac5b6ad8ecbfef85ac071e09416c6f8623b063750bfac8",
+          "http_last_modified": "Mon, 01 Dec 2025 19:56:00 GMT",
+          "http_etag": "\"0c8fd83fc62dc1:0\""
+        }
+      }
+    ],
+    "dataset": "deis_dotacion_camas_establecimientos_snss",
+    "institucion": "Ministerio de Salud, DEIS y DIGERA",
+    "alcance": "Establecimientos pertenecientes al SNSS (públicos)",
+    "periodo": "2010-2025",
+    "sufijo_nombre_archivo_origen": "01-12-2025"
+  },
+  {
+    "source_id": "deis_dotacion_camas_no_snss",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/Estadisticas/DOTACION_CAMAS/Dotaci%C3%B3n%20de%20camas%202019-2025%20Establecimientos%20No%20pertenecientes%20al%20SNSS.xlsx",
+        "downloaded_at": "2026-10-28T22:40:50.540812+00:00",
+        "raw_path": "data/raw/camas/dotacion_camas_no_snss_2019_2025.xlsx",
+        "raw_filename": "dotacion_camas_no_snss_2019_2025.xlsx",
+        "raw_size": 178588,
+        "raw_sha256": "71293a61753e10ff520caca3dd67c1535ba0c1d25dddd41771756f17ccc09c46",
+        "transport": {
+          "filename": "dotacion_camas_no_snss_2019_2025.xlsx",
+          "size": 178588,
+          "sha256": "71293a61753e10ff520caca3dd67c1535ba0c1d25dddd41771756f17ccc09c46",
+          "http_last_modified": "Mon, 20 Oct 2025 16:12:50 GMT",
+          "http_etag": "\"67e5d561dc41dc1:0\""
+        }
+      }
+    ],
+    "dataset": "deis_dotacion_camas_establecimientos_no_snss",
+    "institucion": "Ministerio de Salud, DEIS y DIGERA, con Superintendencia de Salud",
+    "alcance": "Establecimientos no pertenecientes al SNSS (privados); dato referencial según la fuente",
+    "periodo": "2019-2025"
   }
 ]

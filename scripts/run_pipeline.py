@@ -59,6 +59,14 @@ STAGES = {
         ],
         "depends_on": []
     },
+    "download_dotacion_camas": {
+        "module": "src.data.download_dotacion_camas",
+        "outputs": [
+            "data/raw/camas/dotacion_camas_snss_2010_2025.xlsx",
+            "data/raw/camas/dotacion_camas_no_snss_2019_2025.xlsx"
+        ],
+        "depends_on": []
+    },
     "download_deis": {
         "module": "src.data.download_deis_sources",
         "outputs": [
@@ -145,6 +153,14 @@ STAGES = {
         "module": "src.data.clean_pobreza_comunal",
         "outputs": ["data/processed/pobreza/dim_vulnerabilidad_comuna.parquet"],
         "depends_on": ["download_pobreza_comunal", "clean_censo_poblacion"]
+    },
+    "clean_dotacion_camas": {
+        "module": "src.data.clean_dotacion_camas",
+        "outputs": [
+            "data/processed/camas/dotacion_camas_snss.parquet",
+            "data/processed/camas/dotacion_camas_no_snss.parquet"
+        ],
+        "depends_on": ["download_dotacion_camas"]
     },
     "build_catalogs": {
         "module": "src.data.build_catalogs",
@@ -317,6 +333,7 @@ PIPELINE_ORDER = [
     "download_censo_poblacion",
     "download_poblacion_proyecciones",
     "download_pobreza_comunal",
+    "download_dotacion_camas",
     "download_deis",
     "download_establishments",
     "download_contexto_genero",
@@ -327,6 +344,7 @@ PIPELINE_ORDER = [
     "clean_censo_poblacion",
     "clean_poblacion_proyecciones",
     "clean_pobreza_comunal",
+    "clean_dotacion_camas",
     "build_catalogs",
     "clean_urgencias",
     "clean_egresos",

@@ -84,6 +84,21 @@ Todas las etapas de descarga viven en `src/data/` y se ejecutan con `scripts/run
 
 - La URL del cuadro de suicidio conserva la errata "sucidio" porque es la que enlaza la página oficial; la variante corregida devuelve 404.
 
+### 2.8 DEIS y DIGERA — Dotación de camas hospitalarias
+
+- **Etapa:** `download_dotacion_camas`. **Destino:** `data/raw/camas/` (dos libros XLSX, cada uno validado y publicado de forma independiente).
+- **Qué es:** dotación anual de camas hospitalarias declarada por establecimiento y área funcional. No es ocupación ni disponibilidad en tiempo real.
+- **Dos libros:**
+
+| Archivo en RAW | URL | Cobertura | Estructura |
+|---|---|---|---|
+| `dotacion_camas_snss_2010_2025.xlsx` | `https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/Estadisticas/DOTACION_CAMAS/Dotaci%C3%B3n%20de%20camas%202010-2025%20Establecimientos%20Pertenecientes%20al%20SNSS_01-12-2025.xlsx` | Establecimientos públicos (SNSS), 2010-2025 | Una hoja `2010-2025`, una columna por año |
+| `dotacion_camas_no_snss_2019_2025.xlsx` | `https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/Estadisticas/DOTACION_CAMAS/Dotaci%C3%B3n%20de%20camas%202019-2025%20Establecimientos%20No%20pertenecientes%20al%20SNSS.xlsx` | Establecimientos privados (no SNSS), 2019-2025; "dato referencial" según la fuente, con la Superintendencia de Salud | Una hoja por año, `2019` a `2025` |
+
+- **Procesamiento:** la etapa `clean_dotacion_camas` los convierte en un Parquet por libro en `data/processed/camas/` (ver `reports/dictionary/diccionario_dotacion_camas.md`).
+- El RAW conserva ambos libros tal como vienen. Observado: el libro SNSS tiene 8 filas de nota al pie y filas `Total` por establecimiento mezcladas con el detalle por área funcional; el libro no SNSS tiene una fila `TOTAL` por hoja, notas al pie solo desde la hoja 2023 y 10 celdas con el texto `ok` (hojas 2024 y 2025, columna 12) de significado no documentado.
+- El libro SNSS declara un total nacional de camas por año en una fila `Total País`; esa cifra no se ha contrastado todavía con la suma por establecimiento.
+
 ## 3. Procedimiento de descarga
 
 Requisitos: Python 3.12 y las dependencias de `requirements.txt`; acceso a internet; espacio en disco (unos 12 GB de RAW).
@@ -101,6 +116,7 @@ python scripts/run_pipeline.py --stage download_censo
 python scripts/run_pipeline.py --stage download_censo_poblacion
 python scripts/run_pipeline.py --stage download_poblacion_proyecciones
 python scripts/run_pipeline.py --stage download_pobreza_comunal
+python scripts/run_pipeline.py --stage download_dotacion_camas
 python scripts/run_pipeline.py --stage download_contexto_genero
 ```
 
@@ -179,7 +195,7 @@ EOF
 
 - **Atenciones de Urgencia del año corriente** (hoy 2026): el DEIS sobrescribe periódicamente el ZIP sin versionarlo. Dos descargas en fechas distintas pueden dar archivos distintos.
 - **Catálogo de establecimientos:** es el catálogo "actualizado" publicado por DEIS, no un año cerrado.
-- **Años cerrados** (Urgencias 2020-2025, Egresos 2020-2025, Censo 2024, proyecciones INE, Casen 2022, cuadros de género): se espera que el hash no cambie.
+- **Años cerrados** (Urgencias 2020-2025, Egresos 2020-2025, Censo 2024, proyecciones INE, Casen 2022, dotación de camas 2010-2025 y 2019-2025, cuadros de género): se espera que el hash no cambie.
 
 El manifest identifica **qué** snapshot se usó (URL, fecha y hash), pero una URL con un hash **no permite reconstruir** una versión antigua de una fuente mutable si el proveedor ya la reemplazó. Por eso el manifest se versiona: es la evidencia de qué snapshot respalda cada resultado.
 

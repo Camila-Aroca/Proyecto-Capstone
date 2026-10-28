@@ -192,6 +192,12 @@ def validate_expected_schema(path: Path) -> bool:
         elif name.startswith("mds_casen"):
             from src.data.download_pobreza_comunal import validate_pobreza_comunal_workbook
             validate_pobreza_comunal_workbook(path)
+        elif name.startswith("dotacion_camas_no_snss"):
+            from src.data.download_dotacion_camas import validate_camas_no_snss_workbook
+            validate_camas_no_snss_workbook(path)
+        elif name.startswith("dotacion_camas_snss"):
+            from src.data.download_dotacion_camas import validate_camas_snss_workbook
+            validate_camas_snss_workbook(path)
         elif "contexto_genero" in parts:
             from src.data.download_gender_statistics import validate_workbook
             validate_workbook(path)
@@ -231,6 +237,12 @@ def validate_expected_schema(path: Path) -> bool:
             "dim_vulnerabilidad_comuna.parquet": clean_pobreza_comunal.SCHEMA,
             "dim_oferta_urgencia_rm.parquet": build_dim_oferta_urgencia_rm.SCHEMA,
             "mart_mvp_territorial_comuna.parquet": build_mart_mvp_territorial_comuna.SCHEMA,
+        }[name]
+    elif name in {"dotacion_camas_snss.parquet", "dotacion_camas_no_snss.parquet"}:
+        from src.data import clean_dotacion_camas
+        schemas[name] = {
+            clean_dotacion_camas.SNSS_FILENAME: clean_dotacion_camas.SNSS_SCHEMA,
+            clean_dotacion_camas.NO_SNSS_FILENAME: clean_dotacion_camas.NO_SNSS_SCHEMA,
         }[name]
     elif ((name.endswith(".parquet") and "contexto_genero" in parts)
           or name == "mart_contexto_genero_indicador_sexo.parquet"):
