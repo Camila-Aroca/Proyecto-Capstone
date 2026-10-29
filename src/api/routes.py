@@ -16,6 +16,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
 from src.api.schemas import (
+    CamasPsiquiatriaTerritorio,
     Meta,
     PronosticoSerie,
     ResumenComuna,
@@ -26,6 +27,7 @@ from src.api.schemas import (
 from src.api.service import (
     UMBRAL_CAMBIO_PCT,
     ServicioDemanda,
+    camas_territorio,
     cobertura_holdout,
     formatear_pronostico,
     historico,
@@ -191,6 +193,21 @@ def serie(
         pronostico=pronostico,
         estado_pronostico=servicio.estado_pronostico.estado,
     )
+
+
+@router.get("/camas-psiquiatria/{series_id}", response_model=CamasPsiquiatriaTerritorio)
+def camas_psiquiatria(series_id: str, servicio: Servicio) -> dict[str, Any]:
+    """Total de camas de psiquiatria de los hospitales de un territorio (ultimo ano de la dotacion)."""
+    _exigir_datos(servicio)
+    if series_id not in servicio.nombres:
+        raise HTTPException(status_code=404, detail="El territorio no existe.")
+    if servicio.camas_psiquiatria is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Falta la dotacion de camas: ejecute el stage "
+            "`build_dim_camas_psiquiatria_hospital_rm` del pipeline.",
+        )
+    return camas_territorio(servicio.camas_psiquiatria, series_id)
 
 
 @router.get("/pronosticos", response_model=list[PronosticoSerie])

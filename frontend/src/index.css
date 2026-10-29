@@ -38,6 +38,8 @@
   --accent-weak: rgba(15, 90, 120, 0.1);
   --series-1: #0f5a78;
   --band: rgba(74, 159, 207, 0.22);
+  /* Linea de referencia de camas: celeste electrico, mas claro que la serie. */
+  --camas: #00c8ff;
   --focus: #0f5a78;
 
   /* Cambio esperado (divergente, calido/frio) y ausencia de dato. Par validado:
@@ -90,6 +92,7 @@
     --accent-weak: rgba(74, 159, 207, 0.18);
     --series-1: #4a9fcf;
     --band: rgba(74, 159, 207, 0.24);
+    --camas: #3ee6ff;
     --focus: #7cc0e2;
     --alza: #e07a62;
     --alza-weak: rgba(224, 122, 98, 0.18);

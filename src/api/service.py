@@ -69,6 +69,10 @@ class Rutas:
 
     territorial: Path = Path("data/processed/marts/mart_mvp_territorial_comuna.parquet")
     cartografia: Path = Path("data/processed/censo/Cartografia_censo2024_RM_Comunal.parquet")
+    # Capa opcional: sin ella el tablero solo omite la linea de camas.
+    camas_psiquiatria: Path = Path(
+        "data/processed/camas/dim_camas_psiquiatria_hospital_rm.parquet"
+    )
     seleccion: Path = Path("reports/modeling/benchmark_demanda_sm_seleccion.json")
     holdout_resumen: Path = Path("reports/modeling/holdout_demanda_sm_resumen.csv")
     pronostico: Path = RUTA_PRONOSTICO
@@ -272,6 +276,38 @@ def resumen_comunal(
     return resumen.reset_index().sort_values("pronostico_promedio", ascending=False, na_position="last")
 
 
+def camas_territorio(camas: pd.DataFrame, series_id: str) -> dict[str, Any]:
+    """Total de camas de psiquiatria de los hospitales que alimentan el modelo, ultimo ano.
+
+    El territorio es la region o una comuna, segun la comuna del establecimiento, el
+    mismo criterio con que Urgencias asigna sus atenciones. Solo cuentan los hospitales
+    que reportaron ID36 en 2021-2025 (el target del modelo) y que declaran cifra en
+    algun area de psiquiatria: un hospital sin cifra no cuenta como cero. Sin hospitales
+    con cifra, el total es None (sin dato), nunca 0. Es dotacion declarada, no
+    ocupacion ni disponibilidad.
+    """
+    camas = camas[camas["reporto_id36_periodo"]]
+    del_territorio = camas if series_id == RM_SERIES_ID else camas[camas["comuna_codigo"] == series_id]
+    con_camas = del_territorio[del_territorio["camas_psiquiatria"].notna()]
+    total = float(con_camas["camas_psiquiatria"].sum()) if not con_camas.empty else None
+    return {
+        "series_id": series_id,
+        "ano_camas": int(camas["ano_camas"].iloc[0]),
+        "total_camas_psiquiatria": None if total is None else round(total, 1),
+        "n_hospitales_con_camas": int(len(con_camas)),
+        "n_hospitales_snss": int(del_territorio["en_dotacion_snss"].sum()),
+        "n_hospitales_modelo": int(len(del_territorio)),
+        "hospitales": [
+            {
+                "establecimiento_codigo": int(f.establecimiento_codigo),
+                "nombre": f.establecimiento_nombre,
+                "camas_psiquiatria": float(f.camas_psiquiatria),
+            }
+            for f in con_camas.sort_values("camas_psiquiatria", ascending=False).itertuples()
+        ],
+    }
+
+
 def cartografia_geojson(ruta: Path, tolerancia: float = TOLERANCIA_GEOMETRIA) -> dict[str, Any]:
     """GeoJSON comunal simplificado para el mapa.
 
@@ -333,6 +369,7 @@ class ServicioDemanda:
     rutas: Rutas = field(default_factory=Rutas)
     datos: DatosActuales | None = None
     territorial: pd.DataFrame | None = None
+    camas_psiquiatria: pd.DataFrame | None = None
     geojson: dict[str, Any] | None = None
     seleccion: dict[str, Any] | None = None
     pronostico: pd.DataFrame | None = None
@@ -360,6 +397,11 @@ class ServicioDemanda:
             datos = load_current_panel()
             territorial = pq.read_table(self.rutas.territorial).to_pandas()
             geojson = cartografia_geojson(self.rutas.cartografia)
+            camas = (
+                pq.read_table(self.rutas.camas_psiquiatria).to_pandas()
+                if self.rutas.camas_psiquiatria.exists()
+                else None
+            )
             seleccion = (
                 json.loads(self.rutas.seleccion.read_text(encoding="utf-8"))
                 if self.rutas.seleccion.exists()
@@ -372,6 +414,7 @@ class ServicioDemanda:
         self.datos, self.territorial, self.geojson, self.seleccion = (
             datos, territorial, geojson, seleccion
         )
+        self.camas_psiquiatria = camas
         self.nombres = nombres_series(datos.panel)
         self.motivos = exclusiones(datos.diagnostico)
         self.estado_datos.marcar("listo")

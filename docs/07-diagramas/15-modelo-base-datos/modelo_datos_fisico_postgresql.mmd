@@ -204,6 +204,17 @@ erDiagram
         integer camas "NULL = blanco, no cero"
     }
 
+    camas_dim_psiquiatria_hospital_rm {
+        bigint establecimiento_codigo PK, FK "hospital de geo_dim_oferta_urgencia_rm"
+        text establecimiento_nombre
+        char_5 comuna_codigo "copia de la comuna de la oferta; sin FK propia"
+        boolean en_dotacion_snss
+        boolean reporto_id36_periodo "alimenta el modelo: ID36 > 0 alguna vez en 2021-2025"
+        smallint ano_camas
+        numeric camas_psiquiatria "NULL = sin cifra, no cero"
+        smallint n_areas_psiquiatria
+    }
+
     censo_cartografia_comunal ||--o{ censo_cartografia_distrital : "1 comuna, N distritos"
     censo_cartografia_distrital ||--o{ censo_cartografia_zonal : "1 distrito, N zonas urbanas"
     censo_cartografia_distrital ||--o{ censo_cartografia_entidades : "1 distrito, N entidades rurales"
@@ -226,4 +237,5 @@ erDiagram
 
     geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_snss : "relacion documentada, NO enforced por FK fisica"
     geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_no_snss : "relacion documentada, NO enforced por FK fisica"
+    geo_dim_oferta_urgencia_rm ||--o| camas_dim_psiquiatria_hospital_rm : "1 a 1 (hospitales de la oferta)"
 

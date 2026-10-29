@@ -246,6 +246,11 @@ STAGES = {
         "outputs": ["data/processed/geo/dim_oferta_urgencia_rm.parquet"],
         "depends_on": ["clean_establishments", "clean_urgencias"]
     },
+    "build_dim_camas_psiquiatria_hospital_rm": {
+        "module": "src.data.build_dim_camas_psiquiatria_hospital_rm",
+        "outputs": ["data/processed/camas/dim_camas_psiquiatria_hospital_rm.parquet"],
+        "depends_on": ["clean_dotacion_camas", "build_dim_oferta_urgencia_rm"]
+    },
     "build_capa_oferta_urgencia_rm": {
         "module": "src.geo.build_capa_oferta_urgencia_rm",
         "outputs": ["data/processed/geo/capa_oferta_urgencia_rm.parquet"],
@@ -356,6 +361,7 @@ PIPELINE_ORDER = [
     "build_urgencias_establecimiento_mart",
     "build_urgencias_comuna_etario_mart",
     "build_dim_oferta_urgencia_rm",
+    "build_dim_camas_psiquiatria_hospital_rm",
     "build_capa_oferta_urgencia_rm",
     "resolve_coordenadas_establecimientos",
     "build_cobertura_urgencia_comuna",

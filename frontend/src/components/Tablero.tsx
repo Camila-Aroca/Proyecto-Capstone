@@ -1,7 +1,7 @@
 // Tablero: la vista de analisis. Vive separado de la pagina de entrada para
 // que la landing no cargue ni el mapa ni los datos del pronostico.
 import { useEffect, useMemo, useState } from "react";
-import { api, type EstadoProceso, type Meta, type ResumenComuna, type SerieConPronostico, type Territorio } from "../api";
+import { api, type CamasPsiquiatria, type EstadoProceso, type Meta, type ResumenComuna, type SerieConPronostico, type Territorio } from "../api";
 import { Alcance } from "./Alcance";
 import { AvisoLectura } from "./AvisoLectura";
 import { BarraSuperior } from "./BarraSuperior";
@@ -22,6 +22,7 @@ export function Tablero() {
   const [seleccion, setSeleccion] = useState(REGION);
   const [semanas, setSemanas] = useState<number>(VENTANAS[0]);
   const [serie, setSerie] = useState<SerieConPronostico | null>(null);
+  const [camas, setCamas] = useState<CamasPsiquiatria | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Carga inicial. Cada recurso se pinta apenas llega; el pronostico puede
@@ -47,6 +48,17 @@ export function Tablero() {
       .catch((e) => e.name !== "AbortError" && setError(e.message));
     return () => control.abort();
   }, [seleccion, semanas, pronosticoListo]);
+
+  // Capa de contexto: si falta (la API responde 404), el tablero sigue sin la linea
+  // de camas en vez de mostrar un error.
+  useEffect(() => {
+    const control = new AbortController();
+    setCamas(null);
+    api.camasPsiquiatria(seleccion, control.signal)
+      .then(setCamas)
+      .catch(() => undefined);
+    return () => control.abort();
+  }, [seleccion]);
 
   useEffect(() => {
     if (pronosticoListo) api.meta().then(setMeta).catch(() => undefined);
@@ -110,6 +122,7 @@ export function Tablero() {
           cobertura={meta?.cobertura_holdout ?? null}
           umbralCambioPct={meta?.umbral_cambio_pct ?? null}
           semanaParcial={meta?.semana_en_curso ?? null}
+          camas={camas}
         />
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] [&>*]:min-w-0">

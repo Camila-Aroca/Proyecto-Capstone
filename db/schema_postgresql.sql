@@ -685,3 +685,43 @@ COMMENT ON COLUMN camas.dotacion_no_snss.camas IS
     'NULL = celda en blanco en el origen (no es cero); 0 = cero explicito del origen.';
 
 CREATE INDEX ix_dotacion_no_snss_establecimiento ON camas.dotacion_no_snss (establecimiento_codigo, ano);
+
+-- =============================================================================
+-- camas.dim_psiquiatria_hospital_rm
+-- Grain: 1 fila = 1 hospital de geo.dim_oferta_urgencia_rm (45 filas), con sus
+-- camas de psiquiatria del ultimo ano de la dotacion SNSS (2025). Dimension
+-- derivada (stage build_dim_camas_psiquiatria_hospital_rm), no un libro de origen.
+-- =============================================================================
+CREATE TABLE camas.dim_psiquiatria_hospital_rm (
+    establecimiento_codigo     BIGINT      NOT NULL,
+    establecimiento_nombre     TEXT        NOT NULL,
+    comuna_codigo              CHAR(5)     NOT NULL,
+    en_dotacion_snss           BOOLEAN     NOT NULL,
+    reporto_id36_periodo       BOOLEAN     NOT NULL,
+    ano_camas                  SMALLINT    NOT NULL,
+    camas_psiquiatria          NUMERIC,
+    n_areas_psiquiatria        SMALLINT    NOT NULL,
+    CONSTRAINT pk_dim_psiquiatria_hospital_rm PRIMARY KEY (establecimiento_codigo),
+    CONSTRAINT fk_dim_psiquiatria_hospital_rm_oferta FOREIGN KEY (establecimiento_codigo)
+        REFERENCES geo.dim_oferta_urgencia_rm (establecimiento_codigo),
+    CONSTRAINT ck_dim_psiquiatria_hospital_rm_camas CHECK (camas_psiquiatria IS NULL OR camas_psiquiatria >= 0),
+    CONSTRAINT ck_dim_psiquiatria_hospital_rm_fuera_dotacion
+        CHECK (en_dotacion_snss OR camas_psiquiatria IS NULL),
+    CONSTRAINT ck_dim_psiquiatria_hospital_rm_areas
+        CHECK ((camas_psiquiatria IS NOT NULL) = (n_areas_psiquiatria > 0))
+);
+
+COMMENT ON TABLE camas.dim_psiquiatria_hospital_rm IS
+    'Camas de psiquiatria (suma de las areas funcionales de psiquiatria, sin la fila '
+    'Total) de cada hospital de la oferta de urgencia, en el ultimo ano de la dotacion '
+    'SNSS. Es dotacion anual declarada, no ocupacion ni disponibilidad en tiempo real.';
+COMMENT ON COLUMN camas.dim_psiquiatria_hospital_rm.camas_psiquiatria IS
+    'NULL = el hospital no declara cifra en ningun area de psiquiatria (o no figura en '
+    'la dotacion SNSS): ausencia de dato, no cero. Un cero declarado se conserva como 0.';
+COMMENT ON COLUMN camas.dim_psiquiatria_hospital_rm.reporto_id36_periodo IS
+    'ID36 > 0 alguna vez en 2021-2025: el hospital alimento el modelo de demanda. Los '
+    'totales territoriales de camas solo suman hospitales con este indicador en true.';
+COMMENT ON COLUMN camas.dim_psiquiatria_hospital_rm.comuna_codigo IS
+    'Copia de la comuna de geo.dim_oferta_urgencia_rm; sin FK propia para no duplicar la relacion.';
+
+CREATE INDEX ix_dim_psiquiatria_hospital_rm_comuna ON camas.dim_psiquiatria_hospital_rm (comuna_codigo);

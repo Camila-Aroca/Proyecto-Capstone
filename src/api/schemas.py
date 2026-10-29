@@ -107,6 +107,38 @@ class ResumenComuna(BaseModel):
     oferta_urgencia_actual: int | None
 
 
+class HospitalCamas(BaseModel):
+    establecimiento_codigo: int
+    nombre: str
+    camas_psiquiatria: float
+
+
+class CamasPsiquiatriaTerritorio(BaseModel):
+    series_id: str
+    ano_camas: int = Field(description="Ultimo ano de la dotacion de camas del SNSS.")
+    total_camas_psiquiatria: float | None = Field(
+        description=(
+            "Suma de camas de las areas de psiquiatria de los hospitales del territorio que "
+            "reportaron ID36 en 2021-2025 (los que alimentan el modelo). "
+            "Null si ninguno declara cifra: ausencia de dato, no cero. Es dotacion "
+            "declarada, no ocupacion ni disponibilidad."
+        )
+    )
+    n_hospitales_con_camas: int = Field(
+        description="Hospitales del territorio con cifra de psiquiatria; los que suman."
+    )
+    n_hospitales_snss: int = Field(
+        description="Hospitales del modelo en el territorio que figuran en la dotacion SNSS."
+    )
+    n_hospitales_modelo: int = Field(
+        description=(
+            "Hospitales del territorio que reportaron ID36 en 2021-2025 (alimentan el "
+            "modelo), tengan o no camas de psiquiatria."
+        )
+    )
+    hospitales: list[HospitalCamas]
+
+
 class CoberturaNivel(BaseModel):
     nivel: Nivel
     cobertura_observada: float

@@ -7,7 +7,7 @@ import type { CambioEsperado } from "./api";
 
 const NOMBRES = [
   "surface", "surface-2", "ink", "ink-2", "ink-3", "muted", "grid", "axis",
-  "series-1", "band", "accent", "alza", "baja", "estable", "sin-dato",
+  "series-1", "band", "camas", "accent", "alza", "baja", "estable", "sin-dato",
   "seq-1", "seq-2", "seq-3", "seq-4", "seq-5",
 ] as const;
 

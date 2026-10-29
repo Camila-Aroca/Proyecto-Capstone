@@ -1,4 +1,4 @@
-import type { CambioEsperado, CoberturaNivel, SemanaParcial, SerieConPronostico } from "../api";
+import type { CamasPsiquiatria, CambioEsperado, CoberturaNivel, SemanaParcial, SerieConPronostico } from "../api";
 import { fmtEntero, fmtFechaLarga, fmtPct } from "../format";
 import type { Tokens } from "../tokens";
 import { BadgeCambio } from "./BadgeCambio";
@@ -13,6 +13,8 @@ interface Props {
   umbralCambioPct: number | null;
   /** Semana en curso (parcial). Es un dato regional: solo se usa en la serie de la RM. */
   semanaParcial: SemanaParcial | null;
+  /** Camas de psiquiatria del territorio seleccionado; null mientras carga o si la capa no existe. */
+  camas: CamasPsiquiatria | null;
 }
 
 const VENTANA_RECIENTE = 4;
@@ -48,7 +50,7 @@ function Esqueleto() {
   );
 }
 
-export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura, umbralCambioPct, semanaParcial }: Props) {
+export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura, umbralCambioPct, semanaParcial, camas }: Props) {
   const intervalo = nivelIntervalo ? `${Math.round(nivelIntervalo * 100)}%` : "";
   const pronostico = serie?.pronostico ?? [];
   const primero = pronostico[0];
@@ -74,7 +76,7 @@ export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura, umbralCam
           <h2 id="serie-titulo" className="panel-title">{serie?.nombre ?? "Cargando…"}</h2>
           <p className="text-[13px] text-3">Atenciones semanales de urgencia en salud mental</p>
         </div>
-        <LeyendaSerie tokens={tokens} intervalo={intervalo} />
+        <LeyendaSerie tokens={tokens} intervalo={intervalo} camas={camas} />
       </div>
 
       {!serie ? (
@@ -128,8 +130,14 @@ export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura, umbralCam
           </dl>
 
           <div className="mt-5">
-            <GraficoSerie serie={serie} tokens={tokens} intervalo={intervalo} semanaParcial={parcialAplicable} />
-            <TablaSerie serie={serie} intervalo={intervalo} semanaParcial={parcialAplicable} />
+            <GraficoSerie serie={serie} tokens={tokens} intervalo={intervalo} semanaParcial={parcialAplicable} camas={camas} />
+            {camas && camas.total_camas_psiquiatria == null && (
+              <p className="mt-2 text-[12px] text-3">
+                Ningún hospital que reporta a Urgencias en este territorio declara camas de psiquiatría en la
+                dotación {camas.ano_camas}: no se dibuja la línea (sin dato, no cero).
+              </p>
+            )}
+            <TablaSerie serie={serie} intervalo={intervalo} semanaParcial={parcialAplicable} camas={camas} />
           </div>
         </div>
       )}

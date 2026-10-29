@@ -92,6 +92,25 @@ export interface Meta {
   advertencias: string[];
 }
 
+export interface HospitalCamas {
+  establecimiento_codigo: number;
+  nombre: string;
+  camas_psiquiatria: number;
+}
+
+export interface CamasPsiquiatria {
+  series_id: string;
+  /** Ultimo ano de la dotacion de camas del SNSS. */
+  ano_camas: number;
+  /** Suma de camas de psiquiatria del territorio; null = sin dato, nunca 0. */
+  total_camas_psiquiatria: number | null;
+  n_hospitales_con_camas: number;
+  n_hospitales_snss: number;
+  /** Hospitales del territorio que reportaron ID36 en 2021-2025 (alimentan el modelo). */
+  n_hospitales_modelo: number;
+  hospitales: HospitalCamas[];
+}
+
 export interface Salud {
   estado_datos: EstadoProceso;
   estado_pronostico: EstadoProceso;
@@ -133,6 +152,8 @@ export const api = {
   territorios: () => obtener<Territorio[]>("/territorios"),
   serie: (id: string, semanas: number, senal?: AbortSignal) =>
     obtener<SerieConPronostico>(`/series/${encodeURIComponent(id)}?semanas=${semanas}`, senal),
+  camasPsiquiatria: (id: string, senal?: AbortSignal) =>
+    obtener<CamasPsiquiatria>(`/camas-psiquiatria/${encodeURIComponent(id)}`, senal),
   resumenComunal: () => obtener<ResumenComuna[]>("/resumen-comunal"),
   geoComunas: () => obtener<GeoJSON.FeatureCollection>("/geo/comunas"),
 };

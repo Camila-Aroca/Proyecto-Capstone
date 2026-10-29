@@ -227,6 +227,19 @@ erDiagram
         int camas "NULL = blanco, no cero"
     }
 
+    %% grain: 1 fila = 1 hospital de dim_oferta_urgencia_rm (45 filas), con sus camas de psiquiatria del ultimo ano de la dotacion SNSS (2025)
+    %% derivada de dim_oferta_urgencia_rm + dotacion_camas_snss; los totales territoriales solo suman reporto_id36_periodo = true
+    dim_camas_psiquiatria_hospital_rm {
+        bigint establecimiento_codigo PK "FK logica a dim_oferta_urgencia_rm; misma llave que dotacion_camas_snss (34/45 hospitales estan en la dotacion)"
+        string establecimiento_nombre
+        string comuna_codigo FK "comuna del establecimiento segun la oferta"
+        boolean en_dotacion_snss "false = hospital sin dotacion SNSS (p. ej. privado): camas NULL"
+        boolean reporto_id36_periodo "alimenta el modelo: ID36 > 0 alguna vez en 2021-2025"
+        int ano_camas "ultimo ano con columna camas_AAAA, detectado dinamicamente"
+        double camas_psiquiatria "suma de areas de psiquiatria; NULL = sin cifra declarada, no cero"
+        int n_areas_psiquiatria
+    }
+
     cartografia_comunal ||--o{ cartografia_distrital : "1 comuna tiene N distritos"
     cartografia_distrital ||--o{ cartografia_zonal : "1 distrito tiene N zonas urbanas (parcial: 51/52 comunas)"
     cartografia_distrital ||--o{ cartografia_entidades : "1 distrito tiene N entidades rurales (parcial: 26/52 comunas)"
@@ -248,4 +261,6 @@ erDiagram
 
     dim_oferta_urgencia_rm |o..o{ dotacion_camas_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 34/196 hospitales estan en la oferta)"
     dim_oferta_urgencia_rm |o..o{ dotacion_camas_no_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 10/144 establecimientos estan en la oferta)"
+    dim_oferta_urgencia_rm ||--o| dim_camas_psiquiatria_hospital_rm : "1 hospital de la oferta, 1 fila de camas (solo tipo Hospital)"
+    dotacion_camas_snss |o..o{ dim_camas_psiquiatria_hospital_rm : "derivacion: suma de areas de psiquiatria del ultimo ano, vinculo logico por establecimiento_codigo"
 

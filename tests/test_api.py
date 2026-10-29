@@ -16,6 +16,7 @@ from src.api.main import create_app
 from src.api.service import (
     Estado,
     ServicioDemanda,
+    camas_territorio,
     cobertura_holdout,
     exclusiones,
     nombres_series,
@@ -385,3 +386,63 @@ class TestFuncionesPuras:
         assert cobertura["comuna"]["cobertura_observada"] == pytest.approx(0.7)
         assert cobertura["comuna"]["evaluaciones"] == 400
         assert cobertura["region"]["dentro_de_tolerancia"]
+
+
+def _camas() -> pd.DataFrame:
+    """Hospitales de la oferta: dos en 13101 (uno sin cifra), uno en 13102 sin dotacion SNSS."""
+    return pd.DataFrame(
+        {
+            "establecimiento_codigo": [1, 2, 3, 4],
+            "establecimiento_nombre": ["Hosp A", "Hosp B", "Hosp C", "Clinica D"],
+            "comuna_codigo": ["13101", "13101", "13101", "13102"],
+            "en_dotacion_snss": [True, True, True, False],
+            "reporto_id36_periodo": [True, True, True, True],
+            "ano_camas": [2025] * 4,
+            "camas_psiquiatria": [400.0, 10.0, None, None],
+            "n_areas_psiquiatria": [6, 1, 0, 0],
+        }
+    )
+
+
+class TestCamasPsiquiatria:
+    def test_la_comuna_suma_solo_los_hospitales_con_cifra(self):
+        r = camas_territorio(_camas(), "13101")
+        assert r["total_camas_psiquiatria"] == 410.0  # suma, no promedio (205)
+        assert r["n_hospitales_con_camas"] == 2
+        assert r["n_hospitales_snss"] == 3
+        assert r["n_hospitales_modelo"] == 3
+        assert [h["nombre"] for h in r["hospitales"]] == ["Hosp A", "Hosp B"]
+
+    def test_la_region_suma_todos_los_hospitales(self):
+        r = camas_territorio(_camas(), RM_SERIES_ID)
+        assert r["total_camas_psiquiatria"] == 410.0
+        assert r["n_hospitales_modelo"] == 4
+        assert r["ano_camas"] == 2025
+
+    def test_un_hospital_que_nunca_reporto_id36_no_suma(self):
+        camas = _camas()
+        camas.loc[0, "reporto_id36_periodo"] = False  # Hosp A, 400 camas
+        r = camas_territorio(camas, "13101")
+        assert r["total_camas_psiquiatria"] == 10.0
+        assert [h["nombre"] for h in r["hospitales"]] == ["Hosp B"]
+        assert camas_territorio(camas, RM_SERIES_ID)["n_hospitales_modelo"] == 3
+
+    def test_sin_cifra_el_total_es_nulo_y_no_cero(self):
+        r = camas_territorio(_camas(), "13102")
+        assert r["total_camas_psiquiatria"] is None
+        assert r["n_hospitales_con_camas"] == 0
+        assert r["hospitales"] == []
+
+    def test_endpoint(self):
+        servicio = _servicio_listo()
+        servicio.camas_psiquiatria = _camas()
+        with TestClient(create_app(lambda: servicio, iniciar_calculos=False)) as c:
+            cuerpo = c.get("/api/v1/camas-psiquiatria/13101").json()
+            assert cuerpo["total_camas_psiquiatria"] == 410.0
+            assert c.get("/api/v1/camas-psiquiatria/RM").json()["n_hospitales_modelo"] == 4
+            assert c.get("/api/v1/camas-psiquiatria/99999").status_code == 404
+
+    def test_sin_la_capa_informa_el_stage(self, cliente):
+        r = cliente.get("/api/v1/camas-psiquiatria/13101")
+        assert r.status_code == 404
+        assert "build_dim_camas_psiquiatria_hospital_rm" in r.json()["detail"]
