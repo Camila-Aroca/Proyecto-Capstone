@@ -8,6 +8,47 @@
 
 erDiagram
 
+    %% Una fila por registro publicado; clave logica dentro del snapshot identificado en el footer.
+    %% Nacional, todas las causas; sin relacion por paciente ni FK territorial inferida.
+    defunciones_nacional {
+        string fuente_id PK "snapshot RAW identificado mediante SHA256"
+        bigint fuente_fila PK "ordinal CSV, excluye cabecera; no identifica personas"
+        string fuente_archivo "ruta relativa al proyecto"
+        string registro_raw_sha256 "puede repetirse; no es PK"
+        int ano_defuncion
+        date fecha_defuncion "NULL si ausente o no interpretable; sin imputar"
+        string sexo
+        int edad_tipo "0 ignorado; 1 anios, 2 meses, 3 dias, 4 horas"
+        int edad_cantidad
+        string comuna_codigo_original
+        string comuna_codigo "cinco digitos; no certifica validez CUT"
+        string comuna_glosa "residencia segun diccionario fuente"
+        string region_glosa
+        string diag1 "causa basica; todas las causas"
+        string capitulo_diag1
+        string glosa_capitulo_diag1
+        string codigo_grupo_diag1
+        string glosa_grupo_diag1
+        string codigo_categoria_diag1
+        string glosa_categoria_diag1
+        string codigo_subcategoria_diag1
+        string glosa_subcategoria_diag1
+        string diag2 "causa externa"
+        string capitulo_diag2
+        string glosa_capitulo_diag2
+        string codigo_grupo_diag2
+        string glosa_grupo_diag2
+        string codigo_categoria_diag2
+        string glosa_categoria_diag2
+        string codigo_subcategoria_diag2
+        string glosa_subcategoria_diag2
+        string lugar_defuncion
+        string fecha_defuncion_original
+        string edad_tipo_original
+        string edad_cantidad_original
+        string_array excepciones "incidencias conservadas, sin eliminar registros"
+    }
+
     %% grain: 1 fila = 1 comuna RM (52 filas). Ancla territorial del modelo.
     cartografia_comunal {
         int CUT PK "codigo unico territorial comuna, 5 digitos"

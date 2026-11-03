@@ -133,7 +133,35 @@ def validate_expected_schema(path: Path) -> bool:
     name = path.name
     parts = set(path.parts)
 
+    from src.data import clean_defunciones
+    defunciones_outputs = clean_defunciones.load_config()["outputs"]
+    matching = [key for key, value in defunciones_outputs.items() if Path(value).name == name]
+    if matching:
+        kind = matching[0]
+        if kind == "parquet":
+            clean_defunciones.validate_product(path)
+        elif kind == "summary":
+            clean_defunciones.validate_summary(path)
+        else:
+            _require_report(path, clean_defunciones.REPORT_TITLE if kind == "report"
+                            else clean_defunciones.DICTIONARY_TITLE)
+        return True
+
+    if name.startswith("DEFUNCIONES_FUENTE_DEIS_") and name.endswith(".csv"):
+        from src.data.download_defunciones import source_for_csv, validate_csv
+        validate_csv(path, source_for_csv(path))
+        return True
+    if name == "Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx":
+        from src.data.download_defunciones import validate_dictionary
+        validate_dictionary(path)
+        return True
+    if name == "eda_defunciones_raw_resumen.json":
+        from scripts.eda_defunciones import validate_summary
+        validate_summary(path)
+        return True
+
     reports = {
+        "eda_defunciones_raw.md": "# EDA RAW de Defunciones DEIS",
         "eda_series_demanda_sm.md": "# EDA de series temporales: demanda de urgencia en salud mental (RM)",
         "benchmark_demanda_sm.md": "# Benchmark de modelos de demanda de urgencia en salud mental (RM)",
         "holdout_demanda_sm.md": "# Evaluacion en holdout del modelo de demanda de urgencia en salud mental",

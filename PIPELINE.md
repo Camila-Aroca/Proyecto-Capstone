@@ -25,7 +25,7 @@ python scripts/run_pipeline.py
 
 ## 3. Ejecución desde una Etapa
 
-`--stage` (por defecto `all`) selecciona el stage y todos sus descendientes transitivos en `PIPELINE_ORDER`; no ejecuta ni reconstruye sus upstream. Para bootstrap desde cero se usa la ejecución completa, que evalúa los 35 stages en el orden de la sección 5. Una ejecución parcial exige que los demás inputs ya estén disponibles. `--help` muestra las opciones implementadas: `--stage`, `--force`, `--year` y `--refresh-current-urgencias`. El refresh no se combina con un stage específico ni con `--year`.
+`--stage` (por defecto `all`) selecciona el stage y todos sus descendientes transitivos en `PIPELINE_ORDER`; no ejecuta ni reconstruye sus upstream. Para bootstrap desde cero se usa la ejecución completa, que evalúa los stages en el orden de la sección 5. Una ejecución parcial exige que los demás inputs ya estén disponibles. `--help` muestra las opciones implementadas: `--stage`, `--force`, `--year` y `--refresh-current-urgencias`. El refresh no se combina con un stage específico ni con `--year`.
 
 Ejemplo:
 
@@ -127,6 +127,138 @@ python scripts/run_pipeline.py --force
 
 La lógica reutilizable de ingesta, descarga, limpieza y normalización se organiza principalmente en `src/data/`, mientras que los ejecutables de análisis y orquestación se mantienen en `scripts/`. `scripts/run_pipeline.py` coordina las dependencias entre estas etapas.
 
+### Rama de Defunciones: RAW, EDA y consolidación
+
+```bash
+python scripts/run_pipeline.py --stage download_defunciones
+```
+
+Evalúa exclusivamente la rama `download_defunciones` → `eda_defunciones` y
+`clean_defunciones`. Para consolidar los RAW existentes sin volver a descargar
+ni generar el EDA histórico completo:
+
+```bash
+python scripts/run_pipeline.py --stage clean_defunciones
+```
+
+`download_defunciones` (`src/data/download_defunciones.py`) no tiene upstream y
+sus downstream son `eda_defunciones` y `clean_defunciones`. Sus inputs son los dos ZIP oficiales:
+
+- [Cifras oficiales 1990–2023](https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.zip).
+- [Paquete 2024–2026 fechado 27/10/2026](https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.zip).
+
+Publica cuatro archivos: el CSV original y el XLSX
+`Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx` de cada ZIP,
+en `data/raw/defunciones/1990_2023/` y
+`data/raw/defunciones/2024_2026_27102026/`, respectivamente. Los nombres y bytes
+se conservan; los diccionarios homónimos no se sobrescriben entre paquetes.
+Descarga con TLS estándar a `.cache/downloads/defunciones/`, comprueba tamaño de
+transporte si se publica `Content-Length`, miembros exactos y sin duplicados,
+ausencia de enlaces/cifrado, tamaños extraídos y CRC de cada miembro. Antes de
+publicar recorre **todas** las filas del CSV, validando las 27 columnas exactas,
+rectangularidad y pertenencia del año al rango configurado, y comprueba la
+legibilidad y hojas del diccionario. No exige que todo año tenga filas: el EDA
+reporta años esperados ausentes. Límites explícitos: ZIP 512 MiB, expansión y
+CSV 2 GiB. El perfil no certifica exhaustividad del registro nacional.
+
+El CSV y diccionario se publican con reemplazo atómico por archivo y rollback
+conjunto si falla cualquier publicación o el registro del manifiesto. El
+historial común `data/raw/provenance_manifest.json` usa los identificadores
+`deis_defunciones_1990_2023`, `deis_defunciones_2024_2026_27102026` y sus variantes
+con sufijo `_dictionary`: guarda URL, hora real UTC de descarga, SHA256 y tamaño
+del ZIP y de cada archivo RAW, miembro del ZIP y Last-Modified/ETag observados.
+El ZIP se elimina **solo después** de validar y publicar RAW y procedencia;
+ante fallo queda únicamente en cache para diagnóstico, y el RAW anterior se
+conserva. Las dos fuentes se intentan independientemente; cualquier error
+termina la etapa con código distinto de cero.
+
+El orquestador hace `SKIP` si los cuatro archivos existen y pasan sus contratos
+mínimos: cabecera exacta y hasta 100 filas del CSV, y hojas/legibilidad del XLSX.
+Esto no equivale al escaneo completo de ingesta ni verifica vigencia frente a
+ediciones manuales previas. `--force` vuelve a descargar ambas URLs explícitas;
+un contenido idéntico ya registrado no reemplaza RAW ni duplica el historial.
+No se descubre automáticamente una nueva URL fechada ni se afirma que el
+paquete reciente sea consolidado: 2026 es parcial y su corte real se obtiene
+de `FECHA_DEF`. Pruebas: `tests/test_download_defunciones.py`.
+
+`eda_defunciones` (`scripts/eda_defunciones.py`) depende únicamente de la descarga
+y no tiene downstream. Lee los cuatro RAW y el manifiesto sin modificarlos;
+requiere coincidencia de los hashes con el último snapshot registrado. Publica
+`reports/eda/eda_defunciones_raw.md` y
+`reports/eda/eda_defunciones_raw_resumen.json`, mediante temporales y reemplazo
+atómico por archivo. Escanea ambos CSV completos por streaming, sin muestreo,
+con memoria acotada a agregados: cobertura anual/mensual y fechas, ausencias
+por columna, marcadores `*`, sexo, región, lugar de defunción, edad por unidad,
+forma del código comunal y resolución/formato diagnóstico por año. Registra
+anomalías sin corregir ni eliminar registros. Los códigos históricos numéricos
+no se homologan a CIE-10. Incluye una sección reproducible de salud mental:
+conteos anuales nacionales y RM por residencia para DIAG1 F00–F99 (por forma,
+sin certificar catálogo), suicidio DIAG2 X60–X84, secuelas Y87.0 e intención
+no determinada Y10–Y34, conservadas por separado. La composición de categorías
+F, glosas publicadas, sexo y edad usa la ventana descriptiva explícita 2021–2025;
+solo agrupa edad cuando su unidad publicada es años, conservando el resto
+separado. No interpreta los conteos como tasas ni acredita cierre 2024–2025.
+Si existe localmente el Parquet independiente
+`data/processed/contexto_genero/suicidio_ratio_hm_tasas_nacional_regional.parquet`,
+contrasta sus conteos Total nacionales/RM por año contra X60–X84 en DIAG2,
+registra su SHA256 y conserva todas las discrepancias. Es un input opcional
+de comprobación agregada, sin join individual, descarga ni ejecución de esa
+rama; su ausencia se informa y no impide el EDA. Documenta las discrepancias entre el diccionario
+(título 2016–2020 y algunos nombres antiguos) y el esquema actual. No hace
+joins, filtros clínicos, tasas ni modelos. `SKIP` exige informe con título
+esperado y JSON con ambas fuentes, hashes y conteos reconciliados, incluyendo
+la nueva sección de salud mental. La disponibilidad/hash del input contextual
+opcional participa en SKIP; no comprueba automáticamente otros cambios previos
+de inputs/código. `--force` regenera ambos
+reportes y una descarga ejecutada fuerza el EDA en la misma invocación.
+Pruebas: `tests/test_eda_defunciones.py`.
+
+`clean_defunciones` (`src/data/clean_defunciones.py`) depende únicamente de
+`download_defunciones`, no tiene downstream y publica **un solo Parquet**,
+`data/processed/defunciones/defunciones_nacional.parquet`, con Zstandard. Sus
+otros outputs son el EDA `reports/eda/eda_defunciones_consolidadas.md`, el
+resumen verificable `reports/eda/eda_defunciones_consolidadas.json` y el
+diccionario `reports/dictionary/diccionario_defunciones_nacional.md`.
+
+El periodo, encoding, formatos de fecha, tamaño de bloque y rutas se definen
+en `src/data/defunciones_config.json`: inicio explícito y fin nulo para llegar
+al último dato de los lotes disponibles. La lógica no contiene años ni nombres
+de CSV fijados: descubre los CSV mediante los últimos snapshots registrados
+con `dataset=defunciones` y exige que coincidan exactamente con los archivos
+de la carpeta RAW, hashes SHA256 incluidos. Rechaza archivos repetidos,
+cabeceras distintas de las 27 columnas esperadas, registros no rectangulares,
+años no interpretables y solapamiento de años seleccionados entre lotes.
+
+Concatena verticalmente conservando todas las causas, territorios y
+repeticiones del periodo. Normaliza nombres, espacios exteriores y tipos;
+blancos analíticos son nulos, sin recodificar `*`, 0, 99 ni 999. Conserva el
+código comunal publicado y agrega una representación de cinco dígitos solo
+si tiene 4/5 dígitos ASCII y mantiene el valor entero; esto no acredita validez
+CUT ni corrige 99999. Fechas o edades no interpretables quedan nulas en la
+columna tipada, con el texto original y excepciones por fila. Las fechas
+ausentes se conservan mediante el año declarado. No imputa glosas, fechas,
+edades ni territorio ni cruza otras fuentes.
+
+Añade procedencia por identificador, ruta relativa y ordinal de registro CSV;
+el footer contiene configuración, hashes SHA256 de los RAW y del productor,
+conteos por fuente/año y nulos. Las repeticiones completas se auditan por
+SHA256, en SQLite temporal en disco, sin deduplicar ni cargar todos los datos
+en memoria. Tras escribir se relee el Parquet completo, comparando las 36
+columnas mediante hash secuencial, conteos, nulos, excepciones y multiplicidad
+de hashes originales y normalizados. Se verifican otra vez los RAW antes de
+publicar. El JSON registra hashes de los tres artefactos restantes.
+
+La publicación usa temporales fuera de RAW y rollback conjunto de los cuatro
+outputs. `SKIP` requiere esquema, compresión, conteos del footer y coincidencia
+de configuración, código, RAW y hashes de los artefactos; no relee todas las
+filas en cada `SKIP`. `--force` regenera solo esta etapa al seleccionarla. No
+modifica RAW ni su manifiesto. Se representa en el ERD lógico como dataset
+independiente; no se añade tabla SQL, relación con el MVP ni clase conceptual
+de plataforma. Pruebas sintéticas y de integración independiente fila a fila:
+`tests/test_clean_defunciones.py` (`-m data_integration` para los RAW reales).
+
+### Resto de ramas y orden global
+
 > [!WARNING]
 > La serie de atenciones del año en curso es una fuente mutable. El DEIS sobrescribe periódicamente el ZIP sin versionado. La ejecución normal del pipeline usa el RAW local; el comando de actualización manual anterior vuelve a consultar la fuente. El historial de hashes en `data/raw/provenance_manifest.json` identifica snapshots obtenidos, aunque una URL y un hash no permiten reconstruir una versión antigua si el DEIS ya la sustituyó.
 
@@ -167,39 +299,42 @@ La etapa `build_egresos_f00_f99` depende de `clean_egresos`, no tiene downstream
 3. `download_poblacion_proyecciones` → (Descarga a RAW el cuadro comunal oficial INE de estimaciones/proyecciones de población 2002-2035)
 4. `download_pobreza_comunal` → (Descarga a RAW el cuadro comunal oficial MDS/Casen 2022 de tasa de pobreza por ingresos, SAE)
 5. `download_dotacion_camas` → (Descarga a RAW los dos libros oficiales DEIS de dotación de camas hospitalarias: establecimientos SNSS 2010-2025 y no SNSS 2019-2025)
-6. `download_deis` → (Descarga Urgencias y Egresos a RAW)
-7. `download_establishments` → (Descarga Maestro Establecimientos a RAW)
-8. `download_contexto_genero` → (Descarga RAW de cuatro cuadros XLSX de Estadísticas de Género)
-9. `normalize_contexto_genero` → (Normalización independiente de los cuatro cuadros contextuales)
-10. `build_mart_contexto_genero_indicador_sexo` → (Mart canónico de serving MVP, contextual e independiente)
-11. `clean_establishments` → (Limpieza y filtrado RM)
-12. `clean_censo` → (Filtro espacial RM para las 5 capas de cartografía Censo 2024: Comunal, Distrital, Zonal, Entidades, Manzanas)
-13. `clean_censo_poblacion` → (Dimensión de población censada 2024 por comuna RM)
-14. `clean_poblacion_proyecciones` → (Dimensión anual de población comunal RM 2021-2025, INE proyecciones base Censo 2017)
-15. `clean_pobreza_comunal` → (Dimensión de vulnerabilidad socioeconómica comunal RM, MDS/Casen 2022, tasa de pobreza por ingresos SAE)
-16. `clean_dotacion_camas` → (Un Parquet por libro de dotación anual de camas hospitalarias, con las columnas del libro: camas por área funcional y año, y total por hospital)
-17. `build_catalogs` → (Creación de catálogo F00-F99)
-18. `clean_urgencias` → (Limpieza de Urgencias desde 2020 hasta el año corriente y unión territorial)
-19. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
-20. `build_egresos_f00_f99` → (Dataset canónico nacional de Egresos F00-F99, 2020-2025, con flag de residencia RM)
-21. `eda_establishments` → (Validación EDA de Establecimientos)
-22. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
-23. `profile_urgencias_sm_coverage` → (Perfil comuna×semana ID 36 para cobertura 2021–2025)
-24. `build_urgencias_comuna_marts` → (Marts históricos comunales semanal y mensual de Urgencias, 2021–2025, con tasas por 10.000 habitantes)
-25. `build_urgencias_establecimiento_mart` → (Mart histórico establecimiento×mes de Urgencias, 2021–2025, sin población ni tasas)
-26. `build_urgencias_comuna_etario_mart` → (Mart histórico comuna×mes×grupo_etario de Urgencias, 2021–2025, formato largo)
-27. `build_dim_oferta_urgencia_rm` → (Dimensión canónica de oferta territorial de urgencia RM: snapshot actual, no serie histórica)
-28. `build_dim_camas_psiquiatria_hospital_rm` → (Dimensión hospital ↔ camas de psiquiatría: une los hospitales de la oferta de urgencia con la dotación SNSS del último año y marca los que alimentaron el modelo)
-29. `build_capa_oferta_urgencia_rm` → (Capa de puntos GeoParquet EPSG:4674 de la oferta de urgencia, con join espacial a comuna contrastado con la comuna declarada)
-30. `resolve_coordenadas_establecimientos` → (Lista final de establecimientos con coordenada faltante o anómala, con resolución justificada: exclusión o geocodificación requerida; no imputa)
-31. `build_cobertura_urgencia_comuna` → (MVP de cobertura territorial simple: distancia en línea recta de la población censal 2024 a la oferta de urgencia, por comuna, con reporte de limitaciones)
-32. `build_mart_mvp_territorial_comuna` → (Mart canónico MVP territorial comunal: integra demanda 2025, población 2025/2024, vulnerabilidad 2022 y oferta actual en una fila por comuna RM)
-33. `eda_contexto_genero` → (EDA reproducible de los cuatro cuadros contextuales)
-34. `eda_mart_contexto_genero_indicador_sexo` → (EDA reproducible del mart contextual de serving)
-35. `eda_series_demanda_sm` → (EDA de series temporales previo al modelo de demanda: calendario, estacionariedad, autocorrelación, régimen, heterogeneidad y baseline estacional)
-36. `benchmark_demanda_sm` → (Backtesting rolling origin de los modelos de demanda: baselines, modelo global LightGBM y variantes reconciliadas)
-37. `evaluate_holdout_demanda_sm` → (Evaluación del modelo seleccionado en el período posterior al entrenamiento, con el snapshot del año en curso identificado por SHA256)
-38. `forecast_demanda_sm` → (Pronóstico vigente persistido con su manifiesto de procedencia, para que la API no lo recalcule en cada arranque)
+6. `download_defunciones` → (Descarga y extrae a RAW los paquetes DEIS 1990–2023 y 2024–2026, con sus diccionarios)
+7. `eda_defunciones` → (EDA nacional de solo lectura sobre ambos paquetes RAW, sin generar processed)
+8. `clean_defunciones` → (Consolidación nacional en un Parquet tipado, con procedencia, excepciones y validación de preservación)
+9. `download_deis` → (Descarga Urgencias y Egresos a RAW)
+10. `download_establishments` → (Descarga Maestro Establecimientos a RAW)
+11. `download_contexto_genero` → (Descarga RAW de cuatro cuadros XLSX de Estadísticas de Género)
+12. `normalize_contexto_genero` → (Normalización independiente de los cuatro cuadros contextuales)
+13. `build_mart_contexto_genero_indicador_sexo` → (Mart canónico de serving MVP, contextual e independiente)
+14. `clean_establishments` → (Limpieza y filtrado RM)
+15. `clean_censo` → (Filtro espacial RM para las 5 capas de cartografía Censo 2024: Comunal, Distrital, Zonal, Entidades, Manzanas)
+16. `clean_censo_poblacion` → (Dimensión de población censada 2024 por comuna RM)
+17. `clean_poblacion_proyecciones` → (Dimensión anual de población comunal RM 2021-2025, INE proyecciones base Censo 2017)
+18. `clean_pobreza_comunal` → (Dimensión de vulnerabilidad socioeconómica comunal RM, MDS/Casen 2022, tasa de pobreza por ingresos SAE)
+19. `clean_dotacion_camas` → (Un Parquet por libro de dotación anual de camas hospitalarias, con las columnas del libro: camas por área funcional y año, y total por hospital)
+20. `build_catalogs` → (Creación de catálogo F00-F99)
+21. `clean_urgencias` → (Limpieza de Urgencias desde 2020 hasta el año corriente y unión territorial)
+22. `clean_egresos` → (Normalización reproducible de Egresos Hospitalarios 2020-2025)
+23. `build_egresos_f00_f99` → (Dataset canónico nacional de Egresos F00-F99, 2020-2025, con flag de residencia RM)
+24. `eda_establishments` → (Validación EDA de Establecimientos)
+25. `eda_urgencias` → (Generación de tablas base del EDA de Urgencias)
+26. `profile_urgencias_sm_coverage` → (Perfil comuna×semana ID 36 para cobertura 2021–2025)
+27. `build_urgencias_comuna_marts` → (Marts históricos comunales semanal y mensual de Urgencias, 2021–2025, con tasas por 10.000 habitantes)
+28. `build_urgencias_establecimiento_mart` → (Mart histórico establecimiento×mes de Urgencias, 2021–2025, sin población ni tasas)
+29. `build_urgencias_comuna_etario_mart` → (Mart histórico comuna×mes×grupo_etario de Urgencias, 2021–2025, formato largo)
+30. `build_dim_oferta_urgencia_rm` → (Dimensión canónica de oferta territorial de urgencia RM: snapshot actual, no serie histórica)
+31. `build_dim_camas_psiquiatria_hospital_rm` → (Dimensión hospital ↔ camas de psiquiatría: une los hospitales de la oferta de urgencia con la dotación SNSS del último año y marca los que alimentaron el modelo)
+32. `build_capa_oferta_urgencia_rm` → (Capa de puntos GeoParquet EPSG:4674 de la oferta de urgencia, con join espacial a comuna contrastado con la comuna declarada)
+33. `resolve_coordenadas_establecimientos` → (Lista final de establecimientos con coordenada faltante o anómala, con resolución justificada: exclusión o geocodificación requerida; no imputa)
+34. `build_cobertura_urgencia_comuna` → (MVP de cobertura territorial simple: distancia en línea recta de la población censal 2024 a la oferta de urgencia, por comuna, con reporte de limitaciones)
+35. `build_mart_mvp_territorial_comuna` → (Mart canónico MVP territorial comunal: integra demanda 2025, población 2025/2024, vulnerabilidad 2022 y oferta actual en una fila por comuna RM)
+36. `eda_contexto_genero` → (EDA reproducible de los cuatro cuadros contextuales)
+37. `eda_mart_contexto_genero_indicador_sexo` → (EDA reproducible del mart contextual de serving)
+38. `eda_series_demanda_sm` → (EDA de series temporales previo al modelo de demanda: calendario, estacionariedad, autocorrelación, régimen, heterogeneidad y baseline estacional)
+39. `benchmark_demanda_sm` → (Backtesting rolling origin de los modelos de demanda: baselines, modelo global LightGBM y variantes reconciliadas)
+40. `evaluate_holdout_demanda_sm` → (Evaluación del modelo seleccionado en el período posterior al entrenamiento, con el snapshot del año en curso identificado por SHA256)
+41. `forecast_demanda_sm` → (Pronóstico vigente persistido con su manifiesto de procedencia, para que la API no lo recalcule en cada arranque)
 
 La etapa `build_dim_oferta_urgencia_rm` depende de `clean_establishments` y `clean_urgencias`, sus consumidores directos son `build_capa_oferta_urgencia_rm`, `resolve_coordenadas_establecimientos`, `build_cobertura_urgencia_comuna` y `build_mart_mvp_territorial_comuna`, y publica `data/processed/geo/dim_oferta_urgencia_rm.parquet`. Distingue dos temporalidades: el universo y criterio de inclusión son un snapshot ACTUAL del catálogo de establecimientos (no una serie histórica) — incluye establecimientos vigentes cuyo `tipo_establecimiento_glosa` es `Hospital` o termina en el acrónimo DEIS `(SAPU)`, `(SAR)` o `(SUR)`, más una excepción documentada y detectada dinámicamente contra Urgencias (establecimientos que reportan `tipo_establecimiento_urgencia="CEAR"` sin caer en el tipo anterior) —; la evidencia de reporte (`reporto_id1_periodo`, `reporto_id36_periodo`, `ultimo_ano_reporte_id36`, `tipo_urgencia_reportado`) usa en cambio el período canónico CERRADO 2021-2025, excluyendo 2020 (discontinuidad metodológica de salud mental) y 2026 (año parcial/mutable); es información temporal complementaria, no el criterio de inclusión ni un filtro. No usa `tiene_servicio_urgencia` ni `tipo_urgencia` del maestro como criterio de inclusión (se comprobó que no son confiables: ver `reports/eda/eda_dim_oferta_urgencia_rm.md`) ni exige actividad `ID36>0` para pertenecer a la oferta. Antes de publicar valida unicidad de `establecimiento_codigo`, dominio de `criterio_inclusion_oferta` + coherencia con el tipo, vigencia, formato de `comuna_codigo`, nulidad conjunta de coordenadas, bounding box geográfico de la RM y coherencia entre los flags de reporte. El orquestador valida existencia/esquema del Parquet y realiza `SKIP` cuando es válido; `--force` lo regenera. Sus pruebas están en `tests/test_build_dim_oferta_urgencia_rm.py`. No implementa OSM/GTFS ni isócronas; es únicamente el insumo de oferta para esa capa futura de accesibilidad territorial.
 

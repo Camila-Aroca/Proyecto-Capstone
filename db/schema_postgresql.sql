@@ -35,8 +35,10 @@
 CREATE EXTENSION IF NOT EXISTS postgis;
 
 -- -----------------------------------------------------------------------------
--- Esquemas: replican 1:1 los subdirectorios de data/processed/ para
--- trazabilidad directa entre el dataset canonico y su tabla objetivo.
+-- Esquemas de los dominios efectivamente representados en este DDL,
+-- con trazabilidad a sus datasets de origen; no abarcan todos los archivos
+-- de data/processed/. Defunciones se almacena actualmente solo en Parquet
+-- y no tiene una tabla PostgreSQL definida en este modelo.
 -- -----------------------------------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS censo;
 CREATE SCHEMA IF NOT EXISTS pobreza;

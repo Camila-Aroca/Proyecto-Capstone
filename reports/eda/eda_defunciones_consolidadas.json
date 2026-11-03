@@ -1,0 +1,121 @@
+{
+  "config": {
+    "raw_root": "data/raw/defunciones",
+    "provenance_manifest": "data/raw/provenance_manifest.json",
+    "start_date": "2020-01-01",
+    "end_date": null,
+    "encoding": "latin-1",
+    "date_formats": [
+      "%Y-%m-%d",
+      "%d/%m/%Y",
+      "%d-%m-%Y"
+    ],
+    "batch_size": 50000,
+    "outputs": {
+      "parquet": "data/processed/defunciones/defunciones_nacional.parquet",
+      "summary": "reports/eda/eda_defunciones_consolidadas.json",
+      "report": "reports/eda/eda_defunciones_consolidadas.md",
+      "dictionary": "reports/dictionary/diccionario_defunciones_nacional.md"
+    }
+  },
+  "config_sha256": "fe23c0c40cb3f068b55b872a75c9d2905c50b1a3e2a8f01b5aaa8ec0c6fa3585",
+  "producer_sha256": "06f7674d81c50c92153c3ca9c813f383e19929c36321b3fb4c4e0896f3262d9e",
+  "inputs": [
+    {
+      "source_id": "deis_defunciones_1990_2023",
+      "path": "data/raw/defunciones/1990_2023/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv",
+      "sha256": "b763f5be857edbef5d06dc2da9437d7be8640f76719b5a0bb75b276282553ebb",
+      "size": 869415741,
+      "scanned_rows": 3182446,
+      "selected_rows": 522988
+    },
+    {
+      "source_id": "deis_defunciones_2024_2026_27102026",
+      "path": "data/raw/defunciones/2024_2026_27102026/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.csv",
+      "sha256": "01cd5779ede07925716c1f01561f87f0e73e3a870bf7fbdb2a217b1a0eed82ea",
+      "size": 108034433,
+      "scanned_rows": 356974,
+      "selected_rows": 356974
+    }
+  ],
+  "rows": 879962,
+  "counts_by_year": {
+    "2020": 126169,
+    "2021": 137629,
+    "2022": 136972,
+    "2023": 122218,
+    "2024": 126928,
+    "2025": 126466,
+    "2026": 103580
+  },
+  "counts_by_source": {
+    "deis_defunciones_1990_2023": 522988,
+    "deis_defunciones_2024_2026_27102026": 356974
+  },
+  "counts_by_source_year": {
+    "deis_defunciones_1990_2023:2020": 126169,
+    "deis_defunciones_1990_2023:2021": 137629,
+    "deis_defunciones_1990_2023:2022": 136972,
+    "deis_defunciones_1990_2023:2023": 122218,
+    "deis_defunciones_2024_2026_27102026:2026": 103580,
+    "deis_defunciones_2024_2026_27102026:2025": 126466,
+    "deis_defunciones_2024_2026_27102026:2024": 126928
+  },
+  "null_counts": {
+    "ano_defuncion": 0,
+    "fecha_defuncion": 10,
+    "sexo": 0,
+    "edad_tipo": 9,
+    "edad_cantidad": 9,
+    "comuna_codigo_original": 0,
+    "comuna_glosa": 64,
+    "region_glosa": 64,
+    "diag1": 0,
+    "capitulo_diag1": 2,
+    "glosa_capitulo_diag1": 2,
+    "codigo_grupo_diag1": 2,
+    "glosa_grupo_diag1": 2,
+    "codigo_categoria_diag1": 2,
+    "glosa_categoria_diag1": 2,
+    "codigo_subcategoria_diag1": 2,
+    "glosa_subcategoria_diag1": 2,
+    "diag2": 825200,
+    "capitulo_diag2": 825200,
+    "glosa_capitulo_diag2": 825200,
+    "codigo_grupo_diag2": 825200,
+    "glosa_grupo_diag2": 825200,
+    "codigo_categoria_diag2": 825200,
+    "glosa_categoria_diag2": 825200,
+    "codigo_subcategoria_diag2": 825200,
+    "glosa_subcategoria_diag2": 825200,
+    "lugar_defuncion": 0,
+    "comuna_codigo": 64,
+    "fecha_defuncion_original": 0,
+    "edad_tipo_original": 0,
+    "edad_cantidad_original": 0,
+    "fuente_id": 0,
+    "fuente_archivo": 0,
+    "fuente_fila": 0,
+    "registro_raw_sha256": 0,
+    "excepciones": 0
+  },
+  "exceptions": {
+    "edad_ignorada_segun_unidad": 11,
+    "fecha_ausente": 10,
+    "edad_tipo_ausente": 9,
+    "edad_cantidad_ausente": 9,
+    "comuna_ausente": 64,
+    "diag1_jerarquia_incompleta": 2
+  },
+  "normalized_sequence_sha256": "66556cd978c7a9966bc36dfd0987761888b70d78271b29e29cb07cab6c1d65d7",
+  "min_date": "2020-01-01",
+  "max_date": "2026-10-24",
+  "raw_duplicates": 519,
+  "normalized_duplicates": 542,
+  "preservation_verified": true,
+  "artifact_sha256": {
+    "parquet": "2262ce81c94546f4a312f4e4c618525e46188d491874827180a1de4abd6e4e48",
+    "report": "7e8698f9576d8d904c66e4897a34b0da627ba69ead632d4c02d9a7e6228efbbc",
+    "dictionary": "cc984b29005406937a87f9200b81caa00ae3bd88d7d4e0fcfbfae7bd53a489d2"
+  }
+}

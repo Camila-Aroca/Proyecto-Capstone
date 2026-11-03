@@ -36,6 +36,18 @@ Se realizó una búsqueda dirigida antes de crear cualquier artefacto:
   de los cuatro Parquet independientes de `data/processed/contexto_genero/`.
 - `dotacion_camas_snss` y `dotacion_camas_no_snss` (`data/processed/camas/`): dotación anual de camas hospitalarias (DEIS, DIGERA), un Parquet por libro de `data/raw/camas/`, con las mismas columnas que su libro.
 
+**Actualización de Defunciones:** el modelo lógico incorpora
+`data/processed/defunciones/defunciones_nacional.parquet`, con las 27 variables
+de fuente normalizadas y las columnas de procedencia/excepciones documentadas
+en `reports/dictionary/diccionario_defunciones_nacional.md`. Su grano es un
+registro publicado nacional; `fuente_id` + `fuente_fila` es una clave lógica
+dentro del snapshot identificado mediante SHA256. Las repeticiones de valores
+se conservan. No se añaden FK a la cartografía RM ni enlaces individuales con
+Urgencias/Egresos. Se evaluaron el ERD físico/DDL y el UML: no requieren cambio
+porque este stage no incorpora Defunciones a persistencia SQL ni a clases o
+comportamiento de la plataforma. El esquema físico de este nuevo dataset no
+se anticipa en esta consolidación.
+
 **Excluido deliberadamente:**
 
 - Catálogo CIE-10 (`data/processed/egresos/catalogo_cie10_f00_f99.csv`, `data/processed/urgencias/catalogo_f00_f99.csv`): no fue solicitado como entidad del modelo; no se inventa como tabla adicional.
@@ -93,9 +105,57 @@ Si Puppeteer no trae su propio Chromium, `-p puppeteer.json` con `{"executablePa
 
 ```mermaid
 %%{init: {"theme": "neutral"}}%%
+%% Modelo logico - Item 15 (Modelo de base de datos)
+%% Describe los datos TAL COMO EXISTEN HOY en data/processed/ (archivos Parquet/CSV).
+%% Estos archivos NO tienen constraints SQL activos; las PK/FK aqui mostradas son
+%% llaves logicas inferidas y verificadas sobre los datos (ver README seccion 5 y 7),
+%% no restricciones fisicas ya implementadas.
+%% - Egresos NO tiene relacion de llave con Urgencias ni con establecimientos (invariante).
 
 erDiagram
 
+    %% Una fila por registro publicado; clave logica dentro del snapshot identificado en el footer.
+    %% Nacional, todas las causas; sin relacion por paciente ni FK territorial inferida.
+    defunciones_nacional {
+        string fuente_id PK "snapshot RAW identificado mediante SHA256"
+        bigint fuente_fila PK "ordinal CSV, excluye cabecera; no identifica personas"
+        string fuente_archivo "ruta relativa al proyecto"
+        string registro_raw_sha256 "puede repetirse; no es PK"
+        int ano_defuncion
+        date fecha_defuncion "NULL si ausente o no interpretable; sin imputar"
+        string sexo
+        int edad_tipo "0 ignorado; 1 anios, 2 meses, 3 dias, 4 horas"
+        int edad_cantidad
+        string comuna_codigo_original
+        string comuna_codigo "cinco digitos; no certifica validez CUT"
+        string comuna_glosa "residencia segun diccionario fuente"
+        string region_glosa
+        string diag1 "causa basica; todas las causas"
+        string capitulo_diag1
+        string glosa_capitulo_diag1
+        string codigo_grupo_diag1
+        string glosa_grupo_diag1
+        string codigo_categoria_diag1
+        string glosa_categoria_diag1
+        string codigo_subcategoria_diag1
+        string glosa_subcategoria_diag1
+        string diag2 "causa externa"
+        string capitulo_diag2
+        string glosa_capitulo_diag2
+        string codigo_grupo_diag2
+        string glosa_grupo_diag2
+        string codigo_categoria_diag2
+        string glosa_categoria_diag2
+        string codigo_subcategoria_diag2
+        string glosa_subcategoria_diag2
+        string lugar_defuncion
+        string fecha_defuncion_original
+        string edad_tipo_original
+        string edad_cantidad_original
+        string_array excepciones "incidencias conservadas, sin eliminar registros"
+    }
+
+    %% grain: 1 fila = 1 comuna RM (52 filas). Ancla territorial del modelo.
     cartografia_comunal {
         int CUT PK "codigo unico territorial comuna, 5 digitos"
         string COMUNA "nombre comuna"
@@ -104,6 +164,7 @@ erDiagram
         binary SHAPE "geometria WKB MultiPolygon, EPSG 4674"
     }
 
+    %% grain: 1 fila = 1 distrito censal (451 filas RM, 52/52 comunas cubiertas)
     cartografia_distrital {
         double ID_DISTRITO PK "identificador distrito censal"
         int CUT FK "comuna contenedora"
@@ -112,6 +173,7 @@ erDiagram
         binary SHAPE
     }
 
+    %% grain: 1 fila = 1 zona urbana (1865 filas RM, cubre 51/52 comunas: sin San Pedro)
     cartografia_zonal {
         double ID_ZONA PK "identificador zona urbana"
         double ID_DISTRITO FK "distrito contenedor, 0 huerfanos verificado"
@@ -120,6 +182,7 @@ erDiagram
         binary SHAPE
     }
 
+    %% grain: 1 fila = 1 entidad poblada rural dispersa (2072 filas RM, cubre 26/52 comunas)
     cartografia_entidades {
         double MANZENT PK "identificador entidad, llave real (no ID_ENTIDAD: tiene 16 duplicados)"
         double ID_DISTRITO FK "distrito contenedor, 0 huerfanos verificado"
@@ -129,6 +192,7 @@ erDiagram
         binary SHAPE
     }
 
+    %% grain: 1 fila = 1 manzana (urbana + aldea rural) (66873 filas RM, cubre 52/52 comunas)
     cartografia_manzanas {
         double MANZENT PK "identificador manzana, llave real"
         double ID_DISTRITO FK "distrito contenedor, 0 huerfanos verificado"
@@ -138,6 +202,7 @@ erDiagram
         binary SHAPE
     }
 
+    %% grain: 1 fila = 1 comuna RM, periodo unico 2024 (52 filas)
     dim_poblacion_comuna_censo2024 {
         string comuna_codigo PK "CUT como string; equivalente a CUT de cartografia_comunal"
         string comuna_glosa
@@ -146,6 +211,7 @@ erDiagram
         string fuente
     }
 
+    %% grain: 1 fila = comuna x ano (260 filas = 52 comunas x 5 anos, 2021-2025)
     dim_poblacion_comuna_anual {
         string comuna_codigo PK, FK
         int ano PK "2021-2025 en este processed"
@@ -154,6 +220,7 @@ erDiagram
         string fuente
     }
 
+    %% grain: 1 fila = 1 comuna RM, periodo unico Casen 2022 (52 filas, dimension estatica)
     dim_vulnerabilidad_comuna {
         string comuna_codigo PK, FK
         int ano_referencia "2022, periodo unico"
@@ -161,6 +228,7 @@ erDiagram
         string direccion_indicador "mayor_valor_mayor_vulnerabilidad"
     }
 
+    %% grain: 1 fila = 1 establecimiento con oferta de urgencia RM vigente (174 filas, snapshot actual)
     dim_oferta_urgencia_rm {
         bigint establecimiento_codigo PK "codigo DEIS"
         string comuna_codigo FK
@@ -170,6 +238,7 @@ erDiagram
         bool reporto_id36_periodo "evidencia descriptiva 2021-2025, no criterio de inclusion"
     }
 
+    %% grain: 1 fila = comuna x ano x semana DEIS (13362 filas, 51/52 comunas con reporte)
     mart_urgencias_comuna_weekly {
         string comuna_codigo PK, FK
         int ano PK
@@ -179,6 +248,7 @@ erDiagram
         double tasa_atenciones_id36_por_10000
     }
 
+    %% grain: 1 fila = comuna x ano x mes (3060 filas, 51/52 comunas)
     mart_urgencias_comuna_monthly {
         string comuna_codigo PK, FK
         int ano PK
@@ -188,6 +258,7 @@ erDiagram
         double tasa_atenciones_id36_por_10000
     }
 
+    %% grain: 1 fila = establecimiento x ano x mes (8857 filas, 152 establecimientos con reporte 2021-2025)
     mart_urgencias_establecimiento_monthly {
         bigint establecimiento_codigo PK "vinculo logico a dim_oferta_urgencia_rm NO garantizado al 100%: 3/152 no estan en el snapshot actual"
         int ano PK
@@ -196,6 +267,7 @@ erDiagram
         int atenciones_id36
     }
 
+    %% grain: 1 fila = comuna x ano x mes x grupo etario (15300 filas, formato largo, 51/52 comunas)
     mart_urgencias_comuna_etario_monthly {
         string comuna_codigo PK, FK
         int ano PK
@@ -204,6 +276,7 @@ erDiagram
         int atenciones_id36
     }
 
+    %% grain: 1 fila = 1 comuna RM (52 filas, corte unico MVP; Vitacura incluida con metricas NULL, no reporta Urgencias)
     mart_mvp_territorial_comuna {
         string comuna_codigo PK, FK
         bool tiene_reporte_urgencias
@@ -214,6 +287,7 @@ erDiagram
         bigint n_oferta_urgencia_actual
     }
 
+    %% grain: 1 fila = 1 comuna RM (52). Proximidad en linea recta de la poblacion censal 2024 a la oferta; no es accesibilidad (sin red vial ni GTFS)
     cobertura_urgencia_comuna {
         string comuna_codigo PK, FK
         bigint poblacion_unidades_censales "manzanas + entidades con n_per > 0"
@@ -224,6 +298,9 @@ erDiagram
         double distancia_mediana_id36_km "solo oferta que reporto ID36"
     }
 
+    %% grain: 1 fila = 1 observacion publicada de un indicador contextual por sexo/genero.
+    %% Normaliza la maquetacion, no homologa semanticas: source_id conserva los 4 contratos.
+    %% Sin FK ni relacion con Urgencias/Egresos, aunque coincidan sexo, ano o geografia.
     mart_contexto_genero_indicador_sexo {
         string source_id "uno de los cuatro inputs processed; contrato original"
         string source_sheet
@@ -239,6 +316,9 @@ erDiagram
         string unit
     }
 
+    %% grain: 1 fila = 1 registro de egreso hospitalario publicado DEIS (218794 filas, nacional, no pacientes unicos)
+    %% SIN clave natural (disociado: sin id de paciente ni de establecimiento).
+    %% SIN relacion de llave con ninguna otra entidad de este modelo (invariante AGENTS.md).
     egresos_f00_f99_nacional_2020_2025 {
         int ano_egreso "sin clave natural: grano = 1 registro publicado, no deduplicado"
         string sexo "esquema incompatible en 2021 vs resto (no homologado)"
@@ -251,6 +331,9 @@ erDiagram
         bool residente_rm "derivada de region_residencia; NULL si region_residencia es nula en origen"
     }
 
+    %% grain: 1 fila = 1 serie x horizonte pronosticado desde la ultima semana observada.
+    %% series_id es una comuna RM o el agregado regional; la fila regional no tiene comuna.
+    %% Output del modelo, no dato observado: se regenera cuando cambia el panel o la seleccion.
     pronostico_demanda_sm {
         string series_id PK "comuna RM o agregado regional"
         int horizonte PK "semanas despues de la ultima semana observada (1-8; 4-8 es el horizonte comprometido)"
@@ -267,6 +350,7 @@ erDiagram
         string modelo "configuracion de la seleccion congelada que lo genero"
     }
 
+    %% grain: 1 fila = 1 area funcional de 1 hospital del SNSS, o su fila Total (1694 filas, 196 hospitales; una columna camas_AAAA por ano 2010-2025)
     dotacion_camas_snss {
         string servicio_salud PK
         bigint establecimiento_codigo PK "vinculo logico a dim_oferta_urgencia_rm, parcial: 34/196 estan en la oferta"
@@ -278,6 +362,8 @@ erDiagram
         int camas_2025
     }
 
+    %% grain: 1 fila = 1 area funcional de 1 establecimiento no SNSS en 1 ano, o su fila de total (4631 filas, 144 establecimientos, 2019-2025; hojas anuales apiladas)
+    %% sin clave logica valida: area_funcional_codigo es NULL en la fila de total (fisico: dotacion_id tecnico)
     dotacion_camas_no_snss {
         int ano
         string seremi
@@ -288,6 +374,8 @@ erDiagram
         int camas "NULL = blanco, no cero"
     }
 
+    %% grain: 1 fila = 1 hospital de dim_oferta_urgencia_rm (45 filas), con sus camas de psiquiatria del ultimo ano de la dotacion SNSS (2025)
+    %% derivada de dim_oferta_urgencia_rm + dotacion_camas_snss; los totales territoriales solo suman reporto_id36_periodo = true
     dim_camas_psiquiatria_hospital_rm {
         bigint establecimiento_codigo PK "FK logica a dim_oferta_urgencia_rm; misma llave que dotacion_camas_snss (34/45 hospitales estan en la dotacion)"
         string establecimiento_nombre
@@ -322,7 +410,6 @@ erDiagram
     dim_oferta_urgencia_rm |o..o{ dotacion_camas_no_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 10/144 establecimientos estan en la oferta)"
     dim_oferta_urgencia_rm ||--o| dim_camas_psiquiatria_hospital_rm : "1 hospital de la oferta, 1 fila de camas (solo tipo Hospital)"
     dotacion_camas_snss |o..o{ dim_camas_psiquiatria_hospital_rm : "derivacion: suma de areas de psiquiatria del ultimo ano, vinculo logico por establecimiento_codigo"
-
 ```
 
 Fuente independiente (idéntica): [`modelo_datos_logico.mmd`](modelo_datos_logico.mmd).
@@ -590,7 +677,7 @@ Fuente independiente (idéntica): [`modelo_datos_fisico_postgresql.mmd`](modelo_
 | AWS / RDS | Despliegue futuro, **no implementado**. Este DDL no asume ni configura infraestructura cloud. |
 | OSM / GTFS / isócronas | Funcionalidad geoespacial de accesibilidad, **en backlog** (`PROJECT_CONTEXT.md`, "Pendientes principales"). No es requisito para modelar correctamente las geometrías censales que ya existen en los Parquet fuente; por eso las columnas `geom` sí usan tipos PostGIS nativos en este DDL. |
 
-Los esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egresos`, `contexto_genero`, `modeling`, `camas`) replican 1:1 los subdirectorios de `data/processed/` para trazabilidad directa entre el dataset canónico y su tabla objetivo.
+Los nueve esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egresos`, `contexto_genero`, `modeling`, `camas`) corresponden a los dominios incluidos en este diseño físico y mantienen trazabilidad hacia sus datasets de origen. Esta correspondencia se limita a las entidades representadas en PostgreSQL; no implica que todo subdirectorio o archivo de `data/processed/` tenga una tabla objetivo. `defunciones_nacional` está representado en el modelo lógico y almacenado actualmente solo en Parquet, sin tabla PostgreSQL definida.
 
 ## 7. Tabla resumen
 
@@ -613,6 +700,7 @@ Los esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egres
 | `cobertura_urgencia_comuna` | 1 comuna, corte único (52 filas) | `comuna_codigo` | `comuna_codigo` → `cartografia_comunal` | 1 → 1 comuna |
 | `mart_contexto_genero_indicador_sexo` | 1 observación publicada por sexo/género, fuente, geografía, período e indicador (3956 filas) | clave lógica: `source_id, source_sheet, geography_level, geography, region_code, period, sex, indicator, unit`; físico: `indicador_contexto_genero_id` técnico | ninguna | mart contextual aislado |
 | `egresos_f00_f99_nacional_2020_2025` | 1 registro de egreso publicado, nacional (218794 filas) | sin clave natural (físico: `egreso_id` técnico) | ninguna (invariante: sin enlace por paciente/establecimiento; alcance nacional, sin FK a dimensiones exclusivas RM) | entidad aislada |
+| `defunciones_nacional` | 1 registro de defunción publicado, nacional | clave lógica por snapshot: `fuente_id, fuente_fila`; sin constraint SQL | ninguna | entidad aislada en el modelo lógico; almacenamiento actual solo Parquet, sin tabla PostgreSQL definida |
 | `dotacion_camas_snss` | 1 área funcional de 1 hospital del SNSS, o su fila Total (1694 filas, 196 hospitales; 2010-2025 como columnas `camas_AAAA`) | `servicio_salud, establecimiento_codigo, area_funcional_codigo` (clave lógica verificada; físico: `+ ano`, tras transponer los años a filas) | ninguna; vínculo lógico (no FK) a `dim_oferta_urgencia_rm` | entidad aislada |
 | `dotacion_camas_no_snss` | 1 área funcional (o el total) de 1 establecimiento no SNSS en 1 año (4631 filas, 144 establecimientos, 2019-2025) | sin clave lógica sin nulos: `area_funcional_codigo` es nulo en la fila de total (físico: `dotacion_id` técnico) | ninguna; vínculo lógico (no FK) a `dim_oferta_urgencia_rm` | entidad aislada |
 | `dim_camas_psiquiatria_hospital_rm` | 1 hospital de la oferta de urgencia con sus camas de psiquiatría del último año de la dotación SNSS (45 filas, 34 en dotación SNSS, 13 con cifra) | `establecimiento_codigo` | `establecimiento_codigo` → `dim_oferta_urgencia_rm` | 1 → 1 hospital de la oferta |
@@ -627,7 +715,7 @@ Los esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egres
 6. **`egresos_f00_f99_nacional` no tiene FK hacia ninguna dimensión territorial.** `region_residencia`/`comuna_residencia` son la residencia del paciente (no la ubicación del hospital) y el dataset es de alcance **nacional**, no solo RM. Crear una FK hacia `censo.cartografia_comunal` (exclusivamente RM) invalidaría todas las filas de residentes fuera de la Región Metropolitana; el dominio territorial no coincide.
 7. **`urgencias.mart_establecimiento_monthly.establecimiento_codigo` no tiene FK física hacia `geo.dim_oferta_urgencia_rm`.** Se verificó que 3 de los 152 `establecimiento_codigo` históricos (2021-2025) no están en el snapshot vigente de 174 establecimientos: `dim_oferta_urgencia_rm` es un snapshot **actual**, mientras que el mart es histórico. Una FK física real rompería la carga de esas 3 filas; se documenta como relación lógica no forzada, con `COMMENT ON TABLE`.
 8. **Las geometrías se modelan con tipos PostGIS nativos (`geometry(MultiPolygon, 4674)`), no `BYTEA`.** El stack objetivo del proyecto ya incluye PostGIS (`README.md` raíz); el SRID 4674 (SIRGAS 2000) es el CRS real observado en el GeoParquet fuente (`reports/eda/eda_cartografia_censo2024_subcomunal.md`), sin ninguna reproyección.
-9. **Esquemas PostgreSQL por dominio** (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egresos`, `contexto_genero`), replicando los subdirectorios de `data/processed/`, en vez de forzar una convención genérica `dim_`/`fact_`. `contexto_genero` permanece aislado para preservar la naturaleza interpretativa de sus fuentes.
+9. **Esquemas PostgreSQL por dominio** (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egresos`, `contexto_genero`, `modeling`, `camas`), con trazabilidad a los datasets de origen de las entidades incluidas en el modelo físico. Esta organización no asigna automáticamente tablas a todos los subdirectorios de `data/processed/`; Defunciones conserva únicamente su contrato Parquet actual. `contexto_genero` permanece aislado para preservar la naturaleza interpretativa de sus fuentes.
 10. **Los cuatro indicadores de contexto de género alimentan `mart_contexto_genero_indicador_sexo`, no un mega-mart.** El mart canónico de serving conserva el contrato normalizado de cada input mediante `source_id`, geografía, `period`, `year`, `sex`, `indicator`, `unit`, `value` y `value_text`. La persistencia física equivalente es `contexto_genero.indicador_por_sexo`. No tiene FK hacia Urgencias, Egresos, cartografía ni otros marts; coincidir en sexo, año o geografía no habilita un join automático ni convierte estos indicadores en features.
 11. **Los datos de camas se modelan como dos entidades, una por libro de origen, con las columnas de su libro.** Los libros publican la misma magnitud con estructuras distintas (Servicio de Salud frente a SEREMI, tipo de establecimiento solo en el SNSS, un año por columna frente a una hoja por año), y fusionarlos obligaría a columnas mutuamente excluyentes. En el modelo lógico, `dotacion_camas_snss` tiene clave lógica verificada `servicio_salud, establecimiento_codigo, area_funcional_codigo` (sin duplicados ni nulos, porque el total del hospital es el área `100` del propio libro). `dotacion_camas_no_snss` declara ausencia de clave lógica sin nulos: la fila de total del establecimiento no trae área, y esa fila vacía se conserva tal cual en vez de inventarle un código.
 12. **En el modelo físico, el SNSS se normaliza y el no SNSS usa clave técnica.** `camas.dotacion_snss` transpone las 16 columnas `camas_AAAA` a filas (`ano`, `camas`), porque un grupo repetitivo de columnas por año no es un diseño relacional (cada año nuevo cambiaría el esquema); su PK natural es `servicio_salud, establecimiento_codigo, area_funcional_codigo, ano`. `camas.dotacion_no_snss` usa `dotacion_id`, una clave técnica de persistencia como `egreso_id` (no existe en la fuente), más un índice único sobre `ano, seremi, establecimiento_codigo, COALESCE(area_funcional_codigo, -1)` que verifica la llave lógica. Ninguna de las dos tiene FK hacia `geo.dim_oferta_urgencia_rm`: solo 44 de sus 174 establecimientos tienen registro de camas y la mayoría de los códigos de camas no está en la oferta; una FK rompería la carga. Se documenta como relación lógica no forzada, igual que en `mart_urgencias_establecimiento_monthly`.
@@ -644,4 +732,4 @@ Los esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egres
 
 ## 10. Relación con `db/schema_postgresql.sql`
 
-El DDL ejecutable vive en [`db/schema_postgresql.sql`](../../../db/schema_postgresql.sql) (fuera de `docs/`, para no mezclar evidencia académica con código de infraestructura) y es coherente 1:1 con el diagrama de la sección 6: mismos 9 esquemas, mismas 20 tablas (la versión anterior de este texto indicaba 7 y 16, desactualizada respecto del DDL previo a la incorporación de las tablas de `camas`), mismas PK/FK, mismos tipos. No contiene `INSERT`/`COPY`, credenciales, AWS/RDS, Docker, usuarios ni migrations — únicamente `CREATE EXTENSION` (PostGIS), `CREATE SCHEMA`, `CREATE TABLE` con `PRIMARY KEY`/`FOREIGN KEY`/`CHECK`/`COMMENT`, y los índices básicos necesarios para las FK no cubiertas por una PK compuesta y para las columnas `geometry` (`GIST`).
+El DDL ejecutable vive en [`db/schema_postgresql.sql`](../../../db/schema_postgresql.sql) (fuera de `docs/`, para no mezclar evidencia académica con código de infraestructura) y es coherente 1:1 con el diagrama de la sección 6 para los dominios físicos representados: mismos 9 esquemas, mismas 21 tablas, mismas PK/FK, mismos tipos. Defunciones no forma parte de este DDL. No contiene `INSERT`/`COPY`, credenciales, AWS/RDS, Docker, usuarios ni migrations — únicamente `CREATE EXTENSION` (PostGIS), `CREATE SCHEMA`, `CREATE TABLE` con `PRIMARY KEY`/`FOREIGN KEY`/`CHECK`/`COMMENT`, y los índices básicos necesarios para las FK no cubiertas por una PK compuesta y para las columnas `geometry` (`GIST`).

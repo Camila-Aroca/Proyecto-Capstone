@@ -4,8 +4,10 @@
 %% PostgreSQL/PostGIS es la arquitectura de persistencia OBJETIVO; el despliegue en AWS/RDS
 %% y la capa de accesibilidad OSM/GTFS/isocronas NO estan implementados (ver README item 15,
 %% seccion 9 "Limitaciones"). Este diagrama es coherente 1:1 con db/schema_postgresql.sql.
-%% Los esquemas replican los subdirectorios de data/processed/ para trazabilidad
-%% (censo, geo, pobreza, urgencias, marts, egresos, contexto_genero, modeling, camas).
+%% Los esquemas corresponden solo a los dominios representados en este modelo fisico
+%% (censo, geo, pobreza, urgencias, marts, egresos, contexto_genero, modeling, camas),
+%% con trazabilidad a sus datasets de origen; no abarcan todos los archivos processed.
+%% Defunciones figura solo en el modelo logico y se almacena actualmente en Parquet.
 
 erDiagram
 

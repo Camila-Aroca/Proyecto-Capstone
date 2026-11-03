@@ -1,0 +1,15 @@
+{
+  "raw_root": "data/raw/defunciones",
+  "provenance_manifest": "data/raw/provenance_manifest.json",
+  "start_date": "2020-01-01",
+  "end_date": null,
+  "encoding": "latin-1",
+  "date_formats": ["%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y"],
+  "batch_size": 50000,
+  "outputs": {
+    "parquet": "data/processed/defunciones/defunciones_nacional.parquet",
+    "summary": "reports/eda/eda_defunciones_consolidadas.json",
+    "report": "reports/eda/eda_defunciones_consolidadas.md",
+    "dictionary": "reports/dictionary/diccionario_defunciones_nacional.md"
+  }
+}

@@ -709,5 +709,105 @@
     "institucion": "Ministerio de Salud, DEIS y DIGERA, con Superintendencia de Salud",
     "alcance": "Establecimientos no pertenecientes al SNSS (privados); dato referencial según la fuente",
     "periodo": "2019-2025"
+  },
+  {
+    "source_id": "deis_defunciones_1990_2023",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.zip",
+        "downloaded_at": "2026-11-03T00:32:13.971231+00:00",
+        "raw_path": "data/raw/defunciones/1990_2023/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv",
+        "raw_filename": "DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv",
+        "raw_size": 869415741,
+        "raw_sha256": "b763f5be857edbef5d06dc2da9437d7be8640f76719b5a0bb75b276282553ebb",
+        "transport": {
+          "filename": "DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.zip",
+          "size": 93202577,
+          "sha256": "311b56533a60cc5b554575de3cec6575063aa1a1ce17d25c6017a2895cdd60e7",
+          "Last-Modified": "Wed, 06 May 2026 15:28:57 GMT",
+          "ETag": "\"3c24ee6ddddc1:0\"",
+          "downloaded_at": "2026-11-03T00:32:13.971231+00:00",
+          "archive_member": "DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv"
+        }
+      }
+    ],
+    "dataset": "defunciones",
+    "periodo": "1990-2023",
+    "estado_fuente": "cifras_oficiales_segun_nombre_fuente"
+  },
+  {
+    "source_id": "deis_defunciones_1990_2023_dictionary",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.zip",
+        "downloaded_at": "2026-11-03T00:32:13.971231+00:00",
+        "raw_path": "data/raw/defunciones/1990_2023/Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
+        "raw_filename": "Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
+        "raw_size": 37148,
+        "raw_sha256": "298600901a454f91bfb5634359efdbcb163d8a61d6e1b8dcdae01768ec38c60f",
+        "transport": {
+          "filename": "DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.zip",
+          "size": 93202577,
+          "sha256": "311b56533a60cc5b554575de3cec6575063aa1a1ce17d25c6017a2895cdd60e7",
+          "Last-Modified": "Wed, 06 May 2026 15:28:57 GMT",
+          "ETag": "\"3c24ee6ddddc1:0\"",
+          "downloaded_at": "2026-11-03T00:32:13.971231+00:00",
+          "archive_member": "Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx"
+        }
+      }
+    ],
+    "dataset": "defunciones",
+    "periodo": "1990-2023",
+    "estado_fuente": "cifras_oficiales_segun_nombre_fuente"
+  },
+  {
+    "source_id": "deis_defunciones_2024_2026_27102026",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.zip",
+        "downloaded_at": "2026-11-03T00:32:53.961511+00:00",
+        "raw_path": "data/raw/defunciones/2024_2026_27102026/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.csv",
+        "raw_filename": "DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.csv",
+        "raw_size": 108034433,
+        "raw_sha256": "01cd5779ede07925716c1f01561f87f0e73e3a870bf7fbdb2a217b1a0eed82ea",
+        "transport": {
+          "filename": "DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.zip",
+          "size": 12681230,
+          "sha256": "e4bca9ede561fc933ae73ef1889677aeb11ae2a545bb3e7010d7a31d60e9dde4",
+          "Last-Modified": "Tue, 27 Oct 2026 15:11:32 GMT",
+          "ETag": "\"2bcb7d732566dd1:0\"",
+          "downloaded_at": "2026-11-03T00:32:53.961511+00:00",
+          "archive_member": "DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.csv"
+        }
+      }
+    ],
+    "dataset": "defunciones",
+    "periodo": "2024-2026",
+    "estado_fuente": "snapshot_fechado_27102026_sin_afirmar_cierre_anual"
+  },
+  {
+    "source_id": "deis_defunciones_2024_2026_27102026_dictionary",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.zip",
+        "downloaded_at": "2026-11-03T00:32:53.961511+00:00",
+        "raw_path": "data/raw/defunciones/2024_2026_27102026/Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
+        "raw_filename": "Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
+        "raw_size": 37148,
+        "raw_sha256": "298600901a454f91bfb5634359efdbcb163d8a61d6e1b8dcdae01768ec38c60f",
+        "transport": {
+          "filename": "DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.zip",
+          "size": 12681230,
+          "sha256": "e4bca9ede561fc933ae73ef1889677aeb11ae2a545bb3e7010d7a31d60e9dde4",
+          "Last-Modified": "Tue, 27 Oct 2026 15:11:32 GMT",
+          "ETag": "\"2bcb7d732566dd1:0\"",
+          "downloaded_at": "2026-11-03T00:32:53.961511+00:00",
+          "archive_member": "Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx"
+        }
+      }
+    ],
+    "dataset": "defunciones",
+    "periodo": "2024-2026",
+    "estado_fuente": "snapshot_fechado_27102026_sin_afirmar_cierre_anual"
   }
 ]

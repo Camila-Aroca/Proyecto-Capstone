@@ -1,0 +1,2193 @@
+{
+  "generated_at": "2026-11-03T01:14:15.891224+00:00",
+  "python_version": "3.12.6",
+  "sources": {
+    "1990_2023": {
+      "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.zip",
+      "raw_path": "data/raw/defunciones/1990_2023/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv",
+      "raw_size": 869415741,
+      "raw_sha256": "b763f5be857edbef5d06dc2da9437d7be8640f76719b5a0bb75b276282553ebb",
+      "dictionary_sha256": "298600901a454f91bfb5634359efdbcb163d8a61d6e1b8dcdae01768ec38c60f",
+      "provenance_matches": true,
+      "profile": {
+        "rows": 3182446,
+        "invalid_dates": 323,
+        "date_year_mismatch": 0,
+        "future_dates": 0,
+        "invalid_commune_shape": 1551470,
+        "rm_commune_prefix_rows": 1191382,
+        "diag1_f_prefix": 60650,
+        "diag1_numeric": 380772,
+        "diag1_cie10_shape": 2645700,
+        "diag2_cie10_shape": 212781,
+        "diag1_other_shape": 155973,
+        "columns": [
+          "AÑO",
+          "FECHA_DEF",
+          "SEXO_NOMBRE",
+          "EDAD_TIPO",
+          "EDAD_CANT",
+          "COD_COMUNA",
+          "COMUNA",
+          "NOMBRE_REGION",
+          "DIAG1",
+          "CAPITULO_DIAG1",
+          "GLOSA_CAPITULO_DIAG1",
+          "CODIGO_GRUPO_DIAG1",
+          "GLOSA_GRUPO_DIAG1",
+          "CODIGO_CATEGORIA_DIAG1",
+          "GLOSA_CATEGORIA_DIAG1",
+          "CODIGO_SUBCATEGORIA_DIAG1",
+          "GLOSA_SUBCATEGORIA_DIAG1",
+          "DIAG2",
+          "CAPITULO_DIAG2",
+          "GLOSA_CAPITULO_DIAG2",
+          "CODIGO_GRUPO_DIAG2",
+          "GLOSA_GRUPO_DIAG2",
+          "CODIGO_CATEGORIA_DIAG2",
+          "GLOSA_CATEGORIA_DIAG2",
+          "CODIGO_SUBCATEGORIA_DIAG2",
+          "GLOSA_SUBCATEGORIA_DIAG2",
+          "LUGAR_DEFUNCION"
+        ],
+        "encoding": "latin-1",
+        "delimiter": ";",
+        "blank": {
+          "AÑO": 0,
+          "FECHA_DEF": 323,
+          "SEXO_NOMBRE": 0,
+          "EDAD_TIPO": 24,
+          "EDAD_CANT": 24,
+          "COD_COMUNA": 0,
+          "COMUNA": 0,
+          "NOMBRE_REGION": 0,
+          "DIAG1": 1,
+          "CAPITULO_DIAG1": 536746,
+          "GLOSA_CAPITULO_DIAG1": 536746,
+          "CODIGO_GRUPO_DIAG1": 536746,
+          "GLOSA_GRUPO_DIAG1": 536746,
+          "CODIGO_CATEGORIA_DIAG1": 536746,
+          "GLOSA_CATEGORIA_DIAG1": 536746,
+          "CODIGO_SUBCATEGORIA_DIAG1": 536746,
+          "GLOSA_SUBCATEGORIA_DIAG1": 536746,
+          "DIAG2": 2906635,
+          "CAPITULO_DIAG2": 2969665,
+          "GLOSA_CAPITULO_DIAG2": 2969665,
+          "CODIGO_GRUPO_DIAG2": 2969665,
+          "GLOSA_GRUPO_DIAG2": 2969665,
+          "CODIGO_CATEGORIA_DIAG2": 2969665,
+          "GLOSA_CATEGORIA_DIAG2": 2969665,
+          "CODIGO_SUBCATEGORIA_DIAG2": 2969665,
+          "GLOSA_SUBCATEGORIA_DIAG2": 2969665,
+          "LUGAR_DEFUNCION": 0
+        },
+        "asterisk": {
+          "AÑO": 0,
+          "FECHA_DEF": 0,
+          "SEXO_NOMBRE": 0,
+          "EDAD_TIPO": 0,
+          "EDAD_CANT": 0,
+          "COD_COMUNA": 0,
+          "COMUNA": 0,
+          "NOMBRE_REGION": 0,
+          "DIAG1": 0,
+          "CAPITULO_DIAG1": 0,
+          "GLOSA_CAPITULO_DIAG1": 0,
+          "CODIGO_GRUPO_DIAG1": 0,
+          "GLOSA_GRUPO_DIAG1": 0,
+          "CODIGO_CATEGORIA_DIAG1": 0,
+          "GLOSA_CATEGORIA_DIAG1": 0,
+          "CODIGO_SUBCATEGORIA_DIAG1": 0,
+          "GLOSA_SUBCATEGORIA_DIAG1": 0,
+          "DIAG2": 0,
+          "CAPITULO_DIAG2": 0,
+          "GLOSA_CAPITULO_DIAG2": 0,
+          "CODIGO_GRUPO_DIAG2": 0,
+          "GLOSA_GRUPO_DIAG2": 0,
+          "CODIGO_CATEGORIA_DIAG2": 0,
+          "GLOSA_CATEGORIA_DIAG2": 0,
+          "CODIGO_SUBCATEGORIA_DIAG2": 0,
+          "GLOSA_SUBCATEGORIA_DIAG2": 0,
+          "LUGAR_DEFUNCION": 0
+        },
+        "years": {
+          "1990": 78434,
+          "1991": 74862,
+          "1992": 74090,
+          "1993": 76261,
+          "1994": 75445,
+          "1995": 78531,
+          "1996": 79123,
+          "1997": 78472,
+          "1998": 80257,
+          "1999": 81984,
+          "2000": 78814,
+          "2001": 81871,
+          "2002": 81079,
+          "2003": 83672,
+          "2004": 86138,
+          "2005": 86102,
+          "2006": 85639,
+          "2007": 93000,
+          "2008": 90168,
+          "2009": 91965,
+          "2010": 97930,
+          "2011": 94985,
+          "2012": 98711,
+          "2013": 99770,
+          "2014": 101960,
+          "2015": 103327,
+          "2016": 104026,
+          "2017": 106388,
+          "2018": 106796,
+          "2019": 109658,
+          "2020": 126169,
+          "2021": 137629,
+          "2022": 136972,
+          "2023": 122218
+        },
+        "months_by_valid_date": {
+          "1990-01": 6202,
+          "1990-02": 5129,
+          "1990-03": 5978,
+          "1990-04": 6170,
+          "1990-05": 8028,
+          "1990-06": 7637,
+          "1990-07": 7661,
+          "1990-08": 6860,
+          "1990-09": 6884,
+          "1990-10": 6214,
+          "1990-11": 5768,
+          "1990-12": 5872,
+          "1991-01": 5847,
+          "1991-02": 5214,
+          "1991-03": 5708,
+          "1991-04": 5736,
+          "1991-05": 6476,
+          "1991-06": 6635,
+          "1991-07": 7505,
+          "1991-08": 7247,
+          "1991-09": 6442,
+          "1991-10": 6464,
+          "1991-11": 5855,
+          "1991-12": 5713,
+          "1992-01": 5810,
+          "1992-02": 5027,
+          "1992-03": 5449,
+          "1992-04": 5496,
+          "1992-05": 6435,
+          "1992-06": 6969,
+          "1992-07": 7516,
+          "1992-08": 7187,
+          "1992-09": 6601,
+          "1992-10": 6333,
+          "1992-11": 5693,
+          "1992-12": 5537,
+          "1993-01": 6026,
+          "1993-02": 5143,
+          "1993-03": 5598,
+          "1993-04": 5784,
+          "1993-05": 6909,
+          "1993-06": 8285,
+          "1993-07": 7680,
+          "1993-08": 7003,
+          "1993-09": 6273,
+          "1993-10": 6215,
+          "1993-11": 5659,
+          "1993-12": 5674,
+          "1994-01": 5803,
+          "1994-02": 5033,
+          "1994-03": 5642,
+          "1994-04": 5885,
+          "1994-05": 6439,
+          "1994-06": 6467,
+          "1994-07": 7705,
+          "1994-08": 7424,
+          "1994-09": 6886,
+          "1994-10": 6095,
+          "1994-11": 5859,
+          "1994-12": 6178,
+          "1995-01": 5995,
+          "1995-02": 5325,
+          "1995-03": 5658,
+          "1995-04": 6014,
+          "1995-05": 6787,
+          "1995-06": 7184,
+          "1995-07": 8647,
+          "1995-08": 7867,
+          "1995-09": 6668,
+          "1995-10": 6311,
+          "1995-11": 5800,
+          "1995-12": 6255,
+          "1996-01": 6098,
+          "1996-02": 5587,
+          "1996-03": 5843,
+          "1996-04": 6050,
+          "1996-05": 6833,
+          "1996-06": 8418,
+          "1996-07": 8547,
+          "1996-08": 6771,
+          "1996-09": 6583,
+          "1996-10": 6234,
+          "1996-11": 5888,
+          "1996-12": 6257,
+          "1997-01": 6195,
+          "1997-02": 5426,
+          "1997-03": 6240,
+          "1997-04": 6132,
+          "1997-05": 6597,
+          "1997-06": 7061,
+          "1997-07": 7282,
+          "1997-08": 7111,
+          "1997-09": 6831,
+          "1997-10": 6798,
+          "1997-11": 6285,
+          "1997-12": 6503,
+          "1998-01": 6326,
+          "1998-02": 5444,
+          "1998-03": 5924,
+          "1998-04": 6235,
+          "1998-05": 7887,
+          "1998-06": 7914,
+          "1998-07": 7772,
+          "1998-08": 7226,
+          "1998-09": 6688,
+          "1998-10": 6449,
+          "1998-11": 5883,
+          "1998-12": 6495,
+          "1999-01": 6371,
+          "1999-02": 5507,
+          "1999-03": 6082,
+          "1999-04": 6285,
+          "1999-05": 7971,
+          "1999-06": 8771,
+          "1999-07": 8093,
+          "1999-08": 7247,
+          "1999-09": 6952,
+          "1999-10": 6356,
+          "1999-11": 6026,
+          "1999-12": 6303,
+          "2000-01": 6336,
+          "2000-02": 5699,
+          "2000-03": 6008,
+          "2000-04": 6272,
+          "2000-05": 6799,
+          "2000-06": 7104,
+          "2000-07": 7457,
+          "2000-08": 6977,
+          "2000-09": 6983,
+          "2000-10": 6393,
+          "2000-11": 6235,
+          "2000-12": 6534,
+          "2001-01": 6349,
+          "2001-02": 5756,
+          "2001-03": 6217,
+          "2001-04": 6176,
+          "2001-05": 6999,
+          "2001-06": 7694,
+          "2001-07": 8476,
+          "2001-08": 7521,
+          "2001-09": 7149,
+          "2001-10": 6760,
+          "2001-11": 6142,
+          "2001-12": 6619,
+          "2002-01": 6580,
+          "2002-02": 5639,
+          "2002-03": 6177,
+          "2002-04": 6410,
+          "2002-05": 6862,
+          "2002-06": 7260,
+          "2002-07": 7797,
+          "2002-08": 7333,
+          "2002-09": 7335,
+          "2002-10": 6832,
+          "2002-11": 6359,
+          "2002-12": 6487,
+          "2003-01": 6736,
+          "2003-02": 5778,
+          "2003-03": 6295,
+          "2003-04": 6513,
+          "2003-05": 7404,
+          "2003-06": 7155,
+          "2003-07": 8245,
+          "2003-08": 8237,
+          "2003-09": 7160,
+          "2003-10": 6941,
+          "2003-11": 6577,
+          "2003-12": 6616,
+          "2004-01": 6882,
+          "2004-02": 6072,
+          "2004-03": 6419,
+          "2004-04": 6612,
+          "2004-05": 8294,
+          "2004-06": 8489,
+          "2004-07": 8318,
+          "2004-08": 7887,
+          "2004-09": 7170,
+          "2004-10": 6833,
+          "2004-11": 6506,
+          "2004-12": 6647,
+          "2005-01": 6782,
+          "2005-02": 6021,
+          "2005-03": 6563,
+          "2005-04": 6696,
+          "2005-05": 7560,
+          "2005-06": 8273,
+          "2005-07": 8612,
+          "2005-08": 7811,
+          "2005-09": 7390,
+          "2005-10": 7015,
+          "2005-11": 6528,
+          "2005-12": 6845,
+          "2006-01": 6977,
+          "2006-02": 5940,
+          "2006-03": 6710,
+          "2006-04": 6810,
+          "2006-05": 7137,
+          "2006-06": 7341,
+          "2006-07": 8059,
+          "2006-08": 8067,
+          "2006-09": 7600,
+          "2006-10": 7150,
+          "2006-11": 6703,
+          "2006-12": 7139,
+          "2007-01": 7133,
+          "2007-02": 6167,
+          "2007-03": 6875,
+          "2007-04": 7028,
+          "2007-05": 7930,
+          "2007-06": 9527,
+          "2007-07": 9474,
+          "2007-08": 8882,
+          "2007-09": 7962,
+          "2007-10": 7732,
+          "2007-11": 7065,
+          "2007-12": 7221,
+          "2008-01": 7356,
+          "2008-02": 6595,
+          "2008-03": 6861,
+          "2008-04": 7067,
+          "2008-05": 7957,
+          "2008-06": 8187,
+          "2008-07": 8534,
+          "2008-08": 8256,
+          "2008-09": 7770,
+          "2008-10": 7366,
+          "2008-11": 7022,
+          "2008-12": 7193,
+          "2009-01": 7646,
+          "2009-02": 6306,
+          "2009-03": 6906,
+          "2009-04": 6872,
+          "2009-05": 7978,
+          "2009-06": 8424,
+          "2009-07": 9137,
+          "2009-08": 8220,
+          "2009-09": 7852,
+          "2009-10": 7809,
+          "2009-11": 7227,
+          "2009-12": 7588,
+          "2010-01": 7528,
+          "2010-02": 7172,
+          "2010-03": 7338,
+          "2010-04": 7403,
+          "2010-05": 8293,
+          "2010-06": 8478,
+          "2010-07": 9338,
+          "2010-08": 9365,
+          "2010-09": 9391,
+          "2010-10": 8606,
+          "2010-11": 7356,
+          "2010-12": 7659,
+          "2011-01": 7771,
+          "2011-02": 6553,
+          "2011-03": 7095,
+          "2011-04": 7346,
+          "2011-05": 8175,
+          "2011-06": 8580,
+          "2011-07": 9408,
+          "2011-08": 8860,
+          "2011-09": 8195,
+          "2011-10": 7738,
+          "2011-11": 7504,
+          "2011-12": 7758,
+          "2012-01": 7794,
+          "2012-02": 6980,
+          "2012-03": 7535,
+          "2012-04": 7541,
+          "2012-05": 8325,
+          "2012-06": 8830,
+          "2012-07": 10000,
+          "2012-08": 9365,
+          "2012-09": 8505,
+          "2012-10": 8452,
+          "2012-11": 7683,
+          "2012-12": 7700,
+          "2013-01": 8006,
+          "2013-02": 7019,
+          "2013-03": 7557,
+          "2013-04": 7606,
+          "2013-05": 8556,
+          "2013-06": 8895,
+          "2013-07": 9771,
+          "2013-08": 9343,
+          "2013-09": 8772,
+          "2013-10": 8473,
+          "2013-11": 7883,
+          "2013-12": 7886,
+          "2014-01": 8139,
+          "2014-02": 6887,
+          "2014-03": 7596,
+          "2014-04": 8149,
+          "2014-05": 8415,
+          "2014-06": 9551,
+          "2014-07": 10821,
+          "2014-08": 9173,
+          "2014-09": 8657,
+          "2014-10": 8409,
+          "2014-11": 8097,
+          "2014-12": 8063,
+          "2015-01": 8084,
+          "2015-02": 7328,
+          "2015-03": 7920,
+          "2015-04": 7900,
+          "2015-05": 8781,
+          "2015-06": 9097,
+          "2015-07": 9949,
+          "2015-08": 9657,
+          "2015-09": 9264,
+          "2015-10": 8829,
+          "2015-11": 8170,
+          "2015-12": 8342,
+          "2016-01": 8398,
+          "2016-02": 7438,
+          "2016-03": 7806,
+          "2016-04": 8116,
+          "2016-05": 8744,
+          "2016-06": 9439,
+          "2016-07": 10732,
+          "2016-08": 9695,
+          "2016-09": 9245,
+          "2016-10": 8555,
+          "2016-11": 7980,
+          "2016-12": 7875,
+          "2017-01": 8697,
+          "2017-02": 7437,
+          "2017-03": 7767,
+          "2017-04": 8181,
+          "2017-05": 9115,
+          "2017-06": 10824,
+          "2017-07": 10488,
+          "2017-08": 9694,
+          "2017-09": 9281,
+          "2017-10": 8733,
+          "2017-11": 8072,
+          "2017-12": 8099,
+          "2018-01": 8135,
+          "2018-02": 7373,
+          "2018-03": 8215,
+          "2018-04": 8210,
+          "2018-05": 8887,
+          "2018-06": 9981,
+          "2018-07": 10519,
+          "2018-08": 10498,
+          "2018-09": 9260,
+          "2018-10": 8916,
+          "2018-11": 8359,
+          "2018-12": 8442,
+          "2019-01": 8418,
+          "2019-02": 7774,
+          "2019-03": 8172,
+          "2019-04": 8529,
+          "2019-05": 9796,
+          "2019-06": 10391,
+          "2019-07": 10647,
+          "2019-08": 9934,
+          "2019-09": 9524,
+          "2019-10": 9272,
+          "2019-11": 8574,
+          "2019-12": 8626,
+          "2020-01": 9051,
+          "2020-02": 7931,
+          "2020-03": 8693,
+          "2020-04": 8893,
+          "2020-05": 11991,
+          "2020-06": 16037,
+          "2020-07": 12583,
+          "2020-08": 11076,
+          "2020-09": 10209,
+          "2020-10": 10319,
+          "2020-11": 9379,
+          "2020-12": 10004,
+          "2021-01": 11207,
+          "2021-02": 10250,
+          "2021-03": 11846,
+          "2021-04": 11985,
+          "2021-05": 12765,
+          "2021-06": 13544,
+          "2021-07": 13216,
+          "2021-08": 11380,
+          "2021-09": 10091,
+          "2021-10": 10269,
+          "2021-11": 10132,
+          "2021-12": 10942,
+          "2022-01": 11195,
+          "2022-02": 12496,
+          "2022-03": 12184,
+          "2022-04": 10140,
+          "2022-05": 11051,
+          "2022-06": 12266,
+          "2022-07": 13034,
+          "2022-08": 11782,
+          "2022-09": 10887,
+          "2022-10": 10478,
+          "2022-11": 10708,
+          "2022-12": 10749,
+          "2023-01": 10099,
+          "2023-02": 8919,
+          "2023-03": 9789,
+          "2023-04": 9578,
+          "2023-05": 10845,
+          "2023-06": 10926,
+          "2023-07": 10945,
+          "2023-08": 10443,
+          "2023-09": 10469,
+          "2023-10": 10249,
+          "2023-11": 10073,
+          "2023-12": 9880
+        },
+        "sexes": {
+          "Hombre": 1708226,
+          "Mujer": 1474037,
+          "Indeterminado": 183
+        },
+        "regions": {
+          "Del Bíobío": 297633,
+          "Del Libertador B. O'Higgins": 167438,
+          "Metropolitana de Santiago": 1191382,
+          "Del Maule": 206993,
+          "De Arica y Parinacota": 36911,
+          "De Valparaíso": 374539,
+          "De La Araucanía": 203951,
+          "De Los Lagos": 161165,
+          "De Tarapacá": 41017,
+          "De Coquimbo": 123414,
+          "De Magallanes y de La Antártica Chilena": 33577,
+          "De Ñuble": 107498,
+          "De Antofagasta": 91308,
+          "De Los Ríos": 84138,
+          "De Atacama": 45177,
+          "De Aisén del Gral. C. Ibáñez del Campo": 16241,
+          "Ignorada": 64
+        },
+        "age_types": {
+          "1": 3105963,
+          "4": 23246,
+          "2": 27740,
+          "3": 25471,
+          "": 24,
+          "0": 2
+        },
+        "age_quantity_by_type": {
+          "1": {
+            "numeric": 3105962,
+            "non_numeric": 1,
+            "min": 1,
+            "max": 126,
+            "negative": 0,
+            "literal_999": 0
+          },
+          "4": {
+            "numeric": 23246,
+            "non_numeric": 0,
+            "min": 1,
+            "max": 24,
+            "negative": 0,
+            "literal_999": 0
+          },
+          "2": {
+            "numeric": 27740,
+            "non_numeric": 0,
+            "min": 1,
+            "max": 11,
+            "negative": 0,
+            "literal_999": 0
+          },
+          "3": {
+            "numeric": 25471,
+            "non_numeric": 0,
+            "min": 1,
+            "max": 31,
+            "negative": 0,
+            "literal_999": 0
+          },
+          "": {
+            "numeric": 1,
+            "non_numeric": 23,
+            "min": 2,
+            "max": 2,
+            "negative": 0,
+            "literal_999": 0
+          },
+          "0": {
+            "numeric": 2,
+            "non_numeric": 0,
+            "min": 99,
+            "max": 99,
+            "negative": 0,
+            "literal_999": 0
+          }
+        },
+        "locations": {
+          "Otro": 285312,
+          "Hospital o Clínica": 1412177,
+          "Casa habitación": 1484957
+        },
+        "unique_well_formed_communes": 141,
+        "min_date": "1990-01-01",
+        "max_date": "2023-12-31",
+        "missing_expected_years": [],
+        "diagnostic_by_year": {
+          "1990": {
+            "numeric": 56880,
+            "cie10_shape": 0,
+            "f_prefix": 0
+          },
+          "1991": {
+            "numeric": 54340,
+            "cie10_shape": 0,
+            "f_prefix": 0
+          },
+          "1992": {
+            "numeric": 52544,
+            "cie10_shape": 0,
+            "f_prefix": 0
+          },
+          "1993": {
+            "numeric": 53846,
+            "cie10_shape": 0,
+            "f_prefix": 0
+          },
+          "1994": {
+            "numeric": 53302,
+            "cie10_shape": 0,
+            "f_prefix": 0
+          },
+          "1995": {
+            "numeric": 54684,
+            "cie10_shape": 0,
+            "f_prefix": 0
+          },
+          "1996": {
+            "numeric": 55176,
+            "cie10_shape": 0,
+            "f_prefix": 0
+          },
+          "1997": {
+            "numeric": 0,
+            "cie10_shape": 78472,
+            "f_prefix": 1584
+          },
+          "1998": {
+            "numeric": 0,
+            "cie10_shape": 80257,
+            "f_prefix": 869
+          },
+          "1999": {
+            "numeric": 0,
+            "cie10_shape": 81984,
+            "f_prefix": 488
+          },
+          "2000": {
+            "numeric": 0,
+            "cie10_shape": 78814,
+            "f_prefix": 1332
+          },
+          "2001": {
+            "numeric": 0,
+            "cie10_shape": 81871,
+            "f_prefix": 2206
+          },
+          "2002": {
+            "numeric": 0,
+            "cie10_shape": 81079,
+            "f_prefix": 2509
+          },
+          "2003": {
+            "numeric": 0,
+            "cie10_shape": 83672,
+            "f_prefix": 2653
+          },
+          "2004": {
+            "numeric": 0,
+            "cie10_shape": 86138,
+            "f_prefix": 2600
+          },
+          "2005": {
+            "numeric": 0,
+            "cie10_shape": 86102,
+            "f_prefix": 2570
+          },
+          "2006": {
+            "numeric": 0,
+            "cie10_shape": 85639,
+            "f_prefix": 2332
+          },
+          "2007": {
+            "numeric": 0,
+            "cie10_shape": 93000,
+            "f_prefix": 2789
+          },
+          "2008": {
+            "numeric": 0,
+            "cie10_shape": 90168,
+            "f_prefix": 2666
+          },
+          "2009": {
+            "numeric": 0,
+            "cie10_shape": 91965,
+            "f_prefix": 2574
+          },
+          "2010": {
+            "numeric": 0,
+            "cie10_shape": 97930,
+            "f_prefix": 2585
+          },
+          "2011": {
+            "numeric": 0,
+            "cie10_shape": 94985,
+            "f_prefix": 2224
+          },
+          "2012": {
+            "numeric": 0,
+            "cie10_shape": 98711,
+            "f_prefix": 2568
+          },
+          "2013": {
+            "numeric": 0,
+            "cie10_shape": 99770,
+            "f_prefix": 2064
+          },
+          "2014": {
+            "numeric": 0,
+            "cie10_shape": 101960,
+            "f_prefix": 1836
+          },
+          "2015": {
+            "numeric": 0,
+            "cie10_shape": 103327,
+            "f_prefix": 1662
+          },
+          "2016": {
+            "numeric": 0,
+            "cie10_shape": 104026,
+            "f_prefix": 1794
+          },
+          "2017": {
+            "numeric": 0,
+            "cie10_shape": 106388,
+            "f_prefix": 1929
+          },
+          "2018": {
+            "numeric": 0,
+            "cie10_shape": 106796,
+            "f_prefix": 2265
+          },
+          "2019": {
+            "numeric": 0,
+            "cie10_shape": 109658,
+            "f_prefix": 2443
+          },
+          "2020": {
+            "numeric": 0,
+            "cie10_shape": 126169,
+            "f_prefix": 2641
+          },
+          "2021": {
+            "numeric": 0,
+            "cie10_shape": 137629,
+            "f_prefix": 3075
+          },
+          "2022": {
+            "numeric": 0,
+            "cie10_shape": 136972,
+            "f_prefix": 3240
+          },
+          "2023": {
+            "numeric": 0,
+            "cie10_shape": 122218,
+            "f_prefix": 3152
+          }
+        },
+        "scope": "complete_file_streaming_no_sampling",
+        "mental_health": {
+          "annual": {
+            "1990": {
+              "f_diag1": 0,
+              "rm_f_diag1": 0,
+              "self_diag2": 0,
+              "rm_self_diag2": 0,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "1991": {
+              "f_diag1": 0,
+              "rm_f_diag1": 0,
+              "self_diag2": 0,
+              "rm_self_diag2": 0,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "1992": {
+              "f_diag1": 0,
+              "rm_f_diag1": 0,
+              "self_diag2": 0,
+              "rm_self_diag2": 0,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "1993": {
+              "f_diag1": 0,
+              "rm_f_diag1": 0,
+              "self_diag2": 0,
+              "rm_self_diag2": 0,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "1994": {
+              "f_diag1": 0,
+              "rm_f_diag1": 0,
+              "self_diag2": 0,
+              "rm_self_diag2": 0,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "1995": {
+              "f_diag1": 0,
+              "rm_f_diag1": 0,
+              "self_diag2": 0,
+              "rm_self_diag2": 0,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "1996": {
+              "f_diag1": 0,
+              "rm_f_diag1": 0,
+              "self_diag2": 0,
+              "rm_self_diag2": 0,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "1997": {
+              "f_diag1": 1584,
+              "rm_f_diag1": 706,
+              "self_diag2": 910,
+              "rm_self_diag2": 31,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 2568,
+              "rm_undetermined_diag2": 1723
+            },
+            "1998": {
+              "f_diag1": 869,
+              "rm_f_diag1": 349,
+              "self_diag2": 1031,
+              "rm_self_diag2": 63,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 2587,
+              "rm_undetermined_diag2": 1736
+            },
+            "1999": {
+              "f_diag1": 488,
+              "rm_f_diag1": 157,
+              "self_diag2": 1041,
+              "rm_self_diag2": 35,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 2457,
+              "rm_undetermined_diag2": 1648
+            },
+            "2000": {
+              "f_diag1": 1332,
+              "rm_f_diag1": 471,
+              "self_diag2": 1473,
+              "rm_self_diag2": 507,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 801,
+              "rm_undetermined_diag2": 118
+            },
+            "2001": {
+              "f_diag1": 2206,
+              "rm_f_diag1": 869,
+              "self_diag2": 1625,
+              "rm_self_diag2": 548,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 242,
+              "rm_undetermined_diag2": 56
+            },
+            "2002": {
+              "f_diag1": 2509,
+              "rm_f_diag1": 1022,
+              "self_diag2": 1599,
+              "rm_self_diag2": 498,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 1,
+              "rm_undetermined_diag2": 0
+            },
+            "2003": {
+              "f_diag1": 2653,
+              "rm_f_diag1": 1080,
+              "self_diag2": 1654,
+              "rm_self_diag2": 543,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2004": {
+              "f_diag1": 2600,
+              "rm_f_diag1": 1033,
+              "self_diag2": 1735,
+              "rm_self_diag2": 576,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 100,
+              "rm_undetermined_diag2": 24
+            },
+            "2005": {
+              "f_diag1": 2570,
+              "rm_f_diag1": 1081,
+              "self_diag2": 1680,
+              "rm_self_diag2": 567,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 2,
+              "rm_sequela_diag2": 2,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2006": {
+              "f_diag1": 2332,
+              "rm_f_diag1": 1011,
+              "self_diag2": 1795,
+              "rm_self_diag2": 608,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2007": {
+              "f_diag1": 2789,
+              "rm_f_diag1": 1255,
+              "self_diag2": 1926,
+              "rm_self_diag2": 638,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2008": {
+              "f_diag1": 2666,
+              "rm_f_diag1": 1214,
+              "self_diag2": 2166,
+              "rm_self_diag2": 726,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2009": {
+              "f_diag1": 2574,
+              "rm_f_diag1": 1196,
+              "self_diag2": 2148,
+              "rm_self_diag2": 787,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2010": {
+              "f_diag1": 2585,
+              "rm_f_diag1": 1267,
+              "self_diag2": 2001,
+              "rm_self_diag2": 692,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2011": {
+              "f_diag1": 2224,
+              "rm_f_diag1": 1124,
+              "self_diag2": 2027,
+              "rm_self_diag2": 712,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2012": {
+              "f_diag1": 2568,
+              "rm_f_diag1": 1241,
+              "self_diag2": 1841,
+              "rm_self_diag2": 670,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2013": {
+              "f_diag1": 2064,
+              "rm_f_diag1": 952,
+              "self_diag2": 1738,
+              "rm_self_diag2": 639,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2014": {
+              "f_diag1": 1836,
+              "rm_f_diag1": 834,
+              "self_diag2": 1789,
+              "rm_self_diag2": 650,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2015": {
+              "f_diag1": 1662,
+              "rm_f_diag1": 690,
+              "self_diag2": 1835,
+              "rm_self_diag2": 701,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 1,
+              "rm_sequela_diag2": 1,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2016": {
+              "f_diag1": 1794,
+              "rm_f_diag1": 742,
+              "self_diag2": 1858,
+              "rm_self_diag2": 677,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2017": {
+              "f_diag1": 1929,
+              "rm_f_diag1": 790,
+              "self_diag2": 1879,
+              "rm_self_diag2": 658,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 1,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2018": {
+              "f_diag1": 2265,
+              "rm_f_diag1": 956,
+              "self_diag2": 1823,
+              "rm_self_diag2": 617,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 1,
+              "rm_sequela_diag2": 1,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2019": {
+              "f_diag1": 2443,
+              "rm_f_diag1": 927,
+              "self_diag2": 1901,
+              "rm_self_diag2": 638,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2020": {
+              "f_diag1": 2641,
+              "rm_f_diag1": 978,
+              "self_diag2": 1602,
+              "rm_self_diag2": 469,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 1,
+              "rm_undetermined_diag2": 1
+            },
+            "2021": {
+              "f_diag1": 3075,
+              "rm_f_diag1": 1164,
+              "self_diag2": 1573,
+              "rm_self_diag2": 496,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2022": {
+              "f_diag1": 3240,
+              "rm_f_diag1": 1288,
+              "self_diag2": 2099,
+              "rm_self_diag2": 693,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 3,
+              "rm_undetermined_diag2": 1
+            },
+            "2023": {
+              "f_diag1": 3152,
+              "rm_f_diag1": 1172,
+              "self_diag2": 2056,
+              "rm_self_diag2": 615,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            }
+          },
+          "f_categories": {
+            "F31": 15,
+            "F32": 74,
+            "F48": 3,
+            "F60": 1,
+            "F29": 2,
+            "F06": 223,
+            "F44": 10,
+            "F50": 2,
+            "F05": 107,
+            "F10": 716,
+            "F17": 89,
+            "F01": 759,
+            "F19": 105,
+            "F03": 7145,
+            "F20": 129,
+            "F55": 1,
+            "F43": 1,
+            "F84": 9,
+            "F82": 1,
+            "F25": 2,
+            "F34": 1,
+            "F68": 1,
+            "F14": 29,
+            "F72": 9,
+            "F16": 2,
+            "F79": 20,
+            "F99": 1,
+            "F33": 2,
+            "F42": 1,
+            "F71": 2,
+            "F15": 2,
+            "F09": 1,
+            "F73": 1,
+            "F39": 1
+          },
+          "f_category_labels": {
+            "F31": {
+              "Trastorno afectivo bipolar": 15
+            },
+            "F32": {
+              "Episodio depresivo": 74
+            },
+            "F48": {
+              "Neurastenia": 3
+            },
+            "F60": {
+              "Trastornos específicos de la personalidad": 1
+            },
+            "F29": {
+              "Psicosis de origen no orgánico, no especificada": 2
+            },
+            "F06": {
+              "Otros trastornos mentales debidos a lesión y disfunción cerebral, y a enfermedad física": 223
+            },
+            "F44": {
+              "Trastornos disociativos [de conversión]": 10
+            },
+            "F50": {
+              "Trastornos de la ingestión de alimentos": 2
+            },
+            "F05": {
+              "Delirio, no inducido por alcohol o por otras sustancias psicoactivas": 107
+            },
+            "F10": {
+              "Trastornos mentales y del comportamiento debidos al uso de alcohol": 716
+            },
+            "F17": {
+              "Trastornos mentales y del comportamiento debidos al uso de tabaco": 89
+            },
+            "F01": {
+              "Demencia vascular": 759
+            },
+            "F19": {
+              "Trastornos mentales y del comportamiento debidos al uso de múltiples drogas y al uso de otras sustancias psicoactivas": 105
+            },
+            "F03": {
+              "Demencia , no especificada": 7145
+            },
+            "F20": {
+              "Esquizofrenia": 129
+            },
+            "F55": {
+              "Abuso de sustancias que no producen dependencia": 1
+            },
+            "F43": {
+              "Reacción al estrés grave y trastornos de adaptación": 1
+            },
+            "F84": {
+              "Trastornos generalizados del desarrollo": 9
+            },
+            "F82": {
+              "Trastorno especÍfico del desarrollo de la función motriz": 1
+            },
+            "F25": {
+              "Trastornos esquizoafectivos": 2
+            },
+            "F34": {
+              "Trastorno del humor [afectivos] persistentes": 1
+            },
+            "F68": {
+              "Otros trastornos de la personalidad y del comportamiento en adultos": 1
+            },
+            "F14": {
+              "Trastornos mentales y del comportamiento debidos al uso de cocaína": 29
+            },
+            "F72": {
+              "Retraso mental grave": 9
+            },
+            "F16": {
+              "Trastornos mentales y del comportamiento debidos al uso de alucinógenos": 2
+            },
+            "F79": {
+              "Retraso mental, no especificado": 20
+            },
+            "F99": {
+              "Trastorno mental, no especificado": 1
+            },
+            "F33": {
+              "Trastorno depresivo recurrente": 2
+            },
+            "F42": {
+              "Trastorno obsesivo-compulsivo": 1
+            },
+            "F71": {
+              "Retraso mental moderado": 2
+            },
+            "F15": {
+              "Trastornos mentales y del comportamiento debidos al uso de otros estimilantes, incluida la cafeína": 2
+            },
+            "F09": {
+              "Trastorno mental orgánico o sintomático, no especificado": 1
+            },
+            "F73": {
+              "Retraso mental profundo": 1
+            },
+            "F39": {
+              "Trastorno del humor [afectivo], no especificado": 1
+            }
+          },
+          "sex": {
+            "f": {
+              "Mujer": 5660,
+              "Hombre": 3807
+            },
+            "self": {
+              "Hombre": 4643,
+              "Mujer": 1085
+            }
+          },
+          "age": {
+            "f": {
+              "65+": 8639,
+              "45-64": 674,
+              "30-44": 125,
+              "15-29": 24,
+              "0-14": 4,
+              "otra_unidad_o_no_interpretable": 1
+            },
+            "self": {
+              "30-44": 1745,
+              "65+": 813,
+              "45-64": 1689,
+              "15-29": 1442,
+              "0-14": 39
+            }
+          }
+        }
+      }
+    },
+    "2024_2026_27102026": {
+      "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.zip",
+      "raw_path": "data/raw/defunciones/2024_2026_27102026/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.csv",
+      "raw_size": 108034433,
+      "raw_sha256": "01cd5779ede07925716c1f01561f87f0e73e3a870bf7fbdb2a217b1a0eed82ea",
+      "dictionary_sha256": "298600901a454f91bfb5634359efdbcb163d8a61d6e1b8dcdae01768ec38c60f",
+      "provenance_matches": true,
+      "profile": {
+        "rows": 356974,
+        "invalid_dates": 0,
+        "date_year_mismatch": 0,
+        "future_dates": 0,
+        "invalid_commune_shape": 176862,
+        "rm_commune_prefix_rows": 131967,
+        "diag1_f_prefix": 10693,
+        "diag1_numeric": 0,
+        "diag1_cie10_shape": 356974,
+        "diag2_cie10_shape": 21827,
+        "diag1_other_shape": 0,
+        "columns": [
+          "AÑO",
+          "FECHA_DEF",
+          "SEXO_NOMBRE",
+          "EDAD_TIPO",
+          "EDAD_CANT",
+          "COD_COMUNA",
+          "COMUNA",
+          "NOMBRE_REGION",
+          "DIAG1",
+          "CAPITULO_DIAG1",
+          "GLOSA_CAPITULO_DIAG1",
+          "CODIGO_GRUPO_DIAG1",
+          "GLOSA_GRUPO_DIAG1",
+          "CODIGO_CATEGORIA_DIAG1",
+          "GLOSA_CATEGORIA_DIAG1",
+          "CODIGO_SUBCATEGORIA_DIAG1",
+          "GLOSA_SUBCATEGORIA_DIAG1",
+          "DIAG2",
+          "CAPITULO_DIAG2",
+          "GLOSA_CAPITULO_DIAG2",
+          "CODIGO_GRUPO_DIAG2",
+          "GLOSA_GRUPO_DIAG2",
+          "CODIGO_CATEGORIA_DIAG2",
+          "GLOSA_CATEGORIA_DIAG2",
+          "CODIGO_SUBCATEGORIA_DIAG2",
+          "GLOSA_SUBCATEGORIA_DIAG2",
+          "LUGAR_DEFUNCION"
+        ],
+        "encoding": "latin-1",
+        "delimiter": ";",
+        "blank": {
+          "AÑO": 0,
+          "FECHA_DEF": 0,
+          "SEXO_NOMBRE": 0,
+          "EDAD_TIPO": 0,
+          "EDAD_CANT": 0,
+          "COD_COMUNA": 64,
+          "COMUNA": 64,
+          "NOMBRE_REGION": 64,
+          "DIAG1": 0,
+          "CAPITULO_DIAG1": 2,
+          "GLOSA_CAPITULO_DIAG1": 2,
+          "CODIGO_GRUPO_DIAG1": 2,
+          "GLOSA_GRUPO_DIAG1": 2,
+          "CODIGO_CATEGORIA_DIAG1": 2,
+          "GLOSA_CATEGORIA_DIAG1": 2,
+          "CODIGO_SUBCATEGORIA_DIAG1": 2,
+          "GLOSA_SUBCATEGORIA_DIAG1": 2,
+          "DIAG2": 335147,
+          "CAPITULO_DIAG2": 335147,
+          "GLOSA_CAPITULO_DIAG2": 335147,
+          "CODIGO_GRUPO_DIAG2": 335147,
+          "GLOSA_GRUPO_DIAG2": 335147,
+          "CODIGO_CATEGORIA_DIAG2": 335147,
+          "GLOSA_CATEGORIA_DIAG2": 335147,
+          "CODIGO_SUBCATEGORIA_DIAG2": 335147,
+          "GLOSA_SUBCATEGORIA_DIAG2": 335147,
+          "LUGAR_DEFUNCION": 0
+        },
+        "asterisk": {
+          "AÑO": 0,
+          "FECHA_DEF": 0,
+          "SEXO_NOMBRE": 0,
+          "EDAD_TIPO": 0,
+          "EDAD_CANT": 0,
+          "COD_COMUNA": 0,
+          "COMUNA": 0,
+          "NOMBRE_REGION": 0,
+          "DIAG1": 0,
+          "CAPITULO_DIAG1": 0,
+          "GLOSA_CAPITULO_DIAG1": 0,
+          "CODIGO_GRUPO_DIAG1": 0,
+          "GLOSA_GRUPO_DIAG1": 0,
+          "CODIGO_CATEGORIA_DIAG1": 0,
+          "GLOSA_CATEGORIA_DIAG1": 0,
+          "CODIGO_SUBCATEGORIA_DIAG1": 0,
+          "GLOSA_SUBCATEGORIA_DIAG1": 0,
+          "DIAG2": 0,
+          "CAPITULO_DIAG2": 0,
+          "GLOSA_CAPITULO_DIAG2": 0,
+          "CODIGO_GRUPO_DIAG2": 0,
+          "GLOSA_GRUPO_DIAG2": 0,
+          "CODIGO_CATEGORIA_DIAG2": 0,
+          "GLOSA_CATEGORIA_DIAG2": 0,
+          "CODIGO_SUBCATEGORIA_DIAG2": 0,
+          "GLOSA_SUBCATEGORIA_DIAG2": 0,
+          "LUGAR_DEFUNCION": 0
+        },
+        "years": {
+          "2024": 126928,
+          "2025": 126466,
+          "2026": 103580
+        },
+        "months_by_valid_date": {
+          "2024-01": 10111,
+          "2024-02": 9375,
+          "2024-03": 9805,
+          "2024-04": 9826,
+          "2024-05": 12503,
+          "2024-06": 11296,
+          "2024-07": 11761,
+          "2024-08": 11488,
+          "2024-09": 10682,
+          "2024-10": 10320,
+          "2024-11": 9778,
+          "2024-12": 9983,
+          "2025-01": 10224,
+          "2025-02": 8912,
+          "2025-03": 9500,
+          "2025-04": 10182,
+          "2025-05": 11556,
+          "2025-06": 11699,
+          "2025-07": 11830,
+          "2025-08": 11020,
+          "2025-09": 10727,
+          "2025-10": 10740,
+          "2025-11": 10067,
+          "2025-12": 10009,
+          "2026-01": 10508,
+          "2026-02": 8888,
+          "2026-03": 9922,
+          "2026-04": 10069,
+          "2026-05": 11032,
+          "2026-06": 11301,
+          "2026-07": 12388,
+          "2026-08": 11127,
+          "2026-09": 10763,
+          "2026-10": 7582
+        },
+        "sexes": {
+          "Hombre": 185563,
+          "Mujer": 171400,
+          "Indeterminado": 11
+        },
+        "regions": {
+          "De Los Lagos": 17741,
+          "Metropolitana de Santiago": 131967,
+          "Del Bíobío": 32823,
+          "Del Maule": 23134,
+          "De Valparaíso": 42864,
+          "De Ñuble": 11858,
+          "De La Araucanía": 21700,
+          "De Antofagasta": 10118,
+          "Del Libertador B. O'Higgins": 19923,
+          "De Coquimbo": 15714,
+          "De Aisén del Gral. C. Ibáñez del Campo": 1691,
+          "De Los Ríos": 8855,
+          "De Magallanes y de La Antártica Chilena": 3425,
+          "De Arica y Parinacota": 4545,
+          "De Tarapacá": 5061,
+          "De Atacama": 5461,
+          "": 64,
+          "Ignorada": 30
+        },
+        "age_types": {
+          "1": 354437,
+          "2": 594,
+          "4": 985,
+          "3": 949,
+          "0": 9
+        },
+        "age_quantity_by_type": {
+          "1": {
+            "numeric": 354437,
+            "non_numeric": 0,
+            "min": 1,
+            "max": 140,
+            "negative": 0,
+            "literal_999": 0
+          },
+          "2": {
+            "numeric": 594,
+            "non_numeric": 0,
+            "min": 1,
+            "max": 11,
+            "negative": 0,
+            "literal_999": 0
+          },
+          "4": {
+            "numeric": 985,
+            "non_numeric": 0,
+            "min": 1,
+            "max": 23,
+            "negative": 0,
+            "literal_999": 0
+          },
+          "3": {
+            "numeric": 949,
+            "non_numeric": 0,
+            "min": 1,
+            "max": 30,
+            "negative": 0,
+            "literal_999": 0
+          },
+          "0": {
+            "numeric": 9,
+            "non_numeric": 0,
+            "min": 0,
+            "max": 0,
+            "negative": 0,
+            "literal_999": 0
+          }
+        },
+        "locations": {
+          "Casa habitación": 178975,
+          "Hospital o Clínica": 146412,
+          "Otro": 31587
+        },
+        "unique_well_formed_communes": 138,
+        "min_date": "2024-01-01",
+        "max_date": "2026-10-24",
+        "missing_expected_years": [],
+        "diagnostic_by_year": {
+          "2024": {
+            "numeric": 0,
+            "cie10_shape": 126928,
+            "f_prefix": 3639
+          },
+          "2025": {
+            "numeric": 0,
+            "cie10_shape": 126466,
+            "f_prefix": 3676
+          },
+          "2026": {
+            "numeric": 0,
+            "cie10_shape": 103580,
+            "f_prefix": 3378
+          }
+        },
+        "scope": "complete_file_streaming_no_sampling",
+        "mental_health": {
+          "annual": {
+            "2024": {
+              "f_diag1": 3639,
+              "rm_f_diag1": 1401,
+              "self_diag2": 1984,
+              "rm_self_diag2": 662,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            },
+            "2025": {
+              "f_diag1": 3676,
+              "rm_f_diag1": 1414,
+              "self_diag2": 1927,
+              "rm_self_diag2": 573,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 1,
+              "rm_undetermined_diag2": 1
+            },
+            "2026": {
+              "f_diag1": 3378,
+              "rm_f_diag1": 1364,
+              "self_diag2": 1458,
+              "rm_self_diag2": 435,
+              "self_diag1": 0,
+              "rm_self_diag1": 0,
+              "sequela_diag2": 0,
+              "rm_sequela_diag2": 0,
+              "undetermined_diag2": 0,
+              "rm_undetermined_diag2": 0
+            }
+          },
+          "f_categories": {
+            "F03": 5589,
+            "F06": 314,
+            "F01": 693,
+            "F29": 2,
+            "F05": 80,
+            "F20": 76,
+            "F17": 77,
+            "F32": 30,
+            "F48": 4,
+            "F10": 328,
+            "F68": 1,
+            "F19": 67,
+            "F31": 5,
+            "F44": 9,
+            "F91": 2,
+            "F33": 2,
+            "F79": 8,
+            "F14": 9,
+            "F70": 1,
+            "F72": 6,
+            "F23": 1,
+            "F84": 4,
+            "F34": 1,
+            "F22": 1,
+            "F30": 1,
+            "F81": 1,
+            "F43": 1,
+            "F50": 2
+          },
+          "f_category_labels": {
+            "F03": {
+              "Demencia , no especificada": 5589
+            },
+            "F06": {
+              "Otros trastornos mentales debidos a lesión y disfunción cerebral, y a enfermedad física": 314
+            },
+            "F01": {
+              "Demencia vascular": 693
+            },
+            "F29": {
+              "Psicosis de origen no orgánico, no especificada": 2
+            },
+            "F05": {
+              "Delirio, no inducido por alcohol o por otras sustancias psicoactivas": 80
+            },
+            "F20": {
+              "Esquizofrenia": 76
+            },
+            "F17": {
+              "Trastornos mentales y del comportamiento debidos al uso de tabaco": 77
+            },
+            "F32": {
+              "Episodio depresivo": 30
+            },
+            "F48": {
+              "Neurastenia": 4
+            },
+            "F10": {
+              "Trastornos mentales y del comportamiento debidos al uso de alcohol": 328
+            },
+            "F68": {
+              "Otros trastornos de la personalidad y del comportamiento en adultos": 1
+            },
+            "F19": {
+              "Trastornos mentales y del comportamiento debidos al uso de múltiples drogas y al uso de otras sustancias psicoactivas": 67
+            },
+            "F31": {
+              "Trastorno afectivo bipolar": 5
+            },
+            "F44": {
+              "Trastornos disociativos [de conversión]": 9
+            },
+            "F91": {
+              "Trastornos de la conducta": 2
+            },
+            "F33": {
+              "Trastorno depresivo recurrente": 2
+            },
+            "F79": {
+              "Retraso mental, no especificado": 8
+            },
+            "F14": {
+              "Trastornos mentales y del comportamiento debidos al uso de cocaína": 9
+            },
+            "F70": {
+              "Retraso mental leve": 1
+            },
+            "F72": {
+              "Retraso mental grave": 6
+            },
+            "F23": {
+              "Trastornos psicóticos agudos y transitorios": 1
+            },
+            "F84": {
+              "Trastornos generalizados del desarrollo": 4
+            },
+            "F34": {
+              "Trastorno del humor [afectivos] persistentes": 1
+            },
+            "F22": {
+              "Trastornos delirantes persistentes": 1
+            },
+            "F30": {
+              "Episodio maníaco": 1
+            },
+            "F81": {
+              "Trastornos específicos del  desarrollo de las habilidades escolares": 1
+            },
+            "F43": {
+              "Reacción al estrés grave y trastornos de adaptación": 1
+            },
+            "F50": {
+              "Trastornos de la ingestión de alimentos": 2
+            }
+          },
+          "sex": {
+            "f": {
+              "Mujer": 4447,
+              "Hombre": 2868
+            },
+            "self": {
+              "Hombre": 3132,
+              "Mujer": 779
+            }
+          },
+          "age": {
+            "f": {
+              "65+": 6847,
+              "45-64": 382,
+              "30-44": 71,
+              "15-29": 13,
+              "0-14": 2
+            },
+            "self": {
+              "65+": 540,
+              "45-64": 1154,
+              "30-44": 1298,
+              "15-29": 884,
+              "0-14": 35
+            }
+          }
+        }
+      }
+    }
+  },
+  "mental_health_years": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "suicide_context_comparison": {
+    "status": "compared",
+    "path": "data/processed/contexto_genero/suicidio_ratio_hm_tasas_nacional_regional.parquet",
+    "sha256": "2f4c107add093f1c1264874b1f8ed1ae1a7f880138c43974144298e282372c7d",
+    "compared": 49,
+    "matched": 42,
+    "comparisons": [
+      {
+        "year": "1997",
+        "scope": "Nacional",
+        "raw": 910,
+        "context": 910
+      },
+      {
+        "year": "1998",
+        "scope": "Nacional",
+        "raw": 1031,
+        "context": 1031
+      },
+      {
+        "year": "1999",
+        "scope": "Nacional",
+        "raw": 1041,
+        "context": 1041
+      },
+      {
+        "year": "2000",
+        "scope": "Nacional",
+        "raw": 1473,
+        "context": 1473
+      },
+      {
+        "year": "2001",
+        "scope": "Nacional",
+        "raw": 1625,
+        "context": 1625
+      },
+      {
+        "year": "2002",
+        "scope": "Nacional",
+        "raw": 1599,
+        "context": 1603
+      },
+      {
+        "year": "2003",
+        "scope": "Nacional",
+        "raw": 1654,
+        "context": 1654
+      },
+      {
+        "year": "2004",
+        "scope": "Nacional",
+        "raw": 1735,
+        "context": 1735
+      },
+      {
+        "year": "2005",
+        "scope": "Nacional",
+        "raw": 1680,
+        "context": 1680
+      },
+      {
+        "year": "2006",
+        "scope": "Nacional",
+        "raw": 1795,
+        "context": 1795
+      },
+      {
+        "year": "2007",
+        "scope": "Nacional",
+        "raw": 1926,
+        "context": 1926
+      },
+      {
+        "year": "2009",
+        "scope": "Nacional",
+        "raw": 2148,
+        "context": 2148
+      },
+      {
+        "year": "2010",
+        "scope": "Nacional",
+        "raw": 2001,
+        "context": 2001
+      },
+      {
+        "year": "2011",
+        "scope": "Nacional",
+        "raw": 2027,
+        "context": 2027
+      },
+      {
+        "year": "2012",
+        "scope": "Nacional",
+        "raw": 1841,
+        "context": 1841
+      },
+      {
+        "year": "2013",
+        "scope": "Nacional",
+        "raw": 1738,
+        "context": 1738
+      },
+      {
+        "year": "2014",
+        "scope": "Nacional",
+        "raw": 1789,
+        "context": 1789
+      },
+      {
+        "year": "2015",
+        "scope": "Nacional",
+        "raw": 1835,
+        "context": 1835
+      },
+      {
+        "year": "2016",
+        "scope": "Nacional",
+        "raw": 1858,
+        "context": 1858
+      },
+      {
+        "year": "2017",
+        "scope": "Nacional",
+        "raw": 1879,
+        "context": 1879
+      },
+      {
+        "year": "2018",
+        "scope": "Nacional",
+        "raw": 1823,
+        "context": 1823
+      },
+      {
+        "year": "2008",
+        "scope": "Nacional",
+        "raw": 2166,
+        "context": 2168
+      },
+      {
+        "year": "2019",
+        "scope": "Nacional",
+        "raw": 1901,
+        "context": 1901
+      },
+      {
+        "year": "2020",
+        "scope": "Nacional",
+        "raw": 1602,
+        "context": 1602
+      },
+      {
+        "year": "2021",
+        "scope": "Nacional",
+        "raw": 1573,
+        "context": 1573
+      },
+      {
+        "year": "2022",
+        "scope": "Nacional",
+        "raw": 2099,
+        "context": 2099
+      },
+      {
+        "year": "2023",
+        "scope": "Nacional",
+        "raw": 2056,
+        "context": 2056
+      },
+      {
+        "year": "2002",
+        "scope": "RM",
+        "raw": 498,
+        "context": 499
+      },
+      {
+        "year": "2003",
+        "scope": "RM",
+        "raw": 543,
+        "context": 543
+      },
+      {
+        "year": "2004",
+        "scope": "RM",
+        "raw": 576,
+        "context": 577
+      },
+      {
+        "year": "2005",
+        "scope": "RM",
+        "raw": 567,
+        "context": 567
+      },
+      {
+        "year": "2006",
+        "scope": "RM",
+        "raw": 608,
+        "context": 608
+      },
+      {
+        "year": "2007",
+        "scope": "RM",
+        "raw": 638,
+        "context": 638
+      },
+      {
+        "year": "2008",
+        "scope": "RM",
+        "raw": 726,
+        "context": 728
+      },
+      {
+        "year": "2009",
+        "scope": "RM",
+        "raw": 787,
+        "context": 787
+      },
+      {
+        "year": "2010",
+        "scope": "RM",
+        "raw": 692,
+        "context": 692
+      },
+      {
+        "year": "2011",
+        "scope": "RM",
+        "raw": 712,
+        "context": 712
+      },
+      {
+        "year": "2012",
+        "scope": "RM",
+        "raw": 670,
+        "context": 670
+      },
+      {
+        "year": "2013",
+        "scope": "RM",
+        "raw": 639,
+        "context": 639
+      },
+      {
+        "year": "2014",
+        "scope": "RM",
+        "raw": 650,
+        "context": 650
+      },
+      {
+        "year": "2015",
+        "scope": "RM",
+        "raw": 701,
+        "context": 700
+      },
+      {
+        "year": "2016",
+        "scope": "RM",
+        "raw": 677,
+        "context": 677
+      },
+      {
+        "year": "2017",
+        "scope": "RM",
+        "raw": 658,
+        "context": 658
+      },
+      {
+        "year": "2018",
+        "scope": "RM",
+        "raw": 617,
+        "context": 618
+      },
+      {
+        "year": "2019",
+        "scope": "RM",
+        "raw": 638,
+        "context": 638
+      },
+      {
+        "year": "2020",
+        "scope": "RM",
+        "raw": 469,
+        "context": 469
+      },
+      {
+        "year": "2021",
+        "scope": "RM",
+        "raw": 496,
+        "context": 496
+      },
+      {
+        "year": "2022",
+        "scope": "RM",
+        "raw": 693,
+        "context": 693
+      },
+      {
+        "year": "2023",
+        "scope": "RM",
+        "raw": 615,
+        "context": 615
+      }
+    ],
+    "differences": [
+      {
+        "year": "2002",
+        "scope": "Nacional",
+        "raw": 1599,
+        "context": 1603
+      },
+      {
+        "year": "2008",
+        "scope": "Nacional",
+        "raw": 2166,
+        "context": 2168
+      },
+      {
+        "year": "2002",
+        "scope": "RM",
+        "raw": 498,
+        "context": 499
+      },
+      {
+        "year": "2004",
+        "scope": "RM",
+        "raw": 576,
+        "context": 577
+      },
+      {
+        "year": "2008",
+        "scope": "RM",
+        "raw": 726,
+        "context": 728
+      },
+      {
+        "year": "2015",
+        "scope": "RM",
+        "raw": 701,
+        "context": 700
+      },
+      {
+        "year": "2018",
+        "scope": "RM",
+        "raw": 617,
+        "context": 618
+      }
+    ]
+  }
+}

@@ -17,6 +17,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.chile_time import current_year_chile, run_date_chile
 from src.data.raw_provenance import file_sha256, processed_raw_sha256
+from src.data.clean_defunciones import load_config as load_defunciones_config
 
 logging.basicConfig(
     level=logging.INFO,
@@ -66,6 +67,29 @@ STAGES = {
             "data/raw/camas/dotacion_camas_no_snss_2019_2025.xlsx"
         ],
         "depends_on": []
+    },
+    "download_defunciones": {
+        "module": "src.data.download_defunciones",
+        "outputs": [
+            "data/raw/defunciones/1990_2023/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv",
+            "data/raw/defunciones/1990_2023/Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
+            "data/raw/defunciones/2024_2026_27102026/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.csv",
+            "data/raw/defunciones/2024_2026_27102026/Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
+        ],
+        "depends_on": []
+    },
+    "eda_defunciones": {
+        "module": "scripts.eda_defunciones",
+        "outputs": [
+            "reports/eda/eda_defunciones_raw.md",
+            "reports/eda/eda_defunciones_raw_resumen.json",
+        ],
+        "depends_on": ["download_defunciones"]
+    },
+    "clean_defunciones": {
+        "module": "src.data.clean_defunciones",
+        "outputs": list(load_defunciones_config()["outputs"].values()),
+        "depends_on": ["download_defunciones"]
     },
     "download_deis": {
         "module": "src.data.download_deis_sources",
@@ -339,6 +363,9 @@ PIPELINE_ORDER = [
     "download_poblacion_proyecciones",
     "download_pobreza_comunal",
     "download_dotacion_camas",
+    "download_defunciones",
+    "eda_defunciones",
+    "clean_defunciones",
     "download_deis",
     "download_establishments",
     "download_contexto_genero",
