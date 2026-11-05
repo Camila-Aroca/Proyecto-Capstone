@@ -139,8 +139,6 @@ export function PanelSerie({
           </dl>
 
           <div className="mt-5">
-            {/* Las camas no van sobre este eje: una dotacion anual junto a atenciones
-                semanales sugiere una comparacion de capacidad que no corresponde. */}
             <GraficoSerie serie={serie} tokens={tokens} intervalo={intervalo} semanaParcial={parcialAplicable} />
             <TablaSerie serie={serie} intervalo={intervalo} semanaParcial={parcialAplicable} camas={camas} />
           </div>

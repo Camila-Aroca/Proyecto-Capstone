@@ -40,8 +40,9 @@
   --on-accent: #ffffff;
   --series-1: #0f5a78;
   --band: rgba(74, 159, 207, 0.22);
-  /* Linea de referencia de camas: celeste electrico, mas claro que la serie. */
-  --camas: #00c8ff;
+  /* Linea de referencia de camas: burdeos, distinto del petroleo de la serie y del
+     rojo de alza. 8,9:1 sobre la superficie clara; contra el petróleo de la serie solo distingue el matiz, por eso va punteada. */
+  --camas: #8c1d40;
   --focus: #0f5a78;
 
   /* Cambio esperado (divergente, calido/frio) y ausencia de dato. Par validado:
@@ -96,7 +97,8 @@
     --on-accent: #0a141a;
     --series-1: #4a9fcf;
     --band: rgba(74, 159, 207, 0.24);
-    --camas: #3ee6ff;
+    /* Burdeos claro para fondo oscuro: 5,2:1 sobre la superficie. */
+    --camas: #e0627f;
     --focus: #7cc0e2;
     --alza: #e07a62;
     --alza-weak: rgba(224, 122, 98, 0.18);

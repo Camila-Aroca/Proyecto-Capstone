@@ -1,8 +1,10 @@
+import { useRef, useState } from "react";
 import {
   Area,
   CartesianGrid,
   ComposedChart,
   Line,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -20,7 +22,33 @@ interface Props {
   semanaParcial?: SemanaParcial | null;
   /** Que cuenta la serie, en plural y minusculas: "atenciones" u "hospitalizaciones". */
   unidad?: string;
+  /** Dotacion de camas a dibujar como referencia. Sin ella (null) no hay linea: es ausencia de dato, no cero. */
+  camas?: LineaCamas | null;
 }
+
+/** Linea de referencia de camas: el total, su texto y cuanto debe pesar en el grafico. */
+export interface LineaCamas {
+  total: number;
+  /** Etiqueta corta de la leyenda. */
+  etiqueta: string;
+  /** Texto completo del hover. */
+  descripcion: string;
+  /** Referencia de fondo (por establecimiento): mas fina y tenue para no competir con la serie. */
+  sutil?: boolean;
+}
+
+// Halo de la linea de camas: dos sombras del mismo color, una ceñida y otra difusa.
+// La version sutil baja la intensidad para que sea un fondo, no un protagonista.
+export const brilloCamas = (color: string, sutil = false) =>
+  sutil
+    ? `drop-shadow(0 0 1px ${color}) drop-shadow(0 0 4px ${color})`
+    : `drop-shadow(0 0 2px ${color}) drop-shadow(0 0 7px ${color})`;
+
+const trazoCamas = (sutil?: boolean) => ({
+  grosor: sutil ? 1.5 : 2,
+  opacidad: sutil ? 0.5 : 1,
+  guion: sutil ? "2 5" : "6 5",
+});
 
 // Texto de las camas del territorio, en la tabla de datos.
 export function textoCamas(camas: CamasPsiquiatria, total: number): string {
@@ -108,9 +136,10 @@ function construirPuntos(serie: SerieConPronostico, parcial?: SemanaParcial | nu
   return puntos;
 }
 
-export function LeyendaSerie({ tokens, intervalo, conParcial = true }: {
+export function LeyendaSerie({ tokens, intervalo, conParcial = true, camas }: {
   tokens: Tokens;
   intervalo: string;
+  camas?: LineaCamas | null;
   /** Solo la serie regional tiene semana en curso parcial. */
   conParcial?: boolean;
 }) {
@@ -134,6 +163,17 @@ export function LeyendaSerie({ tokens, intervalo, conParcial = true }: {
         </svg>
         Semana en curso (parcial)
       </li>}
+      {camas && (
+        <li className="inline-flex items-center gap-1.5">
+          <svg
+            width="20" height="8" aria-hidden
+            style={{ overflow: "visible", opacity: trazoCamas(camas.sutil).opacidad, filter: brilloCamas(tokens.camas, camas.sutil) }}
+          >
+            <line x1="0" y1="4" x2="20" y2="4" stroke={tokens.camas} strokeWidth={trazoCamas(camas.sutil).grosor} strokeDasharray={trazoCamas(camas.sutil).guion} strokeLinecap="round" />
+          </svg>
+          {camas.etiqueta}
+        </li>
+      )}
     </ul>
   );
 }
@@ -222,10 +262,19 @@ export function TablaSerie({ serie, intervalo, semanaParcial, camas, unidad = "a
   );
 }
 
-export function GraficoSerie({ serie, tokens, intervalo, semanaParcial, unidad = "atenciones" }: Props) {
+export function GraficoSerie({ serie, tokens, intervalo, semanaParcial, unidad = "atenciones", camas }: Props) {
   const puntos = construirPuntos(serie, semanaParcial);
+  const contenedor = useRef<HTMLDivElement>(null);
+  // Posicion del cursor sobre la linea de camas, relativa al grafico; null = fuera.
+  const [sobreCamas, setSobreCamas] = useState<{ x: number; y: number } | null>(null);
+  const moverSobreCamas = (e: { clientX: number; clientY: number }) => {
+    const caja = contenedor.current?.getBoundingClientRect();
+    if (caja) setSobreCamas({ x: e.clientX - caja.left, y: e.clientY - caja.top });
+  };
+  const trazo = trazoCamas(camas?.sutil);
   return (
     <div
+      ref={contenedor}
       className="relative h-72"
       role="img"
       aria-label={`${mayuscula(unidad)} semanales observadas y pronosticadas de ${serie.nombre}`}
@@ -250,10 +299,10 @@ export function GraficoSerie({ serie, tokens, intervalo, semanaParcial, unidad =
             width={52}
           />
           <Tooltip
-            cursor={{ stroke: tokens.axis, strokeWidth: 1 }}
+            cursor={sobreCamas ? false : { stroke: tokens.axis, strokeWidth: 1 }}
             isAnimationActive={false}
             content={({ active, payload }) => {
-              const p = active ? (payload?.[0]?.payload as Punto | undefined) : undefined;
+              const p = active && !sobreCamas ? (payload?.[0]?.payload as Punto | undefined) : undefined;
               if (!p) return null;
               return (
                 <div className="panel px-3 py-2 text-[12px] num shadow-sm">
@@ -298,8 +347,46 @@ export function GraficoSerie({ serie, tokens, intervalo, semanaParcial, unidad =
             isAnimationActive={false}
             connectNulls={false}
           />
+          {camas && (
+            <>
+              {/* Extiende el eje para que la linea nunca quede fuera de rango y desaparezca. */}
+              <ReferenceLine
+                y={camas.total}
+                ifOverflow="extendDomain"
+                stroke={tokens.camas}
+                strokeWidth={trazo.grosor}
+                strokeOpacity={trazo.opacidad}
+                strokeDasharray={trazo.guion}
+                strokeLinecap="round"
+                style={{ filter: brilloCamas(tokens.camas, camas.sutil) }}
+              />
+              {/* Franja transparente y ancha: area de hover comoda para una linea fina. */}
+              <ReferenceLine
+                y={camas.total}
+                ifOverflow="extendDomain"
+                stroke="transparent"
+                strokeWidth={16}
+                onMouseEnter={moverSobreCamas}
+                onMouseMove={moverSobreCamas}
+                onMouseLeave={() => setSobreCamas(null)}
+              />
+            </>
+          )}
         </ComposedChart>
       </ResponsiveContainer>
+      {sobreCamas && camas && (
+        <div
+          role="tooltip"
+          className="panel pointer-events-none absolute z-10 max-w-[260px] px-3 py-2 text-[12px] shadow-sm"
+          style={{
+            left: Math.max(Math.min(sobreCamas.x + 12, (contenedor.current?.clientWidth ?? 0) - 272), 0),
+            top: Math.max(sobreCamas.y - 64, 0),
+            borderColor: tokens.camas,
+          }}
+        >
+          {camas.descripcion}
+        </div>
+      )}
     </div>
   );
 }

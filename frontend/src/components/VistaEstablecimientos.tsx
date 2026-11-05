@@ -21,7 +21,7 @@ import { Alcance } from "./Alcance";
 import { AvisoLectura } from "./AvisoLectura";
 import { BadgeCambio } from "./BadgeCambio";
 import { BarraSuperior } from "./BarraSuperior";
-import { GraficoSerie, LeyendaSerie, TablaSerie } from "./GraficoSerie";
+import { GraficoSerie, LeyendaSerie, TablaSerie, type LineaCamas } from "./GraficoSerie";
 
 const VENTANAS = [26, 52, 104] as const;
 const TODOS = "todos";
@@ -219,6 +219,16 @@ export function VistaEstablecimientos() {
   const motivo = detalle?.series.find((s) => s.objetivo === objetivo)?.motivo_sin_pronostico ?? resumenObjetivo?.motivo_sin_pronostico;
   const primero = serie?.pronostico?.[0];
   const { unidad, subtitulo } = OBJETIVOS[objetivo];
+  // Solo en hospitalizaciones: las camas se comparan con internaciones, no con atenciones de urgencia.
+  // Referencia de fondo: tenue, para que no compita con la serie. Sin dotacion declarada no hay linea.
+  const lineaCamas: LineaCamas | null = objetivo === "hospitalizaciones_sm" && resumen?.camas_psiquiatria != null
+    ? {
+        total: resumen.camas_psiquiatria,
+        etiqueta: "Camas de psiquiatría",
+        descripcion: `Camas de psiquiatría de ${resumen.nombre}: ${fmtEntero(resumen.camas_psiquiatria)}. Dotación declarada (SNSS), no ocupación.`,
+        sutil: true,
+      }
+    : null;
   const ultima = meta ? { ...meta.ultima_semana_observada, fecha_inicio: meta.ultima_semana_fecha_inicio } : null;
 
   return (
@@ -288,7 +298,7 @@ export function VistaEstablecimientos() {
                 )}
               </p>
             </div>
-            <LeyendaSerie tokens={tokens} intervalo={intervalo} conParcial={false} />
+            <LeyendaSerie tokens={tokens} intervalo={intervalo} conParcial={false} camas={lineaCamas} />
           </div>
 
           {!serie ? (
@@ -359,7 +369,7 @@ export function VistaEstablecimientos() {
               </dl>
 
               <div className="mt-5">
-                <GraficoSerie serie={serie} tokens={tokens} intervalo={intervalo} unidad={unidad} />
+                <GraficoSerie serie={serie} tokens={tokens} intervalo={intervalo} unidad={unidad} camas={lineaCamas} />
                 <TablaSerie serie={serie} intervalo={intervalo} unidad={unidad} />
               </div>
             </div>
