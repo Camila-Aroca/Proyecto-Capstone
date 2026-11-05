@@ -35,6 +35,7 @@ Se realizó una búsqueda dirigida antes de crear cualquier artefacto:
 - `mart_contexto_genero_indicador_sexo` (`data/processed/marts/`), derivado
   de los cuatro Parquet independientes de `data/processed/contexto_genero/`.
 - `dotacion_camas_snss` y `dotacion_camas_no_snss` (`data/processed/camas/`): dotación anual de camas hospitalarias (DEIS, DIGERA), un Parquet por libro de `data/raw/camas/`, con las mismas columnas que su libro.
+- `indicadores_hospitalarios_snss` y `categorizacion_riesgo_dependencia` (`data/processed/estadisticas_hospitalarias/`): Estadísticas Hospitalarias REM-20 del DEIS, un Parquet por familia de libros de `data/raw/estadisticas_hospitalarias/`: indicadores mensuales por establecimiento y nivel de cuidado (solo el detalle) y categorización trimestral CUDYR.
 
 **Actualización de Defunciones:** el modelo lógico incorpora
 `data/processed/defunciones/defunciones_nacional.parquet`, con las 27 variables
@@ -397,6 +398,56 @@ erDiagram
         int n_areas_psiquiatria
     }
 
+    %% grain: 1 fila = 1 indicador de 1 nivel de cuidado de 1 establecimiento SNSS en 1 ano, con acumulado y 12 meses (160974 filas, 208 establecimientos, 2014-2026)
+    %% solo detalle: las filas agregadas del libro (Datos Pais, Datos Servicio Salud, Datos Establecimiento) quedan en RAW y se usan para conciliar
+    indicadores_hospitalarios_snss {
+        int ano PK
+        int servicio_salud_codigo PK
+        bigint establecimiento_codigo PK "vinculo logico a dim_oferta_urgencia_rm (35/208) y a dotacion_camas_snss (196/208)"
+        int nivel_cuidado_codigo PK "mismo catalogo que area_funcional_codigo de la dotacion"
+        string indicador PK "11 indicadores: conteos, promedio de camas y razones; solo los conteos son aditivos"
+        string servicio_salud
+        string establecimiento_nombre
+        string nivel_cuidado
+        double acumulado "suma de meses en conteos; razon o promedio del periodo en el resto"
+        double ene "NULL = mes no publicado, no cero (igual en todos los meses)"
+        double feb
+        double mar
+        double abr
+        double may
+        double jun
+        double jul
+        double ago
+        double sep
+        double oct
+        double nov
+        double dic
+    }
+
+    %% grain: 1 fila = 1 nivel de cuidado de 1 establecimiento SNSS en 1 trimestre (8834 filas, 2024-T1 a 2025-T4); el libro no trae codigo de establecimiento
+    categorizacion_riesgo_dependencia {
+        int ano PK
+        int trimestre PK "del nombre de la publicacion; el libro solo declara el ano"
+        string servicio_salud PK
+        string establecimiento_nombre PK "coincide por ano, servicio y nombre exacto con indicadores_hospitalarios_snss (384/384)"
+        int nivel_cuidado_codigo PK
+        string region
+        string nivel_cuidado
+        bigint total "igual a la suma de las 12 categorias"
+        bigint a1 "categorizaciones CUDYR: riesgo A-D x dependencia 1-3"
+        bigint a2
+        bigint a3
+        bigint b1
+        bigint b2
+        bigint b3
+        bigint c1
+        bigint c2
+        bigint c3
+        bigint d1
+        bigint d2
+        bigint d3
+    }
+
     cartografia_comunal ||--o{ cartografia_distrital : "1 comuna tiene N distritos"
     cartografia_distrital ||--o{ cartografia_zonal : "1 distrito tiene N zonas urbanas (parcial: 51/52 comunas)"
     cartografia_distrital ||--o{ cartografia_entidades : "1 distrito tiene N entidades rurales (parcial: 26/52 comunas)"
@@ -421,6 +472,9 @@ erDiagram
     dim_oferta_urgencia_rm |o..o{ dotacion_camas_no_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 10/144 establecimientos estan en la oferta)"
     dim_oferta_urgencia_rm ||--o| dim_camas_psiquiatria_hospital_rm : "1 hospital de la oferta, 1 fila de camas (solo tipo Hospital)"
     dotacion_camas_snss |o..o{ dim_camas_psiquiatria_hospital_rm : "derivacion: suma de areas de psiquiatria del ultimo ano, vinculo logico por establecimiento_codigo"
+    dim_oferta_urgencia_rm |o..o{ indicadores_hospitalarios_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 35/208 establecimientos estan en la oferta)"
+    dotacion_camas_snss |o..o{ indicadores_hospitalarios_snss : "vinculo logico por establecimiento_codigo y area funcional = nivel de cuidado (196/208 establecimientos en la dotacion)"
+    indicadores_hospitalarios_snss |o..o{ categorizacion_riesgo_dependencia : "vinculo logico por ano, servicio de salud y nombre del establecimiento (sin codigo en la fuente)"
 ```
 
 Fuente independiente (idéntica): [`modelo_datos_logico.mmd`](modelo_datos_logico.mmd).
@@ -430,6 +484,8 @@ Fuente independiente (idéntica): [`modelo_datos_logico.mmd`](modelo_datos_logic
 `dotacion_camas_snss` y `dotacion_camas_no_snss` se relacionan con el resto solo por vínculos lógicos (línea punteada), nunca por FK: `establecimiento_codigo` coincide con el de `dim_oferta_urgencia_rm` solo para 44 de sus 174 establecimientos (34 de los 196 códigos del libro SNSS y 10 de los 144 del libro no SNSS), porque esa dimensión es solo la oferta de urgencia. Todos los códigos existen en el maestro de establecimientos, que no es una entidad de este modelo. Cada Parquet replica la estructura de su libro: el SNSS trae una columna `camas_AAAA` por año (el diagrama muestra la primera y la última, `camas_2010` y `camas_2025`) y el no SNSS apila las hojas anuales. La dotación es un stock anual declarado, no ocupación ni disponibilidad en tiempo real, y no se enlaza con Egresos (que no identifica el establecimiento): cualquier relación sería territorial/ecológica. Las notas al pie, las marcas y los totales nacionales de los libros no forman parte de las entidades: siguen en el RAW. Detalle del contrato en `reports/dictionary/diccionario_dotacion_camas.md`.
 
 `dim_camas_psiquiatria_hospital_rm` (`data/processed/camas/`, stage `build_dim_camas_psiquiatria_hospital_rm`) es la única entidad de camas con relación fuerte: es una dimensión derivada con una fila por hospital de `dim_oferta_urgencia_rm` (45), por lo que su `establecimiento_codigo` sí es FK a la oferta. Une cada hospital con sus camas de psiquiatría (suma de las áreas funcionales cuyo nombre contiene «Psiquiatr», excluida la fila Total) del último año de `dotacion_camas_snss`, detectado dinámicamente. `en_dotacion_snss = false` (11 hospitales, p. ej. privados) y los hospitales sin cifra de psiquiatría quedan con `camas_psiquiatria` nula, nunca en cero. `reporto_id36_periodo` marca los hospitales que alimentaron el modelo de demanda (ID36 > 0 alguna vez en 2021-2025): los totales territoriales de la API solo suman esos. Es dotación anual declarada, no ocupación ni disponibilidad.
+
+`indicadores_hospitalarios_snss` y `categorizacion_riesgo_dependencia` (`data/processed/estadisticas_hospitalarias/`, stage `clean_estadisticas_hospitalarias`) son las Estadísticas Hospitalarias REM-20: actividad mensual por establecimiento y nivel de cuidado del SNSS, y categorización trimestral CUDYR. Se relacionan con el resto solo por vínculos lógicos (línea punteada): `establecimiento_codigo` y `nivel_cuidado_codigo` son la misma llave y el mismo catálogo que `establecimiento_codigo` y `area_funcional_codigo` de `dotacion_camas_snss` (196 de los 208 establecimientos están en la dotación), y solo 35 de los 208 están en `dim_oferta_urgencia_rm`, que es solo la oferta de urgencia. **Los indicadores contienen solo el detalle**: las filas agregadas que el libro intercala (`Datos País`, `Datos Servicio Salud`, `Datos Establecimiento`) no son filas de la entidad, porque sumarlas con el detalle contaría lo mismo dos o tres veces; siguen en el RAW y se usan para conciliar. La entidad mezcla conteos, un promedio y razones en la columna `indicador`: solo los conteos son aditivos. La categorización no trae código de establecimiento en la fuente, así que su vínculo con los indicadores es por año, Servicio de Salud y nombre (coinciden los 384 pares del snapshot vigente). Son estadísticas consolidadas, no ocupación en tiempo real, y no se enlazan con Egresos ni con Urgencias por paciente. Detalle en `reports/dictionary/diccionario_estadisticas_hospitalarias.md`.
 
 Las capas `cartografia_zonal`, `cartografia_entidades` y `cartografia_manzanas` publican además ~150 columnas socioeconómicas (`n_*`, `prom_*`) no documentadas formalmente por el diccionario oficial del Censo 2024 (ver `reports/eda/eda_cartografia_censo2024_subcomunal.md`); no se listan en el diagrama por volumen, no porque no existan.
 
@@ -661,6 +717,53 @@ erDiagram
         smallint n_areas_psiquiatria
     }
 
+    camas_indicadores_hospitalarios_snss {
+        smallint ano PK
+        smallint servicio_salud_codigo PK
+        bigint establecimiento_codigo PK "SIN FK fisica a geo_dim_oferta_urgencia_rm: solo 35/208 estan en la oferta"
+        smallint nivel_cuidado_codigo PK
+        text indicador PK "CHECK: uno de los 11 indicadores publicados"
+        text servicio_salud
+        text establecimiento_nombre
+        text nivel_cuidado
+        numeric acumulado "NULL = no publicado"
+        numeric ene "NULL = mes no publicado, no cero (igual en todos los meses)"
+        numeric feb
+        numeric mar
+        numeric abr
+        numeric may
+        numeric jun
+        numeric jul
+        numeric ago
+        numeric sep
+        numeric oct
+        numeric nov
+        numeric dic
+    }
+
+    camas_categorizacion_riesgo_dependencia {
+        smallint ano PK
+        smallint trimestre PK "CHECK 1-4"
+        text servicio_salud PK
+        text establecimiento_nombre PK "sin codigo en la fuente"
+        smallint nivel_cuidado_codigo PK
+        text region
+        text nivel_cuidado
+        integer total "CHECK: igual a la suma de las 12 categorias"
+        integer a1 "categorizaciones CUDYR: riesgo A-D x dependencia 1-3"
+        integer a2
+        integer a3
+        integer b1
+        integer b2
+        integer b3
+        integer c1
+        integer c2
+        integer c3
+        integer d1
+        integer d2
+        integer d3
+    }
+
     censo_cartografia_comunal ||--o{ censo_cartografia_distrital : "1 comuna, N distritos"
     censo_cartografia_distrital ||--o{ censo_cartografia_zonal : "1 distrito, N zonas urbanas"
     censo_cartografia_distrital ||--o{ censo_cartografia_entidades : "1 distrito, N entidades rurales"
@@ -685,6 +788,8 @@ erDiagram
     geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_snss : "relacion documentada, NO enforced por FK fisica"
     geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_no_snss : "relacion documentada, NO enforced por FK fisica"
     geo_dim_oferta_urgencia_rm ||--o| camas_dim_psiquiatria_hospital_rm : "1 a 1 (hospitales de la oferta)"
+    geo_dim_oferta_urgencia_rm |o..o{ camas_indicadores_hospitalarios_snss : "relacion documentada, NO enforced por FK fisica"
+    camas_indicadores_hospitalarios_snss |o..o{ camas_categorizacion_riesgo_dependencia : "cruce por nombre documentado, NO enforced por FK fisica"
 
 ```
 
@@ -726,6 +831,8 @@ Los nueve esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, 
 | `dotacion_camas_snss` | 1 área funcional de 1 hospital del SNSS, o su fila Total (1694 filas, 196 hospitales; 2010-2025 como columnas `camas_AAAA`) | `servicio_salud, establecimiento_codigo, area_funcional_codigo` (clave lógica verificada; físico: `+ ano`, tras transponer los años a filas) | ninguna; vínculo lógico (no FK) a `dim_oferta_urgencia_rm` | entidad aislada |
 | `dotacion_camas_no_snss` | 1 área funcional (o el total) de 1 establecimiento no SNSS en 1 año (4631 filas, 144 establecimientos, 2019-2025) | sin clave lógica sin nulos: `area_funcional_codigo` es nulo en la fila de total (físico: `dotacion_id` técnico) | ninguna; vínculo lógico (no FK) a `dim_oferta_urgencia_rm` | entidad aislada |
 | `dim_camas_psiquiatria_hospital_rm` | 1 hospital de la oferta de urgencia con sus camas de psiquiatría del último año de la dotación SNSS (45 filas, 34 en dotación SNSS, 13 con cifra) | `establecimiento_codigo` | `establecimiento_codigo` → `dim_oferta_urgencia_rm` | 1 → 1 hospital de la oferta |
+| `indicadores_hospitalarios_snss` | 1 indicador de 1 nivel de cuidado de 1 establecimiento SNSS en 1 año, con acumulado y 12 meses (160974 filas, 208 establecimientos, 2014-2026); solo detalle | `ano, servicio_salud_codigo, establecimiento_codigo, nivel_cuidado_codigo, indicador` | ninguna; vínculo lógico (no FK) a `dim_oferta_urgencia_rm` y `dotacion_camas_snss` | entidad aislada |
+| `categorizacion_riesgo_dependencia` | 1 nivel de cuidado de 1 establecimiento SNSS en 1 trimestre (8834 filas, 2024-T1 a 2025-T4) | `ano, trimestre, servicio_salud, establecimiento_nombre, nivel_cuidado_codigo` | ninguna; vínculo lógico por nombre a `indicadores_hospitalarios_snss` (sin código en la fuente) | entidad aislada |
 
 ## 8. Decisiones de modelado (lógico → físico)
 
@@ -742,11 +849,12 @@ Los nueve esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, 
 11. **Los datos de camas se modelan como dos entidades, una por libro de origen, con las columnas de su libro.** Los libros publican la misma magnitud con estructuras distintas (Servicio de Salud frente a SEREMI, tipo de establecimiento solo en el SNSS, un año por columna frente a una hoja por año), y fusionarlos obligaría a columnas mutuamente excluyentes. En el modelo lógico, `dotacion_camas_snss` tiene clave lógica verificada `servicio_salud, establecimiento_codigo, area_funcional_codigo` (sin duplicados ni nulos, porque el total del hospital es el área `100` del propio libro). `dotacion_camas_no_snss` declara ausencia de clave lógica sin nulos: la fila de total del establecimiento no trae área, y esa fila vacía se conserva tal cual en vez de inventarle un código.
 12. **En el modelo físico, el SNSS se normaliza y el no SNSS usa clave técnica.** `camas.dotacion_snss` transpone las 16 columnas `camas_AAAA` a filas (`ano`, `camas`), porque un grupo repetitivo de columnas por año no es un diseño relacional (cada año nuevo cambiaría el esquema); su PK natural es `servicio_salud, establecimiento_codigo, area_funcional_codigo, ano`. `camas.dotacion_no_snss` usa `dotacion_id`, una clave técnica de persistencia como `egreso_id` (no existe en la fuente), más un índice único sobre `ano, seremi, establecimiento_codigo, COALESCE(area_funcional_codigo, -1)` que verifica la llave lógica. Ninguna de las dos tiene FK hacia `geo.dim_oferta_urgencia_rm`: solo 44 de sus 174 establecimientos tienen registro de camas y la mayoría de los códigos de camas no está en la oferta; una FK rompería la carga. Se documenta como relación lógica no forzada, igual que en `mart_urgencias_establecimiento_monthly`.
 13. **Los totales de camas por territorio salen de una dimensión derivada, no de los libros.** `dim_camas_psiquiatria_hospital_rm` une por llave (`establecimiento_codigo`, el mismo código DEIS de 6 dígitos en ambas fuentes) los hospitales de la oferta con la dotación SNSS, sin cruzar por nombre ni por el código textual `NN-NNN` de Urgencias. Conserva los 45 hospitales de la oferta para que el vínculo sea auditable y marca con `reporto_id36_periodo` cuáles alimentaron el modelo; sumar solo esos evita contar, por ejemplo, un hospital psiquiátrico que nunca reportó ID36. A diferencia de los libros de camas, su relación con la oferta sí es FK física porque la dimensión nace de ella.
+14. **Los indicadores REM-20 conservan los meses como columnas.** A diferencia de `camas_AAAA`, los 12 meses son un conjunto cerrado que no crece con el tiempo, y el `acumulado` de una razón no es derivable de sus meses: transponer obligaría a codificar el acumulado como un mes ficticio. `camas.indicadores_hospitalarios_snss` replica la entidad lógica con PK natural y un `CHECK` sobre los 11 indicadores publicados; `camas.categorizacion_riesgo_dependencia` usa la llave lógica por nombre como PK (la fuente no trae código) y un `CHECK` de que el total sea la suma de sus 12 categorías. Ninguna tiene FK física: son libros de origen con establecimientos fuera de la oferta de urgencia.
 
 ## 9. Limitaciones
 
 - **El DDL no se ejecutó contra una instancia PostgreSQL/PostGIS real**: no hay PostgreSQL, `psql` ni Docker disponibles en este entorno de ejecución. Se valida estáticamente en cada actualización; no se afirma ejecución real donde no la hubo.
-- Los dos diagramas `.mmd` sí se renderizaron exitosamente con `@mermaid-js/mermaid-cli` (v11.17.0, vía `npx`) a SVG y PNG, confirmando sintaxis Mermaid válida end-to-end (no solo inspección visual). Los artefactos persistentes (`modelo_datos_logico.svg/png`, `modelo_datos_fisico_postgresql.svg/png`) se generaron directamente desde los `.mmd` vigentes, sin edición manual posterior.
+- Los dos diagramas `.mmd` sí se renderizaron exitosamente con `@mermaid-js/mermaid-cli` (v11.4.2, vía `npx`, con los comandos de la sección 5) a SVG y PNG, confirmando sintaxis Mermaid válida end-to-end (no solo inspección visual). Los artefactos persistentes (`modelo_datos_logico.svg/png`, `modelo_datos_fisico_postgresql.svg/png`) se generaron directamente desde los `.mmd` vigentes, sin edición manual posterior.
 - Las ~150 columnas socioeconómicas (`n_*`, `prom_*`) de `cartografia_zonal`/`cartografia_entidades`/`cartografia_manzanas` no están documentadas formalmente por el diccionario oficial del Censo 2024 (`reports/eda/eda_cartografia_censo2024_subcomunal.md`, sección 2); no se listan exhaustivamente aquí ni en el DDL por ese motivo, no por limitación de espacio únicamente.
 - 6 de 66873 geometrías de `cartografia_manzanas` RM son topológicamente inválidas (autointersección de anillo, documentado en el EDA); no impide crear la columna `geometry`, pero podría afectar operaciones geométricas exactas sobre esas 6 filas específicas.
 - La brecha de reconciliación poblacional entre `dim_poblacion_comuna_censo2024` (7.400.741 hab.) y la suma de `n_per` de Manzanas+Entidades (98,53%) no tiene causa determinable con los datos disponibles (ver EDA); no se modela ni se corrige aquí.
@@ -754,4 +862,4 @@ Los nueve esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, 
 
 ## 10. Relación con `db/schema_postgresql.sql`
 
-El DDL ejecutable vive en [`db/schema_postgresql.sql`](../../../db/schema_postgresql.sql) (fuera de `docs/`, para no mezclar evidencia académica con código de infraestructura) y es coherente 1:1 con el diagrama de la sección 6 para los dominios físicos representados: mismos 9 esquemas, mismas 22 tablas, mismas PK/FK, mismos tipos. Defunciones no forma parte de este DDL. No contiene `INSERT`/`COPY`, credenciales, AWS/RDS, Docker, usuarios ni migrations — únicamente `CREATE EXTENSION` (PostGIS), `CREATE SCHEMA`, `CREATE TABLE` con `PRIMARY KEY`/`FOREIGN KEY`/`CHECK`/`COMMENT`, y los índices básicos necesarios para las FK no cubiertas por una PK compuesta y para las columnas `geometry` (`GIST`).
+El DDL ejecutable vive en [`db/schema_postgresql.sql`](../../../db/schema_postgresql.sql) (fuera de `docs/`, para no mezclar evidencia académica con código de infraestructura) y es coherente 1:1 con el diagrama de la sección 6 para los dominios físicos representados: mismos 9 esquemas, mismas 24 tablas, mismas PK/FK, mismos tipos. Defunciones no forma parte de este DDL. No contiene `INSERT`/`COPY`, credenciales, AWS/RDS, Docker, usuarios ni migrations — únicamente `CREATE EXTENSION` (PostGIS), `CREATE SCHEMA`, `CREATE TABLE` con `PRIMARY KEY`/`FOREIGN KEY`/`CHECK`/`COMMENT`, y los índices básicos necesarios para las FK no cubiertas por una PK compuesta y para las columnas `geometry` (`GIST`).

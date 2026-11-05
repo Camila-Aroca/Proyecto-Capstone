@@ -721,6 +721,116 @@ COMMENT ON COLUMN camas.dotacion_no_snss.camas IS
 CREATE INDEX ix_dotacion_no_snss_establecimiento ON camas.dotacion_no_snss (establecimiento_codigo, ano);
 
 -- =============================================================================
+-- camas.indicadores_hospitalarios_snss
+-- Grain: 1 fila = 1 indicador de 1 nivel de cuidado (area funcional) de 1
+-- establecimiento del SNSS en 1 ano, con el acumulado y un valor por mes.
+-- Replica el detalle de los libros REM-20 "Indicadores Hospitalarios segun
+-- Servicio de Salud" (DEIS), 2014 al ultimo corte del ano en curso. Las filas
+-- agregadas del libro (Datos Pais, Datos Servicio Salud, Datos Establecimiento)
+-- NO se cargan: sumarlas con el detalle duplicaria los conteos. PK natural. Sin
+-- FK a establecimientos: solo 35 de los 208 codigos estan en geo.dim_oferta_urgencia_rm.
+-- =============================================================================
+CREATE TABLE camas.indicadores_hospitalarios_snss (
+    ano                     SMALLINT   NOT NULL,
+    servicio_salud_codigo   SMALLINT   NOT NULL,
+    servicio_salud          TEXT       NOT NULL,
+    establecimiento_codigo  BIGINT     NOT NULL,
+    establecimiento_nombre  TEXT       NOT NULL,
+    nivel_cuidado_codigo    SMALLINT   NOT NULL,
+    nivel_cuidado           TEXT       NOT NULL,
+    indicador               TEXT       NOT NULL,
+    acumulado               NUMERIC,
+    ene                     NUMERIC,
+    feb                     NUMERIC,
+    mar                     NUMERIC,
+    abr                     NUMERIC,
+    may                     NUMERIC,
+    jun                     NUMERIC,
+    jul                     NUMERIC,
+    ago                     NUMERIC,
+    sep                     NUMERIC,
+    oct                     NUMERIC,
+    nov                     NUMERIC,
+    dic                     NUMERIC,
+    CONSTRAINT pk_indicadores_hospitalarios_snss
+        PRIMARY KEY (ano, servicio_salud_codigo, establecimiento_codigo, nivel_cuidado_codigo, indicador),
+    CONSTRAINT ck_indicadores_hospitalarios_snss_detalle
+        CHECK (servicio_salud_codigo > 0 AND establecimiento_codigo > 0 AND nivel_cuidado_codigo > 0),
+    CONSTRAINT ck_indicadores_hospitalarios_snss_indicador
+        CHECK (indicador IN ('Dias Cama Disponibles', 'Dias Cama Ocupados', 'Dias de Estada',
+                             'Numero de Egresos', 'Egresos Fallecidos', 'Traslados',
+                             'Promedio Cama Disponibles', 'Indice Ocupacional',
+                             'Promedio Días de Estada', 'Indice de Rotación', 'Letalidad'))
+);
+
+COMMENT ON TABLE camas.indicadores_hospitalarios_snss IS
+    'Actividad mensual de establecimientos del SNSS por nivel de cuidado (DEIS, REM-20). '
+    'Solo filas de detalle. Estadistica consolidada, NO ocupacion en tiempo real. Solo los '
+    'conteos (dias cama, dias de estada, egresos, fallecidos, traslados) son aditivos; las '
+    'razones y el acumulado del promedio de camas no se suman entre areas ni meses.';
+COMMENT ON COLUMN camas.indicadores_hospitalarios_snss.acumulado IS
+    'Suma de los meses en los conteos; razon o promedio del periodo en el resto. '
+    'NULL = no publicado por el origen.';
+COMMENT ON COLUMN camas.indicadores_hospitalarios_snss.ene IS
+    'Valor del mes (igual para feb ... dic). NULL = mes aun no publicado del ano en curso '
+    'o celda en blanco: no es cero.';
+COMMENT ON COLUMN camas.indicadores_hospitalarios_snss.indicador IS
+    'Promedio Dias de Estada y Letalidad cambian de denominador en 2025 (dejan de sumar '
+    'traslados): recalcular desde los conteos para series de varios anos.';
+
+CREATE INDEX ix_indicadores_hospitalarios_snss_establecimiento
+    ON camas.indicadores_hospitalarios_snss (establecimiento_codigo, nivel_cuidado_codigo, ano);
+
+-- =============================================================================
+-- camas.categorizacion_riesgo_dependencia
+-- Grain: 1 fila = 1 nivel de cuidado de 1 establecimiento del SNSS en 1
+-- trimestre, con el total y las 12 categorias CUDYR. Replica los libros
+-- trimestrales REM-20 "Categorizacion de Pacientes Hospitalizados Segun Riesgo
+-- Dependencia" (DEIS), con la jerarquia region > servicio > establecimiento >
+-- nivel aplanada. La fuente no trae codigo de establecimiento: la PK es la llave
+-- logica por nombre. Sin FK.
+-- =============================================================================
+CREATE TABLE camas.categorizacion_riesgo_dependencia (
+    ano                     SMALLINT   NOT NULL,
+    trimestre               SMALLINT   NOT NULL,
+    region                  TEXT       NOT NULL,
+    servicio_salud          TEXT       NOT NULL,
+    establecimiento_nombre  TEXT       NOT NULL,
+    nivel_cuidado_codigo    SMALLINT   NOT NULL,
+    nivel_cuidado           TEXT       NOT NULL,
+    total                   INTEGER    NOT NULL,
+    a1                      INTEGER    NOT NULL,
+    a2                      INTEGER    NOT NULL,
+    a3                      INTEGER    NOT NULL,
+    b1                      INTEGER    NOT NULL,
+    b2                      INTEGER    NOT NULL,
+    b3                      INTEGER    NOT NULL,
+    c1                      INTEGER    NOT NULL,
+    c2                      INTEGER    NOT NULL,
+    c3                      INTEGER    NOT NULL,
+    d1                      INTEGER    NOT NULL,
+    d2                      INTEGER    NOT NULL,
+    d3                      INTEGER    NOT NULL,
+    CONSTRAINT pk_categorizacion_riesgo_dependencia
+        PRIMARY KEY (ano, trimestre, servicio_salud, establecimiento_nombre, nivel_cuidado_codigo),
+    CONSTRAINT ck_categorizacion_riesgo_dependencia_trimestre CHECK (trimestre BETWEEN 1 AND 4),
+    CONSTRAINT ck_categorizacion_riesgo_dependencia_no_negativas
+        CHECK (LEAST(a1, a2, a3, b1, b2, b3, c1, c2, c3, d1, d2, d3) >= 0),
+    CONSTRAINT ck_categorizacion_riesgo_dependencia_total
+        CHECK (total = a1 + a2 + a3 + b1 + b2 + b3 + c1 + c2 + c3 + d1 + d2 + d3)
+);
+
+COMMENT ON TABLE camas.categorizacion_riesgo_dependencia IS
+    'Categorizaciones CUDYR de pacientes hospitalizados del SNSS por trimestre (DEIS, REM-20). '
+    'Riesgo A-D (A maximo) por dependencia 1-3 (1 total). La fuente no define si cuenta '
+    'pacientes o categorizaciones diarias.';
+COMMENT ON COLUMN camas.categorizacion_riesgo_dependencia.trimestre IS
+    'Del nombre de la publicacion del DEIS: el libro solo declara el ano.';
+COMMENT ON COLUMN camas.categorizacion_riesgo_dependencia.establecimiento_nombre IS
+    'Sin codigo en la fuente; cruza con camas.indicadores_hospitalarios_snss por ano, '
+    'servicio de salud (sin el prefijo SS) y nombre exacto.';
+
+-- =============================================================================
 -- camas.dim_psiquiatria_hospital_rm
 -- Grain: 1 fila = 1 hospital de geo.dim_oferta_urgencia_rm (45 filas), con sus
 -- camas de psiquiatria del ultimo ano de la dotacion SNSS (2025). Dimension

@@ -291,6 +291,56 @@ erDiagram
         int n_areas_psiquiatria
     }
 
+    %% grain: 1 fila = 1 indicador de 1 nivel de cuidado de 1 establecimiento SNSS en 1 ano, con acumulado y 12 meses (160974 filas, 208 establecimientos, 2014-2026)
+    %% solo detalle: las filas agregadas del libro (Datos Pais, Datos Servicio Salud, Datos Establecimiento) quedan en RAW y se usan para conciliar
+    indicadores_hospitalarios_snss {
+        int ano PK
+        int servicio_salud_codigo PK
+        bigint establecimiento_codigo PK "vinculo logico a dim_oferta_urgencia_rm (35/208) y a dotacion_camas_snss (196/208)"
+        int nivel_cuidado_codigo PK "mismo catalogo que area_funcional_codigo de la dotacion"
+        string indicador PK "11 indicadores: conteos, promedio de camas y razones; solo los conteos son aditivos"
+        string servicio_salud
+        string establecimiento_nombre
+        string nivel_cuidado
+        double acumulado "suma de meses en conteos; razon o promedio del periodo en el resto"
+        double ene "NULL = mes no publicado, no cero (igual en todos los meses)"
+        double feb
+        double mar
+        double abr
+        double may
+        double jun
+        double jul
+        double ago
+        double sep
+        double oct
+        double nov
+        double dic
+    }
+
+    %% grain: 1 fila = 1 nivel de cuidado de 1 establecimiento SNSS en 1 trimestre (8834 filas, 2024-T1 a 2025-T4); el libro no trae codigo de establecimiento
+    categorizacion_riesgo_dependencia {
+        int ano PK
+        int trimestre PK "del nombre de la publicacion; el libro solo declara el ano"
+        string servicio_salud PK
+        string establecimiento_nombre PK "coincide por ano, servicio y nombre exacto con indicadores_hospitalarios_snss (384/384)"
+        int nivel_cuidado_codigo PK
+        string region
+        string nivel_cuidado
+        bigint total "igual a la suma de las 12 categorias"
+        bigint a1 "categorizaciones CUDYR: riesgo A-D x dependencia 1-3"
+        bigint a2
+        bigint a3
+        bigint b1
+        bigint b2
+        bigint b3
+        bigint c1
+        bigint c2
+        bigint c3
+        bigint d1
+        bigint d2
+        bigint d3
+    }
+
     cartografia_comunal ||--o{ cartografia_distrital : "1 comuna tiene N distritos"
     cartografia_distrital ||--o{ cartografia_zonal : "1 distrito tiene N zonas urbanas (parcial: 51/52 comunas)"
     cartografia_distrital ||--o{ cartografia_entidades : "1 distrito tiene N entidades rurales (parcial: 26/52 comunas)"
@@ -315,4 +365,7 @@ erDiagram
     dim_oferta_urgencia_rm |o..o{ dotacion_camas_no_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 10/144 establecimientos estan en la oferta)"
     dim_oferta_urgencia_rm ||--o| dim_camas_psiquiatria_hospital_rm : "1 hospital de la oferta, 1 fila de camas (solo tipo Hospital)"
     dotacion_camas_snss |o..o{ dim_camas_psiquiatria_hospital_rm : "derivacion: suma de areas de psiquiatria del ultimo ano, vinculo logico por establecimiento_codigo"
+    dim_oferta_urgencia_rm |o..o{ indicadores_hospitalarios_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 35/208 establecimientos estan en la oferta)"
+    dotacion_camas_snss |o..o{ indicadores_hospitalarios_snss : "vinculo logico por establecimiento_codigo y area funcional = nivel de cuidado (196/208 establecimientos en la dotacion)"
+    indicadores_hospitalarios_snss |o..o{ categorizacion_riesgo_dependencia : "vinculo logico por ano, servicio de salud y nombre del establecimiento (sin codigo en la fuente)"
 

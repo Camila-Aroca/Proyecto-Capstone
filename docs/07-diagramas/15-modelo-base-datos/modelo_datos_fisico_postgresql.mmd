@@ -226,6 +226,53 @@ erDiagram
         smallint n_areas_psiquiatria
     }
 
+    camas_indicadores_hospitalarios_snss {
+        smallint ano PK
+        smallint servicio_salud_codigo PK
+        bigint establecimiento_codigo PK "SIN FK fisica a geo_dim_oferta_urgencia_rm: solo 35/208 estan en la oferta"
+        smallint nivel_cuidado_codigo PK
+        text indicador PK "CHECK: uno de los 11 indicadores publicados"
+        text servicio_salud
+        text establecimiento_nombre
+        text nivel_cuidado
+        numeric acumulado "NULL = no publicado"
+        numeric ene "NULL = mes no publicado, no cero (igual en todos los meses)"
+        numeric feb
+        numeric mar
+        numeric abr
+        numeric may
+        numeric jun
+        numeric jul
+        numeric ago
+        numeric sep
+        numeric oct
+        numeric nov
+        numeric dic
+    }
+
+    camas_categorizacion_riesgo_dependencia {
+        smallint ano PK
+        smallint trimestre PK "CHECK 1-4"
+        text servicio_salud PK
+        text establecimiento_nombre PK "sin codigo en la fuente"
+        smallint nivel_cuidado_codigo PK
+        text region
+        text nivel_cuidado
+        integer total "CHECK: igual a la suma de las 12 categorias"
+        integer a1 "categorizaciones CUDYR: riesgo A-D x dependencia 1-3"
+        integer a2
+        integer a3
+        integer b1
+        integer b2
+        integer b3
+        integer c1
+        integer c2
+        integer c3
+        integer d1
+        integer d2
+        integer d3
+    }
+
     censo_cartografia_comunal ||--o{ censo_cartografia_distrital : "1 comuna, N distritos"
     censo_cartografia_distrital ||--o{ censo_cartografia_zonal : "1 distrito, N zonas urbanas"
     censo_cartografia_distrital ||--o{ censo_cartografia_entidades : "1 distrito, N entidades rurales"
@@ -250,4 +297,6 @@ erDiagram
     geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_snss : "relacion documentada, NO enforced por FK fisica"
     geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_no_snss : "relacion documentada, NO enforced por FK fisica"
     geo_dim_oferta_urgencia_rm ||--o| camas_dim_psiquiatria_hospital_rm : "1 a 1 (hospitales de la oferta)"
+    geo_dim_oferta_urgencia_rm |o..o{ camas_indicadores_hospitalarios_snss : "relacion documentada, NO enforced por FK fisica"
+    camas_indicadores_hospitalarios_snss |o..o{ camas_categorizacion_riesgo_dependencia : "cruce por nombre documentado, NO enforced por FK fisica"
 
