@@ -1,4 +1,5 @@
-import type { CamasPsiquiatria, CambioEsperado, CoberturaNivel, SemanaParcial, SerieConPronostico } from "../api";
+import type { CamasPsiquiatria, CoberturaNivel, SemanaParcial, SerieConPronostico } from "../api";
+import { clasificar, fueraDelIntervalo } from "../cambio";
 import { fmtEntero, fmtFechaLarga, fmtPct } from "../format";
 import type { Tokens } from "../tokens";
 import { BadgeCambio } from "./BadgeCambio";
@@ -15,28 +16,13 @@ interface Props {
   semanaParcial: SemanaParcial | null;
   /** Camas de psiquiatria del territorio seleccionado; null mientras carga o si la capa no existe. */
   camas: CamasPsiquiatria | null;
+  /** Puente a la vista por establecimiento del territorio; null si no hay establecimientos. */
+  establecimientos: { href: string; texto: string } | null;
 }
 
 const VENTANA_RECIENTE = 4;
 
 const promedio = (xs: number[]) => (xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : null);
-
-// Mismas dos etiquetas que el backend. `clasificar` mide el tamano del cambio
-// contra el umbral declarado por la API; `fueraDelIntervalo` dice si ademas se
-// distingue de la fluctuacion semanal.
-function clasificar(variacion: number | null, umbralPct: number | null): CambioEsperado {
-  if (variacion == null || umbralPct == null) return "sin_pronostico";
-  if (variacion >= umbralPct) return "alza";
-  if (variacion <= -umbralPct) return "baja";
-  return "estable";
-}
-
-function fueraDelIntervalo(
-  reciente: number | null, inferior: number | null, superior: number | null,
-): boolean | null {
-  if (reciente == null || inferior == null || superior == null) return null;
-  return reciente < inferior || reciente > superior;
-}
 
 function Esqueleto() {
   return (
@@ -50,7 +36,9 @@ function Esqueleto() {
   );
 }
 
-export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura, umbralCambioPct, semanaParcial, camas }: Props) {
+export function PanelSerie({
+  serie, tokens, nivelIntervalo, cobertura, umbralCambioPct, semanaParcial, camas, establecimientos,
+}: Props) {
   const intervalo = nivelIntervalo ? `${Math.round(nivelIntervalo * 100)}%` : "";
   const pronostico = serie?.pronostico ?? [];
   const primero = pronostico[0];
@@ -74,9 +62,17 @@ export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura, umbralCam
       <div className="panel-header">
         <div>
           <h2 id="serie-titulo" className="panel-title">{serie?.nombre ?? "Cargando…"}</h2>
-          <p className="text-[13px] text-3">Atenciones semanales de urgencia en salud mental</p>
+          <p className="text-[13px] text-3">
+            Atenciones semanales de urgencia en salud mental
+            {establecimientos && (
+              <>
+                {" · "}
+                <a href={establecimientos.href} className="link-button">{establecimientos.texto}</a>
+              </>
+            )}
+          </p>
         </div>
-        <LeyendaSerie tokens={tokens} intervalo={intervalo} camas={camas} />
+        <LeyendaSerie tokens={tokens} intervalo={intervalo} conParcial={parcialAplicable != null} />
       </div>
 
       {!serie ? (
@@ -94,18 +90,18 @@ export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura, umbralCam
             <p className="text-[14px] text-2">El pronóstico se está calculando; aparecerá aquí en unos segundos.</p>
           )}
 
-          <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4 sm:flex sm:flex-wrap sm:gap-0 sm:divide-x sm:divide-(--border)">
-            <div className="sm:px-6 sm:first:pl-0">
+          <dl className="cifras-clave mt-4">
+            <div>
               <dt className="text-[12px] text-3">Nivel reciente</dt>
               <dd className="mt-0.5 text-xl font-semibold tracking-tight">{fmtEntero(reciente)}</dd>
               <dd className="text-[12px] text-3">promedio de las últimas {VENTANA_RECIENTE} semanas</dd>
             </div>
-            <div className="sm:px-6 sm:first:pl-0">
+            <div>
               <dt className="text-[12px] text-3">Pronóstico medio, {rango}</dt>
               <dd className="mt-0.5 text-xl font-semibold tracking-tight">{fmtEntero(medio)}</dd>
               <dd className="text-[12px] text-3 num">{fmtPct(variacion)} frente al nivel reciente</dd>
             </div>
-            <div className="sm:px-6 sm:first:pl-0">
+            <div>
               <dt className="text-[12px] text-3">Cambio esperado</dt>
               <dd className="mt-1.5">
                 <BadgeCambio cambio={cambio} fueraDelIntervalo={fuera} />
@@ -119,7 +115,7 @@ export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura, umbralCam
               </dd>
             </div>
             {coberturaNivel && (
-              <div className="sm:px-6 sm:first:pl-0">
+              <div>
                 <dt className="text-[12px] text-3">Confiabilidad del intervalo</dt>
                 <dd className="mt-0.5 text-xl font-semibold tracking-tight">
                   {Math.round(coberturaNivel.cobertura_observada * 100)}%
@@ -127,16 +123,25 @@ export function PanelSerie({ serie, tokens, nivelIntervalo, cobertura, umbralCam
                 <dd className="text-[12px] text-3">cubrió fuera de muestra (declarado {intervalo})</dd>
               </div>
             )}
+            {camas && (
+              <div>
+                <dt className="text-[12px] text-3">Camas de psiquiatría ({camas.ano_camas})</dt>
+                <dd className="mt-0.5 text-xl font-semibold tracking-tight num">
+                  {camas.total_camas_psiquiatria == null ? "sin dato" : fmtEntero(camas.total_camas_psiquiatria)}
+                </dd>
+                <dd className="text-[12px] text-3">
+                  {camas.total_camas_psiquiatria == null
+                    ? "ningún hospital del territorio las declara"
+                    : `dotación declarada en ${camas.n_hospitales_con_camas === 1 ? "1 hospital" : `${camas.n_hospitales_con_camas} hospitales`}, no ocupación`}
+                </dd>
+              </div>
+            )}
           </dl>
 
           <div className="mt-5">
-            <GraficoSerie serie={serie} tokens={tokens} intervalo={intervalo} semanaParcial={parcialAplicable} camas={camas} />
-            {camas && camas.total_camas_psiquiatria == null && (
-              <p className="mt-2 text-[12px] text-3">
-                Ningún hospital que reporta a Urgencias en este territorio declara camas de psiquiatría en la
-                dotación {camas.ano_camas}: no se dibuja la línea (sin dato, no cero).
-              </p>
-            )}
+            {/* Las camas no van sobre este eje: una dotacion anual junto a atenciones
+                semanales sugiere una comparacion de capacidad que no corresponde. */}
+            <GraficoSerie serie={serie} tokens={tokens} intervalo={intervalo} semanaParcial={parcialAplicable} />
             <TablaSerie serie={serie} intervalo={intervalo} semanaParcial={parcialAplicable} camas={camas} />
           </div>
         </div>

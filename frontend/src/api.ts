@@ -2,7 +2,7 @@
 // Todo valor ausente llega como null y se muestra como "sin dato", nunca como 0.
 
 export type EstadoProceso = "pendiente" | "calculando" | "listo" | "error";
-export type Nivel = "region" | "comuna";
+export type Nivel = "region" | "comuna" | "establecimiento";
 export type CambioEsperado = "alza" | "baja" | "estable" | "sin_pronostico";
 
 export interface PuntoHistorico {
@@ -117,6 +117,80 @@ export interface Salud {
   detalle: string | null;
 }
 
+// --- Pronostico por establecimiento -------------------------------------
+// Sin pronostico nunca es cero: cada objetivo trae el motivo.
+
+export type ObjetivoEstablecimiento = "atenciones_sm" | "hospitalizaciones_sm";
+
+export interface ResumenObjetivoEstablecimiento {
+  incluido: boolean;
+  motivo_sin_pronostico: string | null;
+  promedio_ultimas_semanas: number | null;
+  pronostico_promedio: number | null;
+  variacion_pct: number | null;
+  limite_inferior_promedio: number | null;
+  limite_superior_promedio: number | null;
+}
+
+export interface EstablecimientoResumen {
+  establecimiento_codigo: number;
+  nombre: string;
+  tipo: string;
+  comuna_codigo: string;
+  comuna: string;
+  latitud: number | null;
+  longitud: number | null;
+  /** Dotacion declarada de psiquiatria; null = sin dato, nunca 0. */
+  camas_psiquiatria: number | null;
+  objetivos: Partial<Record<ObjetivoEstablecimiento, ResumenObjetivoEstablecimiento>>;
+}
+
+export interface PuntoSemanal {
+  ano: number;
+  semana: number;
+  fecha_inicio: string | null;
+  valor: number;
+}
+
+export interface SerieObjetivoEstablecimiento {
+  objetivo: ObjetivoEstablecimiento;
+  descripcion: string;
+  historico: PuntoSemanal[];
+  pronostico: PuntoPronostico[] | null;
+  motivo_sin_pronostico: string | null;
+}
+
+export interface EstablecimientoDetalle {
+  establecimiento_codigo: number;
+  nombre: string;
+  tipo: string;
+  comuna_codigo: string;
+  comuna: string;
+  camas_psiquiatria: number | null;
+  series: SerieObjetivoEstablecimiento[];
+}
+
+export interface MetaObjetivoEstablecimiento {
+  objetivo: ObjetivoEstablecimiento;
+  descripcion: string;
+  modelo: string;
+  horizontes: number[];
+  nivel_intervalo: number;
+  establecimientos_con_pronostico: number;
+  cobertura_holdout: number | null;
+  pronosticos_fuera_de_rango: number;
+}
+
+export interface MetaEstablecimientos {
+  ultima_semana_observada: { ano: number; semana: number };
+  ultima_semana_fecha_inicio: string | null;
+  /** Mismo umbral de alza o baja que la vista comunal. */
+  umbral_cambio_pct: number;
+  pronostico_generado_en: string;
+  objetivos: MetaObjetivoEstablecimiento[];
+  advertencias: string[];
+}
+
 const BASE = "/api/v1";
 const MAX_REINTENTOS = 30;
 
@@ -156,4 +230,8 @@ export const api = {
     obtener<CamasPsiquiatria>(`/camas-psiquiatria/${encodeURIComponent(id)}`, senal),
   resumenComunal: () => obtener<ResumenComuna[]>("/resumen-comunal"),
   geoComunas: () => obtener<GeoJSON.FeatureCollection>("/geo/comunas"),
+  establecimientos: () => obtener<EstablecimientoResumen[]>("/establecimientos"),
+  metaEstablecimientos: () => obtener<MetaEstablecimientos>("/establecimientos-meta"),
+  establecimiento: (codigo: number, semanas: number, senal?: AbortSignal) =>
+    obtener<EstablecimientoDetalle>(`/establecimientos/${codigo}?semanas=${semanas}`, senal),
 };

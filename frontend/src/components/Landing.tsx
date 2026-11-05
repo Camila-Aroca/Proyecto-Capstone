@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
-import { api, type Meta } from "../api";
+import { api, type Meta, type MetaEstablecimientos } from "../api";
 import { fmtEntero } from "../format";
+import { RUTA_ESTABLECIMIENTOS, RUTA_TABLERO } from "../ruta";
 import { Alcance } from "./Alcance";
 
 // Pagina de entrada. Explica que es la herramienta, para quien, y con que
 // evidencia trabaja, antes de llevar al tablero. Las cifras no son adorno: se
 // leen de la API en vivo, y si no responde la pagina se muestra igual sin ellas,
 // en vez de inventar un numero de ejemplo.
-
-interface Props {
-  onEntrar: () => void;
-}
 
 const PREGUNTAS = [
   {
@@ -27,6 +24,11 @@ const PREGUNTAS = [
     titulo: "¿Qué territorios exigen atención?",
     detalle:
       "Variación esperada por comuna, cruzada con la oferta de urgencia vigente y la vulnerabilidad socioeconómica.",
+  },
+  {
+    titulo: "¿En qué establecimientos se sentirá?",
+    detalle:
+      "Dentro de cada comuna, el pronóstico de cada urgencia y de las hospitalizaciones que indican sus hospitales, junto a las camas de psiquiatría que declaran.",
   },
 ];
 
@@ -62,20 +64,28 @@ function Cifra({ valor, etiqueta, nota }: { valor: string; etiqueta: string; not
   );
 }
 
-export function Landing({ onEntrar }: Props) {
+export function Landing() {
   const [meta, setMeta] = useState<Meta | null>(null);
+  const [metaEstab, setMetaEstab] = useState<MetaEstablecimientos | null>(null);
 
   useEffect(() => {
-    // Sin reintentos ni estado de error: la landing debe servir aunque la API
-    // no responda; las cifras en vivo son un complemento, no su contenido.
+    // Sin estado de error: la landing debe servir aunque la API no responda; las
+    // cifras en vivo son un complemento, no su contenido.
     api.meta().then(setMeta).catch(() => undefined);
+    api.metaEstablecimientos().then(setMetaEstab).catch(() => undefined);
   }, []);
 
   const ultima = meta?.ultima_semana_observada;
   const horizontes = meta?.horizontes ?? [];
+  // Mismo texto antes y despues de cargar: el respaldo coincide con el modelo vigente.
   const rango = horizontes.length
     ? `${horizontes[0]} a ${horizontes[horizontes.length - 1]} semanas`
-    : "4 a 8 semanas";
+    : "1 a 8 semanas";
+  const estab = (objetivo: string) =>
+    metaEstab?.objetivos.find((o) => o.objetivo === objetivo)?.establecimientos_con_pronostico ?? null;
+  const conAtenciones = estab("atenciones_sm");
+  const conHospitalizaciones = estab("hospitalizaciones_sm");
+  const irAlAlcance = () => document.getElementById("alcance")?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -84,9 +94,10 @@ export function Landing({ onEntrar }: Props) {
           <img src="/marca/saad-logo.svg" alt="SAAD" className="h-7 w-auto" />
           <span className="text-[13px] text-3">Región Metropolitana</span>
         </div>
-        <button type="button" onClick={onEntrar} className="link-button">
-          Ir al tablero
-        </button>
+        <nav aria-label="Vistas" className="flex items-center gap-4">
+          <a href={RUTA_TABLERO} className="link-button inline-flex min-h-6 items-center">Por comuna</a>
+          <a href={RUTA_ESTABLECIMIENTOS} className="link-button inline-flex min-h-6 items-center">Por establecimiento</a>
+        </nav>
       </header>
 
       <main>
@@ -99,16 +110,20 @@ export function Landing({ onEntrar }: Props) {
           </h1>
           <p className="mt-4 max-w-[62ch] text-[15px] text-2">
             La planificación de la red responde cuando la presión ya ocurrió. SAAD proyecta las atenciones
-            de urgencia por salud mental de las próximas {rango} en cada comuna de la Región Metropolitana,
-            a partir de datos públicos oficiales, para que el refuerzo se decida antes y con evidencia.
+            de urgencia por salud mental de las próximas {rango}, desde la región hasta cada comuna y cada
+            establecimiento de urgencia, junto con las hospitalizaciones que esas urgencias indican. Todo a
+            partir de datos públicos oficiales, para que el refuerzo se decida antes y con evidencia.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <button type="button" onClick={onEntrar} className="boton-primario">
-              Ver el tablero
-            </button>
-            <a href="#alcance" className="link-button">
-              Qué incluye y qué no
+            <a href={RUTA_TABLERO} className="boton-primario">
+              Explorar por comuna
             </a>
+            <a href={RUTA_ESTABLECIMIENTOS} className="boton-secundario">
+              Ver establecimientos
+            </a>
+            <button type="button" onClick={irAlAlcance} className="link-button inline-flex min-h-6 items-center">
+              Qué incluye y qué no
+            </button>
           </div>
         </section>
 
@@ -134,9 +149,11 @@ export function Landing({ onEntrar }: Props) {
               nota={meta?.nivel_intervalo ? `Con intervalo de ${Math.round(meta.nivel_intervalo * 100)}%` : undefined}
             />
             <Cifra
-              valor="100%"
-              etiqueta="Cifras reproducibles desde código"
-              nota="Ningún valor se calcula ni corrige a mano"
+              valor={conAtenciones == null ? "—" : String(conAtenciones)}
+              etiqueta="Establecimientos con pronóstico"
+              nota={conHospitalizaciones == null
+                ? "Urgencias con historia suficiente para modelar"
+                : `${conHospitalizaciones} hospitales, además, con hospitalizaciones desde urgencia`}
             />
           </section>
         )}
@@ -145,7 +162,7 @@ export function Landing({ onEntrar }: Props) {
           <h2 id="preguntas-titulo" className="text-xl font-semibold tracking-tight">
             Qué responde
           </h2>
-          <div className="mt-6 grid gap-6 md:grid-cols-3">
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {PREGUNTAS.map((p) => (
               <article key={p.titulo}>
                 <h3 className="text-[15px] font-semibold">{p.titulo}</h3>
@@ -191,10 +208,13 @@ export function Landing({ onEntrar }: Props) {
             de salud y jefaturas de urgencia de la Región Metropolitana. No es una herramienta clínica: no
             registra pacientes, no gestiona cupos y no apoya decisiones sobre personas.
           </p>
-          <div className="mt-5">
-            <button type="button" onClick={onEntrar} className="boton-primario">
-              Ver el tablero
-            </button>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <a href={RUTA_TABLERO} className="boton-primario">
+              Explorar por comuna
+            </a>
+            <a href={RUTA_ESTABLECIMIENTOS} className="boton-secundario">
+              Ver establecimientos
+            </a>
           </div>
         </section>
       </main>
@@ -202,8 +222,8 @@ export function Landing({ onEntrar }: Props) {
       <footer className="border-t py-6 text-[12px] text-3" style={{ borderColor: "var(--border)" }}>
         <p className="max-w-[90ch]">
           Fuentes: DEIS/MINSAL (atenciones de urgencia y egresos hospitalarios), INE (proyecciones de población
-          y Censo 2024), Ministerio de Desarrollo Social (Casen 2022). Las cifras son atenciones, es decir
-          eventos, no personas únicas, y reflejan utilización y oferta instalada, no prevalencia.
+          y Censo 2024), Ministerio de Desarrollo Social (Casen 2022). Camas: DEIS/DIGERA, dotación del SNSS. Las cifras son atenciones
+          y hospitalizaciones, es decir eventos, no personas únicas, y reflejan utilización y oferta instalada, no prevalencia.
         </p>
         <p className="mt-1.5">
           Proyecto de título, Ingeniería en Informática, Duoc UC. Apoyo a la planificación sanitaria

@@ -1,7 +1,8 @@
 // Tablero: la vista de analisis. Vive separado de la pagina de entrada para
 // que la landing no cargue ni el mapa ni los datos del pronostico.
 import { useEffect, useMemo, useState } from "react";
-import { api, type CamasPsiquiatria, type EstadoProceso, type Meta, type ResumenComuna, type SerieConPronostico, type Territorio } from "../api";
+import { api, type CamasPsiquiatria, type EstablecimientoResumen, type EstadoProceso, type Meta, type ResumenComuna, type SerieConPronostico, type Territorio } from "../api";
+import { enlace, parametros, reflejar, RUTA_ESTABLECIMIENTOS, RUTA_TABLERO } from "../ruta";
 import { Alcance } from "./Alcance";
 import { AvisoLectura } from "./AvisoLectura";
 import { BarraSuperior } from "./BarraSuperior";
@@ -19,8 +20,13 @@ export function Tablero() {
   const [territorios, setTerritorios] = useState<Territorio[]>([]);
   const [resumen, setResumen] = useState<ResumenComuna[]>([]);
   const [geo, setGeo] = useState<GeoJSON.FeatureCollection | null>(null);
-  const [seleccion, setSeleccion] = useState(REGION);
-  const [semanas, setSemanas] = useState<number>(VENTANAS[0]);
+  // El territorio viaja en la URL: un enlace desde la vista por establecimiento
+  // abre directamente su comuna.
+  const [seleccion, setSeleccion] = useState(() => parametros().get("territorio") ?? REGION);
+  // Misma ventana por defecto que la vista por establecimiento: un ano completo
+  // muestra la estacionalidad.
+  const [semanas, setSemanas] = useState<number>(VENTANAS[1]);
+  const [establecimientos, setEstablecimientos] = useState<EstablecimientoResumen[]>([]);
   const [serie, setSerie] = useState<SerieConPronostico | null>(null);
   const [camas, setCamas] = useState<CamasPsiquiatria | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +39,14 @@ export function Tablero() {
     api.territorios().then(setTerritorios).catch(fallo);
     api.geoComunas().then(setGeo).catch(fallo);
     api.resumenComunal().then(setResumen).catch(fallo);
+    // Solo alimenta el enlace a la vista por establecimiento: si falta, el
+    // tablero sigue igual, sin el enlace.
+    api.establecimientos().then(setEstablecimientos).catch(() => undefined);
   }, []);
+
+  useEffect(() => {
+    reflejar(RUTA_TABLERO, { territorio: seleccion === REGION ? null : seleccion });
+  }, [seleccion]);
 
   // El resumen llega cuando el pronostico esta listo: entonces la meta ya tiene
   // la hora de calculo y la serie seleccionada puede traer su pronostico.
@@ -69,11 +82,27 @@ export function Tablero() {
   const region = seleccionables.find((t) => t.nivel === "region");
   const comunas = seleccionables.filter((t) => t.nivel === "comuna");
 
+  const enlaceEstablecimientos = useMemo(() => {
+    const propios = seleccion === REGION ? establecimientos : establecimientos.filter((e) => e.comuna_codigo === seleccion);
+    if (!propios.length) return null;
+    const n = propios.length;
+    const nombre = seleccion === REGION ? "de la región" : `de ${propios[0].comuna}`;
+    return {
+      href: enlace(RUTA_ESTABLECIMIENTOS, { comuna: seleccion === REGION ? null : seleccion }),
+      texto: `Ver ${n === 1 ? "su establecimiento" : `los ${n} establecimientos ${nombre}`} →`,
+    };
+  }, [establecimientos, seleccion]);
+  const establecimientosPorComuna = useMemo(() => {
+    const conteo = new Map<string, number>();
+    for (const e of establecimientos) conteo.set(e.comuna_codigo, (conteo.get(e.comuna_codigo) ?? 0) + 1);
+    return conteo;
+  }, [establecimientos]);
+
   return (
     <>
-      <BarraSuperior meta={meta} estadoPronostico={estadoPronostico} />
+      <BarraSuperior ultima={meta?.ultima_semana_observada ?? null} estadoPronostico={estadoPronostico} vista="comunas" />
 
-      <main className="mx-auto max-w-7xl space-y-5 px-4 py-5 sm:px-6">
+      <main id="contenido" tabIndex={-1} className="mx-auto max-w-7xl space-y-5 px-4 py-5 outline-none sm:px-6">
         {error && (
           <div role="alert" className="panel px-4 py-3 text-[13px]" style={{ borderColor: "var(--alza)" }}>
             <p className="font-semibold">No se pudo consultar la API.</p>
@@ -123,11 +152,17 @@ export function Tablero() {
           umbralCambioPct={meta?.umbral_cambio_pct ?? null}
           semanaParcial={meta?.semana_en_curso ?? null}
           camas={camas}
+          establecimientos={enlaceEstablecimientos}
         />
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] [&>*]:min-w-0">
           <MapaComunal geo={geo} resumen={resumenPorId} seleccion={seleccion} onSeleccionar={setSeleccion} tokens={tokens} />
-          <TablaComunal filas={resumen} seleccion={seleccion} onSeleccionar={setSeleccion} />
+          <TablaComunal
+            filas={resumen}
+            seleccion={seleccion}
+            onSeleccionar={setSeleccion}
+            establecimientosPorComuna={establecimientosPorComuna}
+          />
         </div>
 
         <Alcance />

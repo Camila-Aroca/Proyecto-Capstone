@@ -1,10 +1,8 @@
-import { useRef, useState } from "react";
 import {
   Area,
   CartesianGrid,
   ComposedChart,
   Line,
-  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -20,19 +18,17 @@ interface Props {
   intervalo: string;
   /** Semana en curso, parcial. Solo aplica a la serie regional: el dato es de toda la RM. */
   semanaParcial?: SemanaParcial | null;
-  /** Camas de psiquiatria del territorio. Sin total (null) no se dibuja linea: es ausencia de dato, no cero. */
-  camas?: CamasPsiquiatria | null;
+  /** Que cuenta la serie, en plural y minusculas: "atenciones" u "hospitalizaciones". */
+  unidad?: string;
 }
 
-// Texto corto de la linea de camas: lo muestra el hover y tambien la leyenda.
-// Halo de neon de la linea de camas: dos sombras del mismo color, una ceñida y otra difusa.
-export const brilloCamas = (color: string) =>
-  `drop-shadow(0 0 2px ${color}) drop-shadow(0 0 7px ${color})`;
-
+// Texto de las camas del territorio, en la tabla de datos.
 export function textoCamas(camas: CamasPsiquiatria, total: number): string {
   const hospitales = camas.n_hospitales_con_camas === 1 ? "1 hospital" : `${camas.n_hospitales_con_camas} hospitales`;
   return `Camas de psiquiatría de los hospitales que reportan a Urgencias (${camas.ano_camas}): ${fmtEntero(total)}, ${hospitales}. Dotación declarada, no ocupación.`;
 }
+
+const mayuscula = (texto: string) => texto.charAt(0).toUpperCase() + texto.slice(1);
 
 interface Punto {
   fecha: string;
@@ -112,10 +108,11 @@ function construirPuntos(serie: SerieConPronostico, parcial?: SemanaParcial | nu
   return puntos;
 }
 
-export function LeyendaSerie({ tokens, intervalo, camas }: {
+export function LeyendaSerie({ tokens, intervalo, conParcial = true }: {
   tokens: Tokens;
   intervalo: string;
-  camas?: CamasPsiquiatria | null;
+  /** Solo la serie regional tiene semana en curso parcial. */
+  conParcial?: boolean;
 }) {
   return (
     <ul className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-2" aria-label="Leyenda del gráfico">
@@ -131,20 +128,12 @@ export function LeyendaSerie({ tokens, intervalo, camas }: {
         <svg width="20" height="10" aria-hidden><rect width="20" height="10" rx="2" fill={tokens.band} /></svg>
         Intervalo {intervalo}
       </li>
-      <li className="inline-flex items-center gap-1.5">
+      {conParcial && <li className="inline-flex items-center gap-1.5">
         <svg width="20" height="10" aria-hidden>
           <circle cx="10" cy="5" r="4" fill={tokens.surface} stroke={tokens["ink-3"]} strokeWidth="2" strokeDasharray="2 2" />
         </svg>
         Semana en curso (parcial)
-      </li>
-      {camas?.total_camas_psiquiatria != null && (
-        <li className="inline-flex items-center gap-1.5">
-          <svg width="20" height="8" aria-hidden style={{ overflow: "visible", filter: brilloCamas(tokens.camas) }}>
-            <line x1="0" y1="4" x2="20" y2="4" stroke={tokens.camas} strokeWidth="2" strokeDasharray="4 3" />
-          </svg>
-          Camas de psiquiatría ({camas.ano_camas})
-        </li>
-      )}
+      </li>}
     </ul>
   );
 }
@@ -152,11 +141,12 @@ export function LeyendaSerie({ tokens, intervalo, camas }: {
 // Equivalente en tabla del grafico: ningun valor queda accesible solo por hover
 // ni solo por color. Va plegada para no competir con el grafico, pero existe
 // siempre y es navegable por teclado.
-export function TablaSerie({ serie, intervalo, semanaParcial, camas }: {
+export function TablaSerie({ serie, intervalo, semanaParcial, camas, unidad = "atenciones" }: {
   serie: SerieConPronostico;
   intervalo: string;
   semanaParcial?: SemanaParcial | null;
   camas?: CamasPsiquiatria | null;
+  unidad?: string;
 }) {
   const observadas = serie.historico.slice(-12);
   const pronosticadas = serie.pronostico ?? [];
@@ -168,13 +158,13 @@ export function TablaSerie({ serie, intervalo, semanaParcial, camas }: {
       <div className="mt-3 max-h-72 overflow-auto">
         <table className="w-full border-collapse text-[13px] num">
           <caption className="sr-only">
-            Atenciones semanales observadas y pronosticadas de {serie.nombre}
+            {mayuscula(unidad)} semanales observadas y pronosticadas de {serie.nombre}
           </caption>
           <thead>
             <tr className="text-left text-[12px] text-3">
               <th scope="col" className="px-2.5 py-1.5 font-medium">Semana</th>
               <th scope="col" className="px-2.5 py-1.5 font-medium">Inicio</th>
-              <th scope="col" className="px-2.5 py-1.5 text-right font-medium">Atenciones</th>
+              <th scope="col" className="px-2.5 py-1.5 text-right font-medium">{mayuscula(unidad)}</th>
               <th scope="col" className="px-2.5 py-1.5 text-right font-medium">Intervalo {intervalo}</th>
               <th scope="col" className="px-2.5 py-1.5 font-medium">Tipo</th>
             </tr>
@@ -232,22 +222,13 @@ export function TablaSerie({ serie, intervalo, semanaParcial, camas }: {
   );
 }
 
-export function GraficoSerie({ serie, tokens, intervalo, semanaParcial, camas }: Props) {
+export function GraficoSerie({ serie, tokens, intervalo, semanaParcial, unidad = "atenciones" }: Props) {
   const puntos = construirPuntos(serie, semanaParcial);
-  const totalCamas = camas?.total_camas_psiquiatria ?? null;
-  const contenedor = useRef<HTMLDivElement>(null);
-  // Posicion del cursor sobre la linea de camas, relativa al grafico; null = fuera.
-  const [sobreCamas, setSobreCamas] = useState<{ x: number; y: number } | null>(null);
-  const moverSobreCamas = (e: { clientX: number; clientY: number }) => {
-    const caja = contenedor.current?.getBoundingClientRect();
-    if (caja) setSobreCamas({ x: e.clientX - caja.left, y: e.clientY - caja.top });
-  };
   return (
     <div
-      ref={contenedor}
       className="relative h-72"
       role="img"
-      aria-label={`Atenciones semanales observadas y pronosticadas de ${serie.nombre}`}
+      aria-label={`${mayuscula(unidad)} semanales observadas y pronosticadas de ${serie.nombre}`}
     >
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={puntos} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
@@ -269,18 +250,18 @@ export function GraficoSerie({ serie, tokens, intervalo, semanaParcial, camas }:
             width={52}
           />
           <Tooltip
-            cursor={sobreCamas ? false : { stroke: tokens.axis, strokeWidth: 1 }}
+            cursor={{ stroke: tokens.axis, strokeWidth: 1 }}
             isAnimationActive={false}
             content={({ active, payload }) => {
-              const p = active && !sobreCamas ? (payload?.[0]?.payload as Punto | undefined) : undefined;
+              const p = active ? (payload?.[0]?.payload as Punto | undefined) : undefined;
               if (!p) return null;
               return (
                 <div className="panel px-3 py-2 text-[12px] num shadow-sm">
                   <p className="font-semibold">Semana {p.semana} · {fmtFechaLarga(p.fecha)}</p>
-                  {p.observado != null && <p>Observado: {fmtEntero(p.observado)} atenciones</p>}
+                  {p.observado != null && <p>Observado: {fmtEntero(p.observado)} {unidad}</p>}
                   {p.pronostico != null && p.banda && (
                     <>
-                      <p>Pronóstico: {fmtEntero(p.pronostico)} atenciones</p>
+                      <p>Pronóstico: {fmtEntero(p.pronostico)} {unidad}</p>
                       <p className="text-2">Intervalo {intervalo}: {fmtEntero(p.banda[0])} – {fmtEntero(p.banda[1])}</p>
                     </>
                   )}
@@ -317,44 +298,8 @@ export function GraficoSerie({ serie, tokens, intervalo, semanaParcial, camas }:
             isAnimationActive={false}
             connectNulls={false}
           />
-          {totalCamas != null && (
-            <>
-              {/* Extiende el eje para que la linea nunca quede fuera de rango y desaparezca. */}
-              <ReferenceLine
-                y={totalCamas}
-                ifOverflow="extendDomain"
-                stroke={tokens.camas}
-                strokeWidth={2}
-                strokeDasharray="6 5"
-                style={{ filter: brilloCamas(tokens.camas) }}
-              />
-              {/* Franja transparente y ancha: area de hover comoda para una linea de 2 px. */}
-              <ReferenceLine
-                y={totalCamas}
-                ifOverflow="extendDomain"
-                stroke="transparent"
-                strokeWidth={16}
-                onMouseEnter={moverSobreCamas}
-                onMouseMove={moverSobreCamas}
-                onMouseLeave={() => setSobreCamas(null)}
-              />
-            </>
-          )}
         </ComposedChart>
       </ResponsiveContainer>
-      {sobreCamas && camas && totalCamas != null && (
-        <div
-          role="tooltip"
-          className="panel pointer-events-none absolute z-10 max-w-[260px] px-3 py-2 text-[12px] shadow-sm"
-          style={{
-            left: Math.min(sobreCamas.x + 12, (contenedor.current?.clientWidth ?? 0) - 272),
-            top: Math.max(sobreCamas.y - 64, 0),
-            borderColor: tokens.camas,
-          }}
-        >
-          {textoCamas(camas, totalCamas)}
-        </div>
-      )}
     </div>
   );
 }

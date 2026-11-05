@@ -2,16 +2,17 @@
 // Especificacion de Requisitos Funcionales (ERF-SAAD-2026 v1.1).
 
 const INCLUYE = [
-  { titulo: "Proyección de demanda", detalle: "Atenciones semanales a 4–8 semanas, para la región y cada comuna, con intervalo de predicción.", disponible: true },
+  { titulo: "Proyección de demanda", detalle: "Atenciones semanales a 1–8 semanas, para la región y cada comuna, con intervalo de predicción.", disponible: true },
+  { titulo: "Proyección por establecimiento", detalle: "Atenciones de cada urgencia con historia suficiente y hospitalizaciones indicadas desde la urgencia en hospitales, con sus camas de psiquiatría declaradas como contexto.", disponible: true },
   { titulo: "Análisis territorial", detalle: "Distribución comunal, variación esperada y contexto de oferta y vulnerabilidad.", disponible: true },
   { titulo: "Visualización de resultados", detalle: "Series, mapa y tabla, con advertencias de interpretación.", disponible: true },
   { titulo: "Accesibilidad a la red", detalle: "Tiempos de viaje por red vial y transporte público, y cobertura poblacional.", disponible: false },
-  { titulo: "Caracterización de hospitalizaciones", detalle: "Duración de estadía F00–F99 según sexo, previsión y pertenencia al SNSS.", disponible: false },
+  { titulo: "Estimación de camas necesarias", detalle: "Hospitalizaciones esperadas por duración de estadía F00–F99, frente a la dotación declarada, por región y servicio de salud.", disponible: false },
 ];
 
 const EXCLUYE = [
   "Gestión de pacientes: no registra, sigue ni deriva personas, ni usa datos identificables.",
-  "Gestión de cupos o camas en tiempo real.",
+  "Gestión de cupos u ocupación de camas en tiempo real: la dotación es la declarada en el año, no la disponible.",
   "Decisiones clínicas: no apoya diagnóstico, triage ni decisiones individuales.",
   "Predicción de riesgo de una persona.",
   "Integración en tiempo real con sistemas hospitalarios.",

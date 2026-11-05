@@ -36,6 +36,8 @@
   --accent: #0f5a78;
   --accent-ink: #0b4660;
   --accent-weak: rgba(15, 90, 120, 0.1);
+  /* Texto sobre el acento: blanco sobre el petroleo claro (7,6:1). */
+  --on-accent: #ffffff;
   --series-1: #0f5a78;
   --band: rgba(74, 159, 207, 0.22);
   /* Linea de referencia de camas: celeste electrico, mas claro que la serie. */
@@ -90,6 +92,8 @@
     --accent: #4a9fcf;
     --accent-ink: #7cc0e2;
     --accent-weak: rgba(74, 159, 207, 0.18);
+    /* En oscuro el acento es claro: el blanco quedaba en 2,9:1; la tinta de pagina da 6,9:1. */
+    --on-accent: #0a141a;
     --series-1: #4a9fcf;
     --band: rgba(74, 159, 207, 0.24);
     --camas: #3ee6ff;
@@ -170,6 +174,14 @@ h1, h2, h3 {
     letter-spacing: -0.01em;
   }
 
+  /* Fila de cifras clave: columnas iguales que se reacomodan solas, para que una
+     cifra extra (camas) baje completa a la fila siguiente y no quede descuadrada. */
+  .cifras-clave {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 1rem 1.5rem;
+  }
+
   .text-2 { color: var(--ink-2); }
   .text-3 { color: var(--ink-3); }
 
@@ -182,15 +194,18 @@ h1, h2, h3 {
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
   }
-  .segmented button {
+  .segmented button,
+  .segmented a {
     padding: 0.25rem 0.625rem;
     border-radius: 6px;
     font-size: 0.8125rem;
     color: var(--ink-2);
     transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
   }
-  .segmented button:hover { color: var(--ink); }
-  .segmented button[aria-pressed="true"] {
+  .segmented button:hover,
+  .segmented a:hover { color: var(--ink); }
+  .segmented button[aria-pressed="true"],
+  .segmented a[aria-current="page"] {
     background: var(--surface);
     color: var(--ink);
     font-weight: 600;
@@ -214,6 +229,18 @@ h1, h2, h3 {
   }
   .select:hover { border-color: var(--ink-3); }
 
+  .input {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    transition: border-color 150ms var(--ease-out);
+  }
+  .input::placeholder { color: var(--ink-3); }
+  .input:hover { border-color: var(--ink-3); }
+
   .link-button {
     font-size: 0.8125rem;
     color: var(--accent-ink);
@@ -231,7 +258,7 @@ h1, h2, h3 {
     padding: 0 1.125rem;
     border-radius: var(--radius-sm);
     background: var(--accent);
-    color: #fff;
+    color: var(--on-accent);
     font-size: 0.875rem;
     font-weight: 600;
     transition: background 120ms var(--ease-out);
@@ -239,6 +266,26 @@ h1, h2, h3 {
 
   .boton-primario:hover {
     background: var(--accent-ink);
+  }
+
+  /* Segunda accion, de igual destino que la primera: mismo tamano, sin relleno. */
+  .boton-secundario {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.5rem;
+    padding: 0 1.125rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    color: var(--ink);
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: border-color 120ms var(--ease-out), background 120ms var(--ease-out);
+  }
+
+  .boton-secundario:hover {
+    border-color: var(--accent);
+    background: var(--accent-weak);
   }
 
   /* Distintivo de cambio: icono + texto, nunca solo color. */

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { CambioEsperado, ResumenComuna } from "../api";
 import { fmtDecimal, fmtEntero, fmtPct } from "../format";
+import { enlace, RUTA_ESTABLECIMIENTOS } from "../ruta";
 import { BadgeCambio } from "./BadgeCambio";
 
 const CAMBIO_AYUDA =
@@ -10,6 +11,8 @@ interface Props {
   filas: ResumenComuna[];
   seleccion: string;
   onSeleccionar: (seriesId: string) => void;
+  /** Establecimientos que reportan a Urgencias por comuna: habilita el paso a esa vista. */
+  establecimientosPorComuna: Map<string, number>;
 }
 
 type Clave = "nombre" | "promedio_ultimas_semanas" | "pronostico_promedio" | "cambio_esperado"
@@ -18,11 +21,11 @@ type Clave = "nombre" | "promedio_ultimas_semanas" | "pronostico_promedio" | "ca
 const COLUMNAS: { clave: Clave; titulo: string; ayuda?: string; texto?: boolean }[] = [
   { clave: "nombre", titulo: "Comuna", texto: true },
   { clave: "promedio_ultimas_semanas", titulo: "Reciente", ayuda: "Promedio semanal de las últimas 4 semanas observadas" },
-  { clave: "pronostico_promedio", titulo: "Pronóstico", ayuda: "Promedio semanal pronosticado, 4 a 8 semanas" },
+  { clave: "pronostico_promedio", titulo: "Pronóstico", ayuda: "Promedio semanal pronosticado, 1 a 8 semanas" },
   { clave: "cambio_esperado", titulo: "Cambio", ayuda: CAMBIO_AYUDA, texto: true },
   { clave: "tasa_pronostico_por_10000", titulo: "Tasa", ayuda: "Atenciones pronosticadas por 10.000 habitantes a la semana; no es prevalencia" },
   { clave: "indicador_vulnerabilidad", titulo: "Pobreza", ayuda: "Tasa de pobreza por ingresos, Casen 2022" },
-  { clave: "oferta_urgencia_actual", titulo: "Oferta", ayuda: "Establecimientos de urgencia vigentes en la comuna" },
+  { clave: "oferta_urgencia_actual", titulo: "Oferta", ayuda: "Establecimientos de urgencia vigentes en la comuna; clic para verlos uno a uno" },
 ];
 
 // Orden para la columna de cambio: primero lo que exige atencion.
@@ -34,7 +37,7 @@ function valor(fila: ResumenComuna, clave: Clave): number | string | null {
 }
 
 // Tabla ordenable: es tambien la vista accesible de lo que muestra el mapa.
-export function TablaComunal({ filas, seleccion, onSeleccionar }: Props) {
+export function TablaComunal({ filas, seleccion, onSeleccionar, establecimientosPorComuna }: Props) {
   const [orden, setOrden] = useState<{ clave: Clave; asc: boolean }>({ clave: "cambio_esperado", asc: true });
 
   const ordenadas = useMemo(() => {
@@ -75,6 +78,7 @@ export function TablaComunal({ filas, seleccion, onSeleccionar }: Props) {
           </div>
         ) : (
           <table className="w-full border-collapse text-[13px] num">
+            <caption className="sr-only">Resumen de demanda y pronóstico por comuna</caption>
             <thead className="sticky top-0 z-1" style={{ background: "var(--surface-2)" }}>
               <tr>
                 {COLUMNAS.map((c) => (
@@ -85,7 +89,7 @@ export function TablaComunal({ filas, seleccion, onSeleccionar }: Props) {
                     className={`whitespace-nowrap px-2.5 py-2 text-[12px] font-semibold text-2 ${c.texto ? "text-left" : "text-right"}`}
                     aria-sort={orden.clave === c.clave ? (orden.asc ? "ascending" : "descending") : "none"}
                   >
-                    <button type="button" onClick={() => alternar(c.clave)} className="inline-flex items-center gap-1 hover:text-(--ink)">
+                    <button type="button" onClick={() => alternar(c.clave)} className="inline-flex min-h-6 items-center gap-1 hover:text-(--ink)">
                       {c.titulo}
                       <span aria-hidden className="text-[10px]" style={{ opacity: orden.clave === c.clave ? 1 : 0.35 }}>
                         {orden.clave === c.clave && !orden.asc ? "▼" : "▲"}
@@ -139,7 +143,19 @@ export function TablaComunal({ filas, seleccion, onSeleccionar }: Props) {
                     <td className="px-2.5 py-1.5 text-right">
                       {fila.indicador_vulnerabilidad == null ? <span className="text-3">—</span> : `${fmtDecimal(fila.indicador_vulnerabilidad * 100)}%`}
                     </td>
-                    <td className="px-2.5 py-1.5 text-right">{fmtEntero(fila.oferta_urgencia_actual)}</td>
+                    <td className="px-2.5 py-1.5 text-right">
+                      {establecimientosPorComuna.get(fila.series_id) ? (
+                        <a
+                          href={enlace(RUTA_ESTABLECIMIENTOS, { comuna: fila.series_id })}
+                          className="link-button"
+                          aria-label={`Ver los establecimientos de ${fila.nombre}`}
+                        >
+                          {fmtEntero(fila.oferta_urgencia_actual)}
+                        </a>
+                      ) : (
+                        fmtEntero(fila.oferta_urgencia_actual)
+                      )}
+                    </td>
                   </tr>
                 );
               })}
