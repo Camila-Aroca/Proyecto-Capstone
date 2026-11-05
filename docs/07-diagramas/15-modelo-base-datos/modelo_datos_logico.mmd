@@ -161,6 +161,16 @@ erDiagram
         int atenciones_id36
     }
 
+    %% grain: 1 fila = establecimiento x ano x semana DEIS (38641 filas, 152 establecimientos con reporte 2021-2025)
+    mart_urgencias_establecimiento_weekly {
+        bigint establecimiento_codigo PK "vinculo logico a dim_oferta_urgencia_rm NO garantizado al 100%: snapshot actual vs historico"
+        int ano PK
+        int semana PK "semana DEIS; la 53 es un fragmento"
+        string comuna_codigo "denormalizado desde Urgencias"
+        int atenciones_id36
+        int atenciones_id42 "hospitalizaciones derivadas desde urgencia F00-F99; no es componente de ID36"
+    }
+
     %% grain: 1 fila = comuna x ano x mes x grupo etario (15300 filas, formato largo, 51/52 comunas)
     mart_urgencias_comuna_etario_monthly {
         string comuna_codigo PK, FK
@@ -299,6 +309,7 @@ erDiagram
     mart_urgencias_comuna_weekly ||--o{ pronostico_demanda_sm : "panel semanal -> N horizontes por serie (+1 serie regional sin comuna)"
 
     dim_oferta_urgencia_rm |o..o{ mart_urgencias_establecimiento_monthly : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (snapshot actual vs historico 2021-2025)"
+    dim_oferta_urgencia_rm |o..o{ mart_urgencias_establecimiento_weekly : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (snapshot actual vs historico 2021-2025)"
 
     dim_oferta_urgencia_rm |o..o{ dotacion_camas_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 34/196 hospitales estan en la oferta)"
     dim_oferta_urgencia_rm |o..o{ dotacion_camas_no_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 10/144 establecimientos estan en la oferta)"

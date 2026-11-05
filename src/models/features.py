@@ -341,6 +341,9 @@ def build_supervised_frame(
     # --- Covariables exogenas, siempre rezagadas ----------------------------
     for columna in exogenous:
         frame[f"{columna}_lag_{horizon}"] = _shift(columna, horizon)
+    # Una covariable fuera de la lista por defecto solo puede entrar rezagada: su
+    # valor contemporaneo se retira para que no quede como predictor (seria fuga).
+    frame = frame.drop(columns=[c for c in exogenous if c not in EXOGENOUS_COLUMNS])
 
     frame = add_calendar_features(frame)
     frame = add_regime_flag(frame)
@@ -349,7 +352,10 @@ def build_supervised_frame(
     # La poblacion es anual y conocida por adelantado (proyeccion INE), por lo
     # que puede usarse en su valor contemporaneo sin fuga: no depende de
     # observaciones futuras del target.
-    frame["log_poblacion"] = np.log(frame["poblacion_anual"].clip(lower=1))
+    # Un panel sin poblacion (por ejemplo, de establecimientos, cuya poblacion
+    # atendida no es conocida) simplemente no tiene esta variable.
+    if "poblacion_anual" in frame.columns:
+        frame["log_poblacion"] = np.log(frame["poblacion_anual"].clip(lower=1))
 
     return frame.reset_index(drop=True)
 
@@ -363,6 +369,8 @@ def feature_columns(frame: pd.DataFrame) -> list[str]:
     excluidas = {
         "series_id", "nivel", "servicio_id", "comuna_glosa", "t", "ano", "semana",
         "y", "poblacion_anual", *EXOGENOUS_COLUMNS,
+        # Atributos descriptivos de un panel de establecimientos: no son predictores.
+        "comuna_codigo", "establecimiento_glosa", "tipo_establecimiento_urgencia",
     }
     return [c for c in frame.columns if c not in excluidas]
 

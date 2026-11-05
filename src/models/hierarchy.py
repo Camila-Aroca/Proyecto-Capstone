@@ -55,6 +55,16 @@ def _con_estructura(predicciones: pd.DataFrame) -> pd.DataFrame:
     return resultado
 
 
+# Niveles agregados de la jerarquia; todo lo demas es una hoja (comuna o
+# establecimiento, segun el panel).
+NIVELES_AGREGADOS: tuple[str, ...] = ("region", "servicio")
+
+
+def _hojas(frame: pd.DataFrame) -> pd.DataFrame:
+    """Series del nivel inferior, sea cual sea su nombre en el panel."""
+    return frame[~frame["nivel"].isin(NIVELES_AGREGADOS)]
+
+
 def _columnas_valor(frame: pd.DataFrame) -> list[str]:
     """Columnas numericas presentes que la reconciliacion debe transformar."""
     return [c for c in COLUMNAS_VALOR if c in frame.columns]
@@ -89,7 +99,7 @@ def coherence_gap(predicciones: pd.DataFrame) -> pd.DataFrame:
     """
     frame = _con_estructura(predicciones)
     region = frame[frame["nivel"] == "region"]
-    comunas = frame[frame["nivel"] == "comuna"]
+    comunas = _hojas(frame)
 
     suma = (
         comunas.groupby(list(CLAVE_PRONOSTICO), as_index=False)["y_pred"]
@@ -113,7 +123,7 @@ def reconcile_bottom_up(predicciones: pd.DataFrame) -> pd.DataFrame:
     """
     frame = _con_estructura(predicciones)
     clave = list(CLAVE_PRONOSTICO)
-    comunas = frame[frame["nivel"] == "comuna"]
+    comunas = _hojas(frame)
     partes = [comunas]
     if _tiene_servicios(frame):
         partes.append(
@@ -163,7 +173,7 @@ def reconcile_top_down(predicciones: pd.DataFrame) -> pd.DataFrame:
     clave = list(CLAVE_PRONOSTICO)
     region = frame[frame["nivel"] == "region"]
     totales = region[[*clave, "y_pred"]].rename(columns={"y_pred": "total_objetivo"})
-    comunas = _escalar_comunas(frame[frame["nivel"] == "comuna"], totales, clave)
+    comunas = _escalar_comunas(_hojas(frame), totales, clave)
 
     partes = [region, comunas]
     if _tiene_servicios(frame):
@@ -193,7 +203,7 @@ def reconcile_middle_out(predicciones: pd.DataFrame) -> pd.DataFrame:
     totales = servicios[[*por_servicio, "y_pred"]].rename(
         columns={"y_pred": "total_objetivo"}
     )
-    comunas = _escalar_comunas(frame[frame["nivel"] == "comuna"], totales, por_servicio)
+    comunas = _escalar_comunas(_hojas(frame), totales, por_servicio)
     region = _reagregar(servicios, frame[frame["nivel"] == "region"], clave)
     return pd.concat([region, servicios, comunas], ignore_index=True)
 
@@ -233,7 +243,7 @@ def reconcile_wls_structural(predicciones: pd.DataFrame) -> pd.DataFrame:
     """
     frame = _con_estructura(predicciones)
     clave = list(CLAVE_PRONOSTICO)
-    comunas_df = frame[frame["nivel"] == "comuna"]
+    comunas_df = _hojas(frame)
     comunas = sorted(comunas_df["series_id"].unique())
     tiene_servicios = _tiene_servicios(frame)
     if tiene_servicios:

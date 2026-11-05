@@ -415,6 +415,38 @@ COMMENT ON TABLE urgencias.mart_establecimiento_monthly IS
 CREATE INDEX ix_mart_establecimiento_monthly_comuna ON urgencias.mart_establecimiento_monthly (comuna_codigo);
 
 -- =============================================================================
+-- urgencias.mart_establecimiento_weekly
+-- Grain: 1 fila = establecimiento x ano x semana DEIS, 2021-2025. Insumo del
+-- pronostico por establecimiento. atenciones_id42 = hospitalizaciones derivadas
+-- desde la urgencia por F00-F99 (seccion 2 DEIS); no es componente de ID36.
+-- =============================================================================
+CREATE TABLE urgencias.mart_establecimiento_weekly (
+    establecimiento_codigo     BIGINT      NOT NULL,
+    ano                          SMALLINT    NOT NULL,
+    semana                       SMALLINT    NOT NULL,
+    comuna_codigo                CHAR(5)     NOT NULL,
+    atenciones_id36               INTEGER,
+    atenciones_id42               INTEGER,
+    CONSTRAINT pk_mart_establecimiento_weekly PRIMARY KEY (establecimiento_codigo, ano, semana),
+    CONSTRAINT fk_mart_establecimiento_weekly_comuna FOREIGN KEY (comuna_codigo)
+        REFERENCES censo.cartografia_comunal (comuna_codigo),
+    CONSTRAINT ck_mart_establecimiento_weekly_semana CHECK (semana BETWEEN 1 AND 53),
+    CONSTRAINT ck_mart_establecimiento_weekly_atenciones CHECK (
+        (atenciones_id36 IS NULL OR atenciones_id36 >= 0)
+        AND (atenciones_id42 IS NULL OR atenciones_id42 >= 0)
+    )
+);
+
+COMMENT ON TABLE urgencias.mart_establecimiento_weekly IS
+    'Misma regla que urgencias.mart_establecimiento_monthly: establecimiento_codigo '
+    'NO tiene FK fisica hacia geo.dim_oferta_urgencia_rm porque esta tabla es '
+    'historica y la oferta es un snapshot actual. Una semana sin fila es ausencia '
+    'de reporte, no cero. atenciones_id42 se registra en el establecimiento donde '
+    'ocurrio la urgencia, no donde quedo hospitalizado el paciente.';
+
+CREATE INDEX ix_mart_establecimiento_weekly_comuna ON urgencias.mart_establecimiento_weekly (comuna_codigo);
+
+-- =============================================================================
 -- urgencias.mart_comuna_etario_monthly
 -- Grain: 1 fila = comuna x ano x mes x grupo_etario_urgencia (formato largo).
 -- 15300 filas; 51/52 comunas reportan; 5 grupos etarios publicados por DEIS.

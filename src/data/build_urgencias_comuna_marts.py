@@ -100,6 +100,7 @@ def load_urgencias_source(
     input_dir: Path = INPUT_DIR,
     extra_columns: tuple[str, ...] = (),
     years: tuple[int, ...] = YEARS,
+    causes: tuple[int, ...] = CAUSES,
 ) -> pd.DataFrame:
     """Lee sólo los IDs y las columnas requeridas desde los Parquet históricos.
 
@@ -110,6 +111,10 @@ def load_urgencias_source(
     `years` permite leer anios fuera del periodo canonico de los marts (por
     ejemplo, el anio en curso para evaluar un pronostico) con exactamente la
     misma logica de carga, sin modificar los marts publicados.
+
+    `causes` permite a un mart pedir causas fuera del contrato comunal (por
+    ejemplo ID42, hospitalizaciones derivadas desde urgencia) sin alterar los
+    marts que usan el valor por defecto.
     """
     files = [input_dir / f"urgencias_rm_{year}.parquet" for year in years]
     absent = [path.as_posix() for path in files if not path.is_file()]
@@ -120,7 +125,7 @@ def load_urgencias_source(
     ]
     dataset = ds.dataset(files, format="parquet")
     table = dataset.to_table(
-        filter=pc.field("id_causa").isin(CAUSES),
+        filter=pc.field("id_causa").isin(causes),
         columns=columns,
     )
     source = table.to_pandas()

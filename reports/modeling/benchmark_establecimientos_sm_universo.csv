@@ -1,0 +1,305 @@
+establecimiento_codigo,establecimiento_glosa,tipo,comuna_codigo,semanas,media_semanal,media_semanal_minima_anual,incluido,motivo_exclusion,semanas_ventana,objetivo
+109102,"Instituto Psiquiátrico Dr. José Horwitz Barak (Santiago, Recoleta)",Hospital,13127,208,344.72596153846155,304.0,True,,208,atenciones_sm
+113100,"Hospital Barros Luco Trudeau (Santiago, San Miguel)",Hospital,13130,208,62.53846153846154,45.86538461538461,True,,208,atenciones_sm
+110120,Hospital  Félix Bulnes Cerda,Hospital,13103,208,52.00480769230769,32.25,True,,208,atenciones_sm
+111101,Hospital Clínico Metropolitano El Carmen Doctor Luis Valentín Ferrada,Hospital,13119,208,50.38942307692308,47.46153846153846,True,,208,atenciones_sm
+111195,Hospital de Urgencia Asistencia Pública Dr. Alejandro del Río,Hospital,13101,208,47.6875,40.53846153846154,True,,208,atenciones_sm
+109815,SAPU Nº 1 Rodrigo Rojas Denegri,SAPU,13125,208,41.70673076923077,38.76923076923077,True,,208,atenciones_sm
+114101,"Complejo Hospitalario Dr. Sótero del Río (Santiago, Puente Alto)",Hospital,13201,208,33.26442307692308,27.46153846153846,True,,208,atenciones_sm
+110867,SAPU Santa Rosa de Chena,SAPU,13604,208,26.875,24.673076923076923,True,,208,atenciones_sm
+109811,SAPU José Bauzá Frau,SAPU,13302,208,26.76923076923077,22.21153846153846,True,,208,atenciones_sm
+109805,SAR La Pincoya,SAR,13107,208,26.365384615384617,20.51923076923077,True,,208,atenciones_sm
+110150,Hospital San José (Melipilla),Hospital,13501,208,24.302884615384617,20.326923076923077,True,,208,atenciones_sm
+112820,SAPU Centro de Urgencia Ñuñoa,SAPU,13120,208,22.673076923076923,17.46153846153846,True,,208,atenciones_sm
+112100,Hospital Del Salvador de Santiago,Hospital,13123,208,22.66346153846154,18.46153846153846,True,,208,atenciones_sm
+114811,SAPU Santiago de Nueva Extremadura,SAPU,13112,208,22.139423076923077,17.96153846153846,True,,208,atenciones_sm
+112102,Hospital de Niños Dr. Luis Calvo Mackenna,Hospital,13123,208,21.360576923076923,16.403846153846153,True,,208,atenciones_sm
+109810,SAR Colina,SAR,13301,208,21.052884615384617,17.26923076923077,True,,208,atenciones_sm
+114103,Hospital Padre Alberto Hurtado (San Ramón),Hospital,13131,208,20.567307692307693,17.903846153846153,True,,208,atenciones_sm
+113809,SAR Julio Acuña Pinzón,SAR,13116,208,20.403846153846153,17.826923076923077,True,,208,atenciones_sm
+200955,SAPU Esmeralda,SAPU,13301,208,20.384615384615383,19.192307692307693,True,,208,atenciones_sm
+109101,"Hospital Clínico de Niños Dr. Roberto del Río (Santiago, Independencia)",Hospital,13108,208,19.884615384615383,15.192307692307692,True,,208,atenciones_sm
+110860,SAR Renca,SAR,13128,208,19.879807692307693,19.0,True,,208,atenciones_sm
+113803,SAR Dr. Amador Neghme R.,SAR,13121,208,19.307692307692307,17.442307692307693,True,,208,atenciones_sm
+200124,SAPU Dr. Gustavo Molina,SAPU,13124,208,18.682692307692307,17.076923076923077,True,,208,atenciones_sm
+200189,SAR Enfermera Sofía Pincheira,SAR,13102,208,18.64903846153846,10.557692307692308,True,,208,atenciones_sm
+113180,"Hospital El Pino (Santiago, San Bernardo)",Hospital,13401,208,18.379807692307693,16.923076923076923,True,,208,atenciones_sm
+110140,Hospital de Peñaflor,Hospital,13605,208,18.10576923076923,16.057692307692307,True,,208,atenciones_sm
+110130,Hospital Adalberto Steeger (Talagante),Hospital,13601,208,17.89903846153846,17.192307692307693,True,,208,atenciones_sm
+113802,SAR San Miguel,SAR,13130,208,17.70673076923077,12.5,True,,208,atenciones_sm
+109801,SAR Recoleta,SAR,13127,208,17.51923076923077,15.346153846153847,True,,208,atenciones_sm
+110160,Hospital de Curacaví,Hospital,13503,208,17.182692307692307,15.23076923076923,True,,208,atenciones_sm
+114801,SAPU Dr. Alejandro del Río,SAPU,13201,208,16.721153846153847,14.98076923076923,True,,208,atenciones_sm
+200125,SAR Dr. Raúl Yazigi,SAR,13117,208,16.653846153846153,12.576923076923077,True,,208,atenciones_sm
+114807,SAR La Bandera,SAR,13131,208,16.58653846153846,15.423076923076923,True,,208,atenciones_sm
+114805,SAPU Los Quillayes,SAPU,13110,208,16.27403846153846,14.442307692307692,True,,208,atenciones_sm
+114822,SAR Padre Manuel Villaseca,SAR,13201,208,16.177884615384617,11.711538461538462,True,,208,atenciones_sm
+200138,SAR La Estrella,SAR,13124,208,15.572115384615385,12.326923076923077,True,,208,atenciones_sm
+113150,Hospital San Luis (Buin),Hospital,13402,208,15.211538461538462,12.461538461538462,True,,208,atenciones_sm
+114820,SAPU Bernardo Leighton,SAPU,13201,208,14.942307692307692,13.01923076923077,True,,208,atenciones_sm
+200479,SAR Oriente María Eugenia Torres,SAR,13601,208,14.927884615384615,13.442307692307692,True,,208,atenciones_sm
+113829,SAR Eugenia Muñoz Dalmatín,SAR,13401,208,14.514423076923077,9.596153846153847,True,,208,atenciones_sm
+113830,SAPU Raúl Brañes F.,SAPU,13401,208,13.778846153846153,11.211538461538462,True,,208,atenciones_sm
+200118,SAPU Luis Chavarría,SAPU,13103,208,13.259615384615385,12.153846153846153,True,,208,atenciones_sm
+114812,SAPU San Gerónimo,SAPU,13201,208,13.225961538461538,11.846153846153847,True,,208,atenciones_sm
+113813,SAPU Raúl Cuevas (Ex San Bernardo),SAPU,13401,208,13.004807692307692,12.48076923076923,True,,208,atenciones_sm
+200126,SAPU Garín,SAPU,13126,208,12.942307692307692,10.403846153846153,True,,208,atenciones_sm
+200142,SAPU La Reina,SAPU,13113,208,12.884615384615385,11.211538461538462,True,,208,atenciones_sm
+111806,SAPU San José de Chuchunco,SAPU,13106,208,12.45673076923077,11.26923076923077,True,,208,atenciones_sm
+114821,SAPU Cardenal Silva Henríquez de Puente Alto,SAPU,13201,208,12.336538461538462,11.423076923076923,True,,208,atenciones_sm
+114105,Hospital Clínico Metropolitano La Florida Dra. Eloísa Díaz Insunza,Hospital,13110,208,12.245192307692308,4.173076923076923,True,,208,atenciones_sm
+113818,SAPU Paine,SAPU,13404,208,12.004807692307692,11.596153846153847,True,,208,atenciones_sm
+200133,SAR Bicentenario,SAR,13128,208,11.423076923076923,9.326923076923077,True,,208,atenciones_sm
+114814,SAPU San Ramón,SAPU,13131,208,11.225961538461538,8.961538461538462,True,,208,atenciones_sm
+113823,SAR Haydee López,SAR,13105,208,10.947115384615385,9.692307692307692,True,,208,atenciones_sm
+114806,SAPU La Granja,SAPU,13111,208,10.9375,5.230769230769231,True,,208,atenciones_sm
+113190,Hospital Parroquial de San Bernardo (D),Hospital,13401,208,10.932692307692308,8.826923076923077,True,,208,atenciones_sm
+200011,SAR Enrique Molina,SAR,13129,208,10.913461538461538,9.076923076923077,True,,208,atenciones_sm
+114826,SAPU Karol Wojtyla,SAPU,13201,208,10.75,8.615384615384615,True,,208,atenciones_sm
+113814,SAPU Cóndores de Chile,SAPU,13105,208,9.9375,8.961538461538462,True,,208,atenciones_sm
+200130,SAPU Peñaflor,SAPU,13605,208,9.783653846153847,6.653846153846154,True,,208,atenciones_sm
+109813,SAPU Nº 2 Irene Frei de Cid,SAPU,13125,208,9.754807692307692,8.51923076923077,True,,208,atenciones_sm
+200122,SAPU Dr. Fernando Monckeberg,SAPU,13605,208,9.399038461538462,6.230769230769231,True,,208,atenciones_sm
+200135,SAPU Dr. Edelberto Elgueta,SAPU,13501,208,9.221153846153847,5.980769230769231,True,,208,atenciones_sm
+200127,SAPU Isla de Maipo,SAPU,13603,208,9.182692307692308,8.307692307692308,True,,208,atenciones_sm
+201063,SAPU DR. AGUSTIN CRUZ MELO,SAPU,13108,208,9.120192307692308,1.3846153846153846,True,,208,atenciones_sm
+109824,SAPU Presidente Salvador Allende Gossens,SAPU,13125,208,9.110576923076923,5.5576923076923075,True,,208,atenciones_sm
+113890,SAPU Buin,SAPU,13402,208,9.10576923076923,6.519230769230769,True,,208,atenciones_sm
+109802,SAPU Lucas Sierra,SAPU,13104,208,9.014423076923077,8.115384615384615,True,,208,atenciones_sm
+114804,SAPU Villa O'Higgins,SAPU,13110,208,8.95673076923077,7.769230769230769,True,,208,atenciones_sm
+112818,SAPU Lo Hermida,SAPU,13122,208,8.807692307692308,4.653846153846154,True,,208,atenciones_sm
+111804,SAPU Maipú,SAPU,13119,208,8.567307692307692,7.019230769230769,True,,208,atenciones_sm
+114802,SAPU Los Castaños,SAPU,13110,208,8.504807692307692,6.173076923076923,True,,208,atenciones_sm
+200136,SAPU El Monte,SAPU,13602,208,8.490384615384615,7.9423076923076925,True,,208,atenciones_sm
+111809,SAPU Dra. Ana María Juricic,SAPU,13119,208,8.360576923076923,8.076923076923077,True,,208,atenciones_sm
+200876,SUR Isla de Maipo,SUR,13603,208,8.317307692307692,7.461538461538462,True,,208,atenciones_sm
+114102,Hospital San José de Maipo,Hospital,13203,208,8.225961538461538,7.673076923076923,True,,208,atenciones_sm
+112813,SAPU Santa Julia,SAPU,13118,208,8.177884615384615,5.1923076923076925,True,,208,atenciones_sm
+112814,SAPU La Faena,SAPU,13122,208,8.08173076923077,1.4615384615384615,True,,208,atenciones_sm
+112806,SAPU Aníbal Ariztía,SAPU,13114,208,7.798076923076923,3.519230769230769,True,,208,atenciones_sm
+112815,SAPU San Luis,SAPU,13122,208,7.605769230769231,0.9807692307692307,True,,208,atenciones_sm
+113826,SAPU Eduardo Frei Montalva,SAPU,13109,208,7.5673076923076925,6.730769230769231,True,,208,atenciones_sm
+109104,Hospital Comunitario de Til Til,Hospital,13303,208,7.365384615384615,6.403846153846154,True,,208,atenciones_sm
+200743,SUR Batuco,SUR,13302,208,7.360576923076923,3.980769230769231,True,,208,atenciones_sm
+112816,SAR Carol Urzúa Ibáñez,SAR,13122,208,7.331730769230769,0.8461538461538461,True,,208,atenciones_sm
+200131,SAPU Violeta Parra,SAPU,13124,208,7.163461538461538,5.730769230769231,True,,208,atenciones_sm
+113822,SAPU Santa Teresa de Los Andes,SAPU,13129,208,6.990384615384615,5.673076923076923,True,,208,atenciones_sm
+114819,SAPU El Roble,SAPU,13112,208,6.947115384615385,5.980769230769231,True,,208,atenciones_sm
+113828,SAPU Padre Joan Alsina,SAPU,13401,208,6.9375,6.153846153846154,True,,208,atenciones_sm
+200123,SAPU Dr. Francisco Boris Soler,SAPU,13501,208,6.913461538461538,6.0576923076923075,True,,208,atenciones_sm
+114828,SAPU Poetisa Gabriela Mistral,SAPU,13131,208,6.889423076923077,5.884615384615385,True,,208,atenciones_sm
+111100,Hospital Clínico San Borja Arriarán,Hospital,13101,208,6.788461538461538,5.384615384615385,True,,208,atenciones_sm
+200117,SAPU Padre Vicente Irarrázabal,SAPU,13106,208,6.509615384615385,5.365384615384615,True,,208,atenciones_sm
+114824,SAPU Santa Amalia,SAPU,13110,208,6.456730769230769,5.75,True,,208,atenciones_sm
+109100,"Complejo Hospitalario San José (Santiago, Independencia)",Hospital,13108,208,6.221153846153846,3.6923076923076925,True,,208,atenciones_sm
+113820,SAPU Dra. Mariela Salgado,SAPU,13116,208,6.1875,5.173076923076923,True,,208,atenciones_sm
+200121,SAPU Dr. Avendaño,SAPU,13117,208,6.048076923076923,4.634615384615385,True,,208,atenciones_sm
+113806,SAPU La Feria,SAPU,13121,208,5.9326923076923075,5.0576923076923075,True,,208,atenciones_sm
+200141,SAPU Dr. Iván Insunza,SAPU,13119,208,5.923076923076923,5.173076923076923,True,,208,atenciones_sm
+114809,SAPU Pablo de Rokha,SAPU,13112,208,5.826923076923077,5.173076923076923,True,,208,atenciones_sm
+111800,SAPU Consultorio Nº1,SAPU,13101,208,5.711538461538462,3.9423076923076925,True,,208,atenciones_sm
+200119,SAPU Dr. Alberto Allende Jones,SAPU,13601,208,5.524038461538462,1.6730769230769231,True,,208,atenciones_sm
+200051,SAPU Trinidad,SAPU,13110,208,5.480769230769231,4.346153846153846,True,,208,atenciones_sm
+200132,SAPU María Pinto,SAPU,13504,208,5.475961538461538,5.134615384615385,True,,208,atenciones_sm
+109808,SAPU Alberto Bachelet Martínez,SAPU,13104,208,5.451923076923077,5.019230769230769,True,,208,atenciones_sm
+111805,SAPU Dr. Norman Voulliéme,SAPU,13102,208,5.4423076923076925,4.461538461538462,True,,208,atenciones_sm
+113808,SAPU Clara Estrella,SAPU,13116,208,5.427884615384615,4.980769230769231,True,,208,atenciones_sm
+200137,SAPU Huamachuco,SAPU,13128,208,5.403846153846154,4.711538461538462,True,,208,atenciones_sm
+112810,SAPU Rosita Renard,SAPU,13120,208,5.375,5.096153846153846,True,,208,atenciones_sm
+200010,SAPU Santa Laura,SAPU,13105,208,5.341346153846154,3.8653846153846154,True,,208,atenciones_sm
+114817,SAPU Santo Tomás,SAPU,13112,208,5.336538461538462,4.423076923076923,True,,208,atenciones_sm
+200932,SAPU Dr. José Manuel Balmaceda,SAPU,13202,208,5.3173076923076925,4.519230769230769,True,,208,atenciones_sm
+113130,"Hospital Dr. Exequiel González Cortés (Santiago, San Miguel)",Hospital,13130,208,5.3125,5.0,True,,208,atenciones_sm
+113831,SAPU Edgardo Enríquez Froedden,SAPU,13121,208,5.3076923076923075,3.0384615384615383,True,,208,atenciones_sm
+113832,SAPU Juan Pablo II,SAPU,13401,208,5.2548076923076925,5.096153846153846,True,,208,atenciones_sm
+200129,SAPU Pablo Neruda,SAPU,13117,208,5.163461538461538,3.076923076923077,True,,208,atenciones_sm
+114831,SAPU La Florida,SAPU,13110,208,5.115384615384615,4.461538461538462,True,,208,atenciones_sm
+113812,SAPU Dr. Carlos Lorca,SAPU,13105,208,5.048076923076923,2.25,True,,208,atenciones_sm
+114808,SAPU San Rafael,SAPU,13112,208,5.043269230769231,4.115384615384615,True,,208,atenciones_sm
+114816,SAPU Dr. Fernando Maffioletti,SAPU,13110,208,5.028846153846154,4.596153846153846,True,,208,atenciones_sm
+200144,SAPU José Alvo,SAPU,13110,208,4.644230769230769,4.134615384615385,True,,208,atenciones_sm
+200140,SAPU Santa Anita,SAPU,13117,208,4.509615384615385,3.3846153846153846,True,,208,atenciones_sm
+200041,SAPU Libertadores,SAPU,13107,208,4.4423076923076925,2.269230769230769,True,,208,atenciones_sm
+200143,SAPU Aguilucho,SAPU,13123,208,4.423076923076923,3.5,True,,208,atenciones_sm
+200134,SAPU Dr. Adalberto Steeger,SAPU,13103,208,4.365384615384615,4.019230769230769,True,,208,atenciones_sm
+113815,SAPU Confraternidad,SAPU,13401,208,4.259615384615385,3.7115384615384617,True,,208,atenciones_sm
+200120,SAPU Dr. Arturo Albertz,SAPU,13103,208,4.0048076923076925,3.6346153846153846,True,,208,atenciones_sm
+200967,SUR Los Bajos de San Agustín,SUR,13403,208,3.6971153846153846,2.9038461538461537,True,,208,atenciones_sm
+110891,SAPU Marcela Jacques Vargas,SAPU,13601,208,3.5384615384615383,1.8076923076923077,True,,208,atenciones_sm
+113807,SAPU Padre Esteban Gumucio,SAPU,13111,208,3.456730769230769,2.4615384615384617,True,,208,atenciones_sm
+200877,SUR San Pedro,SUR,13505,208,3.235576923076923,2.6346153846153846,True,,208,atenciones_sm
+114825,SAPU Granja Sur,SAPU,13111,208,3.1826923076923075,2.5961538461538463,True,,208,atenciones_sm
+200933,SAPU Ignacio Domeyko,SAPU,13101,208,2.4471153846153846,1.2884615384615385,True,,208,atenciones_sm
+200878,SUR Villa Alhué,SUR,13502,208,1.9038461538461537,0.8461538461538461,True,,208,atenciones_sm
+109890,SAPU Cristo Vive,SAPU,13127,208,1.2932692307692308,1.0384615384615385,True,,208,atenciones_sm
+109809,SAR Conchalí,SAR,13104,207,22.57487922705314,15.627450980392156,False,semanas sin reporte en la ventana,208,atenciones_sm
+201632,SAR Michelle Bachelet,SAR,13119,74,10.094594594594595,9.0,False,semanas sin reporte en la ventana,208,atenciones_sm
+201712,SAR ELSA ROMO ARAVENA,SAR,13501,58,6.448275862068965,4.333333333333333,False,semanas sin reporte en la ventana,208,atenciones_sm
+201015,SAR Violeta Parra,SAR,13124,156,6.333333333333333,5.3076923076923075,False,semanas sin reporte en la ventana,208,atenciones_sm
+112101,"Hospital Dr. Luis Tisné B. (Santiago, Peñalolén)",Hospital,13122,208,6.173076923076923,0.17307692307692307,False,volumen medio menor a 0.5 por semana en algún año de la ventana,208,atenciones_sm
+109821,SAPU Juan Antonio Ríos,SAPU,13108,198,5.52020202020202,1.6346153846153846,False,semanas sin reporte en la ventana,208,atenciones_sm
+200139,SAPU Pudahuel Poniente,SAPU,13124,208,4.75,0.0,False,volumen medio menor a 0.5 por semana en algún año de la ventana,208,atenciones_sm
+202221,SAR Dr. Gustavo Molina,SAR,13124,6,4.166666666666667,4.166666666666667,False,semanas sin reporte en la ventana,208,atenciones_sm
+109804,SAPU Valdivieso,SAPU,13127,175,3.56,2.473684210526316,False,semanas sin reporte en la ventana,208,atenciones_sm
+201438,Servicio de Urgencia Rural SUR Irene Frei Montalva,SUR,13124,104,2.701923076923077,2.5961538461538463,False,semanas sin reporte en la ventana,208,atenciones_sm
+112807,SAPU Lo Barnechea,SAPU,13115,208,2.043269230769231,0.46153846153846156,False,volumen medio menor a 0.5 por semana en algún año de la ventana,208,atenciones_sm
+200744,SUR Huertos Familiares,SUR,13303,123,1.8943089430894309,0.48,False,semanas sin reporte en la ventana,208,atenciones_sm
+200128,SAPU Lo Franco,SAPU,13126,208,1.8557692307692308,0.0,False,volumen medio menor a 0.5 por semana en algún año de la ventana,208,atenciones_sm
+110100,Hospital San Juan de Dios (Santiago),Hospital,13101,208,1.1923076923076923,0.0,False,volumen medio menor a 0.5 por semana en algún año de la ventana,208,atenciones_sm
+200969,SUR Dr. Raúl Moya,SUR,13404,208,0.36538461538461536,0.019230769230769232,False,volumen medio menor a 1 por semana,208,atenciones_sm
+112320,Centro de Salud Familiar Juan Pablo II ( La Reina),CEAR,13113,91,0.02197802197802198,0.0,False,semanas sin reporte en la ventana,208,atenciones_sm
+200966,SUR Alto Jahuel,SUR,13402,205,0.014634146341463415,0.0,False,semanas sin reporte en la ventana,208,atenciones_sm
+200968,SUR Maipo,SUR,13402,205,0.014634146341463415,0.0,False,semanas sin reporte en la ventana,208,atenciones_sm
+110110,Instituto Traumatológico Dr. Teodoro Gebauer,Hospital,13101,208,0.0,0.0,False,volumen medio menor a 1 por semana,208,atenciones_sm
+109102,"Instituto Psiquiátrico Dr. José Horwitz Barak (Santiago, Recoleta)",Hospital,13127,208,26.89423076923077,25.807692307692307,True,,208,hospitalizaciones_sm
+111101,Hospital Clínico Metropolitano El Carmen Doctor Luis Valentín Ferrada,Hospital,13119,208,16.182692307692307,9.807692307692308,True,,208,hospitalizaciones_sm
+114101,"Complejo Hospitalario Dr. Sótero del Río (Santiago, Puente Alto)",Hospital,13201,208,14.951923076923077,12.596153846153847,True,,208,hospitalizaciones_sm
+112100,Hospital Del Salvador de Santiago,Hospital,13123,208,9.451923076923077,6.3076923076923075,True,,208,hospitalizaciones_sm
+112102,Hospital de Niños Dr. Luis Calvo Mackenna,Hospital,13123,208,9.384615384615385,3.6923076923076925,True,,208,hospitalizaciones_sm
+113180,"Hospital El Pino (Santiago, San Bernardo)",Hospital,13401,208,9.370192307692308,5.596153846153846,True,,208,hospitalizaciones_sm
+113100,"Hospital Barros Luco Trudeau (Santiago, San Miguel)",Hospital,13130,208,6.831730769230769,2.6346153846153846,True,,208,hospitalizaciones_sm
+114105,Hospital Clínico Metropolitano La Florida Dra. Eloísa Díaz Insunza,Hospital,13110,208,6.1201923076923075,0.7692307692307693,True,,208,hospitalizaciones_sm
+110150,Hospital San José (Melipilla),Hospital,13501,208,5.5,2.3846153846153846,True,,208,hospitalizaciones_sm
+113150,Hospital San Luis (Buin),Hospital,13402,208,3.144230769230769,1.3846153846153846,True,,208,hospitalizaciones_sm
+109101,"Hospital Clínico de Niños Dr. Roberto del Río (Santiago, Independencia)",Hospital,13108,208,2.6490384615384617,2.1923076923076925,True,,208,hospitalizaciones_sm
+109100,"Complejo Hospitalario San José (Santiago, Independencia)",Hospital,13108,208,1.1298076923076923,0.6730769230769231,True,,208,hospitalizaciones_sm
+111195,Hospital de Urgencia Asistencia Pública Dr. Alejandro del Río,Hospital,13101,208,1.1923076923076923,0.3269230769230769,False,volumen medio menor a 0.5 por semana en algún año de la ventana,208,hospitalizaciones_sm
+112101,"Hospital Dr. Luis Tisné B. (Santiago, Peñalolén)",Hospital,13122,208,0.9423076923076923,0.038461538461538464,False,volumen medio menor a 1 por semana,208,hospitalizaciones_sm
+110100,Hospital San Juan de Dios (Santiago),Hospital,13101,208,0.7115384615384616,0.09615384615384616,False,volumen medio menor a 1 por semana,208,hospitalizaciones_sm
+110120,Hospital  Félix Bulnes Cerda,Hospital,13103,208,0.6009615384615384,0.07692307692307693,False,volumen medio menor a 1 por semana,208,hospitalizaciones_sm
+113130,"Hospital Dr. Exequiel González Cortés (Santiago, San Miguel)",Hospital,13130,208,0.5961538461538461,0.019230769230769232,False,volumen medio menor a 1 por semana,208,hospitalizaciones_sm
+110140,Hospital de Peñaflor,Hospital,13605,208,0.38461538461538464,0.0,False,volumen medio menor a 1 por semana,208,hospitalizaciones_sm
+114102,Hospital San José de Maipo,Hospital,13203,208,0.1971153846153846,0.17307692307692307,False,volumen medio menor a 1 por semana,208,hospitalizaciones_sm
+110130,Hospital Adalberto Steeger (Talagante),Hospital,13601,208,0.17307692307692307,0.019230769230769232,False,volumen medio menor a 1 por semana,208,hospitalizaciones_sm
+113190,Hospital Parroquial de San Bernardo (D),Hospital,13401,208,0.08173076923076923,0.0,False,volumen medio menor a 1 por semana,208,hospitalizaciones_sm
+114103,Hospital Padre Alberto Hurtado (San Ramón),Hospital,13131,208,0.0673076923076923,0.019230769230769232,False,volumen medio menor a 1 por semana,208,hospitalizaciones_sm
+110110,Instituto Traumatológico Dr. Teodoro Gebauer,Hospital,13101,208,0.04326923076923077,0.0,False,volumen medio menor a 1 por semana,208,hospitalizaciones_sm
+110160,Hospital de Curacaví,Hospital,13503,208,0.004807692307692308,0.0,False,volumen medio menor a 1 por semana,208,hospitalizaciones_sm
+109104,Hospital Comunitario de Til Til,Hospital,13303,208,0.0,0.0,False,volumen medio menor a 1 por semana,208,hospitalizaciones_sm
+109801,SAR Recoleta,SAR,13127,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+109802,SAPU Lucas Sierra,SAPU,13104,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+109804,SAPU Valdivieso,SAPU,13127,175,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+109805,SAR La Pincoya,SAR,13107,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+109808,SAPU Alberto Bachelet Martínez,SAPU,13104,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+109809,SAR Conchalí,SAR,13104,207,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+109810,SAR Colina,SAR,13301,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+109811,SAPU José Bauzá Frau,SAPU,13302,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+109813,SAPU Nº 2 Irene Frei de Cid,SAPU,13125,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+109815,SAPU Nº 1 Rodrigo Rojas Denegri,SAPU,13125,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+109821,SAPU Juan Antonio Ríos,SAPU,13108,198,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+109824,SAPU Presidente Salvador Allende Gossens,SAPU,13125,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+109890,SAPU Cristo Vive,SAPU,13127,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+110860,SAR Renca,SAR,13128,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+110867,SAPU Santa Rosa de Chena,SAPU,13604,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+110891,SAPU Marcela Jacques Vargas,SAPU,13601,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+111100,Hospital Clínico San Borja Arriarán,Hospital,13101,208,0.0,0.0,False,volumen medio menor a 1 por semana,208,hospitalizaciones_sm
+111800,SAPU Consultorio Nº1,SAPU,13101,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+111804,SAPU Maipú,SAPU,13119,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+111805,SAPU Dr. Norman Voulliéme,SAPU,13102,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+111806,SAPU San José de Chuchunco,SAPU,13106,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+111809,SAPU Dra. Ana María Juricic,SAPU,13119,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+112320,Centro de Salud Familiar Juan Pablo II ( La Reina),CEAR,13113,91,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+112806,SAPU Aníbal Ariztía,SAPU,13114,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+112807,SAPU Lo Barnechea,SAPU,13115,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+112810,SAPU Rosita Renard,SAPU,13120,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+112813,SAPU Santa Julia,SAPU,13118,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+112814,SAPU La Faena,SAPU,13122,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+112815,SAPU San Luis,SAPU,13122,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+112816,SAR Carol Urzúa Ibáñez,SAR,13122,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+112818,SAPU Lo Hermida,SAPU,13122,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+112820,SAPU Centro de Urgencia Ñuñoa,SAPU,13120,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113802,SAR San Miguel,SAR,13130,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113803,SAR Dr. Amador Neghme R.,SAR,13121,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113806,SAPU La Feria,SAPU,13121,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113807,SAPU Padre Esteban Gumucio,SAPU,13111,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113808,SAPU Clara Estrella,SAPU,13116,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113809,SAR Julio Acuña Pinzón,SAR,13116,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113812,SAPU Dr. Carlos Lorca,SAPU,13105,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113813,SAPU Raúl Cuevas (Ex San Bernardo),SAPU,13401,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113814,SAPU Cóndores de Chile,SAPU,13105,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113815,SAPU Confraternidad,SAPU,13401,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113818,SAPU Paine,SAPU,13404,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113820,SAPU Dra. Mariela Salgado,SAPU,13116,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113822,SAPU Santa Teresa de Los Andes,SAPU,13129,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113823,SAR Haydee López,SAR,13105,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113826,SAPU Eduardo Frei Montalva,SAPU,13109,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113828,SAPU Padre Joan Alsina,SAPU,13401,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113829,SAR Eugenia Muñoz Dalmatín,SAR,13401,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113830,SAPU Raúl Brañes F.,SAPU,13401,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113831,SAPU Edgardo Enríquez Froedden,SAPU,13121,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113832,SAPU Juan Pablo II,SAPU,13401,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+113890,SAPU Buin,SAPU,13402,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114801,SAPU Dr. Alejandro del Río,SAPU,13201,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114802,SAPU Los Castaños,SAPU,13110,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114804,SAPU Villa O'Higgins,SAPU,13110,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114805,SAPU Los Quillayes,SAPU,13110,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114806,SAPU La Granja,SAPU,13111,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114807,SAR La Bandera,SAR,13131,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114808,SAPU San Rafael,SAPU,13112,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114809,SAPU Pablo de Rokha,SAPU,13112,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114811,SAPU Santiago de Nueva Extremadura,SAPU,13112,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114812,SAPU San Gerónimo,SAPU,13201,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114814,SAPU San Ramón,SAPU,13131,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114816,SAPU Dr. Fernando Maffioletti,SAPU,13110,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114817,SAPU Santo Tomás,SAPU,13112,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114819,SAPU El Roble,SAPU,13112,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114820,SAPU Bernardo Leighton,SAPU,13201,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114821,SAPU Cardenal Silva Henríquez de Puente Alto,SAPU,13201,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114822,SAR Padre Manuel Villaseca,SAR,13201,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114824,SAPU Santa Amalia,SAPU,13110,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114825,SAPU Granja Sur,SAPU,13111,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114826,SAPU Karol Wojtyla,SAPU,13201,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114828,SAPU Poetisa Gabriela Mistral,SAPU,13131,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+114831,SAPU La Florida,SAPU,13110,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200010,SAPU Santa Laura,SAPU,13105,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200011,SAR Enrique Molina,SAR,13129,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200041,SAPU Libertadores,SAPU,13107,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200051,SAPU Trinidad,SAPU,13110,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200117,SAPU Padre Vicente Irarrázabal,SAPU,13106,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200118,SAPU Luis Chavarría,SAPU,13103,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200119,SAPU Dr. Alberto Allende Jones,SAPU,13601,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200120,SAPU Dr. Arturo Albertz,SAPU,13103,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200121,SAPU Dr. Avendaño,SAPU,13117,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200122,SAPU Dr. Fernando Monckeberg,SAPU,13605,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200123,SAPU Dr. Francisco Boris Soler,SAPU,13501,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200124,SAPU Dr. Gustavo Molina,SAPU,13124,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200125,SAR Dr. Raúl Yazigi,SAR,13117,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200126,SAPU Garín,SAPU,13126,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200127,SAPU Isla de Maipo,SAPU,13603,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200128,SAPU Lo Franco,SAPU,13126,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200129,SAPU Pablo Neruda,SAPU,13117,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200130,SAPU Peñaflor,SAPU,13605,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200131,SAPU Violeta Parra,SAPU,13124,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200132,SAPU María Pinto,SAPU,13504,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200133,SAR Bicentenario,SAR,13128,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200134,SAPU Dr. Adalberto Steeger,SAPU,13103,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200135,SAPU Dr. Edelberto Elgueta,SAPU,13501,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200136,SAPU El Monte,SAPU,13602,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200137,SAPU Huamachuco,SAPU,13128,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200138,SAR La Estrella,SAR,13124,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200139,SAPU Pudahuel Poniente,SAPU,13124,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200140,SAPU Santa Anita,SAPU,13117,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200141,SAPU Dr. Iván Insunza,SAPU,13119,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200142,SAPU La Reina,SAPU,13113,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200143,SAPU Aguilucho,SAPU,13123,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200144,SAPU José Alvo,SAPU,13110,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200189,SAR Enfermera Sofía Pincheira,SAR,13102,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200479,SAR Oriente María Eugenia Torres,SAR,13601,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200743,SUR Batuco,SUR,13302,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200744,SUR Huertos Familiares,SUR,13303,123,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200876,SUR Isla de Maipo,SUR,13603,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200877,SUR San Pedro,SUR,13505,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200878,SUR Villa Alhué,SUR,13502,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200932,SAPU Dr. José Manuel Balmaceda,SAPU,13202,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200933,SAPU Ignacio Domeyko,SAPU,13101,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200955,SAPU Esmeralda,SAPU,13301,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200966,SUR Alto Jahuel,SUR,13402,205,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200967,SUR Los Bajos de San Agustín,SUR,13403,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200968,SUR Maipo,SUR,13402,205,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+200969,SUR Dr. Raúl Moya,SUR,13404,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+201015,SAR Violeta Parra,SAR,13124,156,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+201063,SAPU DR. AGUSTIN CRUZ MELO,SAPU,13108,208,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+201438,Servicio de Urgencia Rural SUR Irene Frei Montalva,SUR,13124,104,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+201632,SAR Michelle Bachelet,SAR,13119,74,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+201712,SAR ELSA ROMO ARAVENA,SAR,13501,58,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm
+202221,SAR Dr. Gustavo Molina,SAR,13124,6,0.0,0.0,False,no es hospital,208,hospitalizaciones_sm

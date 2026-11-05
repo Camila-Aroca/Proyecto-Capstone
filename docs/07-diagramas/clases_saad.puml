@@ -140,6 +140,17 @@ package "Urgencias (DEIS)" {
     +obtenerAtencionesId36(): Integer
   }
 
+  class UrgenciasEstablecimientoWeekly <<mart>> {
+    +establecimientoCodigo: Long
+    +ano: Integer
+    +semana: Integer
+    +comunaCodigo: String
+    +atencionesId36: Integer
+    +atencionesId42: Integer
+    --
+    +obtenerHospitalizacionesDerivadas(): Integer
+  }
+
   class UrgenciasComunaEtarioMonthly <<mart>> {
     +comunaCodigo: String [5]
     +ano: Integer
@@ -243,6 +254,7 @@ Comuna "1" -- "0..*" UrgenciasComunaEtarioMonthly : desagrega >
 Comuna "1" -- "0..1" MartMVPTerritorialComuna : resume >
 
 EstablecimientoUrgencia "0..1" .. "0..*" UrgenciasEstablecimientoMonthly : establecimientoCodigo
+EstablecimientoUrgencia "0..1" .. "0..*" UrgenciasEstablecimientoWeekly : establecimientoCodigo
 
 UrgenciasComunaWeekly "0..*" ..> "0..*" PronosticoDemandaSM : panel de entrada >
 

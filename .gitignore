@@ -51,6 +51,8 @@ data/processed/*
 data/processed/modeling/*
 !data/processed/modeling/pronostico_demanda_sm.parquet
 !data/processed/modeling/pronostico_demanda_sm_manifest.json
+!data/processed/modeling/pronostico_establecimientos_sm.parquet
+!data/processed/modeling/pronostico_establecimientos_sm_manifest.json
 data/raw/*
 !data/raw/.gitkeep
 !data/raw/provenance_manifest.json

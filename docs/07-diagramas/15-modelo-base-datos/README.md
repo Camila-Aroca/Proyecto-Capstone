@@ -28,7 +28,7 @@ Se realizó una búsqueda dirigida antes de crear cualquier artefacto:
 - `dim_poblacion_comuna_censo2024`, `dim_poblacion_comuna_anual` (`data/processed/censo/`).
 - `dim_vulnerabilidad_comuna` (`data/processed/pobreza/`).
 - `dim_oferta_urgencia_rm` (`data/processed/geo/`).
-- `mart_urgencias_comuna_weekly`, `mart_urgencias_comuna_monthly`, `mart_urgencias_establecimiento_monthly`, `mart_urgencias_comuna_etario_monthly` (`data/processed/marts/`).
+- `mart_urgencias_comuna_weekly`, `mart_urgencias_comuna_monthly`, `mart_urgencias_establecimiento_monthly`, `mart_urgencias_establecimiento_weekly`, `mart_urgencias_comuna_etario_monthly` (`data/processed/marts/`).
 - `mart_mvp_territorial_comuna` (`data/processed/marts/`).
 - `cobertura_urgencia_comuna` (`data/processed/geo/`): cobertura territorial simple por distancia en línea recta (NEXT-032).
 - `egresos_f00_f99_nacional_2020_2025` (`data/processed/egresos/`).
@@ -267,6 +267,16 @@ erDiagram
         int atenciones_id36
     }
 
+    %% grain: 1 fila = establecimiento x ano x semana DEIS (38641 filas, 152 establecimientos con reporte 2021-2025)
+    mart_urgencias_establecimiento_weekly {
+        bigint establecimiento_codigo PK "vinculo logico a dim_oferta_urgencia_rm NO garantizado al 100%: snapshot actual vs historico"
+        int ano PK
+        int semana PK "semana DEIS; la 53 es un fragmento"
+        string comuna_codigo "denormalizado desde Urgencias"
+        int atenciones_id36
+        int atenciones_id42 "hospitalizaciones derivadas desde urgencia F00-F99; no es componente de ID36"
+    }
+
     %% grain: 1 fila = comuna x ano x mes x grupo etario (15300 filas, formato largo, 51/52 comunas)
     mart_urgencias_comuna_etario_monthly {
         string comuna_codigo PK, FK
@@ -405,6 +415,7 @@ erDiagram
     mart_urgencias_comuna_weekly ||--o{ pronostico_demanda_sm : "panel semanal -> N horizontes por serie (+1 serie regional sin comuna)"
 
     dim_oferta_urgencia_rm |o..o{ mart_urgencias_establecimiento_monthly : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (snapshot actual vs historico 2021-2025)"
+    dim_oferta_urgencia_rm |o..o{ mart_urgencias_establecimiento_weekly : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (snapshot actual vs historico 2021-2025)"
 
     dim_oferta_urgencia_rm |o..o{ dotacion_camas_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 34/196 hospitales estan en la oferta)"
     dim_oferta_urgencia_rm |o..o{ dotacion_camas_no_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 10/144 establecimientos estan en la oferta)"
@@ -545,6 +556,15 @@ erDiagram
         integer atenciones_id36
     }
 
+    urgencias_mart_establecimiento_weekly {
+        bigint establecimiento_codigo PK "SIN FK fisica a geo_dim_oferta_urgencia_rm: historico vs snapshot actual"
+        smallint ano PK
+        smallint semana PK "CHECK 1-53"
+        char_5 comuna_codigo FK
+        integer atenciones_id36
+        integer atenciones_id42 "hospitalizaciones derivadas desde urgencia F00-F99"
+    }
+
     urgencias_mart_comuna_etario_monthly {
         char_5 comuna_codigo PK, FK
         smallint ano PK
@@ -660,6 +680,7 @@ erDiagram
     urgencias_mart_comuna_weekly |o..o{ modeling_pronostico_demanda_sm : "panel de entrada, NO enforced por FK fisica"
 
     geo_dim_oferta_urgencia_rm |o..o{ urgencias_mart_establecimiento_monthly : "relacion documentada, NO enforced por FK fisica"
+    geo_dim_oferta_urgencia_rm |o..o{ urgencias_mart_establecimiento_weekly : "relacion documentada, NO enforced por FK fisica"
 
     geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_snss : "relacion documentada, NO enforced por FK fisica"
     geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_no_snss : "relacion documentada, NO enforced por FK fisica"
@@ -695,6 +716,7 @@ Los nueve esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, 
 | `mart_urgencias_comuna_weekly` | comuna × año × semana DEIS (13362 filas, 51/52 comunas) | `comuna_codigo, ano, semana` | `comuna_codigo` → `cartografia_comunal` | N → 1 comuna |
 | `mart_urgencias_comuna_monthly` | comuna × año × mes (3060 filas, 51/52 comunas) | `comuna_codigo, ano, mes` | `comuna_codigo` → `cartografia_comunal` | N → 1 comuna |
 | `mart_urgencias_establecimiento_monthly` | establecimiento × año × mes (8857 filas, 152 establec. 2021-2025) | `establecimiento_codigo, ano, mes` | `comuna_codigo` → `cartografia_comunal`; vínculo lógico (no FK) a `dim_oferta_urgencia_rm` | N → 1 comuna |
+| `mart_urgencias_establecimiento_weekly` | establecimiento × año × semana DEIS (38641 filas, 152 establec. 2021-2025), con ID42 | `establecimiento_codigo, ano, semana` | `comuna_codigo` → `cartografia_comunal`; vínculo lógico (no FK) a `dim_oferta_urgencia_rm` | N → 1 comuna |
 | `mart_urgencias_comuna_etario_monthly` | comuna × año × mes × grupo etario (15300 filas, 51/52 comunas) | `comuna_codigo, ano, mes, grupo_etario_urgencia` | `comuna_codigo` → `cartografia_comunal` | N → 1 comuna |
 | `mart_mvp_territorial_comuna` | 1 comuna, corte único MVP (52 filas) | `comuna_codigo` | `comuna_codigo` → `cartografia_comunal` | 1 → 1 comuna |
 | `cobertura_urgencia_comuna` | 1 comuna, corte único (52 filas) | `comuna_codigo` | `comuna_codigo` → `cartografia_comunal` | 1 → 1 comuna |
@@ -732,4 +754,4 @@ Los nueve esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, 
 
 ## 10. Relación con `db/schema_postgresql.sql`
 
-El DDL ejecutable vive en [`db/schema_postgresql.sql`](../../../db/schema_postgresql.sql) (fuera de `docs/`, para no mezclar evidencia académica con código de infraestructura) y es coherente 1:1 con el diagrama de la sección 6 para los dominios físicos representados: mismos 9 esquemas, mismas 21 tablas, mismas PK/FK, mismos tipos. Defunciones no forma parte de este DDL. No contiene `INSERT`/`COPY`, credenciales, AWS/RDS, Docker, usuarios ni migrations — únicamente `CREATE EXTENSION` (PostGIS), `CREATE SCHEMA`, `CREATE TABLE` con `PRIMARY KEY`/`FOREIGN KEY`/`CHECK`/`COMMENT`, y los índices básicos necesarios para las FK no cubiertas por una PK compuesta y para las columnas `geometry` (`GIST`).
+El DDL ejecutable vive en [`db/schema_postgresql.sql`](../../../db/schema_postgresql.sql) (fuera de `docs/`, para no mezclar evidencia académica con código de infraestructura) y es coherente 1:1 con el diagrama de la sección 6 para los dominios físicos representados: mismos 9 esquemas, mismas 22 tablas, mismas PK/FK, mismos tipos. Defunciones no forma parte de este DDL. No contiene `INSERT`/`COPY`, credenciales, AWS/RDS, Docker, usuarios ni migrations — únicamente `CREATE EXTENSION` (PostGIS), `CREATE SCHEMA`, `CREATE TABLE` con `PRIMARY KEY`/`FOREIGN KEY`/`CHECK`/`COMMENT`, y los índices básicos necesarios para las FK no cubiertas por una PK compuesta y para las columnas `geometry` (`GIST`).

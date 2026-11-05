@@ -194,6 +194,20 @@ def validate_expected_schema(path: Path) -> bool:
     if name == "pronostico_demanda_sm_manifest.json":
         _require_forecast_manifest(path)
         return True
+    if name == "pronostico_establecimientos_sm.parquet":
+        from src.models.pronostico_establecimientos import ESQUEMA as ESQUEMA_ESTAB
+        _require_parquet(path, {campo.name: campo.type for campo in ESQUEMA_ESTAB})
+        return True
+    if name == "pronostico_establecimientos_sm_manifest.json":
+        # Vigencia como parte del contrato: incluye el snapshot del año en curso.
+        from src.models.pronostico_establecimientos import motivo_desactualizacion
+        manifiesto = json.loads(path.read_text(encoding="utf-8"))
+        faltantes = {"generado_en_utc", "objetivos", "entradas", "filas"} - set(manifiesto)
+        if faltantes:
+            raise ValueError(f"{path.name}: faltan claves {sorted(faltantes)}")
+        if motivo := motivo_desactualizacion(manifiesto):
+            raise ValueError(f"{path.name}: pronóstico desactualizado ({motivo})")
+        return True
 
     if name.startswith("AtencionesUrgencia") and name.endswith(".csv"):
         from src.data.download_deis_sources import URGENCIAS_REQUIRED_COLUMNS
@@ -318,6 +332,12 @@ def validate_expected_schema(path: Path) -> bool:
                       else {"ano": "integer", "semana": "integer", "fecha_inicio_semana": "string"})
         if "establecimiento" in name:
             fields["establecimiento_codigo"] = "integer"
+            if "weekly" in name:
+                # El mart semanal agrega ID42 (hospitalizaciones derivadas desde urgencia).
+                from src.data.build_urgencias_establecimiento_weekly_mart import (
+                    HOSPITALIZACION_COLUMN,
+                )
+                fields[HOSPITALIZACION_COLUMN] = "integer"
         else:
             fields["comuna_codigo"] = "string"
             fields["comuna_glosa"] = "string"

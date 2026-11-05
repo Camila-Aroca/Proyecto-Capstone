@@ -190,3 +190,103 @@ class Meta(BaseModel):
         description="Cobertura real de los intervalos fuera de muestra, si el informe existe."
     )
     advertencias: list[str]
+
+
+# --------------------------------------------------------------------------
+# Pronóstico por establecimiento
+# --------------------------------------------------------------------------
+
+ObjetivoEstablecimiento = Literal["atenciones_sm", "hospitalizaciones_sm"]
+
+
+class ResumenObjetivoEstablecimiento(BaseModel):
+    incluido: bool = Field(description="Si el establecimiento tiene pronóstico para este objetivo.")
+    motivo_sin_pronostico: str | None = None
+    promedio_ultimas_semanas: float | None = Field(
+        description="Media de las últimas semanas observadas; null si no reporta."
+    )
+    pronostico_promedio: float | None = Field(
+        description="Media del pronóstico puntual sobre los horizontes publicables."
+    )
+    variacion_pct: float | None
+    limite_inferior_promedio: float | None
+    limite_superior_promedio: float | None
+
+
+class EstablecimientoResumen(BaseModel):
+    establecimiento_codigo: int
+    nombre: str
+    tipo: str = Field(description="Tipo según Urgencias: Hospital, SAPU, SAR, SUR o CEAR.")
+    comuna_codigo: str
+    comuna: str
+    latitud: float | None = Field(description="Null si el maestro DEIS no lo georreferencia.")
+    longitud: float | None
+    camas_psiquiatria: float | None = Field(
+        description="Dotación declarada de psiquiatría (último año del libro SNSS); null si no informa."
+    )
+    objetivos: dict[ObjetivoEstablecimiento, ResumenObjetivoEstablecimiento]
+
+
+class PuntoSemanal(BaseModel):
+    ano: int
+    semana: int
+    fecha_inicio: date | None
+    valor: float
+
+
+class PuntoPronosticoEstablecimiento(BaseModel):
+    horizonte: int
+    ano: int
+    semana: int
+    fecha_inicio: date | None
+    pronostico: float
+    limite_inferior: float
+    limite_superior: float
+
+
+class SerieObjetivoEstablecimiento(BaseModel):
+    objetivo: ObjetivoEstablecimiento
+    descripcion: str
+    historico: list[PuntoSemanal]
+    pronostico: list[PuntoPronosticoEstablecimiento] | None = Field(
+        description="Null si el establecimiento no tiene pronóstico; el motivo viene aparte."
+    )
+    motivo_sin_pronostico: str | None = None
+
+
+class EstablecimientoDetalle(BaseModel):
+    establecimiento_codigo: int
+    nombre: str
+    tipo: str
+    comuna_codigo: str
+    comuna: str
+    camas_psiquiatria: float | None
+    series: list[SerieObjetivoEstablecimiento]
+
+
+class MetaObjetivoEstablecimiento(BaseModel):
+    objetivo: ObjetivoEstablecimiento
+    descripcion: str
+    modelo: str
+    horizontes: list[int]
+    nivel_intervalo: float
+    establecimientos_con_pronostico: int
+    cobertura_holdout: float | None = Field(
+        description="Cobertura real de los intervalos en los establecimientos, fuera de muestra."
+    )
+    pronosticos_fuera_de_rango: int = Field(
+        description="Pronósticos retenidos por exceder el doble del máximo reciente del establecimiento."
+    )
+
+
+class MetaEstablecimientos(BaseModel):
+    ultima_semana_observada: dict[str, int]
+    ultima_semana_fecha_inicio: date | None = Field(
+        default=None, description="Inicio de la última semana observada, del calendario común."
+    )
+    umbral_cambio_pct: float = Field(
+        description="Mismo umbral de alza o baja que el resumen comunal, para leer ambas vistas igual."
+    )
+    pronostico_generado_en: datetime
+    objetivos: list[MetaObjetivoEstablecimiento]
+    advertencias: list[str]

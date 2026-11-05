@@ -258,6 +258,47 @@ STAGES = {
         ],
         "depends_on": ["clean_urgencias", "build_urgencias_comuna_marts"]
     },
+    "build_urgencias_establecimiento_weekly_mart": {
+        "module": "src.data.build_urgencias_establecimiento_weekly_mart",
+        "outputs": [
+            "data/processed/marts/mart_urgencias_establecimiento_weekly.parquet",
+        ],
+        "depends_on": ["clean_urgencias", "build_urgencias_comuna_marts"]
+    },
+    "benchmark_establecimientos_sm": {
+        "module": "scripts.run_benchmark_establecimientos",
+        "outputs": [
+            "reports/modeling/benchmark_establecimientos_sm.md",
+            "reports/modeling/benchmark_establecimientos_sm_resumen.csv",
+            "reports/modeling/benchmark_establecimientos_sm_universo.csv",
+            "reports/modeling/benchmark_establecimientos_sm_seleccion.json",
+        ],
+        "depends_on": ["build_urgencias_establecimiento_weekly_mart"]
+    },
+    "evaluate_holdout_establecimientos_sm": {
+        "module": "scripts.evaluate_holdout_establecimientos",
+        "outputs": [
+            "reports/modeling/holdout_establecimientos_sm.md",
+            "reports/modeling/holdout_establecimientos_sm_resumen.csv",
+        ],
+        "depends_on": ["benchmark_establecimientos_sm", "clean_urgencias"]
+    },
+    "forecast_establecimientos_sm": {
+        "module": "scripts.run_forecast_establecimientos_sm",
+        "outputs": [
+            "data/processed/modeling/pronostico_establecimientos_sm.parquet",
+            "data/processed/modeling/pronostico_establecimientos_sm_manifest.json",
+        ],
+        "depends_on": ["benchmark_establecimientos_sm", "clean_urgencias"]
+    },
+    "eda_mart_urgencias_establecimiento_weekly": {
+        "module": "scripts.eda_mart_urgencias_establecimiento_weekly",
+        "outputs": [
+            "reports/eda/eda_mart_urgencias_establecimiento_weekly.md",
+            "reports/eda/eda_mart_urgencias_establecimiento_weekly_resumen.csv",
+        ],
+        "depends_on": ["build_urgencias_establecimiento_weekly_mart"]
+    },
     "build_urgencias_comuna_etario_mart": {
         "module": "src.data.build_urgencias_comuna_etario_mart",
         "outputs": [
@@ -386,6 +427,8 @@ PIPELINE_ORDER = [
     "profile_urgencias_sm_coverage",
     "build_urgencias_comuna_marts",
     "build_urgencias_establecimiento_mart",
+    "build_urgencias_establecimiento_weekly_mart",
+    "eda_mart_urgencias_establecimiento_weekly",
     "build_urgencias_comuna_etario_mart",
     "build_dim_oferta_urgencia_rm",
     "build_dim_camas_psiquiatria_hospital_rm",
@@ -398,7 +441,10 @@ PIPELINE_ORDER = [
     "eda_series_demanda_sm",
     "benchmark_demanda_sm",
     "evaluate_holdout_demanda_sm",
-    "forecast_demanda_sm"
+    "forecast_demanda_sm",
+    "benchmark_establecimientos_sm",
+    "evaluate_holdout_establecimientos_sm",
+    "forecast_establecimientos_sm"
 ]
 
 SUPPORTED_URGENCIAS_YEARS = tuple(range(2020, current_year_chile() + 1))

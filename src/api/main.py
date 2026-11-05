@@ -24,6 +24,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
+from src.api.establecimientos import ServicioEstablecimientos
+from src.api.establecimientos import router as router_establecimientos
 from src.api.routes import router
 from src.api.service import ServicioDemanda
 
@@ -38,6 +40,7 @@ ORIGENES_PERMITIDOS = os.environ.get(
 def create_app(
     fabrica_servicio: Callable[[], ServicioDemanda] = ServicioDemanda,
     iniciar_calculos: bool = True,
+    fabrica_establecimientos: Callable[[], ServicioEstablecimientos] = ServicioEstablecimientos,
 ) -> FastAPI:
     """Construye la app. Los tests inyectan un servicio ya poblado y sin calculos."""
 
@@ -45,11 +48,15 @@ def create_app(
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         servicio = fabrica_servicio()
         app.state.servicio = servicio
+        establecimientos = fabrica_establecimientos()
+        app.state.establecimientos = establecimientos
         tarea = None
         if iniciar_calculos:
             async def preparar() -> None:
                 await asyncio.to_thread(servicio.cargar)
                 await asyncio.to_thread(servicio.calcular_pronostico)
+                # Solo lee un output persistido: no ajusta modelos.
+                await asyncio.to_thread(establecimientos.cargar)
 
             # En segundo plano: el servidor acepta requests mientras carga.
             tarea = asyncio.create_task(preparar())
@@ -74,6 +81,7 @@ def create_app(
         allow_headers=["*"],
     )
     app.include_router(router)
+    app.include_router(router_establecimientos)
     return app
 
 

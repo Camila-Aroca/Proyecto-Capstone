@@ -80,10 +80,17 @@ class PointForecaster(Protocol):
 
 
 def prepare_supervised(
-    panel: pd.DataFrame, horizons: tuple[int, ...]
+    panel: pd.DataFrame,
+    horizons: tuple[int, ...],
+    exogenous: tuple[str, ...] | None = None,
 ) -> dict[int, pd.DataFrame]:
-    """Precalcula la matriz supervisada de cada horizonte sobre el panel completo."""
-    return {h: build_supervised_frame(panel, horizon=h) for h in horizons}
+    """Precalcula la matriz supervisada de cada horizonte sobre el panel completo.
+
+    `exogenous` reemplaza las covariables por defecto, para paneles que traen
+    otras (por ejemplo, el de establecimientos).
+    """
+    opciones = {} if exogenous is None else {"exogenous": exogenous}
+    return {h: build_supervised_frame(panel, horizon=h, **opciones) for h in horizons}
 
 
 def split_train_target(

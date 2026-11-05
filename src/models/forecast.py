@@ -107,14 +107,18 @@ def _siguiente_semana(ano: int, semana: int) -> tuple[int, int]:
 
 
 def append_future_rows(
-    panel: pd.DataFrame, pasos: int, calendario: pd.DataFrame | None = None
+    panel: pd.DataFrame,
+    pasos: int,
+    calendario: pd.DataFrame | None = None,
+    exogenous: tuple[str, ...] = EXOGENOUS_COLUMNS,
 ) -> pd.DataFrame:
     """Agrega `pasos` periodos futuros por serie, con `y` desconocido.
 
     La poblacion de un anio futuro sale de la proyeccion INE: es conocida de
     antemano y no depende de observaciones futuras. Las covariables exogenas
     quedan en NaN; el modelo solo las usa rezagadas al menos un horizonte, es
-    decir, en semanas ya observadas.
+    decir, en semanas ya observadas. Un panel sin poblacion (por ejemplo, de
+    establecimientos) no la necesita y no la recibe.
     """
     if pasos < 1:
         raise ValueError("Se necesita al menos un periodo futuro.")
@@ -126,23 +130,25 @@ def append_future_rows(
         periodos.append({"t": t_max + paso, "ano": ano, "semana": semana})
     futuros = pd.DataFrame(periodos)
 
-    poblacion = panel.groupby(["series_id", "ano"])["poblacion_anual"].first()
-    anos_faltantes = sorted(set(futuros["ano"]) - set(panel["ano"]))
-    if anos_faltantes:
-        poblacion = pd.concat([poblacion, _poblacion_proyectada(panel, anos_faltantes)])
-
-    series = panel.drop_duplicates("series_id")[
-        [c for c in ("series_id", "nivel", "servicio_id", "comuna_glosa") if c in panel.columns]
-    ]
+    descriptivas = (
+        "series_id", "nivel", "servicio_id", "comuna_glosa", "comuna_codigo",
+        "establecimiento_glosa", "tipo_establecimiento_urgencia",
+    )
+    series = panel.drop_duplicates("series_id")[[c for c in descriptivas if c in panel.columns]]
     filas = series.merge(futuros, how="cross")
     filas["y"] = np.nan
-    for columna in EXOGENOUS_COLUMNS:
+    for columna in exogenous:
         filas[columna] = np.nan
-    filas["poblacion_anual"] = [
-        poblacion.get((s, a), np.nan) for s, a in zip(filas["series_id"], filas["ano"])
-    ]
-    if filas["poblacion_anual"].isna().any():
-        raise ValueError("Falta la poblacion proyectada de algun periodo futuro.")
+    if "poblacion_anual" in panel.columns:
+        poblacion = panel.groupby(["series_id", "ano"])["poblacion_anual"].first()
+        anos_faltantes = sorted(set(futuros["ano"]) - set(panel["ano"]))
+        if anos_faltantes:
+            poblacion = pd.concat([poblacion, _poblacion_proyectada(panel, anos_faltantes)])
+        filas["poblacion_anual"] = [
+            poblacion.get((s, a), np.nan) for s, a in zip(filas["series_id"], filas["ano"])
+        ]
+        if filas["poblacion_anual"].isna().any():
+            raise ValueError("Falta la poblacion proyectada de algun periodo futuro.")
 
     extendido = pd.concat([panel, filas[panel.columns]], ignore_index=True)
     extendido["es_futuro"] = extendido["t"] > t_max
@@ -191,6 +197,7 @@ def forecast_future(
     panel_extendido: pd.DataFrame,
     modelo: DemandModel,
     horizontes: tuple[int, ...] = HORIZONTES_DEFECTO,
+    exogenous: tuple[str, ...] = EXOGENOUS_COLUMNS,
 ) -> pd.DataFrame:
     """Pronostica cada horizonte desde la ultima semana observada.
 
@@ -211,7 +218,7 @@ def forecast_future(
 
     salidas = []
     for horizonte in horizontes:
-        supervisada = build_supervised_frame(base, horizon=horizonte)
+        supervisada = build_supervised_frame(base, horizon=horizonte, exogenous=exogenous)
         prediccion = modelo.fit_predict(supervisada, origen, horizonte)
         prediccion = prediccion[["series_id", "y_pred", "y_inferior", "y_superior"]].copy()
         prediccion["horizonte"] = horizonte
@@ -221,9 +228,10 @@ def forecast_future(
     resultado = pd.concat(salidas, ignore_index=True).merge(periodos, on="t", how="left")
     # La poblacion del periodo pronosticado (proyeccion INE, conocida de antemano)
     # permite derivar tasas sin depender de que ese anio ya tenga observaciones.
-    resultado = resultado.merge(
-        panel_extendido[["series_id", "t", "poblacion_anual"]], on=["series_id", "t"], how="left"
-    )
+    if "poblacion_anual" in panel_extendido.columns:
+        resultado = resultado.merge(
+            panel_extendido[["series_id", "t", "poblacion_anual"]], on=["series_id", "t"], how="left"
+        )
     resultado["origen"] = origen
     resultado["modelo"] = modelo.name
     return resultado.sort_values(["series_id", "horizonte"]).reset_index(drop=True)

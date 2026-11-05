@@ -121,6 +121,15 @@ erDiagram
         integer atenciones_id36
     }
 
+    urgencias_mart_establecimiento_weekly {
+        bigint establecimiento_codigo PK "SIN FK fisica a geo_dim_oferta_urgencia_rm: historico vs snapshot actual"
+        smallint ano PK
+        smallint semana PK "CHECK 1-53"
+        char_5 comuna_codigo FK
+        integer atenciones_id36
+        integer atenciones_id42 "hospitalizaciones derivadas desde urgencia F00-F99"
+    }
+
     urgencias_mart_comuna_etario_monthly {
         char_5 comuna_codigo PK, FK
         smallint ano PK
@@ -236,6 +245,7 @@ erDiagram
     urgencias_mart_comuna_weekly |o..o{ modeling_pronostico_demanda_sm : "panel de entrada, NO enforced por FK fisica"
 
     geo_dim_oferta_urgencia_rm |o..o{ urgencias_mart_establecimiento_monthly : "relacion documentada, NO enforced por FK fisica"
+    geo_dim_oferta_urgencia_rm |o..o{ urgencias_mart_establecimiento_weekly : "relacion documentada, NO enforced por FK fisica"
 
     geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_snss : "relacion documentada, NO enforced por FK fisica"
     geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_no_snss : "relacion documentada, NO enforced por FK fisica"

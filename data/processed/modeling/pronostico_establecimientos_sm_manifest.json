@@ -1,0 +1,78 @@
+{
+  "dataset": "pronostico_establecimientos_sm",
+  "generado_en_utc": "2026-11-03T20:22:55.191981Z",
+  "generado_en_chile": "2026-11-03T17:22:55.191981-03:00",
+  "objetivos": {
+    "atenciones_sm": {
+      "modelo": "poisson_glm_global_conformal",
+      "horizontes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "nivel_intervalo": 0.8,
+      "ultima_semana_observada": {
+        "t": 246,
+        "ano": 2026,
+        "semana": 39
+      },
+      "establecimientos": 125,
+      "fuera_de_rango": 0,
+      "excluidos_por_cobertura_en_curso": [
+        112820,
+        200124,
+        200142,
+        109813,
+        200135,
+        200132,
+        200041,
+        109890
+      ],
+      "filas": 1000
+    },
+    "hospitalizaciones_sm": {
+      "modelo": "lightgbm_global_conformal",
+      "horizontes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "nivel_intervalo": 0.8,
+      "ultima_semana_observada": {
+        "t": 246,
+        "ano": 2026,
+        "semana": 39
+      },
+      "establecimientos": 12,
+      "fuera_de_rango": 0,
+      "excluidos_por_cobertura_en_curso": [],
+      "filas": 96
+    }
+  },
+  "filas": 1096,
+  "entradas": {
+    "mart_urgencias_establecimiento_weekly": {
+      "ruta": "data/processed/marts/mart_urgencias_establecimiento_weekly.parquet",
+      "sha256": "3924444bf3cc49935af3de226e138f35d35f952c738c095686e94694245a308d"
+    },
+    "seleccion_benchmark": {
+      "ruta": "reports/modeling/benchmark_establecimientos_sm_seleccion.json",
+      "sha256": "e64950ef1353416d7f4dc53b3aeb5a11503de99bae02002801b539c9359e4ca1"
+    },
+    "urgencias_2026": {
+      "ruta": "data/processed/urgencias/urgencias_rm_2026.parquet",
+      "sha256": "faaf8af53e0cac2b68f4b6cd6eebffdb079b172a7f2784ff90d5907bad0a1fdb",
+      "tipo": "raw_sha256"
+    }
+  }
+}

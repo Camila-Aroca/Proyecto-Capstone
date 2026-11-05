@@ -1,0 +1,81 @@
+{
+  "atenciones_sm": {
+    "modelo_recomendado": "poisson_glm_global_conformal",
+    "criterio": "menor MASE promedio entre los modelos que superan al baseline con cobertura calibrada en el total y en los establecimientos",
+    "target": "atenciones_id36",
+    "exogenas": [
+      "atenciones_id1"
+    ],
+    "nivel_intervalo": 0.8,
+    "horizontes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "semilla": 42,
+    "universo": {
+      "ano_inicio": 2022,
+      "min_media_semanal": 1.0,
+      "min_media_anual": 0.5,
+      "solo_hospitales": false,
+      "establecimientos": 133
+    },
+    "periodo_backtest": {
+      "origenes": 13,
+      "paso": 4,
+      "t_primer_origen": 151,
+      "t_ultimo_origen": 199
+    },
+    "metricas_backtest": {
+      "mase_total": 0.908,
+      "mase_establecimiento": 0.7212,
+      "cobertura_total": 0.8654,
+      "cobertura_establecimiento": 0.8037
+    }
+  },
+  "hospitalizaciones_sm": {
+    "modelo_recomendado": "lightgbm_global_conformal",
+    "criterio": "menor MASE promedio entre los modelos que superan al baseline con cobertura calibrada en el total y en los establecimientos",
+    "target": "atenciones_id42",
+    "exogenas": [
+      "atenciones_id1",
+      "atenciones_id36"
+    ],
+    "nivel_intervalo": 0.8,
+    "horizontes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "semilla": 42,
+    "universo": {
+      "ano_inicio": 2022,
+      "min_media_semanal": 1.0,
+      "min_media_anual": 0.5,
+      "solo_hospitales": true,
+      "establecimientos": 12
+    },
+    "periodo_backtest": {
+      "origenes": 13,
+      "paso": 4,
+      "t_primer_origen": 151,
+      "t_ultimo_origen": 199
+    },
+    "metricas_backtest": {
+      "mase_total": 0.4477,
+      "mase_establecimiento": 0.7918,
+      "cobertura_total": 0.8558,
+      "cobertura_establecimiento": 0.8101
+    }
+  }
+}
