@@ -809,5 +809,318 @@
     "dataset": "defunciones",
     "periodo": "2024-2026",
     "estado_fuente": "snapshot_fechado_27102026_sin_afirmar_cierre_anual"
+  },
+  {
+    "source_id": "deis_rem20_indicadores_hospitalarios_2014_2023",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Consolidado%20Estad%C3%ADsticas%20Hospitalarias%202014-2023.xlsx",
+        "downloaded_at": "2026-11-05T22:26:21.893172+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2014_2023.xlsx",
+        "raw_filename": "indicadores_hospitalarios_2014_2023.xlsx",
+        "raw_size": 15726409,
+        "raw_sha256": "f4d00bc86086843011b380b9be5ecb6263c9f549ab4c6dab79a66a9d1ca85bf1",
+        "transport": {
+          "filename": "indicadores_hospitalarios_2014_2023.xlsx",
+          "size": 15726409,
+          "sha256": "f4d00bc86086843011b380b9be5ecb6263c9f549ab4c6dab79a66a9d1ca85bf1",
+          "http_last_modified": "Fri, 04 Oct 2024 15:32:54 GMT",
+          "http_etag": "\"6e9779ae7216db1:0\""
+        }
+      }
+    ],
+    "dataset": "deis_rem20_indicadores_hospitalarios",
+    "institucion": "Ministerio de Salud, DEIS",
+    "alcance": "Establecimientos del SNSS por nivel de cuidado",
+    "periodo": "2014-2023"
+  },
+  {
+    "source_id": "deis_rem20_indicadores_hospitalarios_2024",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Estad%C3%ADsticas%20Hospitalarias%20A%C3%B1o%202024.xlsx",
+        "downloaded_at": "2026-11-05T22:26:25.155148+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2024.xlsx",
+        "raw_filename": "indicadores_hospitalarios_2024.xlsx",
+        "raw_size": 1602568,
+        "raw_sha256": "4c4578b81f87c4ea85086750815ea05903bd12b6fca1ec78529ce9f27ee9e06f",
+        "transport": {
+          "filename": "indicadores_hospitalarios_2024.xlsx",
+          "size": 1602568,
+          "sha256": "4c4578b81f87c4ea85086750815ea05903bd12b6fca1ec78529ce9f27ee9e06f",
+          "http_last_modified": "Fri, 09 Jan 2026 12:19:06 GMT",
+          "http_etag": "\"bfd535266281dc1:0\""
+        }
+      }
+    ],
+    "dataset": "deis_rem20_indicadores_hospitalarios",
+    "institucion": "Ministerio de Salud, DEIS",
+    "alcance": "Establecimientos del SNSS por nivel de cuidado",
+    "periodo": "2024"
+  },
+  {
+    "source_id": "deis_rem20_indicadores_hospitalarios_2025",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2025/Estad%C3%ADsticas%20Hospitalarias%20a%C3%B1o%202025-_16042026.xlsx",
+        "downloaded_at": "2026-11-05T22:26:28.794461+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2025.xlsx",
+        "raw_filename": "indicadores_hospitalarios_2025.xlsx",
+        "raw_size": 1556072,
+        "raw_sha256": "71e3a3a7c035eeb624162635ca8f4ea2fa24e5e47061c91b554e3e1278284d5c",
+        "transport": {
+          "filename": "indicadores_hospitalarios_2025.xlsx",
+          "size": 1556072,
+          "sha256": "71e3a3a7c035eeb624162635ca8f4ea2fa24e5e47061c91b554e3e1278284d5c",
+          "http_last_modified": "Fri, 17 Apr 2026 13:31:43 GMT",
+          "http_etag": "\"52931b886ecedc1:0\""
+        }
+      }
+    ],
+    "dataset": "deis_rem20_indicadores_hospitalarios",
+    "institucion": "Ministerio de Salud, DEIS",
+    "alcance": "Establecimientos del SNSS por nivel de cuidado",
+    "periodo": "2025"
+  },
+  {
+    "source_id": "deis_rem20_categorizacion_riesgo_dependencia_2024_t1",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Categorizaci%C3%B3n%20riesgo%20dependencia%20Primer%20Trimestre%202024.xlsx",
+        "downloaded_at": "2026-11-05T22:26:29.291746+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t1.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2024_t1.xlsx",
+        "raw_size": 108780,
+        "raw_sha256": "2e61da246b027e22596abfc5d9a3363d79292f743c249bf9f5c68f45ec89b466",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2024_t1.xlsx",
+          "size": 108780,
+          "sha256": "2e61da246b027e22596abfc5d9a3363d79292f743c249bf9f5c68f45ec89b466",
+          "http_last_modified": "Thu, 01 Aug 2024 22:15:36 GMT",
+          "http_etag": "\"e9eb8e5560e4da1:0\""
+        }
+      }
+    ],
+    "dataset": "deis_rem20_categorizacion_riesgo_dependencia",
+    "institucion": "Ministerio de Salud, DEIS",
+    "alcance": "Pacientes hospitalizados del SNSS categorizados con CUDYR",
+    "periodo": "2024-T1"
+  },
+  {
+    "source_id": "deis_rem20_categorizacion_riesgo_dependencia_2024_t2",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Categorizaci%C3%B3n%20riesgo%20dependencia%20SegundoTrimestre%202024.xlsx",
+        "downloaded_at": "2026-11-05T22:26:29.876045+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t2.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2024_t2.xlsx",
+        "raw_size": 108385,
+        "raw_sha256": "c87b1bad168e0efd72691bd6c9bb25e655f2a088e85cef3be0296b2204cc57c7",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2024_t2.xlsx",
+          "size": 108385,
+          "sha256": "c87b1bad168e0efd72691bd6c9bb25e655f2a088e85cef3be0296b2204cc57c7",
+          "http_last_modified": "Thu, 01 Aug 2024 22:16:36 GMT",
+          "http_etag": "\"232f527960e4da1:0\""
+        }
+      }
+    ],
+    "dataset": "deis_rem20_categorizacion_riesgo_dependencia",
+    "institucion": "Ministerio de Salud, DEIS",
+    "alcance": "Pacientes hospitalizados del SNSS categorizados con CUDYR",
+    "periodo": "2024-T2"
+  },
+  {
+    "source_id": "deis_rem20_categorizacion_riesgo_dependencia_2024_t3",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Categorizaci%C3%B3n%20riesgo%20dependencia%20Tercer%20Trimestre%202024.xlsx",
+        "downloaded_at": "2026-11-05T22:26:30.429851+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t3.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2024_t3.xlsx",
+        "raw_size": 108633,
+        "raw_sha256": "ba021d76c4f28136ba945b946ea37f03d88375f5939f6d0b4b1c2e42720dc543",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2024_t3.xlsx",
+          "size": 108633,
+          "sha256": "ba021d76c4f28136ba945b946ea37f03d88375f5939f6d0b4b1c2e42720dc543",
+          "http_last_modified": "Wed, 04 Dec 2024 12:59:17 GMT",
+          "http_etag": "\"39bac2534c46db1:0\""
+        }
+      }
+    ],
+    "dataset": "deis_rem20_categorizacion_riesgo_dependencia",
+    "institucion": "Ministerio de Salud, DEIS",
+    "alcance": "Pacientes hospitalizados del SNSS categorizados con CUDYR",
+    "periodo": "2024-T3"
+  },
+  {
+    "source_id": "deis_rem20_categorizacion_riesgo_dependencia_2024_t4",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Categorizaci%C3%B3n%20riesgo%20dependencia%20Cuarto%20Trimestre%202024.xlsx",
+        "downloaded_at": "2026-11-05T22:26:30.971119+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t4.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2024_t4.xlsx",
+        "raw_size": 108092,
+        "raw_sha256": "c6d5c01da2e2ab404e120d69014da58a9e61f8db2543d9ae080606be79b599fd",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2024_t4.xlsx",
+          "size": 108092,
+          "sha256": "c6d5c01da2e2ab404e120d69014da58a9e61f8db2543d9ae080606be79b599fd",
+          "http_last_modified": "Fri, 24 Jan 2025 15:41:10 GMT",
+          "http_etag": "\"832d7764766edb1:0\""
+        }
+      }
+    ],
+    "dataset": "deis_rem20_categorizacion_riesgo_dependencia",
+    "institucion": "Ministerio de Salud, DEIS",
+    "alcance": "Pacientes hospitalizados del SNSS categorizados con CUDYR",
+    "periodo": "2024-T4"
+  },
+  {
+    "source_id": "deis_rem20_categorizacion_riesgo_dependencia_2025_t1",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2025/Categorizaci%C3%B3n%20riesgo%20dependencia%20Primer%20Trimestre%202025.xlsx",
+        "downloaded_at": "2026-11-05T22:26:31.490146+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t1.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2025_t1.xlsx",
+        "raw_size": 108260,
+        "raw_sha256": "c88a6361d87dea144716e02cc197f75e600d3102cd7f939e09ec7f5d7cdb85ae",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2025_t1.xlsx",
+          "size": 108260,
+          "sha256": "c88a6361d87dea144716e02cc197f75e600d3102cd7f939e09ec7f5d7cdb85ae",
+          "http_last_modified": "Fri, 23 May 2025 15:25:45 GMT",
+          "http_etag": "\"eb7c33f4f6cbdb1:0\""
+        }
+      }
+    ],
+    "dataset": "deis_rem20_categorizacion_riesgo_dependencia",
+    "institucion": "Ministerio de Salud, DEIS",
+    "alcance": "Pacientes hospitalizados del SNSS categorizados con CUDYR",
+    "periodo": "2025-T1"
+  },
+  {
+    "source_id": "deis_rem20_categorizacion_riesgo_dependencia_2025_t2",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2025/Categorizaci%C3%B3n%20riesgo%20dependencia%20Segundo%20Trimestre%202025.xlsx",
+        "downloaded_at": "2026-11-05T22:26:32.023575+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t2.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2025_t2.xlsx",
+        "raw_size": 103635,
+        "raw_sha256": "cd8a4f3075a779697fa06b216516ec52d482ab44a25f834f80c87bdc2d263d2a",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2025_t2.xlsx",
+          "size": 103635,
+          "sha256": "cd8a4f3075a779697fa06b216516ec52d482ab44a25f834f80c87bdc2d263d2a",
+          "http_last_modified": "Fri, 08 Aug 2025 15:19:34 GMT",
+          "http_etag": "\"e1a7d9d8778dc1:0\""
+        }
+      }
+    ],
+    "dataset": "deis_rem20_categorizacion_riesgo_dependencia",
+    "institucion": "Ministerio de Salud, DEIS",
+    "alcance": "Pacientes hospitalizados del SNSS categorizados con CUDYR",
+    "periodo": "2025-T2"
+  },
+  {
+    "source_id": "deis_rem20_categorizacion_riesgo_dependencia_2025_t3",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2025/Categorizaci%C3%B3n%20riesgo%20dependencia%20Tercer%20Trimestre%202025.xlsx",
+        "downloaded_at": "2026-11-05T22:26:32.577074+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t3.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2025_t3.xlsx",
+        "raw_size": 103936,
+        "raw_sha256": "e40c07d32d63f48d0f1311541d6e3792da17b470a04b3a82bafb3a7efe7ece3d",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2025_t3.xlsx",
+          "size": 103936,
+          "sha256": "e40c07d32d63f48d0f1311541d6e3792da17b470a04b3a82bafb3a7efe7ece3d",
+          "http_last_modified": "Mon, 26 Jan 2026 13:38:43 GMT",
+          "http_etag": "\"4fdefd16c98edc1:0\""
+        }
+      }
+    ],
+    "dataset": "deis_rem20_categorizacion_riesgo_dependencia",
+    "institucion": "Ministerio de Salud, DEIS",
+    "alcance": "Pacientes hospitalizados del SNSS categorizados con CUDYR",
+    "periodo": "2025-T3"
+  },
+  {
+    "source_id": "deis_rem20_categorizacion_riesgo_dependencia_2025_t4",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2025/Categorizaci%C3%B3n%20riesgo%20dependencia%20Cuarto%20Trimestre%202025.xlsx",
+        "downloaded_at": "2026-11-05T22:26:33.161755+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t4.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2025_t4.xlsx",
+        "raw_size": 103407,
+        "raw_sha256": "23f6de90a58dca40fa4ee0a97dd9da78d5f998d3bff4be1f90b5ecda6f75ba83",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2025_t4.xlsx",
+          "size": 103407,
+          "sha256": "23f6de90a58dca40fa4ee0a97dd9da78d5f998d3bff4be1f90b5ecda6f75ba83",
+          "http_last_modified": "Fri, 13 Mar 2026 19:42:20 GMT",
+          "http_etag": "\"80db668121b3dc1:0\""
+        }
+      }
+    ],
+    "dataset": "deis_rem20_categorizacion_riesgo_dependencia",
+    "institucion": "Ministerio de Salud, DEIS",
+    "alcance": "Pacientes hospitalizados del SNSS categorizados con CUDYR",
+    "periodo": "2025-T4"
+  },
+  {
+    "source_id": "deis_rem20_indicadores_hospitalarios_2026",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2026/Estad%C3%ADsticas%20Hospitalarias%20Septiembre%202026.xlsx",
+        "downloaded_at": "2026-11-05T22:26:36.879915+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2026.xlsx",
+        "raw_filename": "indicadores_hospitalarios_2026.xlsx",
+        "raw_size": 1278111,
+        "raw_sha256": "5fb17397c3f5f5b1191fb8b26955b57f2456f8b22788b8afb07b47dcf18dddc6",
+        "transport": {
+          "filename": "indicadores_hospitalarios_2026.xlsx",
+          "size": 1278111,
+          "sha256": "5fb17397c3f5f5b1191fb8b26955b57f2456f8b22788b8afb07b47dcf18dddc6",
+          "http_last_modified": "Mon, 26 Oct 2026 12:36:19 GMT",
+          "http_etag": "\"a8e309a4665dd1:0\"",
+          "corte_mes": 9
+        }
+      }
+    ],
+    "dataset": "deis_rem20_indicadores_hospitalarios",
+    "institucion": "Ministerio de Salud, DEIS",
+    "alcance": "Establecimientos del SNSS por nivel de cuidado",
+    "periodo": "2026",
+    "estado": "año en curso: corte mensual reemplazado por la fuente"
+  },
+  {
+    "source_id": "deis_rem20_diccionario_rem20",
+    "snapshots": [
+      {
+        "source_url": "https://datos.gob.cl/dataset/a756323f-85ba-4759-87dc-f5d5e63868cc/resource/6c7c8a9d-204d-4947-9c8e-82a893fc3f2e/download/diccionario-rem20.xlsx",
+        "downloaded_at": "2026-11-05T23:09:49.022169+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/diccionario_rem20.xlsx",
+        "raw_filename": "diccionario_rem20.xlsx",
+        "raw_size": 31584,
+        "raw_sha256": "6feebecdce70cf9f850054c37d07a292183747d9df1323084d15abf97be26c9a",
+        "transport": {
+          "filename": "diccionario_rem20.xlsx",
+          "size": 31584,
+          "sha256": "6feebecdce70cf9f850054c37d07a292183747d9df1323084d15abf97be26c9a",
+          "http_last_modified": "Fri, 27 Sep 2024 16:38:30 GMT",
+          "http_etag": "\"1727455110.209-31584-2063602386\""
+        }
+      }
+    ],
+    "dataset": "deis_rem20_diccionario",
+    "institucion": "Ministerio de Salud, DEIS (publicado en datos.gob.cl)",
+    "alcance": "Diccionario de campos de los indicadores hospitalarios REM-20"
   }
 ]

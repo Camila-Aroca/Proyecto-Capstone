@@ -1,0 +1,934 @@
+{
+  "raw_sha256": {
+    "indicadores": {
+      "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2014_2023.xlsx": "f4d00bc86086843011b380b9be5ecb6263c9f549ab4c6dab79a66a9d1ca85bf1",
+      "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2024.xlsx": "4c4578b81f87c4ea85086750815ea05903bd12b6fca1ec78529ce9f27ee9e06f",
+      "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2025.xlsx": "71e3a3a7c035eeb624162635ca8f4ea2fa24e5e47061c91b554e3e1278284d5c",
+      "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2026.xlsx": "5fb17397c3f5f5b1191fb8b26955b57f2456f8b22788b8afb07b47dcf18dddc6"
+    },
+    "categorizacion": {
+      "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t1.xlsx": "2e61da246b027e22596abfc5d9a3363d79292f743c249bf9f5c68f45ec89b466",
+      "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t2.xlsx": "c87b1bad168e0efd72691bd6c9bb25e655f2a088e85cef3be0296b2204cc57c7",
+      "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t3.xlsx": "ba021d76c4f28136ba945b946ea37f03d88375f5939f6d0b4b1c2e42720dc543",
+      "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t4.xlsx": "c6d5c01da2e2ab404e120d69014da58a9e61f8db2543d9ae080606be79b599fd",
+      "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t1.xlsx": "c88a6361d87dea144716e02cc197f75e600d3102cd7f939e09ec7f5d7cdb85ae",
+      "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t2.xlsx": "cd8a4f3075a779697fa06b216516ec52d482ab44a25f834f80c87bdc2d263d2a",
+      "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t3.xlsx": "e40c07d32d63f48d0f1311541d6e3792da17b470a04b3a82bafb3a7efe7ece3d",
+      "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t4.xlsx": "23f6de90a58dca40fa4ee0a97dd9da78d5f998d3bff4be1f90b5ecda6f75ba83"
+    }
+  },
+  "anos": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "meses_por_ano": {
+    "2014": 12,
+    "2015": 12,
+    "2016": 12,
+    "2017": 12,
+    "2018": 12,
+    "2019": 12,
+    "2020": 12,
+    "2021": 12,
+    "2022": 12,
+    "2023": 12,
+    "2024": 12,
+    "2025": 12,
+    "2026": 9
+  },
+  "estructura": {
+    "filas_detalle": 160974,
+    "filas_agregadas_excluidas": {
+      "establecimiento": 24845,
+      "servicio": 2262,
+      "pais": 78
+    },
+    "establecimientos_por_ano": {
+      "2014": 192,
+      "2015": 193,
+      "2016": 193,
+      "2017": 194,
+      "2018": 193,
+      "2019": 192,
+      "2020": 203,
+      "2021": 196,
+      "2022": 194,
+      "2023": 195,
+      "2024": 193,
+      "2025": 193,
+      "2026": 192
+    },
+    "establecimientos_total": 208,
+    "niveles_cuidado": 29,
+    "servicios_salud": 29,
+    "establecimientos_en_mas_de_un_servicio": 0,
+    "glosas_por_nivel_codigo_max": 3,
+    "nulos_por_columna": {
+      "acumulado": 2222,
+      "ene": 0,
+      "feb": 0,
+      "mar": 0,
+      "abr": 0,
+      "may": 0,
+      "jun": 0,
+      "jul": 0,
+      "ago": 0,
+      "sep": 0,
+      "oct": 12067,
+      "nov": 12067,
+      "dic": 12067
+    },
+    "valores_negativos": 0
+  },
+  "conciliacion": {
+    "agregados_comparados": {
+      "pais": 78,
+      "servicio": 2262,
+      "establecimiento": 15138
+    },
+    "discrepancias": 0,
+    "acumulado_distinto_de_meses": 0,
+    "promedio_acumulado_no_aditivo": {
+      "establecimiento": 245,
+      "servicio": 157,
+      "pais": 13
+    }
+  },
+  "promedio_camas_igual_disponibles_sobre_dias_ano": 0.9708,
+  "definicion_razones": {
+    "Indice Ocupacional": {
+      "2014": {
+        "100 * ocupados / disponibles": 1.0,
+        "100 * ocupados / disponibles (±0.06)": 1.0,
+        "areas_comparables": 1073
+      },
+      "2015": {
+        "100 * ocupados / disponibles": 1.0,
+        "100 * ocupados / disponibles (±0.06)": 1.0,
+        "areas_comparables": 1089
+      },
+      "2016": {
+        "100 * ocupados / disponibles": 1.0,
+        "100 * ocupados / disponibles (±0.06)": 1.0,
+        "areas_comparables": 1122
+      },
+      "2017": {
+        "100 * ocupados / disponibles": 1.0,
+        "100 * ocupados / disponibles (±0.06)": 1.0,
+        "areas_comparables": 1130
+      },
+      "2018": {
+        "100 * ocupados / disponibles": 1.0,
+        "100 * ocupados / disponibles (±0.06)": 1.0,
+        "areas_comparables": 1120
+      },
+      "2019": {
+        "100 * ocupados / disponibles": 1.0,
+        "100 * ocupados / disponibles (±0.06)": 1.0,
+        "areas_comparables": 1128
+      },
+      "2020": {
+        "100 * ocupados / disponibles": 1.0,
+        "100 * ocupados / disponibles (±0.06)": 1.0,
+        "areas_comparables": 1169
+      },
+      "2021": {
+        "100 * ocupados / disponibles": 1.0,
+        "100 * ocupados / disponibles (±0.06)": 1.0,
+        "areas_comparables": 1153
+      },
+      "2022": {
+        "100 * ocupados / disponibles": 1.0,
+        "100 * ocupados / disponibles (±0.06)": 1.0,
+        "areas_comparables": 1139
+      },
+      "2023": {
+        "100 * ocupados / disponibles": 1.0,
+        "100 * ocupados / disponibles (±0.06)": 1.0,
+        "areas_comparables": 1150
+      },
+      "2024": {
+        "100 * ocupados / disponibles": 1.0,
+        "100 * ocupados / disponibles (±0.06)": 1.0,
+        "areas_comparables": 1139
+      },
+      "2025": {
+        "100 * ocupados / disponibles": 1.0,
+        "100 * ocupados / disponibles (±0.06)": 1.0,
+        "areas_comparables": 1125
+      },
+      "2026": {
+        "100 * ocupados / disponibles": 1.0,
+        "100 * ocupados / disponibles (±0.06)": 1.0,
+        "areas_comparables": 1097
+      }
+    },
+    "Promedio Días de Estada": {
+      "2014": {
+        "estada / (egresos + traslados)": 1.0,
+        "estada / (egresos + traslados) (±0.06)": 1.0,
+        "estada / egresos": 0.322,
+        "estada / egresos (±0.06)": 0.406,
+        "areas_comparables": 1073
+      },
+      "2015": {
+        "estada / (egresos + traslados)": 1.0,
+        "estada / (egresos + traslados) (±0.06)": 1.0,
+        "estada / egresos": 0.3156,
+        "estada / egresos (±0.06)": 0.3976,
+        "areas_comparables": 1089
+      },
+      "2016": {
+        "estada / (egresos + traslados)": 1.0,
+        "estada / (egresos + traslados) (±0.06)": 1.0,
+        "estada / egresos": 0.3092,
+        "estada / egresos (±0.06)": 0.3906,
+        "areas_comparables": 1122
+      },
+      "2017": {
+        "estada / (egresos + traslados)": 1.0,
+        "estada / (egresos + traslados) (±0.06)": 1.0,
+        "estada / egresos": 0.3114,
+        "estada / egresos (±0.06)": 0.3953,
+        "areas_comparables": 1130
+      },
+      "2018": {
+        "estada / (egresos + traslados)": 1.0,
+        "estada / (egresos + traslados) (±0.06)": 1.0,
+        "estada / egresos": 0.3049,
+        "estada / egresos (±0.06)": 0.3748,
+        "areas_comparables": 1120
+      },
+      "2019": {
+        "estada / (egresos + traslados)": 1.0,
+        "estada / (egresos + traslados) (±0.06)": 1.0,
+        "estada / egresos": 0.2897,
+        "estada / egresos (±0.06)": 0.3664,
+        "areas_comparables": 1128
+      },
+      "2020": {
+        "estada / (egresos + traslados)": 1.0,
+        "estada / (egresos + traslados) (±0.06)": 1.0,
+        "estada / egresos": 0.2734,
+        "estada / egresos (±0.06)": 0.3438,
+        "areas_comparables": 1169
+      },
+      "2021": {
+        "estada / (egresos + traslados)": 1.0,
+        "estada / (egresos + traslados) (±0.06)": 1.0,
+        "estada / egresos": 0.2637,
+        "estada / egresos (±0.06)": 0.3342,
+        "areas_comparables": 1153
+      },
+      "2022": {
+        "estada / (egresos + traslados)": 1.0,
+        "estada / (egresos + traslados) (±0.06)": 1.0,
+        "estada / egresos": 0.2695,
+        "estada / egresos (±0.06)": 0.333,
+        "areas_comparables": 1139
+      },
+      "2023": {
+        "estada / (egresos + traslados)": 1.0,
+        "estada / (egresos + traslados) (±0.06)": 1.0,
+        "estada / egresos": 0.2622,
+        "estada / egresos (±0.06)": 0.3354,
+        "areas_comparables": 1150
+      },
+      "2024": {
+        "estada / (egresos + traslados)": 1.0,
+        "estada / (egresos + traslados) (±0.06)": 1.0,
+        "estada / egresos": 0.2543,
+        "estada / egresos (±0.06)": 0.3167,
+        "areas_comparables": 1139
+      },
+      "2025": {
+        "estada / (egresos + traslados)": 0.2705,
+        "estada / (egresos + traslados) (±0.06)": 0.3264,
+        "estada / egresos": 1.0,
+        "estada / egresos (±0.06)": 1.0,
+        "areas_comparables": 1125
+      },
+      "2026": {
+        "estada / (egresos + traslados)": 0.262,
+        "estada / (egresos + traslados) (±0.06)": 0.325,
+        "estada / egresos": 1.0,
+        "estada / egresos (±0.06)": 1.0,
+        "areas_comparables": 1097
+      }
+    },
+    "Letalidad": {
+      "2014": {
+        "100 * fallecidos / (egresos + traslados)": 1.0,
+        "100 * fallecidos / (egresos + traslados) (±0.06)": 1.0,
+        "100 * fallecidos / egresos": 0.5628,
+        "100 * fallecidos / egresos (±0.06)": 0.6449,
+        "areas_comparables": 1073
+      },
+      "2015": {
+        "100 * fallecidos / (egresos + traslados)": 1.0,
+        "100 * fallecidos / (egresos + traslados) (±0.06)": 1.0,
+        "100 * fallecidos / egresos": 0.5615,
+        "100 * fallecidos / egresos (±0.06)": 0.6462,
+        "areas_comparables": 1089
+      },
+      "2016": {
+        "100 * fallecidos / (egresos + traslados)": 1.0,
+        "100 * fallecidos / (egresos + traslados) (±0.06)": 1.0,
+        "100 * fallecidos / egresos": 0.5452,
+        "100 * fallecidos / egresos (±0.06)": 0.6465,
+        "areas_comparables": 1122
+      },
+      "2017": {
+        "100 * fallecidos / (egresos + traslados)": 1.0,
+        "100 * fallecidos / (egresos + traslados) (±0.06)": 1.0,
+        "100 * fallecidos / egresos": 0.5668,
+        "100 * fallecidos / egresos (±0.06)": 0.6489,
+        "areas_comparables": 1130
+      },
+      "2018": {
+        "100 * fallecidos / (egresos + traslados)": 1.0,
+        "100 * fallecidos / (egresos + traslados) (±0.06)": 1.0,
+        "100 * fallecidos / egresos": 0.5517,
+        "100 * fallecidos / egresos (±0.06)": 0.6397,
+        "areas_comparables": 1120
+      },
+      "2019": {
+        "100 * fallecidos / (egresos + traslados)": 1.0,
+        "100 * fallecidos / (egresos + traslados) (±0.06)": 1.0,
+        "100 * fallecidos / egresos": 0.5343,
+        "100 * fallecidos / egresos (±0.06)": 0.6318,
+        "areas_comparables": 1128
+      },
+      "2020": {
+        "100 * fallecidos / (egresos + traslados)": 1.0,
+        "100 * fallecidos / (egresos + traslados) (±0.06)": 1.0,
+        "100 * fallecidos / egresos": 0.5339,
+        "100 * fallecidos / egresos (±0.06)": 0.6059,
+        "areas_comparables": 1169
+      },
+      "2021": {
+        "100 * fallecidos / (egresos + traslados)": 1.0,
+        "100 * fallecidos / (egresos + traslados) (±0.06)": 1.0,
+        "100 * fallecidos / egresos": 0.5064,
+        "100 * fallecidos / egresos (±0.06)": 0.5723,
+        "areas_comparables": 1153
+      },
+      "2022": {
+        "100 * fallecidos / (egresos + traslados)": 1.0,
+        "100 * fallecidos / (egresos + traslados) (±0.06)": 1.0,
+        "100 * fallecidos / egresos": 0.5172,
+        "100 * fallecidos / egresos (±0.06)": 0.5726,
+        "areas_comparables": 1139
+      },
+      "2023": {
+        "100 * fallecidos / (egresos + traslados)": 1.0,
+        "100 * fallecidos / (egresos + traslados) (±0.06)": 1.0,
+        "100 * fallecidos / egresos": 0.5181,
+        "100 * fallecidos / egresos (±0.06)": 0.5877,
+        "areas_comparables": 1150
+      },
+      "2024": {
+        "100 * fallecidos / (egresos + traslados)": 1.0,
+        "100 * fallecidos / (egresos + traslados) (±0.06)": 1.0,
+        "100 * fallecidos / egresos": 0.5403,
+        "100 * fallecidos / egresos (±0.06)": 0.61,
+        "areas_comparables": 1139
+      },
+      "2025": {
+        "100 * fallecidos / (egresos + traslados)": 0.5311,
+        "100 * fallecidos / (egresos + traslados) (±0.06)": 0.605,
+        "100 * fallecidos / egresos": 1.0,
+        "100 * fallecidos / egresos (±0.06)": 1.0,
+        "areas_comparables": 1125
+      },
+      "2026": {
+        "100 * fallecidos / (egresos + traslados)": 0.5537,
+        "100 * fallecidos / (egresos + traslados) (±0.06)": 0.612,
+        "100 * fallecidos / egresos": 1.0,
+        "100 * fallecidos / egresos (±0.06)": 1.0,
+        "areas_comparables": 1097
+      }
+    },
+    "Indice de Rotación": {
+      "2014": {
+        "(egresos + traslados) / promedio camas": 0.5033,
+        "(egresos + traslados) / promedio camas (±0.06)": 0.9616,
+        "egresos / promedio camas": 0.1724,
+        "egresos / promedio camas (±0.06)": 0.3037,
+        "areas_comparables": 1073
+      },
+      "2015": {
+        "(egresos + traslados) / promedio camas": 0.5406,
+        "(egresos + traslados) / promedio camas (±0.06)": 0.9557,
+        "egresos / promedio camas": 0.1827,
+        "egresos / promedio camas (±0.06)": 0.2989,
+        "areas_comparables": 1089
+      },
+      "2016": {
+        "(egresos + traslados) / promedio camas": 0.5596,
+        "(egresos + traslados) / promedio camas (±0.06)": 0.9686,
+        "egresos / promedio camas": 0.1883,
+        "egresos / promedio camas (±0.06)": 0.2987,
+        "areas_comparables": 1122
+      },
+      "2017": {
+        "(egresos + traslados) / promedio camas": 0.5476,
+        "(egresos + traslados) / promedio camas (±0.06)": 0.9697,
+        "egresos / promedio camas": 0.1825,
+        "egresos / promedio camas (±0.06)": 0.3028,
+        "areas_comparables": 1130
+      },
+      "2018": {
+        "(egresos + traslados) / promedio camas": 0.5479,
+        "(egresos + traslados) / promedio camas (±0.06)": 0.9678,
+        "egresos / promedio camas": 0.1773,
+        "egresos / promedio camas (±0.06)": 0.291,
+        "areas_comparables": 1120
+      },
+      "2019": {
+        "(egresos + traslados) / promedio camas": 0.553,
+        "(egresos + traslados) / promedio camas (±0.06)": 0.9724,
+        "egresos / promedio camas": 0.1763,
+        "egresos / promedio camas (±0.06)": 0.2841,
+        "areas_comparables": 1128
+      },
+      "2020": {
+        "(egresos + traslados) / promedio camas": 0.5528,
+        "(egresos + traslados) / promedio camas (±0.06)": 0.9691,
+        "egresos / promedio camas": 0.1803,
+        "egresos / promedio camas (±0.06)": 0.2764,
+        "areas_comparables": 1169
+      },
+      "2021": {
+        "(egresos + traslados) / promedio camas": 0.5496,
+        "(egresos + traslados) / promedio camas (±0.06)": 0.9571,
+        "egresos / promedio camas": 0.1752,
+        "egresos / promedio camas (±0.06)": 0.2681,
+        "areas_comparables": 1153
+      },
+      "2022": {
+        "(egresos + traslados) / promedio camas": 0.5086,
+        "(egresos + traslados) / promedio camas (±0.06)": 0.9568,
+        "egresos / promedio camas": 0.1548,
+        "egresos / promedio camas (±0.06)": 0.2619,
+        "areas_comparables": 1139
+      },
+      "2023": {
+        "(egresos + traslados) / promedio camas": 0.4947,
+        "(egresos + traslados) / promedio camas (±0.06)": 0.9528,
+        "egresos / promedio camas": 0.1584,
+        "egresos / promedio camas (±0.06)": 0.2536,
+        "areas_comparables": 1150
+      },
+      "2024": {
+        "(egresos + traslados) / promedio camas": 0.5374,
+        "(egresos + traslados) / promedio camas (±0.06)": 0.9706,
+        "egresos / promedio camas": 0.1524,
+        "egresos / promedio camas (±0.06)": 0.2496,
+        "areas_comparables": 1139
+      },
+      "2025": {
+        "(egresos + traslados) / promedio camas": NaN,
+        "(egresos + traslados) / promedio camas (±0.06)": NaN,
+        "egresos / promedio camas": NaN,
+        "egresos / promedio camas (±0.06)": NaN,
+        "areas_comparables": 0
+      },
+      "2026": {
+        "(egresos + traslados) / promedio camas": NaN,
+        "(egresos + traslados) / promedio camas (±0.06)": NaN,
+        "egresos / promedio camas": NaN,
+        "egresos / promedio camas (±0.06)": NaN,
+        "areas_comparables": 0
+      }
+    }
+  },
+  "tramos_definicion_razones": {
+    "Indice Ocupacional": [
+      {
+        "formula": "100 * ocupados / disponibles",
+        "desde": 2014,
+        "hasta": 2026
+      }
+    ],
+    "Promedio Días de Estada": [
+      {
+        "formula": "estada / (egresos + traslados)",
+        "desde": 2014,
+        "hasta": 2024
+      },
+      {
+        "formula": "estada / egresos",
+        "desde": 2025,
+        "hasta": 2026
+      }
+    ],
+    "Letalidad": [
+      {
+        "formula": "100 * fallecidos / (egresos + traslados)",
+        "desde": 2014,
+        "hasta": 2024
+      },
+      {
+        "formula": "100 * fallecidos / egresos",
+        "desde": 2025,
+        "hasta": 2026
+      }
+    ],
+    "Indice de Rotación": [
+      {
+        "formula": null,
+        "desde": 2014,
+        "hasta": 2026
+      }
+    ]
+  },
+  "sobreocupacion": {
+    "area_meses": 172317,
+    "area_meses_ocupados_mayor_disponibles": 1955,
+    "area_meses_ocupados_con_disponibles_cero": 17,
+    "psiquiatria_area_meses": 10776,
+    "psiquiatria_ocupados_mayor_disponibles": 233,
+    "indice_mensual_maximo": 2700.0
+  },
+  "coherencia_dotacion": {
+    "disponible": true,
+    "areas_ano_comparadas": 13052,
+    "a_1_cama_o_menos": 0.598,
+    "promedio_bajo_dotacion_en_mas_de_10pct": 0.2086,
+    "psiquiatria_areas_ano": 807,
+    "psiquiatria_a_1_cama_o_menos": 0.5576
+  },
+  "psiquiatria_rm": {
+    "ano_ultimo_completo": 2025,
+    "por_ano": {
+      "2014": {
+        "dias_cama_ocupados": 243589,
+        "dias_cama_disponibles": 275330,
+        "indice_ocupacional": 88.47,
+        "egresos_mas_traslados": 6831
+      },
+      "2015": {
+        "dias_cama_ocupados": 244944,
+        "dias_cama_disponibles": 277069,
+        "indice_ocupacional": 88.41,
+        "egresos_mas_traslados": 7094
+      },
+      "2016": {
+        "dias_cama_ocupados": 249121,
+        "dias_cama_disponibles": 284803,
+        "indice_ocupacional": 87.47,
+        "egresos_mas_traslados": 6942
+      },
+      "2017": {
+        "dias_cama_ocupados": 249329,
+        "dias_cama_disponibles": 286962,
+        "indice_ocupacional": 86.89,
+        "egresos_mas_traslados": 7044
+      },
+      "2018": {
+        "dias_cama_ocupados": 252793,
+        "dias_cama_disponibles": 286745,
+        "indice_ocupacional": 88.16,
+        "egresos_mas_traslados": 7591
+      },
+      "2019": {
+        "dias_cama_ocupados": 253307,
+        "dias_cama_disponibles": 287272,
+        "indice_ocupacional": 88.18,
+        "egresos_mas_traslados": 7432
+      },
+      "2020": {
+        "dias_cama_ocupados": 210575,
+        "dias_cama_disponibles": 258046,
+        "indice_ocupacional": 81.6,
+        "egresos_mas_traslados": 5762
+      },
+      "2021": {
+        "dias_cama_ocupados": 214166,
+        "dias_cama_disponibles": 267704,
+        "indice_ocupacional": 80.0,
+        "egresos_mas_traslados": 6321
+      },
+      "2022": {
+        "dias_cama_ocupados": 205482,
+        "dias_cama_disponibles": 254203,
+        "indice_ocupacional": 80.83,
+        "egresos_mas_traslados": 6542
+      },
+      "2023": {
+        "dias_cama_ocupados": 214139,
+        "dias_cama_disponibles": 254887,
+        "indice_ocupacional": 84.01,
+        "egresos_mas_traslados": 7653
+      },
+      "2024": {
+        "dias_cama_ocupados": 211834,
+        "dias_cama_disponibles": 236333,
+        "indice_ocupacional": 89.63,
+        "egresos_mas_traslados": 8154
+      },
+      "2025": {
+        "dias_cama_ocupados": 217680,
+        "dias_cama_disponibles": 243506,
+        "indice_ocupacional": 89.39,
+        "egresos_mas_traslados": 8367
+      },
+      "2026": {
+        "dias_cama_ocupados": 170997,
+        "dias_cama_disponibles": 187537,
+        "indice_ocupacional": 91.18,
+        "egresos_mas_traslados": 6801
+      }
+    },
+    "hospitales_ultimo_completo": [
+      {
+        "establecimiento_codigo": 112100,
+        "establecimiento_nombre": "Hospital Del Salvador de Santiago",
+        "dias_cama_ocupados": 7270,
+        "dias_cama_disponibles": 7300,
+        "indice_ocupacional": 99.59
+      },
+      {
+        "establecimiento_codigo": 109101,
+        "establecimiento_nombre": "Hospital Clínico de Niños Dr. Roberto del Río (Santiago, Independencia)",
+        "dias_cama_ocupados": 5625,
+        "dias_cama_disponibles": 5819,
+        "indice_ocupacional": 96.67
+      },
+      {
+        "establecimiento_codigo": 113180,
+        "establecimiento_nombre": "Hospital El Pino (Santiago, San Bernardo)",
+        "dias_cama_ocupados": 5582,
+        "dias_cama_disponibles": 5843,
+        "indice_ocupacional": 95.53
+      },
+      {
+        "establecimiento_codigo": 114101,
+        "establecimiento_nombre": "Complejo Hospitalario Dr. Sótero del Río (Santiago, Puente Alto)",
+        "dias_cama_ocupados": 17261,
+        "dias_cama_disponibles": 18070,
+        "indice_ocupacional": 95.52
+      },
+      {
+        "establecimiento_codigo": 113100,
+        "establecimiento_nombre": "Hospital Barros Luco Trudeau (Santiago, San Miguel)",
+        "dias_cama_ocupados": 9643,
+        "dias_cama_disponibles": 10203,
+        "indice_ocupacional": 94.51
+      },
+      {
+        "establecimiento_codigo": 109102,
+        "establecimiento_nombre": "Instituto Psiquiátrico Dr. José Horwitz Barak (Santiago, Recoleta)",
+        "dias_cama_ocupados": 115342,
+        "dias_cama_disponibles": 122722,
+        "indice_ocupacional": 93.99
+      },
+      {
+        "establecimiento_codigo": 114105,
+        "establecimiento_nombre": "Hospital Clínico Metropolitano La Florida Dra. Eloísa Díaz Insunza",
+        "dias_cama_ocupados": 5917,
+        "dias_cama_disponibles": 6570,
+        "indice_ocupacional": 90.06
+      },
+      {
+        "establecimiento_codigo": 113130,
+        "establecimiento_nombre": "Hospital Dr. Exequiel González Cortés (Santiago, San Miguel)",
+        "dias_cama_ocupados": 3795,
+        "dias_cama_disponibles": 4380,
+        "indice_ocupacional": 86.64
+      },
+      {
+        "establecimiento_codigo": 111100,
+        "establecimiento_nombre": "Hospital Clínico San Borja Arriarán",
+        "dias_cama_ocupados": 4687,
+        "dias_cama_disponibles": 5521,
+        "indice_ocupacional": 84.89
+      },
+      {
+        "establecimiento_codigo": 110120,
+        "establecimiento_nombre": "Hospital Félix Bulnes Cerda",
+        "dias_cama_ocupados": 12042,
+        "dias_cama_disponibles": 14540,
+        "indice_ocupacional": 82.82
+      },
+      {
+        "establecimiento_codigo": 113170,
+        "establecimiento_nombre": "Hospital Psiquiátrico El Peral (Santiago, Puente Alto)",
+        "dias_cama_ocupados": 26788,
+        "dias_cama_disponibles": 35818,
+        "indice_ocupacional": 74.79
+      },
+      {
+        "establecimiento_codigo": 112102,
+        "establecimiento_nombre": "Hospital de Niños Dr. Luis Calvo Mackenna",
+        "dias_cama_ocupados": 2286,
+        "dias_cama_disponibles": 3070,
+        "indice_ocupacional": 74.46
+      },
+      {
+        "establecimiento_codigo": 109104,
+        "establecimiento_nombre": "Hospital de Til Til",
+        "dias_cama_ocupados": 1442,
+        "dias_cama_disponibles": 3650,
+        "indice_ocupacional": 39.51
+      }
+    ],
+    "area_meses": 3444,
+    "area_meses_ocupados_mayor_disponibles": 88,
+    "establecimientos_con_ocupados_mayor_disponibles": [
+      "Hospital Clínico San Borja-Arriarán (Santiago, Santiago)",
+      "Hospital Dr. Exequiel González Cortés (Santiago, San Miguel)",
+      "Hospital Psiquiátrico El Peral (Santiago, Puente Alto)",
+      "Instituto Psiquiátrico Dr José Horwitz Barak (Santiago, Recoleta)",
+      "Instituto Psiquiátrico Dr. José Horwitz Barak (Santiago, Recoleta)"
+    ]
+  },
+  "categorizacion": {
+    "trimestres": {
+      "2024-T1": {
+        "filas": 1113,
+        "establecimientos": 192,
+        "total": 1708566
+      },
+      "2024-T2": {
+        "filas": 1106,
+        "establecimientos": 191,
+        "total": 1733438
+      },
+      "2024-T3": {
+        "filas": 1104,
+        "establecimientos": 191,
+        "total": 1834643
+      },
+      "2024-T4": {
+        "filas": 1099,
+        "establecimientos": 191,
+        "total": 1799047
+      },
+      "2025-T1": {
+        "filas": 1106,
+        "establecimientos": 190,
+        "total": 1739425
+      },
+      "2025-T2": {
+        "filas": 1107,
+        "establecimientos": 191,
+        "total": 1841772
+      },
+      "2025-T3": {
+        "filas": 1101,
+        "establecimientos": 191,
+        "total": 1826893
+      },
+      "2025-T4": {
+        "filas": 1098,
+        "establecimientos": 191,
+        "total": 1771480
+      }
+    },
+    "total_igual_suma_categorias": true,
+    "distribucion_nacional": {
+      "criticos": 0.345,
+      "medios": 0.5119,
+      "basicos": 0.1431
+    },
+    "distribucion_psiquiatria_nacional": {
+      "criticos": 0.2199,
+      "medios": 0.4294,
+      "basicos": 0.3507
+    },
+    "distribucion_psiquiatria_rm": {
+      "criticos": 0.1354,
+      "medios": 0.5668,
+      "basicos": 0.2978
+    },
+    "establecimientos_trimestre": 384,
+    "establecimientos_sin_codigo_por_nombre": 0,
+    "establecimientos_ambiguos_por_nombre": 0,
+    "razon_categorizados_sobre_dias_ocupados_mediana": 0.931,
+    "razon_categorizados_sobre_dias_ocupados_mediana_psiquiatria": 0.701,
+    "hashes_trimestres_distintos": true
+  },
+  "ano_en_curso": {
+    "ano": 2026,
+    "meses_publicados": 9
+  },
+  "diccionario": {
+    "ruta": "data/raw/estadisticas_hospitalarias/diccionario_rem20.xlsx",
+    "sha256": "6feebecdce70cf9f850054c37d07a292183747d9df1323084d15abf97be26c9a",
+    "campos": [
+      {
+        "campo": "PERIODO",
+        "tipo": "Numérico",
+        "largo": "4",
+        "valores": "Numérico",
+        "detalle": "Año del Registro",
+        "indicador": null
+      },
+      {
+        "campo": "TIPO_PERTENENCIA",
+        "tipo": "Numérico",
+        "largo": "1",
+        "valores": "1.- Perteneciente\n2.- No Perteneciente",
+        "detalle": "Es un atributo o característica  del establecimiento relacionado con la relación de jurisdicción  establecida con el Sistema  Nacional de Servicios de Salud. Los establecimientos públicos  forman parte de un Servicio de Salud,  por lo tanto se consideran Pertenecientes al Sistema Nacional de Servicios de Salud. Por otro lado, Los establecimientos privados, de las Fuerzas Armadas, de Orden y Seguridad tienen una jurisdicción diferente, por lo tanto serán considerados  No pertenecientes al Sistema Nacional de Servicios de Salud.",
+        "indicador": null
+      },
+      {
+        "campo": "COD_SSS",
+        "tipo": "Alfanumérico",
+        "largo": "2",
+        "valores": "Tabla Maestra de Servicios de Salud Y SEREMIs",
+        "detalle": "Es un identificador único para el Servicio de Salud y para la SEREMI, independiente que puedan tener coincidencia en el valor. **\nLos valores corresponden a los Servicios de Salud y SEREMI existentes durante el Año indicado en la columna PERIODO.",
+        "indicador": null
+      },
+      {
+        "campo": "GLOSA_SSS",
+        "tipo": "Texto",
+        "largo": "50",
+        "valores": "Tabla Maestra de Servicios de Salud\nTabla Maestra de Secretarias Regionales Ministeriales",
+        "detalle": "Corresponde a la dependencia que tiene el establecimiento sobre un nivel jerárquico superior. Esta compuesta por los Servicios de Salud y las SEREMI",
+        "indicador": null
+      },
+      {
+        "campo": "CODIGO_ESTABLECIMIENTO",
+        "tipo": "Alfanumérico",
+        "largo": "6",
+        "valores": "Numérico",
+        "detalle": "Corresponde a un identificador  único, que permite reconocer al prestador en forma unívoca e inequívoca.",
+        "indicador": null
+      },
+      {
+        "campo": "ESTABLECIMIENTO",
+        "tipo": "Texto",
+        "largo": "100",
+        "valores": "Texto Libre",
+        "detalle": "Es la denominación nominal  del establecimiento, que lo reconoce de otros. Es sancionada con la respectiva resolución de Autorización Sanitaria.",
+        "indicador": null
+      },
+      {
+        "campo": "COD_AREA_FUNCIONAL",
+        "tipo": "Numérico",
+        "largo": "3",
+        "valores": "Numérico",
+        "detalle": "Identificador único que permite reconocer las áreas funcionales",
+        "indicador": null
+      },
+      {
+        "campo": "AREA_FUNCIONAL",
+        "tipo": "Texto",
+        "largo": "100",
+        "valores": "Texto",
+        "detalle": "Reconocimiento de camas hospitalarias según niveles de complejidad, en tres grandes áreas de cuidados, predominando estos criterios por sobre la diferenciación de camas por especialidad.",
+        "indicador": null
+      },
+      {
+        "campo": "MES",
+        "tipo": "Numérico",
+        "largo": "2",
+        "valores": "Número correspondiente al mes del Año",
+        "detalle": "Mes del Registro",
+        "indicador": null
+      },
+      {
+        "campo": "DIAS_CAMAS_OCUPADAS",
+        "tipo": "Numérico",
+        "largo": "10",
+        "valores": "Numérico",
+        "detalle": "Cantidad de Días en que una cama de un área funcional está siendo ocupada",
+        "indicador": "Dias Cama Ocupados"
+      },
+      {
+        "campo": "DIAS_CAMAS_DISPONIBLES",
+        "tipo": "Numérico",
+        "largo": "10",
+        "valores": "Numérico",
+        "detalle": "Cantidad de Días en que una cama de un área funcional se encuentra disponible, para ser utilizada por un paciente.",
+        "indicador": "Dias Cama Disponibles"
+      },
+      {
+        "campo": "DIAS_ESTADA",
+        "tipo": "Numérico",
+        "largo": "10",
+        "valores": "Numérico",
+        "detalle": "Total de días en el que los pacientes permanecen haciendo uso de una cama del área funcional",
+        "indicador": "Dias de Estada"
+      },
+      {
+        "campo": "NUMERO_EGRESOS",
+        "tipo": "Numérico",
+        "largo": "10",
+        "valores": "Numérico",
+        "detalle": "Total de egresos en el que el paciente abandona el recinto de una de las siguientes formas:\n- Dado de Alta\n- Derivado a otro establecimiento\n- Fallecido",
+        "indicador": "Numero de Egresos"
+      },
+      {
+        "campo": "EGRESOS_FALLECIDOS",
+        "tipo": "Numérico",
+        "largo": "10",
+        "valores": "Numérico",
+        "detalle": "Egresos en el que el paciente abandona el recinto en condición de fallecido",
+        "indicador": "Egresos Fallecidos"
+      },
+      {
+        "campo": "TRASLADOS",
+        "tipo": "Numérico",
+        "largo": "10",
+        "valores": "Numérico",
+        "detalle": "Movimiento del paciente, donde es transferido a otra área funcional del Establecimiento y no constituye un egreso hospitalario.",
+        "indicador": "Traslados"
+      },
+      {
+        "campo": "INDICE_OCUPACIONAL",
+        "tipo": "Decimal",
+        "largo": "3.2",
+        "valores": "Porcentaje",
+        "detalle": "Número de días camas ocupadas respecto a los días cama disponibles, durante un período de tiempo establecido, expresado en porcentaje",
+        "indicador": "Indice Ocupacional"
+      },
+      {
+        "campo": "PROMEDIO_CAMAS_DISPONIBLE",
+        "tipo": "Decimal",
+        "largo": "10.2",
+        "valores": "Decimal",
+        "detalle": "Promedio de días que una cama del Área Funcional permanece disponible",
+        "indicador": "Promedio Cama Disponibles"
+      },
+      {
+        "campo": "PROMEDIO_DIAS_ESTADA",
+        "tipo": "Decimal",
+        "largo": "10.2",
+        "valores": "Decimal",
+        "detalle": "Promedio de días que un paciente permanece en el Área Funcional",
+        "indicador": "Promedio Días de Estada"
+      },
+      {
+        "campo": "LETALIDAD",
+        "tipo": "Decimal",
+        "largo": "3.2",
+        "valores": "Porcentaje",
+        "detalle": "Porcentaje de Egresos fallecidos contenidos en el total de Egresos",
+        "indicador": "Letalidad"
+      },
+      {
+        "campo": "INDICE_ROTACION",
+        "tipo": "Decimal",
+        "largo": "10.2",
+        "valores": "Decimal",
+        "detalle": "Número de pacientes que pasan por una cama hospitalaria en\nun período de tiempo determinado.",
+        "indicador": "Indice de Rotación"
+      }
+    ]
+  }
+}

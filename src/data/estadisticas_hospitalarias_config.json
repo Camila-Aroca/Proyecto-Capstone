@@ -1,0 +1,105 @@
+{
+  "base_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/",
+  "raw_dir": "data/raw/estadisticas_hospitalarias",
+  "cache_dir": ".cache/downloads/estadisticas_hospitalarias",
+  "diccionario": {
+    "url": "https://datos.gob.cl/dataset/a756323f-85ba-4759-87dc-f5d5e63868cc/resource/6c7c8a9d-204d-4947-9c8e-82a893fc3f2e/download/diccionario-rem20.xlsx",
+    "archivo": "diccionario_rem20.xlsx"
+  },
+  "indicadores": {
+    "cerrados": [
+      {
+        "ruta": "Consolidado Estadísticas Hospitalarias 2014-2023.xlsx",
+        "archivo": "indicadores_hospitalarios_2014_2023.xlsx",
+        "anos": [
+          2014,
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023
+        ]
+      },
+      {
+        "ruta": "Estadísticas Hospitalarias Año 2024.xlsx",
+        "archivo": "indicadores_hospitalarios_2024.xlsx",
+        "anos": [
+          2024
+        ]
+      },
+      {
+        "ruta": "2025/Estadísticas Hospitalarias año 2025-_16042026.xlsx",
+        "archivo": "indicadores_hospitalarios_2025.xlsx",
+        "anos": [
+          2025
+        ]
+      }
+    ],
+    "en_curso": {
+      "primer_ano": 2026,
+      "plantilla_ruta": "{ano}/Estadísticas Hospitalarias {mes} {ano}.xlsx",
+      "plantilla_archivo": "indicadores_hospitalarios_{ano}.xlsx"
+    }
+  },
+  "categorizacion": {
+    "cerrados": [
+      {
+        "ruta": "Categorización riesgo dependencia Primer Trimestre 2024.xlsx",
+        "archivo": "categorizacion_riesgo_dependencia_2024_t1.xlsx",
+        "ano": 2024,
+        "trimestre": 1
+      },
+      {
+        "ruta": "Categorización riesgo dependencia SegundoTrimestre 2024.xlsx",
+        "archivo": "categorizacion_riesgo_dependencia_2024_t2.xlsx",
+        "ano": 2024,
+        "trimestre": 2
+      },
+      {
+        "ruta": "Categorización riesgo dependencia Tercer Trimestre 2024.xlsx",
+        "archivo": "categorizacion_riesgo_dependencia_2024_t3.xlsx",
+        "ano": 2024,
+        "trimestre": 3
+      },
+      {
+        "ruta": "Categorización riesgo dependencia Cuarto Trimestre 2024.xlsx",
+        "archivo": "categorizacion_riesgo_dependencia_2024_t4.xlsx",
+        "ano": 2024,
+        "trimestre": 4
+      },
+      {
+        "ruta": "2025/Categorización riesgo dependencia Primer Trimestre 2025.xlsx",
+        "archivo": "categorizacion_riesgo_dependencia_2025_t1.xlsx",
+        "ano": 2025,
+        "trimestre": 1
+      },
+      {
+        "ruta": "2025/Categorización riesgo dependencia Segundo Trimestre 2025.xlsx",
+        "archivo": "categorizacion_riesgo_dependencia_2025_t2.xlsx",
+        "ano": 2025,
+        "trimestre": 2
+      },
+      {
+        "ruta": "2025/Categorización riesgo dependencia Tercer Trimestre 2025.xlsx",
+        "archivo": "categorizacion_riesgo_dependencia_2025_t3.xlsx",
+        "ano": 2025,
+        "trimestre": 3
+      },
+      {
+        "ruta": "2025/Categorización riesgo dependencia Cuarto Trimestre 2025.xlsx",
+        "archivo": "categorizacion_riesgo_dependencia_2025_t4.xlsx",
+        "ano": 2025,
+        "trimestre": 4
+      }
+    ],
+    "en_curso": {
+      "primer_ano": 2026,
+      "plantilla_ruta": "{ano}/Categorización riesgo dependencia {trimestre} Trimestre {ano}.xlsx",
+      "plantilla_archivo": "categorizacion_riesgo_dependencia_{ano}_t{numero}.xlsx"
+    }
+  }
+}

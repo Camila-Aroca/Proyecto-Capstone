@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.chile_time import current_year_chile, run_date_chile
 from src.data.raw_provenance import file_sha256, processed_raw_sha256
 from src.data.clean_defunciones import load_config as load_defunciones_config
+from src.data.download_estadisticas_hospitalarias import required_raw_paths as estadisticas_hospitalarias_raw
 
 logging.basicConfig(
     level=logging.INFO,
@@ -66,6 +67,13 @@ STAGES = {
             "data/raw/camas/dotacion_camas_snss_2010_2025.xlsx",
             "data/raw/camas/dotacion_camas_no_snss_2019_2025.xlsx"
         ],
+        "depends_on": []
+    },
+    "download_estadisticas_hospitalarias": {
+        "module": "src.data.download_estadisticas_hospitalarias",
+        # Cerrados + años en curso ya obtenidos o pasados; el corte mensual del
+        # año civil se actualiza con --force (ver PIPELINE.md).
+        "outputs": [path.as_posix() for path in estadisticas_hospitalarias_raw()],
         "depends_on": []
     },
     "download_defunciones": {
@@ -177,6 +185,22 @@ STAGES = {
         "module": "src.data.clean_pobreza_comunal",
         "outputs": ["data/processed/pobreza/dim_vulnerabilidad_comuna.parquet"],
         "depends_on": ["download_pobreza_comunal", "clean_censo_poblacion"]
+    },
+    "clean_estadisticas_hospitalarias": {
+        "module": "src.data.clean_estadisticas_hospitalarias",
+        "outputs": [
+            "data/processed/estadisticas_hospitalarias/indicadores_hospitalarios_snss.parquet",
+            "data/processed/estadisticas_hospitalarias/categorizacion_riesgo_dependencia.parquet"
+        ],
+        "depends_on": ["download_estadisticas_hospitalarias"]
+    },
+    "eda_estadisticas_hospitalarias": {
+        "module": "scripts.eda_estadisticas_hospitalarias",
+        "outputs": [
+            "reports/eda/eda_estadisticas_hospitalarias.md",
+            "reports/eda/eda_estadisticas_hospitalarias_resumen.json"
+        ],
+        "depends_on": ["clean_estadisticas_hospitalarias", "clean_dotacion_camas"]
     },
     "clean_dotacion_camas": {
         "module": "src.data.clean_dotacion_camas",
@@ -404,6 +428,7 @@ PIPELINE_ORDER = [
     "download_poblacion_proyecciones",
     "download_pobreza_comunal",
     "download_dotacion_camas",
+    "download_estadisticas_hospitalarias",
     "download_defunciones",
     "eda_defunciones",
     "clean_defunciones",
@@ -418,6 +443,8 @@ PIPELINE_ORDER = [
     "clean_poblacion_proyecciones",
     "clean_pobreza_comunal",
     "clean_dotacion_camas",
+    "clean_estadisticas_hospitalarias",
+    "eda_estadisticas_hospitalarias",
     "build_catalogs",
     "clean_urgencias",
     "clean_egresos",

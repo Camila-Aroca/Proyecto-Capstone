@@ -234,6 +234,9 @@ def validate_expected_schema(path: Path) -> bool:
         elif name.startswith("mds_casen"):
             from src.data.download_pobreza_comunal import validate_pobreza_comunal_workbook
             validate_pobreza_comunal_workbook(path)
+        elif "estadisticas_hospitalarias" in parts:
+            from src.data.download_estadisticas_hospitalarias import validate_raw_file
+            validate_raw_file(path)
         elif name.startswith("dotacion_camas_no_snss"):
             from src.data.download_dotacion_camas import validate_camas_no_snss_workbook
             validate_camas_no_snss_workbook(path)
@@ -286,6 +289,14 @@ def validate_expected_schema(path: Path) -> bool:
             clean_dotacion_camas.SNSS_FILENAME: clean_dotacion_camas.SNSS_SCHEMA,
             clean_dotacion_camas.NO_SNSS_FILENAME: clean_dotacion_camas.NO_SNSS_SCHEMA,
         }[name]
+    elif name in {"eda_estadisticas_hospitalarias.md", "eda_estadisticas_hospitalarias_resumen.json"}:
+        from scripts.eda_estadisticas_hospitalarias import validate_outputs
+        validate_outputs()
+        return True
+    elif name in {"indicadores_hospitalarios_snss.parquet", "categorizacion_riesgo_dependencia.parquet"}:
+        from src.data.clean_estadisticas_hospitalarias import validate_output
+        validate_output(path)
+        return True
     elif name == "dim_camas_psiquiatria_hospital_rm.parquet":
         from src.data.build_dim_camas_psiquiatria_hospital_rm import SCHEMA
         schemas[name] = SCHEMA

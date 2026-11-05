@@ -99,6 +99,25 @@ Todas las etapas de descarga viven en `src/data/` y se ejecutan con `scripts/run
 - El RAW conserva ambos libros tal como vienen. Observado: el libro SNSS tiene 8 filas de nota al pie y filas `Total` por establecimiento mezcladas con el detalle por área funcional; el libro no SNSS tiene una fila `TOTAL` por hoja, notas al pie solo desde la hoja 2023 y 10 celdas con el texto `ok` (hojas 2024 y 2025, columna 12) de significado no documentado.
 - El libro SNSS declara un total nacional de camas por año en una fila `Total País`; esa cifra no se ha contrastado todavía con la suma por establecimiento.
 
+### 2.9 DEIS — Estadísticas Hospitalarias REM-20
+
+- **Etapa:** `download_estadisticas_hospitalarias`. **Destino:** `data/raw/estadisticas_hospitalarias/` (cada libro validado y publicado de forma independiente). Configuración de URLs en `src/data/estadisticas_hospitalarias_config.json`.
+- **Qué es:** actividad mensual de los establecimientos del SNSS por nivel de cuidado (días cama disponibles y ocupados, días de estada, egresos, fallecidos, traslados e índices) y la categorización trimestral de los pacientes hospitalizados según riesgo-dependencia (CUDYR). Son estadísticas consolidadas, no ocupación en tiempo real.
+- **Libros** (base `https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/`):
+
+| Archivo en RAW | Ruta de origen | Cobertura |
+|---|---|---|
+| `indicadores_hospitalarios_2014_2023.xlsx` | `Consolidado Estadísticas Hospitalarias 2014-2023.xlsx` | 2014-2023, una hoja por año |
+| `indicadores_hospitalarios_2024.xlsx` | `Estadísticas Hospitalarias Año 2024.xlsx` | 2024 |
+| `indicadores_hospitalarios_2025.xlsx` | `2025/Estadísticas Hospitalarias año 2025-_16042026.xlsx` | 2025 |
+| `indicadores_hospitalarios_AAAA.xlsx` | `AAAA/Estadísticas Hospitalarias <Mes> AAAA.xlsx` | Año en curso: último corte mensual publicado (hoy 2026, enero a septiembre) |
+| `categorizacion_riesgo_dependencia_AAAA_tN.xlsx` | `[AAAA/]Categorización riesgo dependencia <Trimestre> Trimestre AAAA.xlsx` | Un libro por trimestre, 2024-T1 a 2025-T4 |
+| `diccionario_rem20.xlsx` | `https://datos.gob.cl/dataset/a756323f-85ba-4759-87dc-f5d5e63868cc/resource/6c7c8a9d-204d-4947-9c8e-82a893fc3f2e/download/diccionario-rem20.xlsx` (URL completa, datos.gob.cl) | Diccionario oficial de los campos de los indicadores; no cubre la categorización |
+
+- **Procesamiento:** `clean_estadisticas_hospitalarias` (dos Parquet en `data/processed/estadisticas_hospitalarias/`, ver `reports/dictionary/diccionario_estadisticas_hospitalarias.md`) y `eda_estadisticas_hospitalarias` (`reports/eda/eda_estadisticas_hospitalarias.md`).
+- Observado en el RAW, que se conserva sin modificar: cada hoja de indicadores intercala el detalle por nivel de cuidado con filas agregadas `Datos País`, `Datos Servicio Salud` y `Datos Establecimiento`; el nombre de la hoja varía (`Año 2024`, `Corte Septiembre`) y el año se lee del título. El libro de categorización es jerárquico (región, Servicio de Salud, establecimiento y nivel en una sola columna), no trae código de establecimiento y solo declara el año: el trimestre viene del nombre de la publicación.
+- La lectura de las categorías CUDYR se toma de González P, Kappes M, Gallardo-Vargas C. *Cuidados según dependencia y riesgo en hospitales de baja complejidad del Servicio de Salud Reloncaví, Chile*. Ciencia y Enfermería. 2024;30:31 ([doi:10.29393/CE30-31CSPC30031](https://doi.org/10.29393/CE30-31CSPC30031)). Se cita como referencia; no se guarda en RAW.
+
 ## 3. Procedimiento de descarga
 
 Requisitos: Python 3.12 y las dependencias de `requirements.txt`; acceso a internet; espacio en disco (unos 12 GB de RAW).
@@ -117,6 +136,7 @@ python scripts/run_pipeline.py --stage download_censo_poblacion
 python scripts/run_pipeline.py --stage download_poblacion_proyecciones
 python scripts/run_pipeline.py --stage download_pobreza_comunal
 python scripts/run_pipeline.py --stage download_dotacion_camas
+python scripts/run_pipeline.py --stage download_estadisticas_hospitalarias
 python scripts/run_pipeline.py --stage download_contexto_genero
 ```
 
@@ -125,11 +145,12 @@ Comportamiento:
 - **Idempotente:** si el RAW ya existe y es válido, la etapa hace `SKIP` y no consulta la fuente.
 - **`--force`:** solicita explícitamente un snapshot nuevo y propaga la regeneración solo a las etapas que dependen de él. Úsalo con cuidado en las fuentes mutables (sección 5).
 - **`--refresh-current-urgencias`:** vuelve a consultar el ZIP del año corriente de Urgencias y actualiza solo la rama afectada.
+- **Estadísticas Hospitalarias del año en curso:** con el RAW presente, la etapa hace `SKIP`. Para traer un corte mensual nuevo: `python scripts/run_pipeline.py --stage download_estadisticas_hospitalarias --force` (busca el último mes publicado sin fijarlo en el código).
 - **Descarga segura:** cada fuente se descarga a `.cache/downloads/`, se valida (ZIP íntegro, columnas requeridas, hojas del XLSX, geometría legible) y recién entonces se publica en `data/raw/`.
 
 ## 4. Manifest y hashes
 
-`data/raw/provenance_manifest.json` es una lista JSON con una entrada por `source_id`. Es el único archivo de `data/raw/` que se versiona. Hoy registra 27 fuentes.
+`data/raw/provenance_manifest.json` es una lista JSON con una entrada por `source_id`. Es el único archivo de `data/raw/` que se versiona. Hoy registra 49 fuentes.
 
 Formato actual (una entrada con historial de snapshots; lo escribe `record_raw_snapshot` en `src/data/raw_provenance.py`):
 
@@ -195,7 +216,8 @@ EOF
 
 - **Atenciones de Urgencia del año corriente** (hoy 2026): el DEIS sobrescribe periódicamente el ZIP sin versionarlo. Dos descargas en fechas distintas pueden dar archivos distintos.
 - **Catálogo de establecimientos:** es el catálogo "actualizado" publicado por DEIS, no un año cerrado.
-- **Años cerrados** (Urgencias 2020-2025, Egresos 2020-2025, Censo 2024, proyecciones INE, Casen 2022, dotación de camas 2010-2025 y 2019-2025, cuadros de género): se espera que el hash no cambie.
+- **Estadísticas Hospitalarias REM-20 del año en curso:** el DEIS reemplaza el libro con cada corte mensual (con otro nombre de archivo) y deja de exponer el anterior sin aviso. El manifest registra cada corte obtenido (`corte_mes`).
+- **Años cerrados** (Urgencias 2020-2025, Egresos 2020-2025, Censo 2024, proyecciones INE, Casen 2022, dotación de camas 2010-2025 y 2019-2025, Estadísticas Hospitalarias 2014-2025 y su categorización 2024-2025, cuadros de género): se espera que el hash no cambie.
 
 El manifest identifica **qué** snapshot se usó (URL, fecha y hash), pero una URL con un hash **no permite reconstruir** una versión antigua de una fuente mutable si el proveedor ya la reemplazó. Por eso el manifest se versiona: es la evidencia de qué snapshot respalda cada resultado.
 
