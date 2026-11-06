@@ -14,4 +14,8 @@ export const fmtDecimal = (v: number | null | undefined) => (v == null ? SIN_DAT
 export const fmtPct = (v: number | null | undefined) =>
   v == null ? SIN_DATO : `${v > 0 ? "+" : ""}${decimal.format(v)}%`;
 export const fmtFechaCorta = (iso: string | null) => (iso ? fechaCorta.format(new Date(iso)) : SIN_DATO);
+const mesCorto = new Intl.DateTimeFormat("es-CL", { month: "short", year: "2-digit", timeZone: "UTC" });
+const mesLargo = new Intl.DateTimeFormat("es-CL", { month: "long", year: "numeric", timeZone: "UTC" });
+export const fmtMesCorto = (iso: string | null) => (iso ? mesCorto.format(new Date(iso)) : SIN_DATO);
+export const fmtMesLargo = (iso: string | null) => (iso ? mesLargo.format(new Date(iso)) : SIN_DATO);
 export const fmtFechaLarga = (iso: string | null) => (iso ? fechaLarga.format(new Date(iso)) : SIN_DATO);

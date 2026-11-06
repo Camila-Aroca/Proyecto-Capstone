@@ -9,19 +9,21 @@ import {
   type EstablecimientoDetalle,
   type EstablecimientoResumen,
   type EstadoProceso,
+  type NivelColapso,
   type MetaEstablecimientos,
   type ObjetivoEstablecimiento,
   type SerieConPronostico,
 } from "../api";
 import { clasificar, fueraDelIntervalo } from "../cambio";
-import { fmtDecimal, fmtEntero, fmtFechaLarga, fmtPct, SIN_DATO } from "../format";
+import { fmtDecimal, fmtEntero, fmtFechaLarga, fmtMesCorto, fmtPct, SIN_DATO } from "../format";
 import { enlace, parametros, reflejar, RUTA_ESTABLECIMIENTOS, RUTA_TABLERO } from "../ruta";
 import { useTokens } from "../tokens";
 import { Alcance } from "./Alcance";
 import { AvisoLectura } from "./AvisoLectura";
 import { BadgeCambio } from "./BadgeCambio";
 import { BarraSuperior } from "./BarraSuperior";
-import { GraficoSerie, LeyendaSerie, TablaSerie, type LineaCamas } from "./GraficoSerie";
+import { GraficoSerie, LeyendaSerie, TablaSerie } from "./GraficoSerie";
+import { PanelOcupacion } from "./PanelOcupacion";
 
 const VENTANAS = [26, 52, 104] as const;
 const TODOS = "todos";
@@ -35,7 +37,7 @@ const OBJETIVOS: Record<ObjetivoEstablecimiento, { etiqueta: string; unidad: str
   hospitalizaciones_sm: {
     etiqueta: "Hospitalizaciones",
     unidad: "hospitalizaciones",
-    subtitulo: "Hospitalizaciones semanales indicadas desde la urgencia, por cualquier causa",
+    subtitulo: "Hospitalizaciones semanales indicadas desde la urgencia por trastornos mentales (F00-F99)",
   },
 };
 
@@ -59,7 +61,36 @@ function aSerie(detalle: EstablecimientoDetalle, objetivo: ObjetivoEstablecimien
   };
 }
 
-type Clave = "nombre" | "tipo" | "comuna" | "reciente" | "pronostico" | "cambio" | "camas";
+type Clave = "nombre" | "tipo" | "comuna" | "reciente" | "pronostico" | "cambio" | "camas" | "colapso";
+
+// Nivel de colapso: ocupacion de las camas de psiquiatria del hospital en los ultimos 12
+// meses publicados (REM-20). Umbrales de la literatura, los mismos de la API y del EDA.
+const NIVELES: Record<NivelColapso, { etiqueta: string; orden: number }> = {
+  holgura: { etiqueta: "Holgura", orden: 0 },
+  presion: { etiqueta: "Presión", orden: 1 },
+  saturacion: { etiqueta: "Saturación", orden: 2 },
+  sobre_capacidad: { etiqueta: "Sobre la capacidad", orden: 3 },
+};
+// Formula, clasificacion y fuentes del nivel de colapso: tooltip con el estilo de los
+// tooltips de los graficos (panel, 12 px), visible al pasar el mouse o al enfocar.
+function AyudaColapso() {
+  return (
+    <span
+      id="ayuda-colapso"
+      role="tooltip"
+      className="panel pointer-events-none invisible absolute right-0 top-full z-20 mt-1 w-80 whitespace-normal px-3 py-2 text-left text-[12px] font-normal text-(--ink) opacity-0 shadow-sm transition-opacity duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100"
+    >
+      <span className="block font-semibold">Nivel de colapso</span>
+      <span className="mt-0.5 block num">Ocupación = Σ días‑cama ocupados ÷ Σ días‑cama disponibles</span>
+      <span className="block text-2">Camas de psiquiatría del hospital, últimos 12 meses publicados.</span>
+      <span className="mt-1.5 block">Holgura &lt; 85 % · Presión 85–90 % · Saturación ≥ 90 %</span>
+      <span className="block">Sobre la capacidad: un área con más camas ocupadas que disponibles.</span>
+      <span className="mt-1.5 block text-3">
+        Fuentes: DEIS, REM-20. Umbrales: Royal College of Psychiatrists (85 %) y Bagust et al., BMJ 1999 (90 %).
+      </span>
+    </span>
+  );
+}
 
 const COLUMNAS: { clave: Clave; titulo: string; ayuda?: string; texto?: boolean }[] = [
   { clave: "nombre", titulo: "Establecimiento", texto: true },
@@ -69,6 +100,7 @@ const COLUMNAS: { clave: Clave; titulo: string; ayuda?: string; texto?: boolean 
   { clave: "pronostico", titulo: "Pronóstico", ayuda: "Promedio semanal pronosticado, 1 a 8 semanas" },
   { clave: "cambio", titulo: "Cambio", texto: true, ayuda: "Mismo criterio que la vista por comuna. El signo ≈ marca los que caben dentro de la fluctuación semanal." },
   { clave: "camas", titulo: "Camas psiq.", ayuda: "Dotación declarada de camas de psiquiatría (SNSS); — si el establecimiento no declara" },
+  { clave: "colapso", titulo: "Nivel de colapso", texto: true },
 ];
 
 function valor(fila: EstablecimientoResumen, objetivo: ObjetivoEstablecimiento, clave: Clave): number | string | null {
@@ -81,6 +113,10 @@ function valor(fila: EstablecimientoResumen, objetivo: ObjetivoEstablecimiento, 
     case "pronostico": return o?.incluido ? o.pronostico_promedio : null;
     case "cambio": return o?.incluido ? o.variacion_pct : null;
     case "camas": return fila.camas_psiquiatria;
+    // Primero el nivel y, dentro del nivel, la ocupacion: ordena de mas a menos saturado.
+    case "colapso": return fila.colapso_psiquiatria
+      ? NIVELES[fila.colapso_psiquiatria.nivel].orden * 1000 + fila.colapso_psiquiatria.indice_ocupacional
+      : null;
   }
 }
 
@@ -219,16 +255,6 @@ export function VistaEstablecimientos() {
   const motivo = detalle?.series.find((s) => s.objetivo === objetivo)?.motivo_sin_pronostico ?? resumenObjetivo?.motivo_sin_pronostico;
   const primero = serie?.pronostico?.[0];
   const { unidad, subtitulo } = OBJETIVOS[objetivo];
-  // Solo en hospitalizaciones: las camas se comparan con internaciones, no con atenciones de urgencia.
-  // Referencia de fondo: tenue, para que no compita con la serie. Sin dotacion declarada no hay linea.
-  const lineaCamas: LineaCamas | null = objetivo === "hospitalizaciones_sm" && resumen?.camas_psiquiatria != null
-    ? {
-        total: resumen.camas_psiquiatria,
-        etiqueta: "Camas de psiquiatría",
-        descripcion: `Camas de psiquiatría de ${resumen.nombre}: ${fmtEntero(resumen.camas_psiquiatria)}. Dotación declarada (SNSS), no ocupación.`,
-        sutil: true,
-      }
-    : null;
   const ultima = meta ? { ...meta.ultima_semana_observada, fecha_inicio: meta.ultima_semana_fecha_inicio } : null;
 
   return (
@@ -298,7 +324,7 @@ export function VistaEstablecimientos() {
                 )}
               </p>
             </div>
-            <LeyendaSerie tokens={tokens} intervalo={intervalo} conParcial={false} camas={lineaCamas} />
+            <LeyendaSerie tokens={tokens} intervalo={intervalo} conParcial={false} />
           </div>
 
           {!serie ? (
@@ -369,9 +395,24 @@ export function VistaEstablecimientos() {
               </dl>
 
               <div className="mt-5">
-                <GraficoSerie serie={serie} tokens={tokens} intervalo={intervalo} unidad={unidad} camas={lineaCamas} />
+                <GraficoSerie serie={serie} tokens={tokens} intervalo={intervalo} unidad={unidad} />
                 <TablaSerie serie={serie} intervalo={intervalo} unidad={unidad} />
               </div>
+
+              {objetivo === "hospitalizaciones_sm" && detalle?.ocupacion_psiquiatria?.length ? (
+                <PanelOcupacion
+                  key={detalle.establecimiento_codigo}
+                  meses={detalle.ocupacion_psiquiatria}
+                  areas={detalle.areas_psiquiatria ?? null}
+                  dotacion={resumen?.camas_psiquiatria ?? null}
+                  tokens={tokens}
+                />
+              ) : objetivo === "hospitalizaciones_sm" && resumen?.tipo === "Hospital" && detalle ? (
+                <p className="mt-5 border-t border-[var(--border)] pt-4 text-[13px] text-3">
+                  Este hospital no registra áreas de psiquiatría en las estadísticas hospitalarias (REM-20): no hay
+                  ocupación de camas de psiquiatría que mostrar (ausencia de dato, no cero).
+                </p>
+              ) : null}
             </div>
           )}
         </section>
@@ -434,15 +475,27 @@ export function VistaEstablecimientos() {
                         key={c.clave}
                         scope="col"
                         title={c.ayuda}
-                        className={`whitespace-nowrap px-2.5 py-1.5 text-[12px] font-semibold text-2 ${c.texto ? "text-left" : "text-right"}`}
+                        className={`whitespace-nowrap px-2.5 py-1.5 text-[12px] font-semibold text-2 ${c.texto ? "text-left" : "text-right"} ${c.clave === "colapso" ? "group relative" : ""}`}
                         aria-sort={orden.clave === c.clave ? (orden.asc ? "ascending" : "descending") : "none"}
                       >
-                        <button type="button" onClick={() => alternar(c.clave)} className="inline-flex min-h-6 items-center gap-1 hover:text-(--ink)">
+                        <button
+                          type="button"
+                          onClick={() => alternar(c.clave)}
+                          aria-describedby={c.clave === "colapso" ? "ayuda-colapso" : undefined}
+                          className="inline-flex min-h-6 items-center gap-1 hover:text-(--ink)"
+                        >
                           {c.titulo}
+                          {c.clave === "colapso" && (
+                            <svg aria-hidden width="12" height="12" viewBox="0 0 16 16" fill="none" className="opacity-60">
+                              <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
+                              <path d="M8 7v4.5M8 4.6v.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                            </svg>
+                          )}
                           <span aria-hidden className="text-[10px]" style={{ opacity: orden.clave === c.clave ? 1 : 0.35 }}>
                             {orden.clave === c.clave && !orden.asc ? "▼" : "▲"}
                           </span>
                         </button>
+                        {c.clave === "colapso" && <AyudaColapso />}
                       </th>
                     ))}
                   </tr>
@@ -507,6 +560,21 @@ export function VistaEstablecimientos() {
                         <td className="px-2.5 py-1.5 text-right">
                           {fila.camas_psiquiatria == null ? <span className="text-3">—</span> : fmtEntero(fila.camas_psiquiatria)}
                         </td>
+                        <td className="px-2.5 py-1.5 text-left">
+                          {fila.colapso_psiquiatria ? (
+                            <span
+                              className="inline-flex items-center gap-1.5 whitespace-nowrap"
+                              title={`Ocupación de camas de psiquiatría, ${fmtMesCorto(fila.colapso_psiquiatria.desde)} a ${fmtMesCorto(fila.colapso_psiquiatria.hasta)} (${fila.colapso_psiquiatria.meses} meses con camas habilitadas)`}
+                            >
+                              <span className={NIVELES[fila.colapso_psiquiatria.nivel].orden >= 2 ? "font-medium" : "text-2"}>
+                                {NIVELES[fila.colapso_psiquiatria.nivel].etiqueta}
+                              </span>
+                              <span className="text-[12px] text-3 num">{fmtDecimal(fila.colapso_psiquiatria.indice_ocupacional)}%</span>
+                            </span>
+                          ) : (
+                            <span className="text-3">—</span>
+                          )}
+                        </td>
                       </tr>
                     );
                   })}
@@ -521,8 +589,10 @@ export function VistaEstablecimientos() {
         <footer className="border-t pb-6 pt-4 text-[12px] text-3" style={{ borderColor: "var(--border)" }}>
           <p className="max-w-[90ch]">
             Fuente: DEIS/MINSAL, atenciones de urgencia por causas de salud mental (ID36) y hospitalizaciones indicadas
-            desde la urgencia (ID42, por cualquier causa). Camas: DEIS/DIGERA, dotación del SNSS. La cifra regional
-            se lee en la vista por comuna.
+            desde la urgencia por trastornos mentales (ID42, F00-F99). Camas: DEIS/DIGERA, dotación del SNSS;
+            ocupación: DEIS, estadísticas hospitalarias REM-20 (promedio mensual). Nivel de colapso: ocupación de las
+            camas de psiquiatría en los últimos 12 meses publicados, con los umbrales de 85 % (Royal College of
+            Psychiatrists) y 90 % (Bagust et al., BMJ 1999). La cifra regional se lee en la vista por comuna.
           </p>
           <p className="mt-1">
             Modelo: <span className="font-mono text-[11px]">{metaObjetivo?.modelo ?? "—"}</span>

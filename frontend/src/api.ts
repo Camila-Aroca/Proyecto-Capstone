@@ -132,6 +132,18 @@ export interface ResumenObjetivoEstablecimiento {
   limite_superior_promedio: number | null;
 }
 
+export type NivelColapso = "holgura" | "presion" | "saturacion" | "sobre_capacidad";
+
+/** Ocupacion de las camas de psiquiatria del hospital en los ultimos 12 meses publicados (REM-20). */
+export interface ColapsoPsiquiatria {
+  nivel: NivelColapso;
+  indice_ocupacional: number;
+  meses: number;
+  area_mes_sobre_capacidad: number;
+  desde: string;
+  hasta: string;
+}
+
 export interface EstablecimientoResumen {
   establecimiento_codigo: number;
   nombre: string;
@@ -143,6 +155,8 @@ export interface EstablecimientoResumen {
   /** Dotacion declarada de psiquiatria; null = sin dato, nunca 0. */
   camas_psiquiatria: number | null;
   objetivos: Partial<Record<ObjetivoEstablecimiento, ResumenObjetivoEstablecimiento>>;
+  /** Null = sin areas de psiquiatria en el REM-20 (no es cero). */
+  colapso_psiquiatria?: ColapsoPsiquiatria | null;
 }
 
 export interface PuntoSemanal {
@@ -160,6 +174,39 @@ export interface SerieObjetivoEstablecimiento {
   motivo_sin_pronostico: string | null;
 }
 
+/** Total mensual de las camas de psiquiatria de un hospital (REM-20, promedio diario del mes). */
+export interface PuntoOcupacionMensual {
+  ano: number;
+  mes: number;
+  fecha_inicio: string;
+  camas_ocupadas_promedio: number;
+  camas_disponibles_promedio: number;
+  /** Disponibles - ocupadas por dia: la brecha. Negativa = sobre la capacidad. */
+  camas_libres_promedio: number;
+  indice_ocupacional: number | null;
+}
+
+/** Saturacion de un area de psiquiatria en la ventana mostrada. */
+export interface AreaPsiquiatria {
+  nivel_cuidado_codigo: number;
+  nivel_cuidado: string;
+  meses: number;
+  /** Meses con menos de una cama libre por dia, en promedio. */
+  meses_sin_holgura: number;
+  meses_sobre_capacidad: number;
+  indice_ocupacional: number | null;
+  ultimo_camas_ocupadas_promedio: number;
+  ultimo_camas_disponibles_promedio: number;
+  ultimo_camas_libres_promedio: number;
+  /** Camas declaradas del area (libro de dotacion, ultimo ano); null = no declara, no cero. */
+  dotacion_declarada?: number | null;
+  ano_dotacion?: number | null;
+  /** Causa observada de que el area no tenga dotacion declarada. */
+  motivo_sin_dotacion?: string | null;
+  /** Ocupacion mensual del area en la misma ventana. */
+  serie: PuntoOcupacionMensual[];
+}
+
 export interface EstablecimientoDetalle {
   establecimiento_codigo: number;
   nombre: string;
@@ -168,6 +215,9 @@ export interface EstablecimientoDetalle {
   comuna: string;
   camas_psiquiatria: number | null;
   series: SerieObjetivoEstablecimiento[];
+  /** Null = el hospital no tiene areas de psiquiatria en el REM-20 (no es cero). */
+  ocupacion_psiquiatria?: PuntoOcupacionMensual[] | null;
+  areas_psiquiatria?: AreaPsiquiatria[] | null;
 }
 
 export interface MetaObjetivoEstablecimiento {
