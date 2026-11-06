@@ -213,6 +213,23 @@ class ResumenObjetivoEstablecimiento(BaseModel):
     limite_superior_promedio: float | None
 
 
+NivelColapso = Literal["holgura", "presion", "saturacion", "sobre_capacidad"]
+
+
+class ColapsoPsiquiatria(BaseModel):
+    nivel: NivelColapso = Field(
+        description=(
+            "Ocupación de las camas de psiquiatría del hospital en la ventana (razón de sumas): holgura < 85 %, "
+            "presión 85-90 %, saturación >= 90 %; sobre_capacidad si algún área superó sus camas disponibles."
+        )
+    )
+    indice_ocupacional: float
+    meses: int = Field(description="Meses de la ventana con camas habilitadas en el hospital.")
+    area_mes_sobre_capacidad: int
+    desde: date
+    hasta: date
+
+
 class EstablecimientoResumen(BaseModel):
     establecimiento_codigo: int
     nombre: str
@@ -225,6 +242,9 @@ class EstablecimientoResumen(BaseModel):
         description="Dotación declarada de psiquiatría (último año del libro SNSS); null si no informa."
     )
     objetivos: dict[ObjetivoEstablecimiento, ResumenObjetivoEstablecimiento]
+    colapso_psiquiatria: ColapsoPsiquiatria | None = Field(
+        default=None, description="Null si el establecimiento no tiene áreas de psiquiatría en el REM-20.",
+    )
 
 
 class PuntoSemanal(BaseModel):
@@ -254,6 +274,42 @@ class SerieObjetivoEstablecimiento(BaseModel):
     motivo_sin_pronostico: str | None = None
 
 
+class PuntoOcupacionMensual(BaseModel):
+    ano: int
+    mes: int
+    fecha_inicio: date
+    camas_ocupadas_promedio: float = Field(
+        description="Días cama ocupados del mes / días del mes: pacientes en cama de psiquiatría por día, en promedio."
+    )
+    camas_disponibles_promedio: float = Field(description="Días cama disponibles del mes / días del mes.")
+    camas_libres_promedio: float = Field(
+        description="Disponibles − ocupadas, por día en promedio: la brecha de capacidad. Negativa = sobre la capacidad."
+    )
+    indice_ocupacional: float | None = Field(
+        description="100 · ocupados / disponibles del mes (razón de sumas); null si no hubo camas disponibles."
+    )
+
+
+class AreaPsiquiatria(BaseModel):
+    nivel_cuidado_codigo: int
+    nivel_cuidado: str
+    meses: int = Field(description="Meses de la ventana con camas disponibles (habilitadas) en el área.")
+    meses_sin_holgura: int = Field(description="Meses con menos de una cama libre por día, en promedio.")
+    meses_sobre_capacidad: int = Field(description="Meses con más días cama ocupados que disponibles.")
+    indice_ocupacional: float | None = Field(description="Del período, como razón de sumas.")
+    ultimo_camas_ocupadas_promedio: float
+    ultimo_camas_disponibles_promedio: float
+    ultimo_camas_libres_promedio: float
+    dotacion_declarada: float | None = Field(
+        default=None, description="Camas declaradas del área en el último año del libro de dotación; null si no declara.",
+    )
+    ano_dotacion: int | None = None
+    motivo_sin_dotacion: str | None = Field(
+        default=None, description="Por qué el área no tiene dotación declarada; null si la tiene.",
+    )
+    serie: list[PuntoOcupacionMensual] = Field(description="Ocupación mensual del área en la misma ventana.")
+
+
 class EstablecimientoDetalle(BaseModel):
     establecimiento_codigo: int
     nombre: str
@@ -262,6 +318,16 @@ class EstablecimientoDetalle(BaseModel):
     comuna: str
     camas_psiquiatria: float | None
     series: list[SerieObjetivoEstablecimiento]
+    ocupacion_psiquiatria: list[PuntoOcupacionMensual] | None = Field(
+        default=None,
+        description=(
+            "Ocupación mensual de las camas de psiquiatría (REM-20, último mes publicado), en la ventana de la "
+            "historia semanal. Null si el hospital no tiene áreas de psiquiatría en el REM-20 o la capa no existe."
+        ),
+    )
+    areas_psiquiatria: list[AreaPsiquiatria] | None = Field(
+        default=None, description="Saturación de cada área de psiquiatría en la misma ventana; null si no hay.",
+    )
 
 
 class MetaObjetivoEstablecimiento(BaseModel):

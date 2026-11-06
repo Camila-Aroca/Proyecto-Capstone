@@ -26,6 +26,13 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
 from src.api.schemas import EstablecimientoDetalle, EstablecimientoResumen, MetaEstablecimientos
 from src.api.service import UMBRAL_CAMBIO_PCT, Estado, registros
+from src.data.build_dim_camas_psiquiatria_hospital_rm import camas_psiquiatria_por_area, ultimo_ano_camas
+from src.data.build_mart_ocupacion_psiquiatria_hospital_rm import (
+    motivo_sin_dotacion,
+    nivel_colapso,
+    por_hospital,
+    resumen_areas,
+)
 from src.models.establecimientos import OBJETIVOS, load_current_weekly, load_mart
 from src.models.features import SEASONAL_PERIOD
 from src.models.holdout import holdout_years
@@ -57,6 +64,8 @@ class RutasEstablecimientos:
     holdout_resumen: Path = Path("reports/modeling/holdout_establecimientos_sm_resumen.csv")
     oferta: Path = Path("data/processed/geo/dim_oferta_urgencia_rm.parquet")
     camas: Path = Path("data/processed/camas/dim_camas_psiquiatria_hospital_rm.parquet")
+    ocupacion: Path = Path("data/processed/marts/mart_ocupacion_psiquiatria_hospital_rm.parquet")
+    dotacion: Path = Path("data/processed/camas/dotacion_camas_snss.parquet")
 
 
 # --------------------------------------------------------------------------
@@ -170,6 +179,81 @@ def detalle_establecimiento(
     return {**atributos.to_dict(), "establecimiento_codigo": codigo, "series": series}
 
 
+def _areas_en_ventana(ocupacion: pd.DataFrame | None, codigo: int, desde: Any) -> pd.DataFrame:
+    """Filas área-mes del hospital desde el mes de la primera semana mostrada."""
+    if ocupacion is None:
+        return pd.DataFrame()
+    propia = ocupacion[ocupacion["establecimiento_codigo"] == codigo]
+    if desde is not None and not pd.isna(desde):
+        inicio = pd.Timestamp(desde).to_period("M").start_time.date()
+        propia = propia[propia["fecha_inicio_mes"] >= inicio]
+    return propia
+
+
+def ocupacion_en_ventana(ocupacion: pd.DataFrame | None, codigo: int, desde: Any) -> list[dict[str, Any]] | None:
+    """Total mensual de psiquiatría del hospital, en la misma ventana que la historia semanal.
+
+    Suma los días cama de sus áreas (no promedia índices). Null si el hospital no
+    tiene filas: ausencia de dato, no cero.
+    """
+    areas = _areas_en_ventana(ocupacion, codigo, desde)
+    if areas.empty:
+        return None
+    return _puntos_mensuales(por_hospital(areas))
+
+
+def _puntos_mensuales(frame: pd.DataFrame) -> list[dict[str, Any]]:
+    """Filas mensuales con los campos de `PuntoOcupacionMensual`, redondeadas a 1 decimal."""
+    salida = frame.sort_values(["ano", "mes"]).rename(columns={"fecha_inicio_mes": "fecha_inicio"})
+    for columna in ("camas_ocupadas_promedio", "camas_disponibles_promedio", "camas_libres_promedio",
+                    "indice_ocupacional"):
+        salida[columna] = salida[columna].round(1)
+    return registros(salida[["ano", "mes", "fecha_inicio", "camas_ocupadas_promedio", "camas_disponibles_promedio",
+                             "camas_libres_promedio", "indice_ocupacional"]])
+
+
+def dotacion_por_area(dotacion: pd.DataFrame | None) -> pd.DataFrame | None:
+    """Camas declaradas por área de psiquiatría en el último año del libro (detectado, no fijo)."""
+    if dotacion is None:
+        return None
+    ano = ultimo_ano_camas(list(dotacion.columns))
+    return camas_psiquiatria_por_area(dotacion, ano).assign(ano_dotacion=ano)
+
+
+def areas_en_ventana(
+    ocupacion: pd.DataFrame | None, codigo: int, desde: Any, dotacion: pd.DataFrame | None = None,
+) -> list[dict[str, Any]] | None:
+    """Saturación de cada área de psiquiatría del hospital en la ventana; null si no hay áreas.
+
+    Cada área trae su dotación declarada (mismo código de área funcional en ambos
+    libros) cuando el libro de dotación la informa; si no, null, nunca cero.
+    """
+    areas = _areas_en_ventana(ocupacion, codigo, desde)
+    if areas.empty:
+        return None
+    resumen = resumen_areas(areas).sort_values(["meses_sin_holgura", "indice_ocupacional"], ascending=False)
+    for columna in ("indice_ocupacional", "ultimo_camas_ocupadas_promedio", "ultimo_camas_disponibles_promedio",
+                    "ultimo_camas_libres_promedio"):
+        resumen[columna] = resumen[columna].round(1)
+    filas = registros(resumen[["nivel_cuidado_codigo", "nivel_cuidado", "meses", "meses_sin_holgura",
+                               "meses_sobre_capacidad", "indice_ocupacional", "ultimo_camas_ocupadas_promedio",
+                               "ultimo_camas_disponibles_promedio", "ultimo_camas_libres_promedio"]])
+    propias = (dotacion[dotacion["establecimiento_codigo"] == codigo].set_index("area_funcional_codigo")
+               if dotacion is not None else None)
+    ano_libro = int(dotacion["ano_dotacion"].iloc[0]) if dotacion is not None and not dotacion.empty else None
+    primeras = ocupacion[ocupacion["establecimiento_codigo"] == codigo].groupby("nivel_cuidado_codigo")["ano"].min()
+    for fila in filas:
+        fila["serie"] = _puntos_mensuales(areas[areas["nivel_cuidado_codigo"] == fila["nivel_cuidado_codigo"]])
+        declarada = None if propias is None or fila["nivel_cuidado_codigo"] not in propias.index \
+            else propias.loc[fila["nivel_cuidado_codigo"]]
+        fila["dotacion_declarada"] = None if declarada is None or pd.isna(declarada["camas"]) \
+            else float(declarada["camas"])
+        fila["ano_dotacion"] = None if declarada is None else int(declarada["ano_dotacion"])
+        fila["motivo_sin_dotacion"] = motivo_sin_dotacion(
+            declarada, ano_libro, int(primeras.get(fila["nivel_cuidado_codigo"], 0)) or None)
+    return filas
+
+
 def cobertura_objetivo(holdout: pd.DataFrame | None, objetivo: str, modelo: str) -> float | None:
     """Cobertura fuera de muestra del modelo en los establecimientos, ponderada por evaluaciones."""
     if holdout is None:
@@ -197,6 +281,9 @@ class ServicioEstablecimientos:
     atributos: pd.DataFrame | None = None
     motivos: dict[tuple[str, int], str] = field(default_factory=dict)
     holdout: pd.DataFrame | None = None
+    ocupacion: pd.DataFrame | None = None
+    dotacion_areas: pd.DataFrame | None = None
+    colapso: pd.DataFrame | None = None
     estado: Estado = field(default_factory=Estado)
     _bloqueo: threading.Lock = field(default_factory=threading.Lock, repr=False)
 
@@ -227,6 +314,14 @@ class ServicioEstablecimientos:
                 if self.rutas.holdout_resumen.exists() else None
             )
             self.seleccion = json.loads(self.rutas.seleccion.read_text(encoding="utf-8"))
+            # Capa opcional: sin el mart, el detalle sale sin ocupación en vez de fallar.
+            self.ocupacion = (
+                pq.read_table(self.rutas.ocupacion).to_pandas() if self.rutas.ocupacion.exists() else None
+            )
+            self.colapso = nivel_colapso(self.ocupacion) if self.ocupacion is not None else None
+            self.dotacion_areas = dotacion_por_area(
+                pq.read_table(self.rutas.dotacion).to_pandas() if self.rutas.dotacion.exists() else None
+            )
             self.semanal, self.pronostico, self.manifiesto = semanal, pronostico, manifiesto
             self.motivos = motivos_sin_pronostico(universo, pronostico, manifiesto)
             self.estado.marcar("listo")
@@ -290,7 +385,25 @@ def listar_establecimientos(servicio: ServicioE) -> list[dict[str, Any]]:
     """Establecimientos de urgencia con su resumen de atenciones y hospitalizaciones esperadas."""
     _exigir(servicio)
     filas = resumen_establecimientos(servicio.semanal, servicio.pronostico, servicio.atributos, servicio.motivos)
-    return [{k: (None if pd.isna(v) else v) if not isinstance(v, dict) else v for k, v in f.items()} for f in filas]
+    colapso = colapso_por_establecimiento(servicio.colapso)
+    return [{**{k: (None if pd.isna(v) else v) if not isinstance(v, dict) else v for k, v in f.items()},
+             "colapso_psiquiatria": colapso.get(f["establecimiento_codigo"])} for f in filas]
+
+
+def colapso_por_establecimiento(colapso: pd.DataFrame | None) -> dict[int, dict[str, Any]]:
+    """Nivel de colapso de cada hospital con áreas de psiquiatría, por código."""
+    if colapso is None or colapso.empty:
+        return {}
+    salida = {}
+    for fila in colapso.itertuples():
+        if fila.nivel is None:
+            continue
+        salida[int(fila.establecimiento_codigo)] = {
+            "nivel": fila.nivel, "indice_ocupacional": round(float(fila.indice_ocupacional), 1),
+            "meses": int(fila.meses), "area_mes_sobre_capacidad": int(fila.area_mes_sobre_capacidad),
+            "desde": fila.desde, "hasta": fila.hasta,
+        }
+    return salida
 
 
 @router.get("/establecimientos-meta", response_model=MetaEstablecimientos)
@@ -330,6 +443,8 @@ def meta_establecimientos(servicio: ServicioE) -> dict[str, Any]:
             "Las hospitalizaciones se cuentan en el hospital donde ocurrió la urgencia, no donde "
             "quedó hospitalizado el paciente: no miden la ocupación de sus camas.",
             "Las camas son la dotación anual declarada, no camas disponibles.",
+            "La ocupación de camas de psiquiatría es el promedio diario de cada mes (REM-20, último mes "
+            "publicado), no ocupación en tiempo real; cuenta pacientes de cualquier origen, no solo de la urgencia.",
             "Un establecimiento sin pronóstico no tiene demanda cero: no tiene un pronóstico confiable.",
         ],
     }
@@ -347,6 +462,11 @@ def establecimiento(
     if codigo not in atributos.index:
         raise HTTPException(status_code=404, detail="El establecimiento no existe en los datos de Urgencias.")
     fila = atributos.loc[codigo].where(atributos.loc[codigo].notna(), None)
-    return detalle_establecimiento(
+    detalle = detalle_establecimiento(
         codigo, servicio.semanal, servicio.pronostico, servicio.calendario, fila, servicio.motivos, semanas,
     )
+    historia = detalle["series"][0]["historico"]
+    desde = historia[0]["fecha_inicio"] if historia else None
+    detalle["ocupacion_psiquiatria"] = ocupacion_en_ventana(servicio.ocupacion, codigo, desde)
+    detalle["areas_psiquiatria"] = areas_en_ventana(servicio.ocupacion, codigo, desde, servicio.dotacion_areas)
+    return detalle
