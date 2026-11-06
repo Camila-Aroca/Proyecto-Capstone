@@ -340,6 +340,21 @@ STAGES = {
         "outputs": ["data/processed/camas/dim_camas_psiquiatria_hospital_rm.parquet"],
         "depends_on": ["clean_dotacion_camas", "build_dim_oferta_urgencia_rm"]
     },
+    "build_mart_ocupacion_psiquiatria_hospital_rm": {
+        "module": "src.data.build_mart_ocupacion_psiquiatria_hospital_rm",
+        "outputs": [
+            "data/processed/marts/mart_ocupacion_psiquiatria_hospital_rm.parquet",
+        ],
+        "depends_on": ["clean_estadisticas_hospitalarias", "build_dim_oferta_urgencia_rm"]
+    },
+    "eda_mart_ocupacion_psiquiatria_hospital_rm": {
+        "module": "scripts.eda_mart_ocupacion_psiquiatria_hospital_rm",
+        "outputs": [
+            "reports/eda/eda_mart_ocupacion_psiquiatria_hospital_rm.md",
+            "reports/eda/eda_mart_ocupacion_psiquiatria_hospital_rm_resumen.json",
+        ],
+        "depends_on": ["build_mart_ocupacion_psiquiatria_hospital_rm", "build_dim_camas_psiquiatria_hospital_rm"]
+    },
     "build_capa_oferta_urgencia_rm": {
         "module": "src.geo.build_capa_oferta_urgencia_rm",
         "outputs": ["data/processed/geo/capa_oferta_urgencia_rm.parquet"],
@@ -459,6 +474,8 @@ PIPELINE_ORDER = [
     "build_urgencias_comuna_etario_mart",
     "build_dim_oferta_urgencia_rm",
     "build_dim_camas_psiquiatria_hospital_rm",
+    "build_mart_ocupacion_psiquiatria_hospital_rm",
+    "eda_mart_ocupacion_psiquiatria_hospital_rm",
     "build_capa_oferta_urgencia_rm",
     "resolve_coordenadas_establecimientos",
     "build_cobertura_urgencia_comuna",

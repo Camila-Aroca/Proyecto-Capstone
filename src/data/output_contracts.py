@@ -289,6 +289,11 @@ def validate_expected_schema(path: Path) -> bool:
             clean_dotacion_camas.SNSS_FILENAME: clean_dotacion_camas.SNSS_SCHEMA,
             clean_dotacion_camas.NO_SNSS_FILENAME: clean_dotacion_camas.NO_SNSS_SCHEMA,
         }[name]
+    elif name in {"eda_mart_ocupacion_psiquiatria_hospital_rm.md",
+                  "eda_mart_ocupacion_psiquiatria_hospital_rm_resumen.json"}:
+        from scripts.eda_mart_ocupacion_psiquiatria_hospital_rm import validate_outputs
+        validate_outputs()
+        return True
     elif name in {"eda_estadisticas_hospitalarias.md", "eda_estadisticas_hospitalarias_resumen.json"}:
         from scripts.eda_estadisticas_hospitalarias import validate_outputs
         validate_outputs()
@@ -299,6 +304,9 @@ def validate_expected_schema(path: Path) -> bool:
         return True
     elif name == "dim_camas_psiquiatria_hospital_rm.parquet":
         from src.data.build_dim_camas_psiquiatria_hospital_rm import SCHEMA
+        schemas[name] = SCHEMA
+    elif name == "mart_ocupacion_psiquiatria_hospital_rm.parquet":
+        from src.data.build_mart_ocupacion_psiquiatria_hospital_rm import SCHEMA
         schemas[name] = SCHEMA
     elif ((name.endswith(".parquet") and "contexto_genero" in parts)
           or name == "mart_contexto_genero_indicador_sexo.parquet"):

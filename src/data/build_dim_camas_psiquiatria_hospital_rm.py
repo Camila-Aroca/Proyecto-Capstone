@@ -80,18 +80,29 @@ def ultimo_ano_camas(columnas: list[str]) -> int:
     return max(anos)
 
 
-def camas_psiquiatria_por_establecimiento(camas: pd.DataFrame, ano: int) -> pd.DataFrame:
-    """Suma de camas de las áreas de psiquiatría por establecimiento en `ano`.
+def camas_psiquiatria_por_area(camas: pd.DataFrame, ano: int) -> pd.DataFrame:
+    """Camas declaradas de cada área de psiquiatría de cada establecimiento en `ano`.
 
-    `camas_psiquiatria` es nula si ninguna área de psiquiatría declara cifra;
-    `n_areas_psiquiatria` cuenta las áreas con cifra declarada.
+    Mismo criterio de área que la suma por establecimiento (nombre con "Psiquiatr",
+    sin la fila Total ni el área sociosanitaria). `camas` nula = área sin cifra.
     """
-    columna = f"camas_{ano}"
     es_psiquiatria = camas["area_funcional"].fillna("").str.contains(AREA_PSIQUIATRIA)
     areas = camas[es_psiquiatria & (camas["area_funcional_codigo"] != AREA_TOTAL_CODIGO)]
     if areas.duplicated(["establecimiento_codigo", "area_funcional_codigo"]).any():
         raise ValueError("La dotación repite un área de psiquiatría por establecimiento.")
-    agregado = areas.groupby("establecimiento_codigo")[columna].agg(
+    return areas[["establecimiento_codigo", "area_funcional_codigo", f"camas_{ano}"]].rename(
+        columns={f"camas_{ano}": "camas"}).reset_index(drop=True)
+
+
+def camas_psiquiatria_por_establecimiento(camas: pd.DataFrame, ano: int) -> pd.DataFrame:
+    """Suma de camas de las áreas de psiquiatría por establecimiento en `ano`.
+
+    `camas_psiquiatria` es nula si ninguna área de psiquiatría declara cifra;
+    `n_areas_psiquiatria` cuenta las áreas con cifra declarada. Se construye desde
+    `camas_psiquiatria_por_area`, de modo que el total y las áreas cuadran siempre.
+    """
+    areas = camas_psiquiatria_por_area(camas, ano)
+    agregado = areas.groupby("establecimiento_codigo")["camas"].agg(
         camas_psiquiatria=lambda s: s.sum(min_count=1),
         n_areas_psiquiatria="count",
     )

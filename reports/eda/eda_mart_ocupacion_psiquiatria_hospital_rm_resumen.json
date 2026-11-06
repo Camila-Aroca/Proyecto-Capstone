@@ -1,0 +1,1245 @@
+{
+  "mart_sha256": "cdcaa7fa55a02f097420e10de48b5509a62f4bcab4630d2c647f6cbdbeb02c55",
+  "filas": 3444,
+  "hospitales": 14,
+  "areas": 28,
+  "periodo": {
+    "desde": "2014-01",
+    "hasta": "2026-09"
+  },
+  "identidad": {
+    "area_mes": 3444,
+    "max_diferencia": 0.004839,
+    "max_tolerancia": 0.005,
+    "fuera_de_tolerancia": 0
+  },
+  "indice_rm_por_ano": {
+    "2014": 88.47,
+    "2015": 88.41,
+    "2016": 87.47,
+    "2017": 86.89,
+    "2018": 88.16,
+    "2019": 88.18,
+    "2020": 81.6,
+    "2021": 80.0,
+    "2022": 80.83,
+    "2023": 84.01,
+    "2024": 89.63,
+    "2025": 89.39,
+    "2026": 91.18
+  },
+  "area_mes_sobre_capacidad": [
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2014-01",
+      "indice_ocupacional": 100.86
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2014-02",
+      "indice_ocupacional": 100.36
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2014-03",
+      "indice_ocupacional": 101.4
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2014-04",
+      "indice_ocupacional": 101.11
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2014-05",
+      "indice_ocupacional": 100.32
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2014-06",
+      "indice_ocupacional": 100.11
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2014-07",
+      "indice_ocupacional": 100.11
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2014-08",
+      "indice_ocupacional": 101.4
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2014-09",
+      "indice_ocupacional": 100.89
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2014-10",
+      "indice_ocupacional": 100.11
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2014-12",
+      "indice_ocupacional": 100.22
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2015-01",
+      "indice_ocupacional": 100.54
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2015-02",
+      "indice_ocupacional": 100.24
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2015-03",
+      "indice_ocupacional": 100.22
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2015-04",
+      "indice_ocupacional": 100.22
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2015-06",
+      "indice_ocupacional": 100.11
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2015-08",
+      "indice_ocupacional": 100.32
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2017-01",
+      "indice_ocupacional": 101.08
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 423,
+      "periodo": "2018-11",
+      "indice_ocupacional": 100.34
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2014-01",
+      "indice_ocupacional": 126.21
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2014-02",
+      "indice_ocupacional": 130.71
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2014-03",
+      "indice_ocupacional": 132.82
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2014-04",
+      "indice_ocupacional": 125.83
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2014-05",
+      "indice_ocupacional": 118.87
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2014-06",
+      "indice_ocupacional": 122.92
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2014-07",
+      "indice_ocupacional": 122.98
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2014-08",
+      "indice_ocupacional": 125.16
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2014-09",
+      "indice_ocupacional": 126.42
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2014-10",
+      "indice_ocupacional": 124.92
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2014-11",
+      "indice_ocupacional": 124.67
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2014-12",
+      "indice_ocupacional": 124.11
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2015-01",
+      "indice_ocupacional": 119.35
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2015-02",
+      "indice_ocupacional": 119.38
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2015-03",
+      "indice_ocupacional": 124.6
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2015-04",
+      "indice_ocupacional": 131.33
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2015-05",
+      "indice_ocupacional": 126.37
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2015-06",
+      "indice_ocupacional": 129.5
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2015-07",
+      "indice_ocupacional": 127.34
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2015-08",
+      "indice_ocupacional": 128.71
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2015-09",
+      "indice_ocupacional": 125.33
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2015-10",
+      "indice_ocupacional": 129.03
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2015-11",
+      "indice_ocupacional": 128.17
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2015-12",
+      "indice_ocupacional": 129.92
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2016-01",
+      "indice_ocupacional": 125.65
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2016-02",
+      "indice_ocupacional": 120.95
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2016-03",
+      "indice_ocupacional": 120.73
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2016-04",
+      "indice_ocupacional": 118.17
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2016-05",
+      "indice_ocupacional": 120.08
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2016-06",
+      "indice_ocupacional": 123.42
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2016-07",
+      "indice_ocupacional": 124.76
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2016-08",
+      "indice_ocupacional": 126.85
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2016-09",
+      "indice_ocupacional": 124.42
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2016-10",
+      "indice_ocupacional": 126.13
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2016-11",
+      "indice_ocupacional": 119.5
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2016-12",
+      "indice_ocupacional": 107.42
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2017-01",
+      "indice_ocupacional": 105.48
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2017-02",
+      "indice_ocupacional": 106.16
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2017-03",
+      "indice_ocupacional": 104.84
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2017-04",
+      "indice_ocupacional": 101.5
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2017-05",
+      "indice_ocupacional": 100.73
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2017-09",
+      "indice_ocupacional": 100.25
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2017-10",
+      "indice_ocupacional": 100.24
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 424,
+      "periodo": "2017-12",
+      "indice_ocupacional": 100.4
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 425,
+      "periodo": "2015-02",
+      "indice_ocupacional": 107.14
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 426,
+      "periodo": "2014-07",
+      "indice_ocupacional": 102.69
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 426,
+      "periodo": "2014-08",
+      "indice_ocupacional": 118.82
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 426,
+      "periodo": "2014-12",
+      "indice_ocupacional": 100.65
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 426,
+      "periodo": "2019-04",
+      "indice_ocupacional": 102.31
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 418,
+      "periodo": "2015-12",
+      "indice_ocupacional": 100.8
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2016-04",
+      "indice_ocupacional": 101.91
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2016-05",
+      "indice_ocupacional": 100.64
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2016-09",
+      "indice_ocupacional": 101.94
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2017-12",
+      "indice_ocupacional": 101.48
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2018-04",
+      "indice_ocupacional": 101.47
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2018-06",
+      "indice_ocupacional": 101.15
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2018-07",
+      "indice_ocupacional": 101.06
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2018-08",
+      "indice_ocupacional": 102.08
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2018-09",
+      "indice_ocupacional": 102.27
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2018-10",
+      "indice_ocupacional": 106.25
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2018-11",
+      "indice_ocupacional": 104.08
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2019-03",
+      "indice_ocupacional": 102.07
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2019-09",
+      "indice_ocupacional": 100.58
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2019-10",
+      "indice_ocupacional": 103.57
+    },
+    {
+      "establecimiento_codigo": 113130,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2018-09",
+      "indice_ocupacional": 101.67
+    },
+    {
+      "establecimiento_codigo": 113130,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2018-12",
+      "indice_ocupacional": 100.54
+    },
+    {
+      "establecimiento_codigo": 113130,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2019-04",
+      "indice_ocupacional": 100.83
+    },
+    {
+      "establecimiento_codigo": 113130,
+      "nivel_cuidado_codigo": 421,
+      "periodo": "2019-05",
+      "indice_ocupacional": 100.79
+    },
+    {
+      "establecimiento_codigo": 113170,
+      "nivel_cuidado_codigo": 419,
+      "periodo": "2015-06",
+      "indice_ocupacional": 125.95
+    }
+  ],
+  "hospital_mes_sobre_capacidad": 6,
+  "colapso": {
+    "umbrales_pct": {
+      "presion": 85.0,
+      "saturacion": 90.0
+    },
+    "hospitales": [
+      {
+        "establecimiento_codigo": 109101,
+        "establecimiento_nombre": "Hospital Clínico de Niños Dr. Roberto del Río (Santiago, Independencia)",
+        "nivel": "saturacion",
+        "indice_ocupacional": 99.7,
+        "meses": 12,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      },
+      {
+        "establecimiento_codigo": 112100,
+        "establecimiento_nombre": "Hospital Del Salvador de Santiago",
+        "nivel": "saturacion",
+        "indice_ocupacional": 99.5,
+        "meses": 12,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      },
+      {
+        "establecimiento_codigo": 114105,
+        "establecimiento_nombre": "Hospital Clínico Metropolitano La Florida Dra. Eloísa Díaz Insunza",
+        "nivel": "saturacion",
+        "indice_ocupacional": 96.9,
+        "meses": 12,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      },
+      {
+        "establecimiento_codigo": 111101,
+        "establecimiento_nombre": "Hospital Clínico Metropolitano El Carmen Doctor Luis Valentín Ferrada",
+        "nivel": "saturacion",
+        "indice_ocupacional": 96.5,
+        "meses": 9,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      },
+      {
+        "establecimiento_codigo": 112102,
+        "establecimiento_nombre": "Hospital de Niños Dr. Luis Calvo Mackenna",
+        "nivel": "saturacion",
+        "indice_ocupacional": 96.4,
+        "meses": 12,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      },
+      {
+        "establecimiento_codigo": 114101,
+        "establecimiento_nombre": "Complejo Hospitalario Dr. Sótero del Río (Santiago, Puente Alto)",
+        "nivel": "saturacion",
+        "indice_ocupacional": 96.4,
+        "meses": 12,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      },
+      {
+        "establecimiento_codigo": 113100,
+        "establecimiento_nombre": "Hospital Barros Luco Trudeau (Santiago, San Miguel)",
+        "nivel": "saturacion",
+        "indice_ocupacional": 96.0,
+        "meses": 12,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      },
+      {
+        "establecimiento_codigo": 113180,
+        "establecimiento_nombre": "Hospital El Pino (Santiago, San Bernardo)",
+        "nivel": "saturacion",
+        "indice_ocupacional": 96.0,
+        "meses": 12,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      },
+      {
+        "establecimiento_codigo": 109102,
+        "establecimiento_nombre": "Instituto Psiquiátrico Dr. José Horwitz Barak (Santiago, Recoleta)",
+        "nivel": "saturacion",
+        "indice_ocupacional": 94.3,
+        "meses": 12,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      },
+      {
+        "establecimiento_codigo": 113130,
+        "establecimiento_nombre": "Hospital Dr. Exequiel González Cortés (Santiago, San Miguel)",
+        "nivel": "saturacion",
+        "indice_ocupacional": 90.3,
+        "meses": 12,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      },
+      {
+        "establecimiento_codigo": 110120,
+        "establecimiento_nombre": "Hospital  Félix Bulnes Cerda",
+        "nivel": "presion",
+        "indice_ocupacional": 87.6,
+        "meses": 12,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      },
+      {
+        "establecimiento_codigo": 111100,
+        "establecimiento_nombre": "Hospital Clínico San Borja Arriarán",
+        "nivel": "presion",
+        "indice_ocupacional": 85.6,
+        "meses": 12,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      },
+      {
+        "establecimiento_codigo": 113170,
+        "establecimiento_nombre": "Hospital Psiquiátrico El Peral (Santiago, Puente Alto)",
+        "nivel": "holgura",
+        "indice_ocupacional": 75.5,
+        "meses": 12,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      },
+      {
+        "establecimiento_codigo": 109104,
+        "establecimiento_nombre": "Hospital Comunitario de Til Til",
+        "nivel": "holgura",
+        "indice_ocupacional": 35.5,
+        "meses": 12,
+        "area_mes_sobre_capacidad": 0,
+        "desde": "2025-10-01",
+        "hasta": "2026-09-01"
+      }
+    ]
+  },
+  "sin_dotacion": [
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 421,
+      "nivel_cuidado": "421 - Área Psiquiatría Infanto-adolescente corta estadía",
+      "primer_ano": 2014,
+      "motivo": "El libro de dotación 2025 lista el área sin cifra."
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "nivel_cuidado_codigo": 425,
+      "nivel_cuidado": "Área Psiquiatría Forense Infanto Adolescente evaluación e inicio tto.",
+      "primer_ano": 2015,
+      "motivo": "El área no figura en el libro de dotación 2025; la causa no es determinable con estos datos."
+    },
+    {
+      "establecimiento_codigo": 111101,
+      "nivel_cuidado_codigo": 428,
+      "nivel_cuidado": "428 - Área de Hospitalización de Cuidados Intensivos en Psiquiatría Adulto",
+      "primer_ano": 2026,
+      "motivo": "El área se habilitó en 2026, después del último año del libro de dotación (2025): aún no tiene dotación declarada."
+    },
+    {
+      "establecimiento_codigo": 112102,
+      "nivel_cuidado_codigo": 421,
+      "nivel_cuidado": "421 - Área Psiquiatría Infanto-adolescente corta estadía",
+      "primer_ano": 2014,
+      "motivo": "El libro de dotación 2025 lista el área sin cifra."
+    },
+    {
+      "establecimiento_codigo": 114105,
+      "nivel_cuidado_codigo": 428,
+      "nivel_cuidado": "428 - Área Hospitalización de Cuidados Intensivos en Psiquiatría Adulto",
+      "primer_ano": 2022,
+      "motivo": "El área no figura en el libro de dotación 2025; la causa no es determinable con estos datos."
+    }
+  ],
+  "backtest_dotacion": {
+    "mediana": {
+      "todas": {
+        "areas_ano": 13048,
+        "exacto": 0.584,
+        "a_1_cama": 0.687,
+        "error_absoluto_medio": 3.19
+      },
+      "psiquiatría": {
+        "areas_ano": 807,
+        "exacto": 0.568,
+        "a_1_cama": 0.667,
+        "error_absoluto_medio": 2.82
+      }
+    },
+    "maximo": {
+      "todas": {
+        "areas_ano": 13048,
+        "exacto": 0.55,
+        "a_1_cama": 0.663,
+        "error_absoluto_medio": 3.94
+      },
+      "psiquiatría": {
+        "areas_ano": 807,
+        "exacto": 0.599,
+        "a_1_cama": 0.69,
+        "error_absoluto_medio": 2.78
+      }
+    }
+  },
+  "area_mes_sin_camas": 76,
+  "umbral_holgura_camas": 1.0,
+  "saturacion_ultimos_meses": {
+    "meses": 12,
+    "areas": [
+      {
+        "establecimiento_codigo": 111100,
+        "establecimiento_nombre": "Hospital Clínico San Borja Arriarán",
+        "nivel_cuidado": "421 - Área Psiquiatría Infanto-adolescente corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 12,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 4.4,
+        "camas_libres_promedio": 0.0,
+        "indice_ocupacional": 100.0
+      },
+      {
+        "establecimiento_codigo": 109101,
+        "establecimiento_nombre": "Hospital Clínico de Niños Dr. Roberto del Río (Santiago, Independencia)",
+        "nivel_cuidado": "421 - Área Psiquiatría Infanto-adolescente corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 12,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 12.0,
+        "camas_libres_promedio": 0.02,
+        "indice_ocupacional": 99.8
+      },
+      {
+        "establecimiento_codigo": 109101,
+        "establecimiento_nombre": "Hospital Clínico de Niños Dr. Roberto del Río (Santiago, Independencia)",
+        "nivel_cuidado": "422 - Área Psiquiatría Infanto-adolescente mediana estadía",
+        "meses": 12,
+        "meses_sin_holgura": 12,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 3.9,
+        "camas_libres_promedio": 0.02,
+        "indice_ocupacional": 99.6
+      },
+      {
+        "establecimiento_codigo": 112100,
+        "establecimiento_nombre": "Hospital Del Salvador de Santiago",
+        "nivel_cuidado": "418 - Área Psiquiatría Adulto Corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 12,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 20.0,
+        "camas_libres_promedio": 0.1,
+        "indice_ocupacional": 99.5
+      },
+      {
+        "establecimiento_codigo": 109102,
+        "establecimiento_nombre": "Instituto Psiquiátrico Dr. José Horwitz Barak (Santiago, Recoleta)",
+        "nivel_cuidado": "423 - Área Psiquiatría Forense Adulto evaluación e inicio tto.",
+        "meses": 12,
+        "meses_sin_holgura": 12,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 39.0,
+        "camas_libres_promedio": 0.33,
+        "indice_ocupacional": 99.2
+      },
+      {
+        "establecimiento_codigo": 112102,
+        "establecimiento_nombre": "Hospital de Niños Dr. Luis Calvo Mackenna",
+        "nivel_cuidado": "429 - Área de Hospitalización de Cuidados Intensivos en Psiquiatría Infanto Adolescente",
+        "meses": 12,
+        "meses_sin_holgura": 12,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 7.5,
+        "camas_libres_promedio": 0.27,
+        "indice_ocupacional": 96.4
+      },
+      {
+        "establecimiento_codigo": 109102,
+        "establecimiento_nombre": "Instituto Psiquiátrico Dr. José Horwitz Barak (Santiago, Recoleta)",
+        "nivel_cuidado": "424 - Área Psiquiatría Forense Adulto tratamiento",
+        "meses": 12,
+        "meses_sin_holgura": 11,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 40.0,
+        "camas_libres_promedio": 0.32,
+        "indice_ocupacional": 99.2
+      },
+      {
+        "establecimiento_codigo": 114105,
+        "establecimiento_nombre": "Hospital Clínico Metropolitano La Florida Dra. Eloísa Díaz Insunza",
+        "nivel_cuidado": "418 - Área Psiquiatría Adulto Corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 11,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 18.0,
+        "camas_libres_promedio": 0.55,
+        "indice_ocupacional": 96.9
+      },
+      {
+        "establecimiento_codigo": 114101,
+        "establecimiento_nombre": "Complejo Hospitalario Dr. Sótero del Río (Santiago, Puente Alto)",
+        "nivel_cuidado": "421 - Área Psiquiatría Infanto-adolescente corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 11,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 11.9,
+        "camas_libres_promedio": 0.67,
+        "indice_ocupacional": 94.4
+      },
+      {
+        "establecimiento_codigo": 113180,
+        "establecimiento_nombre": "Hospital El Pino (Santiago, San Bernardo)",
+        "nivel_cuidado": "418 - Área Psiquiatría Adulto Corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 8,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 16.0,
+        "camas_libres_promedio": 0.63,
+        "indice_ocupacional": 96.0
+      },
+      {
+        "establecimiento_codigo": 110120,
+        "establecimiento_nombre": "Hospital  Félix Bulnes Cerda",
+        "nivel_cuidado": "421 - Área Psiquiatría Infanto-adolescente corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 8,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 12.0,
+        "camas_libres_promedio": 0.94,
+        "indice_ocupacional": 92.1
+      },
+      {
+        "establecimiento_codigo": 114101,
+        "establecimiento_nombre": "Complejo Hospitalario Dr. Sótero del Río (Santiago, Puente Alto)",
+        "nivel_cuidado": "418 - Área Psiquiatría Adulto Corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 7,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 37.8,
+        "camas_libres_promedio": 1.11,
+        "indice_ocupacional": 97.1
+      },
+      {
+        "establecimiento_codigo": 111101,
+        "establecimiento_nombre": "Hospital Clínico Metropolitano El Carmen Doctor Luis Valentín Ferrada",
+        "nivel_cuidado": "428 - Área de Hospitalización de Cuidados Intensivos en Psiquiatría Adulto",
+        "meses": 9,
+        "meses_sin_holgura": 7,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 20.9,
+        "camas_libres_promedio": 0.72,
+        "indice_ocupacional": 96.5
+      },
+      {
+        "establecimiento_codigo": 109102,
+        "establecimiento_nombre": "Instituto Psiquiátrico Dr. José Horwitz Barak (Santiago, Recoleta)",
+        "nivel_cuidado": "420 - Área Psiquiatría Adulto Larga estadía",
+        "meses": 7,
+        "meses_sin_holgura": 7,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 7.7,
+        "camas_libres_promedio": 0.41,
+        "indice_ocupacional": 94.7
+      },
+      {
+        "establecimiento_codigo": 113100,
+        "establecimiento_nombre": "Hospital Barros Luco Trudeau (Santiago, San Miguel)",
+        "nivel_cuidado": "418 - Área Psiquiatría Adulto Corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 6,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 28.0,
+        "camas_libres_promedio": 1.11,
+        "indice_ocupacional": 96.0
+      },
+      {
+        "establecimiento_codigo": 113130,
+        "establecimiento_nombre": "Hospital Dr. Exequiel González Cortés (Santiago, San Miguel)",
+        "nivel_cuidado": "421 - Área Psiquiatría Infanto-adolescente corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 6,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 12.0,
+        "camas_libres_promedio": 1.17,
+        "indice_ocupacional": 90.3
+      },
+      {
+        "establecimiento_codigo": 109102,
+        "establecimiento_nombre": "Instituto Psiquiátrico Dr. José Horwitz Barak (Santiago, Recoleta)",
+        "nivel_cuidado": "426 - Área Psiquiatría Forense Infanto Adolescente tratamiento",
+        "meses": 12,
+        "meses_sin_holgura": 5,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 12.0,
+        "camas_libres_promedio": 1.2,
+        "indice_ocupacional": 90.1
+      },
+      {
+        "establecimiento_codigo": 111100,
+        "establecimiento_nombre": "Hospital Clínico San Borja Arriarán",
+        "nivel_cuidado": "418 - Área Psiquiatría Adulto Corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 2,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 10.6,
+        "camas_libres_promedio": 2.14,
+        "indice_ocupacional": 79.7
+      },
+      {
+        "establecimiento_codigo": 109102,
+        "establecimiento_nombre": "Instituto Psiquiátrico Dr. José Horwitz Barak (Santiago, Recoleta)",
+        "nivel_cuidado": "418 - Área Psiquiatría Adulto Corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 0,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 229.4,
+        "camas_libres_promedio": 10.55,
+        "indice_ocupacional": 95.4
+      },
+      {
+        "establecimiento_codigo": 113170,
+        "establecimiento_nombre": "Hospital Psiquiátrico El Peral (Santiago, Puente Alto)",
+        "nivel_cuidado": "420 - Área Psiquiatría Adulto Larga estadía",
+        "meses": 12,
+        "meses_sin_holgura": 0,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 55.6,
+        "camas_libres_promedio": 5.99,
+        "indice_ocupacional": 89.2
+      },
+      {
+        "establecimiento_codigo": 110120,
+        "establecimiento_nombre": "Hospital  Félix Bulnes Cerda",
+        "nivel_cuidado": "418 - Área Psiquiatría Adulto Corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 0,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 28.0,
+        "camas_libres_promedio": 4.0,
+        "indice_ocupacional": 85.7
+      },
+      {
+        "establecimiento_codigo": 109102,
+        "establecimiento_nombre": "Instituto Psiquiátrico Dr. José Horwitz Barak (Santiago, Recoleta)",
+        "nivel_cuidado": "428 - Área de Hospitalización de Cuidados Intensivos en Psiquiatría Adulto",
+        "meses": 12,
+        "meses_sin_holgura": 0,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 16.0,
+        "camas_libres_promedio": 6.68,
+        "indice_ocupacional": 58.3
+      },
+      {
+        "establecimiento_codigo": 113170,
+        "establecimiento_nombre": "Hospital Psiquiátrico El Peral (Santiago, Puente Alto)",
+        "nivel_cuidado": "419 - Área Psiquiatría Adulto Mediana estadía",
+        "meses": 12,
+        "meses_sin_holgura": 0,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 38.3,
+        "camas_libres_promedio": 17.07,
+        "indice_ocupacional": 55.5
+      },
+      {
+        "establecimiento_codigo": 109104,
+        "establecimiento_nombre": "Hospital Comunitario de Til Til",
+        "nivel_cuidado": "421 - Área Psiquiatría Infanto-adolescente corta estadía",
+        "meses": 12,
+        "meses_sin_holgura": 0,
+        "meses_sobre_capacidad": 0,
+        "camas_disponibles_promedio": 10.0,
+        "camas_libres_promedio": 6.43,
+        "indice_ocupacional": 35.5
+      }
+    ]
+  },
+  "hospitales_detalle": [
+    {
+      "establecimiento_codigo": 109101,
+      "establecimiento_nombre": "Hospital Clínico de Niños Dr. Roberto del Río (Santiago, Independencia)",
+      "desde": "2014-01",
+      "hasta": "2026-09",
+      "meses": 153,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 15.6,
+      "ultimo_camas_disponibles_promedio": 15.6,
+      "ultimo_indice_ocupacional": 100.0,
+      "dotacion_psiquiatria": 16.0,
+      "en_pronostico_hospitalizaciones": true
+    },
+    {
+      "establecimiento_codigo": 109102,
+      "establecimiento_nombre": "Instituto Psiquiátrico Dr. José Horwitz Barak (Santiago, Recoleta)",
+      "desde": "2014-01",
+      "hasta": "2026-09",
+      "meses": 153,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 315.2,
+      "ultimo_camas_disponibles_promedio": 337.6,
+      "ultimo_indice_ocupacional": 93.4,
+      "dotacion_psiquiatria": 408.0,
+      "en_pronostico_hospitalizaciones": true
+    },
+    {
+      "establecimiento_codigo": 109104,
+      "establecimiento_nombre": "Hospital Comunitario de Til Til",
+      "desde": "2015-01",
+      "hasta": "2026-09",
+      "meses": 141,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 4.5,
+      "ultimo_camas_disponibles_promedio": 10.0,
+      "ultimo_indice_ocupacional": 45.0,
+      "dotacion_psiquiatria": 10.0,
+      "en_pronostico_hospitalizaciones": false
+    },
+    {
+      "establecimiento_codigo": 110120,
+      "establecimiento_nombre": "Hospital  Félix Bulnes Cerda",
+      "desde": "2014-01",
+      "hasta": "2026-09",
+      "meses": 153,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 35.6,
+      "ultimo_camas_disponibles_promedio": 40.0,
+      "ultimo_indice_ocupacional": 88.9,
+      "dotacion_psiquiatria": 40.0,
+      "en_pronostico_hospitalizaciones": false
+    },
+    {
+      "establecimiento_codigo": 111100,
+      "establecimiento_nombre": "Hospital Clínico San Borja Arriarán",
+      "desde": "2014-01",
+      "hasta": "2026-09",
+      "meses": 153,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 10.2,
+      "ultimo_camas_disponibles_promedio": 15.1,
+      "ultimo_indice_ocupacional": 67.8,
+      "dotacion_psiquiatria": 17.0,
+      "en_pronostico_hospitalizaciones": false
+    },
+    {
+      "establecimiento_codigo": 111101,
+      "establecimiento_nombre": "Hospital Clínico Metropolitano El Carmen Doctor Luis Valentín Ferrada",
+      "desde": "2026-01",
+      "hasta": "2026-09",
+      "meses": 9,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 19.7,
+      "ultimo_camas_disponibles_promedio": 20.0,
+      "ultimo_indice_ocupacional": 98.3,
+      "dotacion_psiquiatria": null,
+      "en_pronostico_hospitalizaciones": true
+    },
+    {
+      "establecimiento_codigo": 112100,
+      "establecimiento_nombre": "Hospital Del Salvador de Santiago",
+      "desde": "2014-01",
+      "hasta": "2026-09",
+      "meses": 153,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 20.0,
+      "ultimo_camas_disponibles_promedio": 20.0,
+      "ultimo_indice_ocupacional": 100.0,
+      "dotacion_psiquiatria": 20.0,
+      "en_pronostico_hospitalizaciones": true
+    },
+    {
+      "establecimiento_codigo": 112102,
+      "establecimiento_nombre": "Hospital de Niños Dr. Luis Calvo Mackenna",
+      "desde": "2014-01",
+      "hasta": "2026-09",
+      "meses": 153,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 9.1,
+      "ultimo_camas_disponibles_promedio": 9.2,
+      "ultimo_indice_ocupacional": 99.3,
+      "dotacion_psiquiatria": 9.0,
+      "en_pronostico_hospitalizaciones": true
+    },
+    {
+      "establecimiento_codigo": 113100,
+      "establecimiento_nombre": "Hospital Barros Luco Trudeau (Santiago, San Miguel)",
+      "desde": "2014-01",
+      "hasta": "2026-09",
+      "meses": 153,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 26.9,
+      "ultimo_camas_disponibles_promedio": 28.0,
+      "ultimo_indice_ocupacional": 96.1,
+      "dotacion_psiquiatria": 28.0,
+      "en_pronostico_hospitalizaciones": true
+    },
+    {
+      "establecimiento_codigo": 113130,
+      "establecimiento_nombre": "Hospital Dr. Exequiel González Cortés (Santiago, San Miguel)",
+      "desde": "2017-01",
+      "hasta": "2026-09",
+      "meses": 117,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 11.3,
+      "ultimo_camas_disponibles_promedio": 12.0,
+      "ultimo_indice_ocupacional": 94.4,
+      "dotacion_psiquiatria": 12.0,
+      "en_pronostico_hospitalizaciones": false
+    },
+    {
+      "establecimiento_codigo": 113170,
+      "establecimiento_nombre": "Hospital Psiquiátrico El Peral (Santiago, Puente Alto)",
+      "desde": "2014-01",
+      "hasta": "2026-09",
+      "meses": 153,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 66.6,
+      "ultimo_camas_disponibles_promedio": 84.0,
+      "ultimo_indice_ocupacional": 79.3,
+      "dotacion_psiquiatria": 98.0,
+      "en_pronostico_hospitalizaciones": false
+    },
+    {
+      "establecimiento_codigo": 113180,
+      "establecimiento_nombre": "Hospital El Pino (Santiago, San Bernardo)",
+      "desde": "2014-01",
+      "hasta": "2026-09",
+      "meses": 153,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 15.8,
+      "ultimo_camas_disponibles_promedio": 16.0,
+      "ultimo_indice_ocupacional": 98.8,
+      "dotacion_psiquiatria": 16.0,
+      "en_pronostico_hospitalizaciones": true
+    },
+    {
+      "establecimiento_codigo": 114101,
+      "establecimiento_nombre": "Complejo Hospitalario Dr. Sótero del Río (Santiago, Puente Alto)",
+      "desde": "2014-01",
+      "hasta": "2026-09",
+      "meses": 153,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 50.3,
+      "ultimo_camas_disponibles_promedio": 51.7,
+      "ultimo_indice_ocupacional": 97.3,
+      "dotacion_psiquiatria": 51.0,
+      "en_pronostico_hospitalizaciones": true
+    },
+    {
+      "establecimiento_codigo": 114105,
+      "establecimiento_nombre": "Hospital Clínico Metropolitano La Florida Dra. Eloísa Díaz Insunza",
+      "desde": "2014-01",
+      "hasta": "2026-09",
+      "meses": 153,
+      "huecos": 0,
+      "ultimo_camas_ocupadas_promedio": 17.5,
+      "ultimo_camas_disponibles_promedio": 18.0,
+      "ultimo_indice_ocupacional": 97.0,
+      "dotacion_psiquiatria": 18.0,
+      "en_pronostico_hospitalizaciones": true
+    }
+  ],
+  "hospitales_oferta_sin_psiquiatria_rem20": 31,
+  "con_ocupacion_sin_dotacion": [
+    111101
+  ],
+  "pronostico_hospitalizaciones": {
+    "hospitales": 12,
+    "con_ocupacion": 9,
+    "sin_ocupacion": [
+      109100,
+      110150,
+      113150
+    ]
+  }
+}
