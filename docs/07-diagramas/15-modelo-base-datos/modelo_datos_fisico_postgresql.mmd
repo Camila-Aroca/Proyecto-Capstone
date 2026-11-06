@@ -273,6 +273,22 @@ erDiagram
         integer d3
     }
 
+    marts_ocupacion_psiquiatria_hospital_rm {
+        bigint establecimiento_codigo PK, FK "hospital de geo_dim_oferta_urgencia_rm"
+        smallint nivel_cuidado_codigo PK
+        smallint ano PK
+        smallint mes PK "CHECK 1-12"
+        text nivel_cuidado
+        date fecha_inicio_mes
+        smallint dias_mes
+        numeric dias_cama_ocupados "CHECK >= 0"
+        numeric dias_cama_disponibles "CHECK >= 0"
+        numeric camas_ocupadas_promedio
+        numeric camas_disponibles_promedio
+        numeric camas_libres_promedio "negativa = sobre la capacidad"
+        numeric indice_ocupacional "NULL sin camas disponibles"
+    }
+
     censo_cartografia_comunal ||--o{ censo_cartografia_distrital : "1 comuna, N distritos"
     censo_cartografia_distrital ||--o{ censo_cartografia_zonal : "1 distrito, N zonas urbanas"
     censo_cartografia_distrital ||--o{ censo_cartografia_entidades : "1 distrito, N entidades rurales"
@@ -299,4 +315,5 @@ erDiagram
     geo_dim_oferta_urgencia_rm ||--o| camas_dim_psiquiatria_hospital_rm : "1 a 1 (hospitales de la oferta)"
     geo_dim_oferta_urgencia_rm |o..o{ camas_indicadores_hospitalarios_snss : "relacion documentada, NO enforced por FK fisica"
     camas_indicadores_hospitalarios_snss |o..o{ camas_categorizacion_riesgo_dependencia : "cruce por nombre documentado, NO enforced por FK fisica"
+    geo_dim_oferta_urgencia_rm ||--o{ marts_ocupacion_psiquiatria_hospital_rm : "1 a N (area-mes de psiquiatria)"
 

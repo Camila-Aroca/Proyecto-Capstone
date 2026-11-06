@@ -341,6 +341,24 @@ erDiagram
         bigint d3
     }
 
+    %% grain: 1 fila = 1 area de psiquiatria de 1 hospital de la oferta RM en 1 mes publicado (3444 filas, 28 areas, 14 hospitales, 2014-2026)
+    %% derivada de indicadores_hospitalarios_snss; promedio diario = dias cama / dias del mes, identidad verificada contra el promedio publicado
+    mart_ocupacion_psiquiatria_hospital_rm {
+        bigint establecimiento_codigo PK "FK logica a dim_oferta_urgencia_rm (solo tipo Hospital)"
+        int nivel_cuidado_codigo PK "area de psiquiatria; mismo catalogo que area_funcional_codigo de la dotacion"
+        int ano PK
+        int mes PK "solo meses publicados; un mes no publicado no es cero"
+        string nivel_cuidado
+        date fecha_inicio_mes
+        int dias_mes
+        double dias_cama_ocupados
+        double dias_cama_disponibles
+        double camas_ocupadas_promedio "dias cama ocupados / dias del mes"
+        double camas_disponibles_promedio "dias cama disponibles / dias del mes"
+        double camas_libres_promedio "brecha; negativa = sobre la capacidad"
+        double indice_ocupacional "NULL sin camas disponibles"
+    }
+
     cartografia_comunal ||--o{ cartografia_distrital : "1 comuna tiene N distritos"
     cartografia_distrital ||--o{ cartografia_zonal : "1 distrito tiene N zonas urbanas (parcial: 51/52 comunas)"
     cartografia_distrital ||--o{ cartografia_entidades : "1 distrito tiene N entidades rurales (parcial: 26/52 comunas)"
@@ -368,4 +386,6 @@ erDiagram
     dim_oferta_urgencia_rm |o..o{ indicadores_hospitalarios_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 35/208 establecimientos estan en la oferta)"
     dotacion_camas_snss |o..o{ indicadores_hospitalarios_snss : "vinculo logico por establecimiento_codigo y area funcional = nivel de cuidado (196/208 establecimientos en la dotacion)"
     indicadores_hospitalarios_snss |o..o{ categorizacion_riesgo_dependencia : "vinculo logico por ano, servicio de salud y nombre del establecimiento (sin codigo en la fuente)"
+    dim_oferta_urgencia_rm ||--o{ mart_ocupacion_psiquiatria_hospital_rm : "1 hospital de la oferta, N area-mes de psiquiatria (14/45 hospitales)"
+    indicadores_hospitalarios_snss |o..o{ mart_ocupacion_psiquiatria_hospital_rm : "derivacion: areas de psiquiatria del detalle, vinculo logico por establecimiento_codigo y nivel de cuidado"
 

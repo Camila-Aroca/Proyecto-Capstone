@@ -831,6 +831,45 @@ COMMENT ON COLUMN camas.categorizacion_riesgo_dependencia.establecimiento_nombre
     'servicio de salud (sin el prefijo SS) y nombre exacto.';
 
 -- =============================================================================
+-- marts.ocupacion_psiquiatria_hospital_rm
+-- Grain: 1 fila = 1 area de psiquiatria de 1 hospital de geo.dim_oferta_urgencia_rm
+-- en 1 mes publicado del REM-20. Derivada (stage build_mart_ocupacion_psiquiatria_hospital_rm)
+-- del detalle de camas.indicadores_hospitalarios_snss. Los promedios son dias cama /
+-- dias del mes; el total de un hospital se obtiene sumando dias cama de sus areas.
+-- =============================================================================
+CREATE TABLE marts.ocupacion_psiquiatria_hospital_rm (
+    establecimiento_codigo      BIGINT     NOT NULL,
+    nivel_cuidado_codigo        SMALLINT   NOT NULL,
+    nivel_cuidado               TEXT       NOT NULL,
+    ano                         SMALLINT   NOT NULL,
+    mes                         SMALLINT   NOT NULL,
+    fecha_inicio_mes            DATE       NOT NULL,
+    dias_mes                    SMALLINT   NOT NULL,
+    dias_cama_ocupados          NUMERIC    NOT NULL,
+    dias_cama_disponibles       NUMERIC    NOT NULL,
+    camas_ocupadas_promedio     NUMERIC    NOT NULL,
+    camas_disponibles_promedio  NUMERIC    NOT NULL,
+    camas_libres_promedio       NUMERIC    NOT NULL,
+    indice_ocupacional          NUMERIC,
+    CONSTRAINT pk_ocupacion_psiquiatria_hospital_rm
+        PRIMARY KEY (establecimiento_codigo, nivel_cuidado_codigo, ano, mes),
+    CONSTRAINT fk_ocupacion_psiquiatria_hospital_rm_oferta FOREIGN KEY (establecimiento_codigo)
+        REFERENCES geo.dim_oferta_urgencia_rm (establecimiento_codigo),
+    CONSTRAINT ck_ocupacion_psiquiatria_hospital_rm_mes CHECK (mes BETWEEN 1 AND 12),
+    CONSTRAINT ck_ocupacion_psiquiatria_hospital_rm_dias
+        CHECK (dias_cama_ocupados >= 0 AND dias_cama_disponibles >= 0),
+    CONSTRAINT ck_ocupacion_psiquiatria_hospital_rm_indice
+        CHECK ((indice_ocupacional IS NULL) = (dias_cama_disponibles = 0))
+);
+
+COMMENT ON TABLE marts.ocupacion_psiquiatria_hospital_rm IS
+    'Ocupacion mensual de las camas de psiquiatria por area de los hospitales de la oferta de '
+    'urgencia RM (REM-20). Estadistica consolidada, NO ocupacion en tiempo real. Es un piso de '
+    'la demanda de camas: la espera en camilla en la urgencia no se registra.';
+COMMENT ON COLUMN marts.ocupacion_psiquiatria_hospital_rm.camas_libres_promedio IS
+    'Disponibles menos ocupadas por dia, en promedio del mes: la brecha. Negativa = sobre la capacidad.';
+
+-- =============================================================================
 -- camas.dim_psiquiatria_hospital_rm
 -- Grain: 1 fila = 1 hospital de geo.dim_oferta_urgencia_rm (45 filas), con sus
 -- camas de psiquiatria del ultimo ano de la dotacion SNSS (2025). Dimension

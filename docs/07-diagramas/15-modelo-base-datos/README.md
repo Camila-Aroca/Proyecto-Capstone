@@ -36,6 +36,7 @@ Se realizó una búsqueda dirigida antes de crear cualquier artefacto:
   de los cuatro Parquet independientes de `data/processed/contexto_genero/`.
 - `dotacion_camas_snss` y `dotacion_camas_no_snss` (`data/processed/camas/`): dotación anual de camas hospitalarias (DEIS, DIGERA), un Parquet por libro de `data/raw/camas/`, con las mismas columnas que su libro.
 - `indicadores_hospitalarios_snss` y `categorizacion_riesgo_dependencia` (`data/processed/estadisticas_hospitalarias/`): Estadísticas Hospitalarias REM-20 del DEIS, un Parquet por familia de libros de `data/raw/estadisticas_hospitalarias/`: indicadores mensuales por establecimiento y nivel de cuidado (solo el detalle) y categorización trimestral CUDYR.
+- `mart_ocupacion_psiquiatria_hospital_rm` (`data/processed/marts/`): ocupación mensual de las camas de psiquiatría por área y hospital de la oferta RM, derivada del REM-20.
 
 **Actualización de Defunciones:** el modelo lógico incorpora
 `data/processed/defunciones/defunciones_nacional.parquet`, con las 27 variables
@@ -448,6 +449,24 @@ erDiagram
         bigint d3
     }
 
+    %% grain: 1 fila = 1 area de psiquiatria de 1 hospital de la oferta RM en 1 mes publicado (3444 filas, 28 areas, 14 hospitales, 2014-2026)
+    %% derivada de indicadores_hospitalarios_snss; promedio diario = dias cama / dias del mes, identidad verificada contra el promedio publicado
+    mart_ocupacion_psiquiatria_hospital_rm {
+        bigint establecimiento_codigo PK "FK logica a dim_oferta_urgencia_rm (solo tipo Hospital)"
+        int nivel_cuidado_codigo PK "area de psiquiatria; mismo catalogo que area_funcional_codigo de la dotacion"
+        int ano PK
+        int mes PK "solo meses publicados; un mes no publicado no es cero"
+        string nivel_cuidado
+        date fecha_inicio_mes
+        int dias_mes
+        double dias_cama_ocupados
+        double dias_cama_disponibles
+        double camas_ocupadas_promedio "dias cama ocupados / dias del mes"
+        double camas_disponibles_promedio "dias cama disponibles / dias del mes"
+        double camas_libres_promedio "brecha; negativa = sobre la capacidad"
+        double indice_ocupacional "NULL sin camas disponibles"
+    }
+
     cartografia_comunal ||--o{ cartografia_distrital : "1 comuna tiene N distritos"
     cartografia_distrital ||--o{ cartografia_zonal : "1 distrito tiene N zonas urbanas (parcial: 51/52 comunas)"
     cartografia_distrital ||--o{ cartografia_entidades : "1 distrito tiene N entidades rurales (parcial: 26/52 comunas)"
@@ -475,6 +494,8 @@ erDiagram
     dim_oferta_urgencia_rm |o..o{ indicadores_hospitalarios_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 35/208 establecimientos estan en la oferta)"
     dotacion_camas_snss |o..o{ indicadores_hospitalarios_snss : "vinculo logico por establecimiento_codigo y area funcional = nivel de cuidado (196/208 establecimientos en la dotacion)"
     indicadores_hospitalarios_snss |o..o{ categorizacion_riesgo_dependencia : "vinculo logico por ano, servicio de salud y nombre del establecimiento (sin codigo en la fuente)"
+    dim_oferta_urgencia_rm ||--o{ mart_ocupacion_psiquiatria_hospital_rm : "1 hospital de la oferta, N area-mes de psiquiatria (14/45 hospitales)"
+    indicadores_hospitalarios_snss |o..o{ mart_ocupacion_psiquiatria_hospital_rm : "derivacion: areas de psiquiatria del detalle, vinculo logico por establecimiento_codigo y nivel de cuidado"
 ```
 
 Fuente independiente (idéntica): [`modelo_datos_logico.mmd`](modelo_datos_logico.mmd).
@@ -486,6 +507,8 @@ Fuente independiente (idéntica): [`modelo_datos_logico.mmd`](modelo_datos_logic
 `dim_camas_psiquiatria_hospital_rm` (`data/processed/camas/`, stage `build_dim_camas_psiquiatria_hospital_rm`) es la única entidad de camas con relación fuerte: es una dimensión derivada con una fila por hospital de `dim_oferta_urgencia_rm` (45), por lo que su `establecimiento_codigo` sí es FK a la oferta. Une cada hospital con sus camas de psiquiatría (suma de las áreas funcionales cuyo nombre contiene «Psiquiatr», excluida la fila Total) del último año de `dotacion_camas_snss`, detectado dinámicamente. `en_dotacion_snss = false` (11 hospitales, p. ej. privados) y los hospitales sin cifra de psiquiatría quedan con `camas_psiquiatria` nula, nunca en cero. `reporto_id36_periodo` marca los hospitales que alimentaron el modelo de demanda (ID36 > 0 alguna vez en 2021-2025): los totales territoriales de la API solo suman esos. Es dotación anual declarada, no ocupación ni disponibilidad.
 
 `indicadores_hospitalarios_snss` y `categorizacion_riesgo_dependencia` (`data/processed/estadisticas_hospitalarias/`, stage `clean_estadisticas_hospitalarias`) son las Estadísticas Hospitalarias REM-20: actividad mensual por establecimiento y nivel de cuidado del SNSS, y categorización trimestral CUDYR. Se relacionan con el resto solo por vínculos lógicos (línea punteada): `establecimiento_codigo` y `nivel_cuidado_codigo` son la misma llave y el mismo catálogo que `establecimiento_codigo` y `area_funcional_codigo` de `dotacion_camas_snss` (196 de los 208 establecimientos están en la dotación), y solo 35 de los 208 están en `dim_oferta_urgencia_rm`, que es solo la oferta de urgencia. **Los indicadores contienen solo el detalle**: las filas agregadas que el libro intercala (`Datos País`, `Datos Servicio Salud`, `Datos Establecimiento`) no son filas de la entidad, porque sumarlas con el detalle contaría lo mismo dos o tres veces; siguen en el RAW y se usan para conciliar. La entidad mezcla conteos, un promedio y razones en la columna `indicador`: solo los conteos son aditivos. La categorización no trae código de establecimiento en la fuente, así que su vínculo con los indicadores es por año, Servicio de Salud y nombre (coinciden los 384 pares del snapshot vigente). Son estadísticas consolidadas, no ocupación en tiempo real, y no se enlazan con Egresos ni con Urgencias por paciente. Detalle en `reports/dictionary/diccionario_estadisticas_hospitalarias.md`.
+
+`mart_ocupacion_psiquiatria_hospital_rm` (`data/processed/marts/`, stage `build_mart_ocupacion_psiquiatria_hospital_rm`) deriva del detalle de `indicadores_hospitalarios_snss` la ocupación mensual de cada **área de psiquiatría** de los hospitales de `dim_oferta_urgencia_rm`. Como solo incluye hospitales de la oferta, su `establecimiento_codigo` sí es FK a esa dimensión (14 de sus 45 hospitales tienen áreas de psiquiatría en el REM-20). El grano es el área y no el hospital porque el total oculta áreas saturadas; el total del hospital se obtiene sumando días cama. Los promedios diarios son días cama / días del mes, una identidad que la etapa verifica contra el promedio publicado por la fuente. Es estadística mensual consolidada, no ocupación en tiempo real, y no se enlaza por paciente con Urgencias ni con Egresos. Detalle en `reports/dictionary/diccionario_mart_ocupacion_psiquiatria_hospital_rm.md`.
 
 Las capas `cartografia_zonal`, `cartografia_entidades` y `cartografia_manzanas` publican además ~150 columnas socioeconómicas (`n_*`, `prom_*`) no documentadas formalmente por el diccionario oficial del Censo 2024 (ver `reports/eda/eda_cartografia_censo2024_subcomunal.md`); no se listan en el diagrama por volumen, no porque no existan.
 
@@ -764,6 +787,22 @@ erDiagram
         integer d3
     }
 
+    marts_ocupacion_psiquiatria_hospital_rm {
+        bigint establecimiento_codigo PK, FK "hospital de geo_dim_oferta_urgencia_rm"
+        smallint nivel_cuidado_codigo PK
+        smallint ano PK
+        smallint mes PK "CHECK 1-12"
+        text nivel_cuidado
+        date fecha_inicio_mes
+        smallint dias_mes
+        numeric dias_cama_ocupados "CHECK >= 0"
+        numeric dias_cama_disponibles "CHECK >= 0"
+        numeric camas_ocupadas_promedio
+        numeric camas_disponibles_promedio
+        numeric camas_libres_promedio "negativa = sobre la capacidad"
+        numeric indice_ocupacional "NULL sin camas disponibles"
+    }
+
     censo_cartografia_comunal ||--o{ censo_cartografia_distrital : "1 comuna, N distritos"
     censo_cartografia_distrital ||--o{ censo_cartografia_zonal : "1 distrito, N zonas urbanas"
     censo_cartografia_distrital ||--o{ censo_cartografia_entidades : "1 distrito, N entidades rurales"
@@ -790,6 +829,7 @@ erDiagram
     geo_dim_oferta_urgencia_rm ||--o| camas_dim_psiquiatria_hospital_rm : "1 a 1 (hospitales de la oferta)"
     geo_dim_oferta_urgencia_rm |o..o{ camas_indicadores_hospitalarios_snss : "relacion documentada, NO enforced por FK fisica"
     camas_indicadores_hospitalarios_snss |o..o{ camas_categorizacion_riesgo_dependencia : "cruce por nombre documentado, NO enforced por FK fisica"
+    geo_dim_oferta_urgencia_rm ||--o{ marts_ocupacion_psiquiatria_hospital_rm : "1 a N (area-mes de psiquiatria)"
 
 ```
 
@@ -833,6 +873,7 @@ Los nueve esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, 
 | `dim_camas_psiquiatria_hospital_rm` | 1 hospital de la oferta de urgencia con sus camas de psiquiatría del último año de la dotación SNSS (45 filas, 34 en dotación SNSS, 13 con cifra) | `establecimiento_codigo` | `establecimiento_codigo` → `dim_oferta_urgencia_rm` | 1 → 1 hospital de la oferta |
 | `indicadores_hospitalarios_snss` | 1 indicador de 1 nivel de cuidado de 1 establecimiento SNSS en 1 año, con acumulado y 12 meses (160974 filas, 208 establecimientos, 2014-2026); solo detalle | `ano, servicio_salud_codigo, establecimiento_codigo, nivel_cuidado_codigo, indicador` | ninguna; vínculo lógico (no FK) a `dim_oferta_urgencia_rm` y `dotacion_camas_snss` | entidad aislada |
 | `categorizacion_riesgo_dependencia` | 1 nivel de cuidado de 1 establecimiento SNSS en 1 trimestre (8834 filas, 2024-T1 a 2025-T4) | `ano, trimestre, servicio_salud, establecimiento_nombre, nivel_cuidado_codigo` | ninguna; vínculo lógico por nombre a `indicadores_hospitalarios_snss` (sin código en la fuente) | entidad aislada |
+| `mart_ocupacion_psiquiatria_hospital_rm` | 1 área de psiquiatría de 1 hospital de la oferta en 1 mes publicado (3444 filas, 28 áreas, 14 hospitales, 2014-2026) | `establecimiento_codigo, nivel_cuidado_codigo, ano, mes` | `establecimiento_codigo` → `dim_oferta_urgencia_rm`; derivación lógica de `indicadores_hospitalarios_snss` | N → 1 hospital de la oferta |
 
 ## 8. Decisiones de modelado (lógico → físico)
 
@@ -862,4 +903,4 @@ Los nueve esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, 
 
 ## 10. Relación con `db/schema_postgresql.sql`
 
-El DDL ejecutable vive en [`db/schema_postgresql.sql`](../../../db/schema_postgresql.sql) (fuera de `docs/`, para no mezclar evidencia académica con código de infraestructura) y es coherente 1:1 con el diagrama de la sección 6 para los dominios físicos representados: mismos 9 esquemas, mismas 24 tablas, mismas PK/FK, mismos tipos. Defunciones no forma parte de este DDL. No contiene `INSERT`/`COPY`, credenciales, AWS/RDS, Docker, usuarios ni migrations — únicamente `CREATE EXTENSION` (PostGIS), `CREATE SCHEMA`, `CREATE TABLE` con `PRIMARY KEY`/`FOREIGN KEY`/`CHECK`/`COMMENT`, y los índices básicos necesarios para las FK no cubiertas por una PK compuesta y para las columnas `geometry` (`GIST`).
+El DDL ejecutable vive en [`db/schema_postgresql.sql`](../../../db/schema_postgresql.sql) (fuera de `docs/`, para no mezclar evidencia académica con código de infraestructura) y es coherente 1:1 con el diagrama de la sección 6 para los dominios físicos representados: mismos 9 esquemas, mismas 25 tablas, mismas PK/FK, mismos tipos. Defunciones no forma parte de este DDL. No contiene `INSERT`/`COPY`, credenciales, AWS/RDS, Docker, usuarios ni migrations — únicamente `CREATE EXTENSION` (PostGIS), `CREATE SCHEMA`, `CREATE TABLE` con `PRIMARY KEY`/`FOREIGN KEY`/`CHECK`/`COMMENT`, y los índices básicos necesarios para las FK no cubiertas por una PK compuesta y para las columnas `geometry` (`GIST`).
