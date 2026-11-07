@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { api, type BarraCaracterizacion, type Caracterizacion as Datos, type SerieConPronostico } from "../api";
 import { fmtEntero, fmtFechaLarga } from "../format";
 
+// Desde esta fraccion la porcion lleva su etiqueta dentro; las menores la leen en la leyenda.
+const FRACCION_ETIQUETA = 0.1;
+
 function colorSexo(etiqueta: string) {
   const sexo = etiqueta.toLocaleLowerCase("es");
   return sexo.startsWith("mujer") ? "var(--sexo-mujer)"
@@ -33,7 +36,7 @@ export function TortaSexo({ titulo, datos, total }: {
     <ul className="mb-1 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-2" aria-label={`${titulo}: leyenda y valores`}>
       {porciones.map((p) => <li key={p.etiqueta} className="flex items-center gap-1.5">
         <span className="inline-block h-2 w-2 shrink-0 rounded-sm" style={{ background: colorSexo(p.etiqueta) }} aria-hidden />
-        <span>{p.etiqueta}<span className={p.fraccion >= 0.08 ? "sr-only" : "num text-3"}>: {fmtEntero(p.valor)} ({porcentaje(p.valor)})</span></span>
+        <span>{p.etiqueta}<span className={p.fraccion >= FRACCION_ETIQUETA ? "sr-only" : "num text-3"}>: {fmtEntero(p.valor)} ({porcentaje(p.valor)})</span></span>
       </li>)}
     </ul>
     {total > 0 ? <svg viewBox="0 0 280 260" className="mx-auto block w-full max-w-[224px]" role="img" aria-label={`${titulo}. ${datos.map((p) => `${p.etiqueta}: ${fmtEntero(p.valor)}, ${porcentaje(p.valor)}`).join("; ")}`}>
@@ -42,9 +45,9 @@ export function TortaSexo({ titulo, datos, total }: {
         opacity={activa && activa !== p.etiqueta ? 0.5 : 1} style={{ transition: "opacity 150ms var(--ease-out)" }}>
         {p.fraccion === 1 ? <circle cx="140" cy="130" r="116" fill={colorSexo(p.etiqueta)} />
           : <path d={`M 140 130 L ${140 + 116 * Math.cos(p.inicio)} ${130 + 116 * Math.sin(p.inicio)} A 116 116 0 ${p.fraccion > 0.5 ? 1 : 0} 1 ${140 + 116 * Math.cos(p.fin)} ${130 + 116 * Math.sin(p.fin)} Z`} fill={colorSexo(p.etiqueta)} stroke="var(--surface)" strokeWidth="2" />}
-        {p.fraccion >= 0.08 && <text x={p.etiquetaX} y={p.etiquetaY} textAnchor="middle" className="num" fontFamily="monospace" fill="var(--sexo-etiqueta)" fontSize="14" fontWeight="400">
-          <tspan x={p.etiquetaX} dy="-2">{porcentaje(p.valor)}</tspan>
-          <tspan x={p.etiquetaX} dy="16" fontSize="11" fillOpacity="0.8">{fmtEntero(p.valor)}</tspan>
+        {p.fraccion >= FRACCION_ETIQUETA && <text x={p.etiquetaX} y={p.etiquetaY} textAnchor="middle" className="num" fontFamily="monospace" fill="var(--sexo-etiqueta)" fontSize="15" fontWeight="600">
+          <tspan x={p.etiquetaX} dy="-3">{porcentaje(p.valor)}</tspan>
+          <tspan x={p.etiquetaX} dy="17" fontSize="12" fontWeight="500">{fmtEntero(p.valor)}</tspan>
         </text>}
       </g>)}
       <circle cx="140" cy="130" r="54" fill="var(--surface)" />
