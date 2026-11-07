@@ -3,13 +3,11 @@ interface Props {
 }
 
 // Advertencias de interpretacion como aviso plegable: siempre visible su
-// existencia, sin ocupar media pantalla en cada visita. Se abre por defecto
-// porque la primera lectura es la que mas lo necesita.
+// existencia, sin ocupar media pantalla en cada visita. El usuario decide abrirlo.
 export function AvisoLectura({ advertencias }: Props) {
   if (!advertencias.length) return null;
   return (
     <details
-      open
       className="group rounded-lg border text-[13px]"
       style={{ background: "var(--notice-bg)", borderColor: "var(--notice-border)", color: "var(--notice-ink)" }}
     >
