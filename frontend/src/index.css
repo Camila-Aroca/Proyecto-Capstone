@@ -374,22 +374,6 @@ h1, h2, h3 {
   background: var(--surface-2);
   font-family: inherit;
 }
-.leaflet-tooltip {
-  background: var(--surface);
-  color: var(--ink);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  padding: 0.5rem 0.625rem;
-  font-size: 0.8125rem;
-  line-height: 1.4;
-}
-.leaflet-tooltip-top::before,
-.leaflet-tooltip-bottom::before,
-.leaflet-tooltip-left::before,
-.leaflet-tooltip-right::before {
-  display: none;
-}
 .leaflet-bar a {
   background: var(--surface);
   color: var(--ink);

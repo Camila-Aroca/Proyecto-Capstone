@@ -1,8 +1,10 @@
 import { geoJSON, type Layer, type LeafletMouseEvent, type PathOptions } from "leaflet";
-import { useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { GeoJSON, MapContainer, TileLayer } from "react-leaflet";
 import type { ResumenComuna } from "../api";
 import { fmtDecimal, fmtEntero, fmtPct } from "../format";
+import { Tip } from "./Tip";
 import {
   CAMBIO,
   CLASES_SECUENCIALES,
@@ -33,12 +35,45 @@ function urlCarto(oscuro: boolean): string {
   return `https://basemaps.cartocdn.com/rastertiles/${estilo}/{z}/{x}/{y}.png?key=${encodeURIComponent(CARTO_KEY ?? "")}`;
 }
 
-// Los tooltips de Leaflet reciben HTML: todo texto de datos se escapa.
-const escapar = (texto: string) =>
-  texto.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+// Tooltip de la comuna: un panel propio en un portal sobre el body, no el de Leaflet. El de
+// Leaflet vive dentro del mapa (overflow oculto) y se cortaba en cuanto la comuna quedaba cerca
+// de un borde. Este se abre hacia el lado con mas espacio dentro del mapa (a la derecha si el
+// cursor esta en su mitad izquierda, a la izquierda si esta en la derecha; igual arriba y
+// abajo), y despues se ajusta a la ventana para no salirse nunca.
+const DESPLAZAMIENTO = 16;
+const MARGEN = 12;
+
+function posicionar(el: HTMLElement, x: number, y: number, mapa: DOMRect | undefined) {
+  const { offsetWidth: ancho, offsetHeight: alto } = el;
+  const haciaDerecha = mapa ? mapa.right - x >= x - mapa.left : true;
+  const haciaAbajo = mapa ? mapa.bottom - y >= y - mapa.top : true;
+  let izquierda = haciaDerecha ? x + DESPLAZAMIENTO : x - DESPLAZAMIENTO - ancho;
+  let arriba = haciaAbajo ? y + DESPLAZAMIENTO : y - DESPLAZAMIENTO - alto;
+  // Respaldo: si el lado elegido no cabe en la ventana, se usa el opuesto.
+  if (izquierda < MARGEN || izquierda + ancho > window.innerWidth - MARGEN) {
+    izquierda = haciaDerecha ? x - DESPLAZAMIENTO - ancho : x + DESPLAZAMIENTO;
+  }
+  if (arriba < MARGEN || arriba + alto > window.innerHeight - MARGEN) {
+    arriba = haciaAbajo ? y - DESPLAZAMIENTO - alto : y + DESPLAZAMIENTO;
+  }
+  const dentro = (v: number, tam: number, max: number) => Math.min(Math.max(MARGEN, v), Math.max(MARGEN, max - MARGEN - tam));
+  el.style.transform = `translate(${dentro(izquierda, ancho, window.innerWidth)}px, ${dentro(arriba, alto, window.innerHeight)}px)`;
+}
 
 export function MapaComunal({ geo, resumen, seleccion, onSeleccionar, tokens }: Props) {
   const [metrica, setMetrica] = useState<Metrica>("concentracion");
+  // Comuna bajo el puntero. La posicion no es estado: se escribe directo en el elemento en cada
+  // movimiento para seguir al cursor sin renderizar de nuevo.
+  const [bajoPuntero, setBajoPuntero] = useState<{ id: string; nombre: string } | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const mapaRef = useRef<HTMLDivElement>(null);
+  const punteroRef = useRef({ x: 0, y: 0 });
+  const ocultarRef = useRef(0);
+  useLayoutEffect(() => {
+    if (bajoPuntero && panelRef.current) {
+      posicionar(panelRef.current, punteroRef.current.x, punteroRef.current.y, mapaRef.current?.getBoundingClientRect());
+    }
+  }, [bajoPuntero]);
   const limites = useMemo(() => (geo ? geoJSON(geo).getBounds() : null), [geo]);
   const conMapaBase = Boolean(CARTO_KEY);
 
@@ -77,18 +112,27 @@ export function MapaComunal({ geo, resumen, seleccion, onSeleccionar, tokens }: 
   const alCrear = (feature: GeoJSON.Feature, capa: Layer) => {
     const id = String(feature.properties?.series_id ?? "");
     const fila = resumen.get(id);
-    const nombre = escapar(fila?.nombre ?? String(feature.properties?.nombre ?? id));
-    const texto = fila?.tiene_pronostico
-      ? `<strong>${nombre}</strong><br/>` +
-        `${fmtDecimal(fila.tasa_pronostico_por_10000)} atenciones por 10.000 hab. a la semana<br/>` +
-        `Pronóstico: ${fmtEntero(fila.pronostico_promedio)} por semana (${fmtPct(fila.variacion_pct)})<br/>` +
-        `Cambio esperado: ${CAMBIO[fila.cambio_esperado].etiqueta.toLowerCase()}`
-      : `<strong>${nombre}</strong><br/>Sin pronóstico${fila?.motivo_sin_pronostico ? `: ${escapar(fila.motivo_sin_pronostico)}` : ""}`;
-    capa.bindTooltip(texto, { sticky: true });
+    const nombre = fila?.nombre ?? String(feature.properties?.nombre ?? id);
     capa.on({
       click: () => fila?.tiene_pronostico && onSeleccionar(id),
-      mouseover: (e: LeafletMouseEvent) => e.target.setStyle({ weight: 2.5 }),
-      mouseout: (e: LeafletMouseEvent) => e.target.setStyle({ weight: id === seleccion ? 2.5 : 0.8 }),
+      mouseover: (e: LeafletMouseEvent) => {
+        e.target.setStyle({ weight: 2.5 });
+        cancelAnimationFrame(ocultarRef.current);
+        punteroRef.current = { x: e.originalEvent.clientX, y: e.originalEvent.clientY };
+        setBajoPuntero({ id, nombre });
+      },
+      mousemove: (e: LeafletMouseEvent) => {
+        punteroRef.current = { x: e.originalEvent.clientX, y: e.originalEvent.clientY };
+        if (panelRef.current) {
+          posicionar(panelRef.current, punteroRef.current.x, punteroRef.current.y, mapaRef.current?.getBoundingClientRect());
+        }
+      },
+      mouseout: (e: LeafletMouseEvent) => {
+        e.target.setStyle({ weight: id === seleccion ? 2.5 : 0.8 });
+        // Un cuadro de espera: al pasar a la comuna vecina el mouseover siguiente cancela el
+        // cierre y el panel no parpadea.
+        ocultarRef.current = requestAnimationFrame(() => setBajoPuntero(null));
+      },
     });
   };
 
@@ -102,6 +146,7 @@ export function MapaComunal({ geo, resumen, seleccion, onSeleccionar, tokens }: 
       })
     : [];
 
+  const filaBajoPuntero = bajoPuntero ? resumen.get(bajoPuntero.id) : undefined;
   const alzas = [...resumen.values()].filter((r) => r.cambio_esperado === "alza").length;
   const bajas = [...resumen.values()].filter((r) => r.cambio_esperado === "baja").length;
 
@@ -119,7 +164,7 @@ export function MapaComunal({ geo, resumen, seleccion, onSeleccionar, tokens }: 
         </div>
       </div>
 
-      <div className="relative mx-5 h-104 overflow-hidden rounded-lg border" style={{ borderColor: "var(--border)" }}>
+      <div ref={mapaRef} className="relative isolate mx-5 h-104 overflow-hidden rounded-lg border" style={{ borderColor: "var(--border)" }}>
         {geo && limites ? (
           <MapContainer
             bounds={limites}
@@ -146,6 +191,25 @@ export function MapaComunal({ geo, resumen, seleccion, onSeleccionar, tokens }: 
         )}
       </div>
 
+      {bajoPuntero && createPortal(
+        <div ref={panelRef} role="tooltip" style={{ willChange: "transform" }}
+          className="panel pointer-events-none fixed left-0 top-0 z-50 max-w-64 px-3 py-2 text-[12px] leading-snug text-(--ink) shadow-sm">
+          <p className="font-semibold">{bajoPuntero.nombre}</p>
+          {filaBajoPuntero?.tiene_pronostico ? (
+            <div className="num text-2">
+              <p>{fmtDecimal(filaBajoPuntero.tasa_pronostico_por_10000)} atenciones por 10.000 hab. a la semana</p>
+              <p>Pronóstico: {fmtEntero(filaBajoPuntero.pronostico_promedio)} por semana ({fmtPct(filaBajoPuntero.variacion_pct)})</p>
+              <p>Cambio esperado: {CAMBIO[filaBajoPuntero.cambio_esperado].etiqueta.toLowerCase()}</p>
+            </div>
+          ) : (
+            <p className="text-2">
+              Sin pronóstico{filaBajoPuntero?.motivo_sin_pronostico ? `: ${filaBajoPuntero.motivo_sin_pronostico}` : ""}
+            </p>
+          )}
+        </div>,
+        document.body,
+      )}
+
       <div className="space-y-2 px-5 pb-5 pt-3">
         <ul className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-2" aria-label="Leyenda del mapa">
           {metrica === "concentracion"
@@ -168,12 +232,23 @@ export function MapaComunal({ geo, resumen, seleccion, onSeleccionar, tokens }: 
             />
             Sin pronóstico
           </li>
+          {/* Solo desarrollo: quien usa el producto no necesita saber de la clave del mapa base. */}
+          {!conMapaBase && import.meta.env.DEV && (
+            <li className="sm:ml-auto">
+              <Tip texto="Defina VITE_CARTO_API_KEY en frontend/.env.local para dibujar el mapa base." lado="derecha">
+                <span tabIndex={0} className="badge badge-sin_pronostico">
+                  <span className="badge-icon" aria-hidden>∅</span>
+                  Sin mapa base
+                </span>
+              </Tip>
+            </li>
+          )}
         </ul>
         <p className="max-w-[75ch] text-[12px] text-3">
           {metrica === "concentracion"
             ? "Atenciones pronosticadas por 10.000 habitantes a la semana, en quintiles. Cada atención se asigna a la comuna del establecimiento que la registra, no a la de residencia: una comuna con un centro de referencia regional, como Recoleta con el Instituto Horwitz, concentra atenciones de toda la región."
             : `Alza o baja solo cuando el nivel reciente queda fuera del intervalo del pronóstico; el resto cabe en el ruido semanal. Hoy: ${alzas} en alza y ${bajas} en baja.`}
-          {conMapaBase ? "" : " Sin mapa base: configure VITE_CARTO_API_KEY."} Clic en una comuna para ver su serie.
+          {" "}Clic en una comuna para ver su serie.
         </p>
       </div>
     </section>
