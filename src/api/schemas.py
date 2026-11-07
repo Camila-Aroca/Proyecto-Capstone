@@ -356,3 +356,59 @@ class MetaEstablecimientos(BaseModel):
     pronostico_generado_en: datetime
     objetivos: list[MetaObjetivoEstablecimiento]
     advertencias: list[str]
+
+
+# --- Suicidios semanales (defunciones X60-X84 por comuna de residencia) ----
+
+class PuntoSuicidios(BaseModel):
+    ano: int
+    semana: int
+    fecha_inicio: date | None
+    suicidios: int = Field(description="Defunciones registradas por lesiones autoinfligidas (X60-X84).")
+
+
+class PuntoPronosticoSuicidios(PuntoPronostico):
+    cobertura_esperada: float | None = Field(
+        description="Probabilidad que el modelo asigna al intervalo: en un conteo es mayor o igual al nivel."
+    )
+
+
+class CoberturaSuicidios(BaseModel):
+    observada: float = Field(description="Cobertura real de los intervalos del nivel, fuera de muestra.")
+    esperada: float = Field(description="Cobertura que el modelo declaró para esos mismos intervalos.")
+    evaluaciones: int
+
+
+class SerieSuicidios(BaseModel):
+    series_id: str
+    nombre: str
+    nivel: Nivel
+    historico: list[PuntoSuicidios]
+    pronostico: list[PuntoPronosticoSuicidios]
+    suicidios_ultimas_52_semanas: int = Field(
+        description="Suicidios de los 364 días que terminan en la última semana completa, incluidos los "
+        "fragmentos de borde de año."
+    )
+    tasa_anual_por_100000: float | None = Field(
+        description="Esos suicidios anualizados por 100.000 habitantes (población INE proyectada del último año)."
+    )
+    modelo: str
+    nivel_intervalo: float
+    ultima_semana_observada: dict[str, int]
+    fecha_corte_datos: date
+    semanas_registro_incompleto: list[str] = Field(
+        description="Semanas finales excluidas porque su inscripción aún no está completa."
+    )
+    cobertura_holdout: CoberturaSuicidios | None
+    advertencias: list[str]
+
+
+# --- Calendario de contexto (festividades y estaciones) -------------------
+
+class EventoCalendario(BaseModel):
+    evento_id: str
+    nombre: str
+    categoria: Literal["festividad", "estacion"]
+    fecha_inicio: date
+    fecha_fin: date = Field(description="Último día incluido; igual al inicio si es un solo día.")
+    detalle: str = Field(description="Regla con que se obtuvo la fecha.")

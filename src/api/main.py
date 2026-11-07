@@ -24,10 +24,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
+from src.api.calendario import router as router_calendario
 from src.api.establecimientos import ServicioEstablecimientos
 from src.api.establecimientos import router as router_establecimientos
 from src.api.routes import router
 from src.api.service import ServicioDemanda
+from src.api.suicidios import ServicioSuicidios
+from src.api.suicidios import router as router_suicidios
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
@@ -41,6 +44,7 @@ def create_app(
     fabrica_servicio: Callable[[], ServicioDemanda] = ServicioDemanda,
     iniciar_calculos: bool = True,
     fabrica_establecimientos: Callable[[], ServicioEstablecimientos] = ServicioEstablecimientos,
+    fabrica_suicidios: Callable[[], ServicioSuicidios] = ServicioSuicidios,
 ) -> FastAPI:
     """Construye la app. Los tests inyectan un servicio ya poblado y sin calculos."""
 
@@ -50,9 +54,13 @@ def create_app(
         app.state.servicio = servicio
         establecimientos = fabrica_establecimientos()
         app.state.establecimientos = establecimientos
+        suicidios = fabrica_suicidios()
+        app.state.suicidios = suicidios
         tarea = None
         if iniciar_calculos:
             async def preparar() -> None:
+                # Lectura de un output persistido, sin ajuste: no espera al pronóstico de demanda.
+                await asyncio.to_thread(suicidios.cargar)
                 await asyncio.to_thread(servicio.cargar)
                 await asyncio.to_thread(servicio.calcular_pronostico)
                 # Solo lee un output persistido: no ajusta modelos.
@@ -82,6 +90,8 @@ def create_app(
     )
     app.include_router(router)
     app.include_router(router_establecimientos)
+    app.include_router(router_suicidios)
+    app.include_router(router_calendario)
     return app
 
 
