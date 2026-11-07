@@ -58,6 +58,12 @@ def test_festividades_del_periodo_y_rango_que_cruza_el_ano():
     assert len(ids) == len(set(ids))
 
 
+def test_halloween_y_todos_los_santos_cubren_31_oct_y_1_nov():
+    marcas = [e for e in c.eventos(date(2025, 10, 1), date(2025, 11, 30)) if e.categoria == c.FESTIVIDAD]
+    assert [(e.nombre, e.fecha_inicio, e.fecha_fin) for e in marcas] == [
+        ("Halloween y Todos los Santos", date(2025, 10, 31), date(2025, 11, 1))]
+
+
 def test_fuera_de_rango_falla():
     with pytest.raises(ValueError):
         c.eventos(date(2026, 2, 1), date(2026, 1, 1))

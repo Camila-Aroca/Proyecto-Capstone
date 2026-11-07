@@ -8,8 +8,9 @@ con una fecha no dice que la fecha la cause.
 Nada se escribe a mano: cada fecha sale de una regla verificable.
 
 - **Fechas fijas:** Año Nuevo (31 dic - 1 ene, víspera y feriado), Fiestas Patrias
-  (18 y 19 sep, feriados legales; los años en que la ley agrega días no se incluyen)
-  y Navidad (24 - 25 dic, víspera y feriado).
+  (18 y 19 sep, feriados legales; los años en que la ley agrega días no se incluyen),
+  Halloween y Todos los Santos (31 oct - 1 nov; el 31 es además feriado de las Iglesias
+  Evangélicas y Protestantes) y Navidad (24 - 25 dic, víspera y feriado).
 - **Semana Santa:** de Viernes Santo a Domingo de Resurrección; la Pascua se calcula
   con el algoritmo gregoriano anónimo (Meeus, *Astronomical Algorithms*, cap. 8).
 - **Día de la Madre y del Padre:** segundo domingo de mayo y tercer domingo de junio.
@@ -135,6 +136,9 @@ def _festividades(ano: int) -> list[Evento]:
                "Tercer domingo de junio; no es feriado."),
         Evento(f"fiestas_patrias_{ano}", "Fiestas Patrias", FESTIVIDAD, date(ano, 9, 18), date(ano, 9, 19),
                "18 y 19 de septiembre, feriados legales (los días que la ley agrega algunos años no se incluyen)."),
+        Evento(f"todos_los_santos_{ano}", "Halloween y Todos los Santos", FESTIVIDAD, date(ano, 10, 31), date(ano, 11, 1),
+               "31 de octubre (Halloween y Día de las Iglesias Evangélicas y Protestantes) y 1 de noviembre "
+               "(Todos los Santos), feriados legales; los traslados que haga la ley no se incluyen."),
         Evento(f"navidad_{ano}", "Navidad", FESTIVIDAD, date(ano, 12, 24), date(ano, 12, 25),
                "Nochebuena (24 de diciembre) y feriado del 25."),
     ]
