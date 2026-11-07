@@ -8,6 +8,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import type { ReactNode } from "react";
 import type { CamasPsiquiatria, SemanaParcial, SerieConPronostico } from "../api";
 import { fmtEntero, fmtFechaCorta, fmtFechaLarga, fmtMedia } from "../format";
 import type { Tokens } from "../tokens";
@@ -30,6 +31,91 @@ interface Props {
   eje?: SemanaEje[] | null;
   /** Marcas de contexto (festividades, estaciones): lineas verticales y bandas. */
   marcas?: MarcaTemporal[];
+  /**
+   * Altura minima del eje y, que parte en 0, con marcas en numeros limpios. En series
+   * de conteos bajos evita que el eje se ajuste a 0-1 y que una semana con un caso
+   * llene todo el grafico.
+   */
+  pisoEje?: number;
+  /**
+   * Lectura del hover anclada arriba del grafico (sigue la semana, no salta en vertical
+   * ni tapa la linea), con el valor de cada serie junto a su clave de linea.
+   */
+  tooltipAnclado?: boolean;
+}
+
+// Marcas del eje y en enteros limpios: paso 1, 2 o 5 por potencia de 10, nunca menor a
+// 1 (son conteos). Con un maximo dado, Recharts repartiria el eje en pasos como 7.
+function marcasEnteras(max: number): number[] {
+  const bruto = Math.max(max, 1) / 4;
+  const potencia = 10 ** Math.floor(Math.log10(bruto));
+  const paso = Math.max(1, [1, 2, 5, 10].map((m) => m * potencia).find((p) => p >= bruto) ?? 10 * potencia);
+  return Array.from({ length: Math.ceil(max / paso) + 1 }, (_, i) => i * paso);
+}
+
+function ClaveLinea({ color, discontinua = false }: { color: string; discontinua?: boolean }) {
+  return (
+    <svg width="16" height="8" className="shrink-0" aria-hidden>
+      <line x1="0" y1="4" x2="16" y2="4" stroke={color} strokeWidth="2" strokeDasharray={discontinua ? "4 3" : undefined} />
+    </svg>
+  );
+}
+
+function FilaLectura({ clave, etiqueta, valor }: { clave: ReactNode; etiqueta: string; valor: string }) {
+  return (
+    <div className="flex items-center gap-2">
+      {clave}
+      <span className="text-2">{etiqueta}</span>
+      <span className="ml-auto pl-5 font-semibold">{valor}</span>
+    </div>
+  );
+}
+
+// Lectura de una semana: fecha en segundo plano, una fila por serie (el valor manda) y
+// el contexto del calendario separado por una linea, mas tenue.
+function LecturaSemana({ p, unidad, intervalo, trazo, banda, fmtPronostico, marcas }: {
+  p: Punto;
+  unidad: string;
+  intervalo: string;
+  trazo: string;
+  banda: string;
+  fmtPronostico: (v: number) => string;
+  marcas: MarcaTemporal[];
+}) {
+  return (
+    <div className="panel min-w-52 px-3 py-2 text-[12px] leading-relaxed num shadow-sm">
+      <p className="text-3">Semana {p.semana} · {fmtFechaLarga(p.fecha)}</p>
+      <div className="mt-1">
+        {p.observado != null && (
+          <FilaLectura clave={<ClaveLinea color={trazo} />} etiqueta={mayuscula(unidad)} valor={fmtEntero(p.observado)} />
+        )}
+        {p.pronostico != null && p.banda && (
+          <>
+            <FilaLectura clave={<ClaveLinea color={trazo} discontinua />} etiqueta="Pronóstico" valor={fmtPronostico(p.pronostico)} />
+            <FilaLectura
+              clave={<svg width="16" height="8" className="shrink-0" aria-hidden><rect width="16" height="8" rx="2" fill={banda} /></svg>}
+              etiqueta={`Intervalo ${intervalo}`}
+              valor={`${fmtEntero(p.banda[0])} – ${fmtEntero(p.banda[1])}`}
+            />
+          </>
+        )}
+        {p.sinPronostico && <p className="text-3">Sin dato observado ni pronóstico.</p>}
+      </div>
+      {marcas.length > 0 && (
+        <div className="mt-1.5 border-t border-[var(--border)] pt-1.5 text-3">
+          {marcas.map((m) => (
+            <p key={m.id} className="flex items-center gap-2">
+              <svg width="16" height="10" className="shrink-0" aria-hidden>
+                <line x1="8" y1="0" x2="8" y2="10" stroke={m.color} strokeWidth="2"
+                  strokeDasharray={m.categoria === "festividad" ? "3 2" : undefined} />
+              </svg>
+              {m.nombre} ({fechasMarca(m)})
+            </p>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 // Halo de la linea de camas (dotacion declarada): dos sombras del mismo color, una
@@ -292,6 +378,7 @@ export function TablaSerie({ serie, intervalo, semanaParcial, camas, unidad = "a
 
 export function GraficoSerie({
   serie, tokens, intervalo, semanaParcial, unidad = "atenciones", color, banda, decimales = false, eje, marcas,
+  pisoEje, tooltipAnclado = false,
 }: Props) {
   const propios = construirPuntos(serie, semanaParcial);
   const puntos = eje ? alinear(propios, eje) : propios;
@@ -299,6 +386,14 @@ export function GraficoSerie({
   const marcasSemana = marcas?.length ? marcasPorSemana(fechas, marcas) : null;
   const trazo = color ?? tokens["series-1"];
   const fmtPronostico = decimales ? fmtMedia : fmtEntero;
+  let marcasY: number[] | undefined;
+  if (pisoEje != null) {
+    let maximo = pisoEje;
+    for (const p of puntos) {
+      for (const v of [p.observado, p.pronostico, p.banda?.[1], p.parcial]) if (v != null && v > maximo) maximo = v;
+    }
+    marcasY = marcasEnteras(maximo);
+  }
   return (
     <div
       className="relative h-72"
@@ -317,7 +412,8 @@ export function GraficoSerie({
             minTickGap={40}
           />
           <YAxis
-            domain={["auto", "auto"]}
+            domain={marcasY ? [0, marcasY[marcasY.length - 1]] : ["auto", "auto"]}
+            ticks={marcasY}
             allowDecimals={!decimales}
             tickFormatter={(v: number) => fmtEntero(v)}
             tick={{ fill: tokens["ink-3"], fontSize: 11 }}
@@ -328,9 +424,23 @@ export function GraficoSerie({
           <Tooltip
             cursor={{ stroke: tokens.axis, strokeWidth: 1 }}
             isAnimationActive={false}
+            position={tooltipAnclado ? { y: 0 } : undefined}
             content={({ active, payload }) => {
               const p = active ? (payload?.[0]?.payload as Punto | undefined) : undefined;
               if (!p) return null;
+              if (tooltipAnclado) {
+                return (
+                  <LecturaSemana
+                    p={p}
+                    unidad={unidad}
+                    intervalo={intervalo}
+                    trazo={trazo}
+                    banda={banda ?? tokens.band}
+                    fmtPronostico={fmtPronostico}
+                    marcas={marcasSemana?.get(p.fecha) ?? []}
+                  />
+                );
+              }
               return (
                 <div className="panel px-3 py-2 text-[12px] num shadow-sm">
                   <p className="font-semibold">Semana {p.semana} · {fmtFechaLarga(p.fecha)}</p>

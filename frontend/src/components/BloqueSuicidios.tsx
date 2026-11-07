@@ -35,6 +35,10 @@ const CATEGORIAS: { id: CategoriaEvento; etiqueta: string }[] = [
 const ORDEN_ESTACIONES = ["Verano", "Otoño", "Invierno", "Primavera"];
 
 const SEMANAS_ANO = 52;
+// Altura minima del eje y: en una comuna con 0-1 casos por semana el eje automatico
+// seria 0-1 y un caso llenaria todo el grafico. En la region el maximo ya la supera
+// y el eje se ajusta a los datos.
+const PISO_EJE = 3;
 
 const promedio = (xs: number[]) => (xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : null);
 
@@ -209,7 +213,15 @@ export function BloqueSuicidios({ suicidios, error, tokens, eje, eventos = [] }:
               decimales
               eje={eje}
               marcas={marcas}
+              pisoEje={PISO_EJE}
+              tooltipAnclado
             />
+            {anual != null && anual < 1 && (
+              <p className="mt-2 max-w-[90ch] text-[12px] text-3">
+                En {territorio} hay en promedio <span className="num">{fmtMedia(anual)}</span> suicidios por semana. Con
+                tan pocos casos, una semana con un suicidio no indica por sí sola un aumento.
+              </p>
+            )}
             <TablaSerie serie={alineada} intervalo={intervalo} unidad="suicidios" decimales />
             <Caracterizacion serie={alineada} fuente="suicidios" />
             {marcasPeriodo.length > 0 && (
