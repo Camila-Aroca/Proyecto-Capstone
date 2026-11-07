@@ -3,7 +3,7 @@
 // atenciones de salud mental (ID36) y de hospitalizaciones indicadas desde la
 // urgencia (ID42, solo hospitales). La cifra regional no se muestra aqui: la
 // entrega el modelo comunal, que reconcilia.
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   api,
   type EstablecimientoDetalle,
@@ -120,9 +120,9 @@ function valor(fila: EstablecimientoResumen, objetivo: ObjetivoEstablecimiento, 
   }
 }
 
-function Esqueleto() {
+function Esqueleto({ alturaMinima }: { alturaMinima: number }) {
   return (
-    <div className="space-y-4 px-5 pb-5" aria-busy="true" aria-label="Cargando establecimiento">
+    <div className="space-y-4 px-5 pb-5" style={{ minHeight: alturaMinima }} aria-busy="true" aria-label="Cargando establecimiento">
       <div className="skeleton h-5 w-2/3" />
       <div className="flex gap-8">
         {[0, 1, 2].map((i) => <div key={i} className="skeleton h-12 w-36" />)}
@@ -255,6 +255,13 @@ export function VistaEstablecimientos() {
   const motivo = detalle?.series.find((s) => s.objetivo === objetivo)?.motivo_sin_pronostico ?? resumenObjetivo?.motivo_sin_pronostico;
   const primero = serie?.pronostico?.[0];
   const { unidad, subtitulo } = OBJETIVOS[objetivo];
+  // Al cambiar de establecimiento el detalle se reemplaza por un esqueleto; si fuera
+  // mas bajo, la pagina se acortaria y el navegador moveria el scroll al final.
+  const cuerpoDetalle = useRef<HTMLDivElement>(null);
+  const alturaDetalle = useRef(0);
+  useLayoutEffect(() => {
+    if (serie && cuerpoDetalle.current) alturaDetalle.current = cuerpoDetalle.current.offsetHeight;
+  });
   const ultima = meta ? { ...meta.ultima_semana_observada, fecha_inicio: meta.ultima_semana_fecha_inicio } : null;
 
   return (
@@ -328,9 +335,9 @@ export function VistaEstablecimientos() {
           </div>
 
           {!serie ? (
-            <Esqueleto />
+            <Esqueleto alturaMinima={alturaDetalle.current} />
           ) : (
-            <div className="px-5 pb-4">
+            <div className="px-5 pb-4" ref={cuerpoDetalle}>
               <div aria-live="polite">
                 {primero ? (
                   <p className="max-w-[75ch] text-[15px] leading-relaxed">
