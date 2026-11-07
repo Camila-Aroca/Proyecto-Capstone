@@ -1,7 +1,7 @@
 // Tablero: la vista de analisis. Vive separado de la pagina de entrada para
 // que la landing no cargue ni el mapa ni los datos del pronostico.
 import { useEffect, useMemo, useState } from "react";
-import { api, type CamasPsiquiatria, type EstablecimientoResumen, type EstadoProceso, type Meta, type ResumenComuna, type SerieConPronostico, type Territorio } from "../api";
+import { api, type CamasPsiquiatria, type EstablecimientoResumen, type EstadoProceso, type EventoCalendario, type Meta, type ResumenComuna, type SerieConPronostico, type SerieSuicidios, type Territorio } from "../api";
 import { enlace, parametros, reflejar, RUTA_ESTABLECIMIENTOS, RUTA_TABLERO } from "../ruta";
 import { Alcance } from "./Alcance";
 import { AvisoLectura } from "./AvisoLectura";
@@ -13,6 +13,10 @@ import { useTokens } from "../tokens";
 
 const REGION = "RM";
 const VENTANAS = [26, 52, 104] as const;
+// Semanas extra de historia de suicidios: sus datos se publican con otro desfase que los
+// de atenciones, y el grafico se recorta al eje de atenciones. Con margen, su primera
+// semana siempre tiene dato.
+const MARGEN_SUICIDIOS = 26;
 
 export function Tablero() {
   const tokens = useTokens();
@@ -29,6 +33,9 @@ export function Tablero() {
   const [establecimientos, setEstablecimientos] = useState<EstablecimientoResumen[]>([]);
   const [serie, setSerie] = useState<SerieConPronostico | null>(null);
   const [camas, setCamas] = useState<CamasPsiquiatria | null>(null);
+  const [suicidios, setSuicidios] = useState<SerieSuicidios | null>(null);
+  const [errorSuicidios, setErrorSuicidios] = useState<string | null>(null);
+  const [eventos, setEventos] = useState<EventoCalendario[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   // Carga inicial. Cada recurso se pinta apenas llega; el pronostico puede
@@ -42,6 +49,10 @@ export function Tablero() {
     // Solo alimenta el enlace a la vista por establecimiento: si falta, el
     // tablero sigue igual, sin el enlace.
     api.establecimientos().then(setEstablecimientos).catch(() => undefined);
+    // Marcas de contexto del grafico de suicidios: una sola consulta que cubre la
+    // ventana mas larga (104 semanas) y el pronostico. Si falla, el grafico sale sin marcas.
+    const ano = new Date().getFullYear();
+    api.calendarioEventos(`${ano - 3}-01-01`, `${ano + 1}-12-31`).then(setEventos).catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -72,6 +83,18 @@ export function Tablero() {
       .catch(() => undefined);
     return () => control.abort();
   }, [seleccion]);
+
+  // Suicidios del mismo territorio y la misma ventana. Es un output persistido e
+  // independiente del pronostico de atenciones: su falla no afecta al resto del tablero.
+  useEffect(() => {
+    const control = new AbortController();
+    setSuicidios(null);
+    setErrorSuicidios(null);
+    api.suicidios(seleccion, semanas + MARGEN_SUICIDIOS, control.signal)
+      .then(setSuicidios)
+      .catch((e) => e.name !== "AbortError" && setErrorSuicidios(e instanceof Error ? e.message : String(e)));
+    return () => control.abort();
+  }, [seleccion, semanas]);
 
   useEffect(() => {
     if (pronosticoListo) api.meta().then(setMeta).catch(() => undefined);
@@ -153,6 +176,9 @@ export function Tablero() {
           semanaParcial={meta?.semana_en_curso ?? null}
           camas={camas}
           establecimientos={enlaceEstablecimientos}
+          suicidios={suicidios}
+          errorSuicidios={errorSuicidios}
+          eventos={eventos}
         />
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] [&>*]:min-w-0">
@@ -170,7 +196,8 @@ export function Tablero() {
         <footer className="border-t pb-6 pt-4 text-[12px] text-3" style={{ borderColor: "var(--border)" }}>
           <p className="max-w-[90ch]">
             Fuente: DEIS/MINSAL, atenciones de urgencia por causas de salud mental (ID36, incluye ideación suicida,
-            ID37). Población: INE, proyecciones comunales. Pobreza: MDS, Casen 2022. Límites comunales: INE, Censo 2024.
+            ID37). Suicidios: DEIS, defunciones por lesiones autoinfligidas (X60–X84) según comuna de
+            residencia. Población: INE, proyecciones comunales. Pobreza: MDS, Casen 2022. Límites comunales: INE, Censo 2024.
           </p>
           <p className="mt-1">
             Modelo: <span className="font-mono text-[11px]">{meta?.modelo ?? "—"}</span>. Las cifras son atenciones

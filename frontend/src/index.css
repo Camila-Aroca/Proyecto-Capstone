@@ -43,6 +43,23 @@
   /* Linea de referencia de camas: burdeos, distinto del petroleo de la serie y del
      rojo de alza. 8,9:1 sobre la superficie clara; contra el petróleo de la serie solo distingue el matiz, por eso va punteada. */
   --camas: #8c1d40;
+  /* Serie de suicidios: el mismo burdeos validado, como serie propia en su propio
+     grafico (nunca en el eje de las atenciones). Se prefirio al rojo porque el rojo
+     ya significa "alza" en el tablero. Separacion con el petroleo: delta E 21,5
+     (deuteranopia 10,3), validada con la skill dataviz. */
+  --suicidios: #8c1d40;
+  --band-suicidios: rgba(140, 29, 64, 0.14);
+  /* Marcas de contexto del grafico de suicidios: recesivas (lineas finas con opacidad,
+     bandas casi transparentes). Estaciones en el orden del ciclo, validadas con la
+     skill dataviz para pares vecinos (vision normal delta E >= 16,8; deuteranopia >= 15,4)
+     y lejos del burdeos de la serie (otono: delta E 21,2). El ambar de verano queda a
+     2,1:1 de la superficie: por eso cada marca tiene nombre en el tooltip y en la lista
+     de fechas. Festividades en pizarra neutra y punteada: no compiten por tono. */
+  --marca-festividad: #6b8391;
+  --marca-verano: #e0aa2b;
+  --marca-otono: #946f0c;
+  --marca-invierno: #4a8fd0;
+  --marca-primavera: #2f8a64;
   --focus: #0f5a78;
 
   /* Cambio esperado (divergente, calido/frio) y ausencia de dato. Par validado:
@@ -99,6 +116,15 @@
     --band: rgba(74, 159, 207, 0.24);
     /* Burdeos claro para fondo oscuro: 5,2:1 sobre la superficie. */
     --camas: #e0627f;
+    /* Delta E 24,5 con el petroleo claro (deuteranopia 13,3); 5,2:1 sobre la superficie. */
+    --suicidios: #e0627f;
+    --band-suicidios: rgba(224, 98, 127, 0.2);
+    /* Mismo orden y reglas, re-escalonados para la superficie oscura (todas >= 3:1). */
+    --marca-festividad: #93aab6;
+    --marca-verano: #ba8c28;
+    --marca-otono: #866100;
+    --marca-invierno: #5d98dc;
+    --marca-primavera: #33a07c;
     --focus: #7cc0e2;
     --alza: #e07a62;
     --alza-weak: rgba(224, 122, 98, 0.18);

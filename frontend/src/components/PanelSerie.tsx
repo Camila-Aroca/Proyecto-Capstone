@@ -1,9 +1,11 @@
-import type { CamasPsiquiatria, CoberturaNivel, SemanaParcial, SerieConPronostico } from "../api";
+import { useMemo } from "react";
+import type { CamasPsiquiatria, CoberturaNivel, EventoCalendario, SemanaParcial, SerieConPronostico, SerieSuicidios } from "../api";
 import { clasificar, fueraDelIntervalo } from "../cambio";
 import { fmtEntero, fmtFechaLarga, fmtPct } from "../format";
 import type { Tokens } from "../tokens";
 import { BadgeCambio } from "./BadgeCambio";
-import { GraficoSerie, LeyendaSerie, TablaSerie } from "./GraficoSerie";
+import { BloqueSuicidios } from "./BloqueSuicidios";
+import { ejeDeSerie, GraficoSerie, LeyendaSerie, TablaSerie } from "./GraficoSerie";
 
 interface Props {
   serie: SerieConPronostico | null;
@@ -18,6 +20,11 @@ interface Props {
   camas: CamasPsiquiatria | null;
   /** Puente a la vista por establecimiento del territorio; null si no hay establecimientos. */
   establecimientos: { href: string; texto: string } | null;
+  /** Suicidios semanales del mismo territorio; null mientras carga. */
+  suicidios: SerieSuicidios | null;
+  errorSuicidios: string | null;
+  /** Festividades y estaciones que se marcan sobre el grafico de suicidios. */
+  eventos: EventoCalendario[];
 }
 
 const VENTANA_RECIENTE = 4;
@@ -38,6 +45,7 @@ function Esqueleto() {
 
 export function PanelSerie({
   serie, tokens, nivelIntervalo, cobertura, umbralCambioPct, semanaParcial, camas, establecimientos,
+  suicidios, errorSuicidios, eventos,
 }: Props) {
   const intervalo = nivelIntervalo ? `${Math.round(nivelIntervalo * 100)}%` : "";
   const pronostico = serie?.pronostico ?? [];
@@ -53,6 +61,8 @@ export function PanelSerie({
   // El dato parcial es de toda la RM: mostrarlo en una comuna seria atribuirle
   // un volumen que no es suyo.
   const parcialAplicable = serie?.nivel === "region" ? semanaParcial : null;
+  // El grafico de suicidios usa exactamente las semanas de este grafico.
+  const eje = useMemo(() => (serie ? ejeDeSerie(serie, parcialAplicable) : null), [serie, parcialAplicable]);
   const rango = pronostico.length
     ? `${pronostico[0].horizonte} a ${pronostico[pronostico.length - 1].horizonte} semanas`
     : "";
@@ -144,6 +154,10 @@ export function PanelSerie({
           </div>
         </div>
       )}
+
+      <div className="px-5 pb-4">
+        <BloqueSuicidios suicidios={suicidios} error={errorSuicidios} tokens={tokens} eje={eje} eventos={eventos} />
+      </div>
     </section>
   );
 }

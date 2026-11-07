@@ -11,6 +11,11 @@ export const SIN_DATO = "sin dato";
 
 export const fmtEntero = (v: number | null | undefined) => (v == null ? SIN_DATO : entero.format(v));
 export const fmtDecimal = (v: number | null | undefined) => (v == null ? SIN_DATO : decimal.format(v));
+// Medias de conteos bajos (p. ej. suicidios por semana en una comuna): bajo 1 se
+// muestran dos decimales, porque 0,05 con uno se leeria 0,0.
+const dosDecimales = new Intl.NumberFormat("es-CL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+export const fmtMedia = (v: number | null | undefined) =>
+  v != null && v < 1 ? dosDecimales.format(v) : fmtDecimal(v);
 export const fmtPct = (v: number | null | undefined) =>
   v == null ? SIN_DATO : `${v > 0 ? "+" : ""}${decimal.format(v)}%`;
 export const fmtFechaCorta = (iso: string | null) => (iso ? fechaCorta.format(new Date(iso)) : SIN_DATO);

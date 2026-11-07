@@ -241,6 +241,59 @@ export interface MetaEstablecimientos {
   advertencias: string[];
 }
 
+// --- Suicidios semanales (defunciones X60-X84, comuna de residencia) -----
+
+export interface PuntoSuicidios {
+  ano: number;
+  semana: number;
+  fecha_inicio: string | null;
+  suicidios: number;
+}
+
+export interface PuntoPronosticoSuicidios extends PuntoPronostico {
+  /** Probabilidad que el modelo asigna al intervalo; en un conteo es >= al nivel nominal. */
+  cobertura_esperada: number | null;
+}
+
+export interface CoberturaSuicidios {
+  observada: number;
+  esperada: number;
+  evaluaciones: number;
+}
+
+export interface SerieSuicidios {
+  series_id: string;
+  nombre: string;
+  nivel: Nivel;
+  historico: PuntoSuicidios[];
+  pronostico: PuntoPronosticoSuicidios[];
+  suicidios_ultimas_52_semanas: number;
+  /** Null si no hay poblacion para el territorio (nunca 0 por ausencia). */
+  tasa_anual_por_100000: number | null;
+  modelo: string;
+  nivel_intervalo: number;
+  ultima_semana_observada: { ano: number; semana: number };
+  fecha_corte_datos: string;
+  semanas_registro_incompleto: string[];
+  cobertura_holdout: CoberturaSuicidios | null;
+  advertencias: string[];
+}
+
+// --- Calendario de contexto: festividades de reunion y estaciones ----------
+
+export type CategoriaEvento = "festividad" | "estacion";
+
+export interface EventoCalendario {
+  evento_id: string;
+  nombre: string;
+  categoria: CategoriaEvento;
+  fecha_inicio: string;
+  /** Ultimo dia incluido; igual al inicio si es un solo dia. */
+  fecha_fin: string;
+  /** Regla con que se obtuvo la fecha. */
+  detalle: string;
+}
+
 const BASE = "/api/v1";
 const MAX_REINTENTOS = 30;
 
@@ -280,6 +333,10 @@ export const api = {
     obtener<CamasPsiquiatria>(`/camas-psiquiatria/${encodeURIComponent(id)}`, senal),
   resumenComunal: () => obtener<ResumenComuna[]>("/resumen-comunal"),
   geoComunas: () => obtener<GeoJSON.FeatureCollection>("/geo/comunas"),
+  suicidios: (id: string, semanas: number, senal?: AbortSignal) =>
+    obtener<SerieSuicidios>(`/suicidios/${encodeURIComponent(id)}?semanas=${semanas}`, senal),
+  calendarioEventos: (desde: string, hasta: string) =>
+    obtener<EventoCalendario[]>(`/calendario-eventos?desde=${desde}&hasta=${hasta}`),
   establecimientos: () => obtener<EstablecimientoResumen[]>("/establecimientos"),
   metaEstablecimientos: () => obtener<MetaEstablecimientos>("/establecimientos-meta"),
   establecimiento: (codigo: number, semanas: number, senal?: AbortSignal) =>
