@@ -446,6 +446,7 @@ export function VistaEstablecimientos() {
               {objetivo === "hospitalizaciones_sm" && detalle?.ocupacion_psiquiatria?.length ? (
                 <PanelOcupacion
                   key={detalle.establecimiento_codigo}
+                  establecimientoCodigo={detalle.establecimiento_codigo}
                   meses={detalle.ocupacion_psiquiatria}
                   areas={detalle.areas_psiquiatria ?? null}
                   dotacion={resumen?.camas_psiquiatria ?? null}

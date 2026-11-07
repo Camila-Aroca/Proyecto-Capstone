@@ -329,7 +329,7 @@ function TablaMeses({ meses }: { meses: PuntoOcupacionMensual[] }) {
   );
 }
 
-export function PanelOcupacion({ meses, areas, dotacion, tokens }: Props) {
+export function PanelOcupacion({ establecimientoCodigo, meses, areas, dotacion, tokens }: Props & { establecimientoCodigo: number }) {
   // null = total del hospital. Se reinicia al cambiar de hospital (la vista monta el panel con su codigo como key).
   const [elegida, setElegida] = useState<number | null>(null);
   const area = areas?.find((a) => a.nivel_cuidado_codigo === elegida) ?? null;
@@ -371,9 +371,33 @@ export function PanelOcupacion({ meses, areas, dotacion, tokens }: Props) {
             Total del hospital
           </button>
           {area && (
+            <span className="group relative inline-flex items-center">
             <button type="button" aria-pressed onClick={() => setElegida(null)} title="Volver al total del hospital">
               {nombreArea(area.nivel_cuidado)} ✕
             </button>
+            {establecimientoCodigo === 109102 && area.nivel_cuidado_codigo === 420 && (
+              <>
+                <button type="button" aria-label="Información sobre el cierre de larga estadía del Horwitz"
+                  aria-describedby="ayuda-cierre-larga-estadia-horwitz" className="ml-1 cursor-help text-3">
+                  <span aria-hidden>ⓘ</span>
+                </button>
+                <span id="ayuda-cierre-larga-estadia-horwitz" role="tooltip"
+                  className="invisible absolute left-0 top-full z-20 w-72 max-w-[calc(100vw-3rem)] pt-1 text-left text-[12px] font-normal opacity-0 transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                  <span className="panel block whitespace-normal px-3 py-2.5 text-(--ink) shadow-sm">
+                    <span className="block font-semibold">Cierre de larga estadía del Horwitz</span>
+                    <span className="mt-1.5 block">El 20 de abril de 2026 salieron los últimos cuatro pacientes hacia
+                      una residencia de alta complejidad, culminando el cierre de la unidad.</span>
+                    <span className="mt-1.5 block">Desde mayo de 2026, REM-20 registra cero días cama disponibles,
+                      ocupados y egresos en esta área. Las 29 camas declaradas corresponden al libro de 2025, anterior al cierre.</span>
+                    <a className="mt-2 block text-3 underline" target="_blank" rel="noopener noreferrer"
+                      href="https://psiquiatrico.cl/video-luego-de-174-anos-el-instituto-psiquiatrico-deja-de-tener-pacientes-de-larga-estadia/">
+                      Fuente: comunicado del Horwitz, 23 de abril de 2026 (abre en otra pestaña).
+                    </a>
+                  </span>
+                </span>
+              </>
+            )}
+            </span>
           )}
         </div>
       )}
