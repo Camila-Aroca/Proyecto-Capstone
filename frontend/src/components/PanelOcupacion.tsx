@@ -4,7 +4,7 @@
 // mensual (pacientes en cama por dia, de cualquier origen). Mezclarlos en una
 // escala aplastaria la serie de hospitalizaciones y sugeriria una comparacion
 // uno a uno que no existe.
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import {
   Area,
   CartesianGrid,
@@ -37,6 +37,20 @@ const fmtCamas = (v: number | null | undefined) => (v != null && Math.abs(v) < 1
 const fmtIndice = (v: number | null | undefined) => (v == null ? "sin dato" : `${fmtDecimal(v)}%`);
 // "418 - Área Psiquiatría Adulto Corta estadía" -> "Psiquiatría Adulto Corta estadía"
 const nombreArea = (glosa: string) => glosa.replace(/^\d{3}\s*-\s*/, "").replace(/^Área\s+(de\s+)?/i, "");
+
+// Division con barra horizontal (numerador sobre denominador). Lo visual va oculto a los
+// lectores de pantalla, que reciben la lectura en palabras.
+function Fraccion({ num, den, lectura }: { num: ReactNode; den: ReactNode; lectura: string }) {
+  return (
+    <>
+      <span aria-hidden className="inline-flex flex-col items-center text-center leading-tight align-middle">
+        <span className="border-b border-current px-1.5 pb-0.5">{num}</span>
+        <span className="px-1.5 pt-0.5">{den}</span>
+      </span>
+      <span className="sr-only">{lectura}</span>
+    </>
+  );
+}
 
 interface Punto extends PuntoOcupacionMensual {
   /** Banda de 0 a las camas disponibles: la capacidad, como area neutra de fondo. */
@@ -421,10 +435,20 @@ export function PanelOcupacion({ meses, areas, dotacion, tokens }: Props) {
         </div>
         <div>
           <dt className="text-[12px] text-3">Aumento de dotación propuesto{anoPropuesta ? `, ${anoPropuesta}` : ''}</dt>
-          <dd className="mt-0.5 text-xl font-semibold tracking-tight num">
-            {aumentoVisible == null ? 'Sin cálculo respaldado' : `+${fmtEntero(aumentoVisible)} camas`}
+          {/* Sin cifra: la cifra grande queda atenuada ("—") y el estado va en el distintivo punteado
+              de "sin dato" de la app, no como una frase en el tamaño de una cifra. */}
+          <dd className={`mt-0.5 text-xl font-semibold tracking-tight num${aumentoVisible == null ? ' text-3' : ''}`}>
+            {aumentoVisible == null ? '—' : `+${fmtEntero(aumentoVisible)} camas`}
           </dd>
-          <dd className="text-[12px] text-3">
+          {aumentoVisible == null && (
+            <dd className="mt-1">
+              <span className="badge badge-sin_pronostico">
+                <span className="badge-icon" aria-hidden>∅</span>
+                Sin cálculo respaldado
+              </span>
+            </dd>
+          )}
+          <dd className={`text-[12px] text-3${aumentoVisible == null ? ' mt-1' : ''}`}>
             {!area ? `${resumen.areasConPropuesta} de ${resumen.areasTotales} áreas de psiquiatría${resumen.parcial ? '; subtotal parcial' : '; suma por área'}` : propuesta?.motivo ? propuesta.motivo
               : propuesta?.aumento_dotacion == null ? 'actualice los datos de capacidad'
               : propuesta.fuente_base === 'disponibles_rem20' ? 'respecto de disponibles REM-20; estimación'
@@ -451,12 +475,17 @@ export function PanelOcupacion({ meses, areas, dotacion, tokens }: Props) {
               <ol className="mt-3 grid gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-3 sm:grid-cols-3" aria-label="Cómo se calcula el objetivo de camas">
                 <li>
                   <p className="text-[11px] text-3">1. Carga del mes de mayor demanda</p>
-                  <p className="mt-1 text-[15px] font-medium text-2 num">{fmtEntero(propuesta.pico_dias_cama_ocupados)} ÷ {fmtEntero(propuesta.pico_dias_mes)}</p>
-                  <p className="mt-1 text-[11px]">Días cama ocupados ÷ días del mes</p>
+                  <p className="mt-1 text-[15px] font-medium text-2 num">
+                    <Fraccion num={fmtEntero(propuesta.pico_dias_cama_ocupados)} den={fmtEntero(propuesta.pico_dias_mes)}
+                      lectura={`${fmtEntero(propuesta.pico_dias_cama_ocupados)} dividido por ${fmtEntero(propuesta.pico_dias_mes)}`} />
+                  </p>
+                  <p className="mt-1 text-[11px]">Días cama ocupados (una cama durante un día) ÷ días del mes</p>
                 </li>
                 <li className="border-t border-[var(--border)] pt-2 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-3">
                   <p className="text-[11px] text-3">2. Margen de planificación</p>
-                  <p className="mt-1 text-[15px] font-medium text-2 num">÷ 0,85</p>
+                  <p className="mt-1 text-[15px] font-medium text-2 num">
+                    <Fraccion num="Carga" den="0,85" lectura="La carga del paso 1 dividida por 0,85" />
+                  </p>
                   <p className="mt-1 text-[11px]">Objetivo de ocupación del 85%</p>
                 </li>
                 <li className="border-t border-[var(--border)] pt-2 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-3">
