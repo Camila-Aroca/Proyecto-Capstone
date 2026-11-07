@@ -21,6 +21,7 @@ import { useTokens } from "../tokens";
 import { Alcance } from "./Alcance";
 import { AvisoLectura } from "./AvisoLectura";
 import { BadgeCambio } from "./BadgeCambio";
+import { Tip } from "./Tip";
 import { BarraSuperior } from "./BarraSuperior";
 import { GraficoSerie, LeyendaSerie, TablaSerie } from "./GraficoSerie";
 import { Caracterizacion } from "./Caracterizacion";
@@ -519,27 +520,28 @@ export function VistaEstablecimientos() {
                       <th
                         key={c.clave}
                         scope="col"
-                        title={c.ayuda}
                         className={`whitespace-nowrap px-2.5 py-1.5 text-[12px] font-semibold text-2 ${c.texto ? "text-left" : "text-right"} ${c.clave === "colapso" ? "group relative" : ""}`}
                         aria-sort={orden.clave === c.clave ? (orden.asc ? "ascending" : "descending") : "none"}
                       >
-                        <button
-                          type="button"
-                          onClick={() => alternar(c.clave)}
-                          aria-describedby={c.clave === "colapso" ? "ayuda-colapso" : undefined}
-                          className="inline-flex min-h-6 items-center gap-1 hover:text-(--ink)"
-                        >
-                          {c.titulo}
-                          {c.clave === "colapso" && (
-                            <svg aria-hidden width="12" height="12" viewBox="0 0 16 16" fill="none" className="opacity-60">
-                              <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
-                              <path d="M8 7v4.5M8 4.6v.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                            </svg>
-                          )}
-                          <span aria-hidden className="text-[10px]" style={{ opacity: orden.clave === c.clave ? 1 : 0.35 }}>
-                            {orden.clave === c.clave && !orden.asc ? "▼" : "▲"}
-                          </span>
-                        </button>
+                        <Tip texto={c.ayuda} lado={c.texto ? "izquierda" : "derecha"}>
+                          <button
+                            type="button"
+                            onClick={() => alternar(c.clave)}
+                            aria-describedby={c.clave === "colapso" ? "ayuda-colapso" : undefined}
+                            className="inline-flex min-h-6 items-center gap-1 hover:text-(--ink)"
+                          >
+                            {c.titulo}
+                            {c.clave === "colapso" && (
+                              <svg aria-hidden width="12" height="12" viewBox="0 0 16 16" fill="none" className="opacity-60">
+                                <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
+                                <path d="M8 7v4.5M8 4.6v.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                              </svg>
+                            )}
+                            <span aria-hidden className="text-[10px]" style={{ opacity: orden.clave === c.clave ? 1 : 0.35 }}>
+                              {orden.clave === c.clave && !orden.asc ? "▼" : "▲"}
+                            </span>
+                          </button>
+                        </Tip>
                         {c.clave === "colapso" && <AyudaColapso />}
                       </th>
                     ))}
@@ -607,15 +609,17 @@ export function VistaEstablecimientos() {
                         </td>
                         <td className="px-2.5 py-1.5 text-left">
                           {fila.colapso_psiquiatria ? (
-                            <span
-                              className="inline-flex items-center gap-1.5 whitespace-nowrap"
-                              title={`Ocupación de camas de psiquiatría, ${fmtMesCorto(fila.colapso_psiquiatria.desde)} a ${fmtMesCorto(fila.colapso_psiquiatria.hasta)} (${fila.colapso_psiquiatria.meses} meses con camas habilitadas)`}
-                            >
-                              <span className={NIVELES[fila.colapso_psiquiatria.nivel].orden >= 2 ? "font-medium" : "text-2"}>
-                                {NIVELES[fila.colapso_psiquiatria.nivel].etiqueta}
+                            <Tip texto={`Ocupación de camas de psiquiatría, ${fmtMesCorto(fila.colapso_psiquiatria.desde)} a ${fmtMesCorto(fila.colapso_psiquiatria.hasta)} (${fila.colapso_psiquiatria.meses} meses con camas habilitadas)`} lado="derecha">
+                              <span
+                                className="inline-flex items-center gap-1.5 whitespace-nowrap"
+                                tabIndex={0}
+                              >
+                                <span className={NIVELES[fila.colapso_psiquiatria.nivel].orden >= 2 ? "font-medium" : "text-2"}>
+                                  {NIVELES[fila.colapso_psiquiatria.nivel].etiqueta}
+                                </span>
+                                <span className="text-[12px] text-3 num">{fmtDecimal(fila.colapso_psiquiatria.indice_ocupacional)}%</span>
                               </span>
-                              <span className="text-[12px] text-3 num">{fmtDecimal(fila.colapso_psiquiatria.indice_ocupacional)}%</span>
-                            </span>
+                            </Tip>
                           ) : (
                             <span className="text-3">—</span>
                           )}

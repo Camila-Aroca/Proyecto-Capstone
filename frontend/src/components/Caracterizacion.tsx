@@ -11,6 +11,8 @@ function colorSexo(etiqueta: string) {
 export function TortaSexo({ titulo, datos, total }: {
   titulo: string; datos: BarraCaracterizacion[]; total: number;
 }) {
+  // Porcion bajo el mouse: su detalle se lee en el centro del donut (sin tooltip nativo).
+  const [activa, setActiva] = useState<string | null>(null);
   let acumulado = 0;
   const porciones = datos.map((dato) => {
     const fraccion = total > 0 ? dato.valor / total : 0;
@@ -25,6 +27,7 @@ export function TortaSexo({ titulo, datos, total }: {
     };
   });
   const porcentaje = (valor: number) => `${(total > 0 ? valor / total * 100 : 0).toLocaleString("es-CL", { maximumFractionDigits: 1 })}%`;
+  const elegida = porciones.find((p) => p.etiqueta === activa && p.valor > 0);
   return <figure className="min-w-0">
     <figcaption className="mb-3 text-[13px] font-medium">{titulo}</figcaption>
     <ul className="mb-1 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-2" aria-label={`${titulo}: leyenda y valores`}>
@@ -35,8 +38,8 @@ export function TortaSexo({ titulo, datos, total }: {
     </ul>
     {total > 0 ? <svg viewBox="0 0 280 260" className="mx-auto block w-full max-w-[224px]" role="img" aria-label={`${titulo}. ${datos.map((p) => `${p.etiqueta}: ${fmtEntero(p.valor)}, ${porcentaje(p.valor)}`).join("; ")}`}>
       <circle cx="140" cy="130" r="116" fill="none" stroke="var(--border)" strokeWidth="1" />
-      {porciones.filter((p) => p.valor > 0).map((p) => <g key={p.etiqueta}>
-        <title>{`${p.etiqueta}: ${fmtEntero(p.valor)} eventos (${porcentaje(p.valor)})`}</title>
+      {porciones.filter((p) => p.valor > 0).map((p) => <g key={p.etiqueta} onMouseEnter={() => setActiva(p.etiqueta)} onMouseLeave={() => setActiva(null)}
+        opacity={activa && activa !== p.etiqueta ? 0.5 : 1} style={{ transition: "opacity 150ms var(--ease-out)" }}>
         {p.fraccion === 1 ? <circle cx="140" cy="130" r="116" fill={colorSexo(p.etiqueta)} />
           : <path d={`M 140 130 L ${140 + 116 * Math.cos(p.inicio)} ${130 + 116 * Math.sin(p.inicio)} A 116 116 0 ${p.fraccion > 0.5 ? 1 : 0} 1 ${140 + 116 * Math.cos(p.fin)} ${130 + 116 * Math.sin(p.fin)} Z`} fill={colorSexo(p.etiqueta)} stroke="var(--surface)" strokeWidth="2" />}
         {p.fraccion >= 0.08 && <text x={p.etiquetaX} y={p.etiquetaY} textAnchor="middle" className="num" fontFamily="monospace" fill="var(--sexo-etiqueta)" fontSize="14" fontWeight="400">
@@ -45,8 +48,14 @@ export function TortaSexo({ titulo, datos, total }: {
         </text>}
       </g>)}
       <circle cx="140" cy="130" r="54" fill="var(--surface)" />
-      <text x="140" y="128" textAnchor="middle" fill="var(--ink)" className="num" fontFamily="monospace" fontSize="23" fontWeight="300">{fmtEntero(total)}</text>
-      <text x="140" y="147" textAnchor="middle" fill="var(--ink-3)" fontSize="11">eventos</text>
+      {elegida ? <>
+        <text x="140" y="114" textAnchor="middle" fill="var(--ink-3)" fontSize="11">{elegida.etiqueta}</text>
+        <text x="140" y="136" textAnchor="middle" fill="var(--ink)" className="num" fontFamily="monospace" fontSize="23" fontWeight="300">{fmtEntero(elegida.valor)}</text>
+        <text x="140" y="153" textAnchor="middle" fill="var(--ink-3)" fontSize="11">{porcentaje(elegida.valor)} del total</text>
+      </> : <>
+        <text x="140" y="128" textAnchor="middle" fill="var(--ink)" className="num" fontFamily="monospace" fontSize="23" fontWeight="300">{fmtEntero(total)}</text>
+        <text x="140" y="147" textAnchor="middle" fill="var(--ink-3)" fontSize="11">eventos</text>
+      </>}
     </svg> : <p className="py-6 text-[12px] text-3">Sin eventos para representar.</p>}
   </figure>;
 }

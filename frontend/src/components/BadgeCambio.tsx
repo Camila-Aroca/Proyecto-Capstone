@@ -1,5 +1,6 @@
 import type { CambioEsperado } from "../api";
 import { CAMBIO } from "../tokens";
+import { Tip } from "./Tip";
 
 interface Props {
   cambio: CambioEsperado;
@@ -35,15 +36,17 @@ export function BadgeCambio({ cambio, fueraDelIntervalo, titulo, compacto = fals
     : undefined);
 
   return (
-    <span className={`badge badge-${cambio}${dentroDelRuido ? " badge-ruido" : ""}`} title={ayuda}>
-      <span className="badge-icon" aria-hidden>{icono}</span>
-      {etiqueta}
-      {dentroDelRuido && (
-        <>
-          <span aria-hidden className="badge-ruido-marca">≈</span>
-          <span className="sr-only">, dentro de la fluctuación semanal</span>
-        </>
-      )}
-    </span>
+    <Tip texto={ayuda}>
+      <span className={`badge badge-${cambio}${dentroDelRuido ? " badge-ruido" : ""}`}>
+        <span className="badge-icon" aria-hidden>{icono}</span>
+        {etiqueta}
+        {dentroDelRuido && (
+          <>
+            <span aria-hidden className="badge-ruido-marca">≈</span>
+            <span className="sr-only">, dentro de la fluctuación semanal</span>
+          </>
+        )}
+      </span>
+    </Tip>
   );
 }

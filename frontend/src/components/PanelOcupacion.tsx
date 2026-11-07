@@ -372,8 +372,8 @@ export function PanelOcupacion({ establecimientoCodigo, meses, areas, dotacion, 
           </button>
           {area && (
             <span className="group relative inline-flex items-center">
-            <button type="button" aria-pressed onClick={() => setElegida(null)} title="Volver al total del hospital">
-              {nombreArea(area.nivel_cuidado)} ✕
+            <button type="button" aria-pressed onClick={() => setElegida(null)}>
+              {nombreArea(area.nivel_cuidado)} ✕<span className="sr-only">, volver al total del hospital</span>
             </button>
             {establecimientoCodigo === 109102 && area.nivel_cuidado_codigo === 420 && (
               <>

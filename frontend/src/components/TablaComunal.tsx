@@ -3,6 +3,7 @@ import type { CambioEsperado, ResumenComuna } from "../api";
 import { fmtDecimal, fmtEntero, fmtPct } from "../format";
 import { enlace, RUTA_ESTABLECIMIENTOS } from "../ruta";
 import { BadgeCambio } from "./BadgeCambio";
+import { Tip } from "./Tip";
 
 const CAMBIO_AYUDA =
   "Alza o baja según el tamaño del cambio esperado. El signo ≈ marca los que caben dentro de la fluctuación semanal.";
@@ -85,16 +86,17 @@ export function TablaComunal({ filas, seleccion, onSeleccionar, establecimientos
                   <th
                     key={c.clave}
                     scope="col"
-                    title={c.ayuda}
                     className={`whitespace-nowrap px-2.5 py-2 text-[12px] font-semibold text-2 ${c.texto ? "text-left" : "text-right"}`}
                     aria-sort={orden.clave === c.clave ? (orden.asc ? "ascending" : "descending") : "none"}
                   >
-                    <button type="button" onClick={() => alternar(c.clave)} className="inline-flex min-h-6 items-center gap-1 hover:text-(--ink)">
-                      {c.titulo}
-                      <span aria-hidden className="text-[10px]" style={{ opacity: orden.clave === c.clave ? 1 : 0.35 }}>
-                        {orden.clave === c.clave && !orden.asc ? "▼" : "▲"}
-                      </span>
-                    </button>
+                    <Tip texto={c.ayuda} lado={c.texto ? "izquierda" : "derecha"}>
+                      <button type="button" onClick={() => alternar(c.clave)} className="inline-flex min-h-6 items-center gap-1 hover:text-(--ink)">
+                        {c.titulo}
+                        <span aria-hidden className="text-[10px]" style={{ opacity: orden.clave === c.clave ? 1 : 0.35 }}>
+                          {orden.clave === c.clave && !orden.asc ? "▼" : "▲"}
+                        </span>
+                      </button>
+                    </Tip>
                   </th>
                 ))}
               </tr>
@@ -123,7 +125,9 @@ export function TablaComunal({ filas, seleccion, onSeleccionar, establecimientos
                           {fila.nombre}
                         </button>
                       ) : (
-                        <span className="text-3" title={fila.motivo_sin_pronostico ?? undefined}>{fila.nombre}</span>
+                        <Tip texto={fila.motivo_sin_pronostico}>
+                          <span className="text-3" tabIndex={fila.motivo_sin_pronostico ? 0 : undefined}>{fila.nombre}</span>
+                        </Tip>
                       )}
                     </td>
                     <td className="px-2.5 py-1.5 text-right">{fmtEntero(fila.promedio_ultimas_semanas)}</td>
