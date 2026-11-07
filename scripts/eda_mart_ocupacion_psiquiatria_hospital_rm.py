@@ -15,6 +15,7 @@ Uso (vía pipeline): `python scripts/run_pipeline.py --stage eda_mart_ocupacion_
 from __future__ import annotations
 
 import argparse
+from datetime import date
 import json
 import re
 import os
@@ -390,10 +391,85 @@ def run(mart_path: Path = mart_mod.OUTPUT_PATH, report: Path = OUTPUT_REPORT,
         hospitalizaciones = {int(s) for s in pron.loc[pron.objetivo == "hospitalizaciones_sm", "series_id"].unique()}
     dotacion = pq.read_table(DOTACION_PATH).to_pandas() if DOTACION_PATH.is_file() else None
     resultado = calcular(mart, indicadores, oferta, camas, hospitalizaciones, dotacion)
+    resultado['propuestas_camas'] = auditar_propuestas(mart, dotacion)
     resultado["mart_sha256"] = file_sha256(mart_path)
+    resultado['dotacion_sha256'] = file_sha256(DOTACION_PATH) if DOTACION_PATH.is_file() else None
     _write_atomic(summary, json.dumps(resultado, ensure_ascii=False, indent=2) + "\n")
-    _write_atomic(report, informe(resultado))
+    _write_atomic(report, informe(resultado) + informe_propuestas(resultado['propuestas_camas']))
     return resultado
+
+
+def auditar_propuestas(mart: pd.DataFrame, dotacion: pd.DataFrame | None,
+                      fecha_corte: date | None = None) -> dict[str, Any]:
+    """QA del mismo cálculo servido y prueba retrospectiva anual sin ajuste al futuro.
+
+    Cortes anuales no solapados, antes de cada enero; mide meses cuyo promedio
+    no supera 85% del objetivo, no probabilidad de encontrar cama un día dado.
+    """
+    from src.data.build_dim_camas_psiquiatria_hospital_rm import camas_psiquiatria_por_area, ultimo_ano_camas
+    corte = fecha_corte or date.today()
+    declaradas = None if dotacion is None else camas_psiquiatria_por_area(
+        dotacion, ultimo_ano_camas(list(dotacion.columns)))
+    mapa = {} if declaradas is None else declaradas.set_index(
+        ['establecimiento_codigo', 'area_funcional_codigo']).camas.to_dict()
+    propuestas = []
+    meses_evaluados = meses_cubiertos = cortes = 0
+    for (hospital, area), serie in mart.groupby(['establecimiento_codigo', 'nivel_cuidado_codigo']):
+        p = mart_mod.propuesta_camas(serie, mapa.get((hospital, area)), int(area), corte)
+        p.update(establecimiento_codigo=int(hospital), nivel_cuidado_codigo=int(area))
+        if p['camas_objetivo'] is not None:
+            objetivo = p['camas_objetivo']
+            pico = p['pico_camas_ocupadas']
+            if objetivo * .85 + 1e-9 < pico or (objetivo > 0 and (objetivo - 1) * .85 >= pico):
+                raise ValueError('El objetivo no es el entero mínimo que cumple 85%.')
+            if p['aumento_dotacion'] is not None and p['aumento_dotacion'] > 0:
+                if p['base_capacidad'] + p['aumento_dotacion'] < objetivo:
+                    raise ValueError('La dotación propuesta no cubre el objetivo.')
+        propuestas.append(p)
+        for ano in sorted(serie.ano.unique()):
+            historia = serie[serie.ano < ano]
+            futuro = serie[serie.ano == ano]
+            if len(futuro) != 12 or futuro.mes.nunique() != 12:
+                continue
+            pasado = mart_mod.propuesta_camas(historia, None, int(area), date(int(ano), 1, 1))
+            if pasado['camas_objetivo'] is None or (futuro.dias_cama_disponibles <= 0).any():
+                continue
+            capacidad = pasado['camas_objetivo']
+            cargas = futuro.dias_cama_ocupados / futuro.dias_mes
+            meses_evaluados += len(futuro)
+            meses_cubiertos += int((cargas <= capacidad * .85 + 1e-9).sum())
+            cortes += 1
+    return dict(fecha_corte=corte.isoformat(), propuestas=propuestas, cortes_retrospectivos=cortes,
+                meses_evaluados=meses_evaluados, meses_bajo_objetivo=meses_cubiertos,
+                proporcion_meses_bajo_objetivo=meses_cubiertos / meses_evaluados if meses_evaluados else None)
+
+
+def informe_propuestas(qa: dict[str, Any]) -> str:
+    lineas = ['', '## Propuesta anual de camas: escenario de continuidad', '',
+              f"Corte reproducible: {qa['fecha_corte']}. Método `continuidad_pico_12m_v1`.", '',
+              'Objetivo = techo(max(días cama ocupados / días del mes) / 0,85), últimos 12 meses consecutivos. '
+              'Sensibilidad a 90%. Cada área de psiquiatría se calcula por separado. Fuera de corta estadía 418/421, '
+              'el 85% es un supuesto explícito del escenario, no un estándar clínico específico validado. '
+              'Primero evaluar habilitación de dotación existente; ampliar solo la brecha positiva respecto de la declarada. '
+              'Sin cifra declarada, la base es la disponibilidad diaria calculada del último REM-20: '
+              'el aumento es capacidad adicional estimada y no distingue camas nuevas de rehabilitación. '
+              'Las disponibles son promedios: la habilitación calculada puede ser fraccionaria; las camas nuevas son enteras.', '',
+              '| Hospital | Área | Hasta | Objetivo 85% | Objetivo 90% | Aumento capacidad | Base | Habilitar existentes (prom.) | Motivo de abstención |',
+              '|---:|---:|---|---:|---:|---:|---|---:|---|']
+    for p in qa['propuestas']:
+        lineas.append(f"| {p['establecimiento_codigo']} | {p['nivel_cuidado_codigo']} | {p['hasta'] or '—'} | "
+                      f"{_n(p['camas_objetivo'])} | {_n(p['camas_objetivo_90'])} | {_n(p['aumento_dotacion'])} | {p['fuente_base'] or '—'} | "
+                      f"{_n(p['habilitar_existentes'], 2)} | {p['motivo'] or '—'} |")
+    lineas += ['', f"QA: {qa['cortes_retrospectivos']} cortes anuales retrospectivos no solapados; "
+               f"{qa['meses_bajo_objetivo']} de {qa['meses_evaluados']} meses siguientes con promedio ≤85% del objetivo. "
+               'Diagnóstico histórico agregado, no cobertura probabilística ni validación de un pronóstico anual.', '',
+               'No presupone crecimiento ni mide demanda insatisfecha o máximos diarios. No garantiza dar abasto. '
+               'Presupuesto, personal, espacio y plazos no están disponibles: la factibilidad requiere validación local. '
+               'No mezcla ID42 ni Egresos con la ocupación por hospital. No se compensan áreas entre sí.', '',
+               'Referencia: [Royal College of Psychiatrists](https://mentalhealthwatch.rcpsych.ac.uk/indicators/bed-occupancy-across-mental-health-trust). '
+               'La sensibilidad al tamaño y especialidad está documentada en '
+               '[Pratt y Wood, 2021](https://pubmed.ncbi.nlm.nih.gov/34219171/).', '']
+    return '\n'.join(lineas)
 
 
 def validate_outputs(report: Path = OUTPUT_REPORT, summary: Path = OUTPUT_SUMMARY,
@@ -403,6 +479,11 @@ def validate_outputs(report: Path = OUTPUT_REPORT, summary: Path = OUTPUT_SUMMAR
         raise ValueError(f"{report.name}: título inesperado.")
     if json.loads(summary.read_text(encoding="utf-8")).get("mart_sha256") != file_sha256(mart_path):
         raise ValueError(f"{summary.name}: no corresponde al mart vigente.")
+    contenido = json.loads(summary.read_text(encoding='utf-8'))
+    if contenido.get('propuestas_camas', {}).get('fecha_corte') != date.today().isoformat():
+        raise ValueError('QA de propuestas requiere actualizar fecha de corte.')
+    if DOTACION_PATH.is_file() and contenido.get('dotacion_sha256') != file_sha256(DOTACION_PATH):
+        raise ValueError('QA de propuestas no corresponde a la dotación vigente.')
 
 
 def main(argv: list[str] | None = None) -> int:

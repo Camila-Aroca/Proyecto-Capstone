@@ -157,3 +157,46 @@ Lectura: son magnitudes distintas. El ID42 cuenta, por semana, hospitalizaciones
 - No es ocupación en tiempo real: es el último mes publicado por el DEIS.
 - Es un promedio mensual: un mes sin holgura puede incluir días con camas libres y días sobre la capacidad.
 - Disponibles (REM-20) no es dotación (libro de camas): la primera descuenta las camas no habilitadas.
+
+## Propuesta anual de camas: escenario de continuidad
+
+Corte reproducible: 2026-11-07. Método `continuidad_pico_12m_v1`.
+
+Objetivo = techo(max(días cama ocupados / días del mes) / 0,85), últimos 12 meses consecutivos. Sensibilidad a 90%. Cada área de psiquiatría se calcula por separado. Fuera de corta estadía 418/421, el 85% es un supuesto explícito del escenario, no un estándar clínico específico validado. Primero evaluar habilitación de dotación existente; ampliar solo la brecha positiva respecto de la declarada. Sin cifra declarada, la base es la disponibilidad diaria calculada del último REM-20: el aumento es capacidad adicional estimada y no distingue camas nuevas de rehabilitación. Las disponibles son promedios: la habilitación calculada puede ser fraccionaria; las camas nuevas son enteras.
+
+| Hospital | Área | Hasta | Objetivo 85% | Objetivo 90% | Aumento capacidad | Base | Habilitar existentes (prom.) | Motivo de abstención |
+|---:|---:|---|---:|---:|---:|---|---:|---|
+| 109101 | 421 | 2026-09 | 15 | 14 | 3 | dotacion_declarada | 0,00 | — |
+| 109101 | 422 | 2026-09 | 5 | 5 | 1 | dotacion_declarada | 0,47 | — |
+| 109102 | 418 | 2026-09 | 266 | 251 | 0 | dotacion_declarada | 35,40 | — |
+| 109102 | 420 | — | — | — | — | — | — | Serie incompleta o con cierres: no se dimensiona sin revisar el área. |
+| 109102 | 421 | — | — | — | — | — | — | Datos sin cierre mensual o antiguos: actualizar REM-20. |
+| 109102 | 423 | 2026-09 | 46 | 44 | 7 | dotacion_declarada | 0,00 | — |
+| 109102 | 424 | 2026-09 | 48 | 45 | 8 | dotacion_declarada | 0,00 | — |
+| 109102 | 425 | — | — | — | — | — | — | Datos sin cierre mensual o antiguos: actualizar REM-20. |
+| 109102 | 426 | 2026-09 | 15 | 14 | 1 | dotacion_declarada | 2,00 | — |
+| 109102 | 428 | 2026-09 | 14 | 14 | 0 | dotacion_declarada | 0,00 | — |
+| 109104 | 421 | 2026-09 | 7 | 6 | 0 | dotacion_declarada | 0,00 | — |
+| 110120 | 418 | 2026-09 | 32 | 30 | 4 | dotacion_declarada | 0,00 | — |
+| 110120 | 421 | 2026-09 | 15 | 14 | 3 | dotacion_declarada | 0,00 | — |
+| 111100 | 418 | 2026-09 | 13 | 12 | 2 | dotacion_declarada | 0,20 | — |
+| 111100 | 421 | 2026-09 | 7 | 7 | 1 | dotacion_declarada | 1,70 | — |
+| 111101 | 428 | — | — | — | — | — | — | Se requieren 12 meses consecutivos publicados, sin imputación. |
+| 112100 | 418 | 2026-09 | 24 | 23 | 4 | dotacion_declarada | 0,00 | — |
+| 112102 | 421 | — | — | — | — | — | — | Datos sin cierre mensual o antiguos: actualizar REM-20. |
+| 112102 | 429 | 2026-09 | 11 | 11 | 2 | dotacion_declarada | 0,00 | — |
+| 113100 | 418 | 2026-09 | 33 | 31 | 5 | dotacion_declarada | 0,00 | — |
+| 113130 | 421 | 2026-09 | 14 | 14 | 2 | dotacion_declarada | 0,00 | — |
+| 113170 | 419 | 2026-09 | 37 | 35 | 0 | dotacion_declarada | 2,00 | — |
+| 113170 | 420 | 2026-09 | 66 | 62 | 8 | dotacion_declarada | 9,00 | — |
+| 113180 | 418 | 2026-09 | 19 | 18 | 3 | dotacion_declarada | 0,00 | — |
+| 114101 | 418 | 2026-09 | 46 | 44 | 7 | dotacion_declarada | 0,00 | — |
+| 114101 | 421 | 2026-09 | 14 | 14 | 2 | dotacion_declarada | 0,00 | — |
+| 114105 | 418 | 2026-09 | 21 | 20 | 3 | dotacion_declarada | 0,00 | — |
+| 114105 | 428 | — | — | — | — | — | — | Datos sin cierre mensual o antiguos: actualizar REM-20. |
+
+QA: 223 cortes anuales retrospectivos no solapados; 2373 de 2676 meses siguientes con promedio ≤85% del objetivo. Diagnóstico histórico agregado, no cobertura probabilística ni validación de un pronóstico anual.
+
+No presupone crecimiento ni mide demanda insatisfecha o máximos diarios. No garantiza dar abasto. Presupuesto, personal, espacio y plazos no están disponibles: la factibilidad requiere validación local. No mezcla ID42 ni Egresos con la ocupación por hospital. No se compensan áreas entre sí.
+
+Referencia: [Royal College of Psychiatrists](https://mentalhealthwatch.rcpsych.ac.uk/indicators/bed-occupancy-across-mental-health-trust). La sensibilidad al tamaño y especialidad está documentada en [Pratt y Wood, 2021](https://pubmed.ncbi.nlm.nih.gov/34219171/).

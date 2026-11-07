@@ -16,7 +16,7 @@ import json
 import logging
 import threading
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from typing import Annotated, Any, Final
 
@@ -31,6 +31,7 @@ from src.data.build_mart_ocupacion_psiquiatria_hospital_rm import (
     motivo_sin_dotacion,
     nivel_colapso,
     por_hospital,
+    propuesta_camas,
     resumen_areas,
 )
 from src.models.establecimientos import OBJETIVOS, load_current_weekly, load_mart
@@ -251,6 +252,11 @@ def areas_en_ventana(
         fila["ano_dotacion"] = None if declarada is None else int(declarada["ano_dotacion"])
         fila["motivo_sin_dotacion"] = motivo_sin_dotacion(
             declarada, ano_libro, int(primeras.get(fila["nivel_cuidado_codigo"], 0)) or None)
+        # La ventana gráfica no altera el ciclo anual de dimensionamiento.
+        completa = ocupacion[(ocupacion.establecimiento_codigo == codigo)
+                             & (ocupacion.nivel_cuidado_codigo == fila['nivel_cuidado_codigo'])]
+        fila['propuesta_camas'] = propuesta_camas(
+            completa, fila['dotacion_declarada'], fila['nivel_cuidado_codigo'], date.today())
     return filas
 
 

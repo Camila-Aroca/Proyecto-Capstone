@@ -205,6 +205,28 @@ export interface PuntoOcupacionMensual {
 }
 
 /** Saturacion de un area de psiquiatria en la ventana mostrada. */
+export interface PropuestaCamas {
+  referencia_aguda: boolean;
+  ano_objetivo: number;
+  fecha_corte: string;
+  metodo: string;
+  motivo: string | null;
+  desde: string | null;
+  hasta: string | null;
+  pico_camas_ocupadas: number | null;
+  pico_dias_cama_ocupados: number | null;
+  pico_dias_mes: number | null;
+  camas_objetivo: number | null;
+  camas_objetivo_90: number | null;
+  disponibles_ultimo_mes: number | null;
+  base_capacidad: number | null;
+  fuente_base: string | null;
+  aumento_dotacion: number | null;
+  habilitar_existentes: number | null;
+  brecha_habilitacion: number | null;
+  ocupacion_resultante_pct: number | null;
+}
+
 export interface AreaPsiquiatria {
   nivel_cuidado_codigo: number;
   nivel_cuidado: string;
@@ -223,6 +245,7 @@ export interface AreaPsiquiatria {
   motivo_sin_dotacion?: string | null;
   /** Ocupacion mensual del area en la misma ventana. */
   serie: PuntoOcupacionMensual[];
+  propuesta_camas?: PropuestaCamas | null;
 }
 
 export interface EstablecimientoDetalle {

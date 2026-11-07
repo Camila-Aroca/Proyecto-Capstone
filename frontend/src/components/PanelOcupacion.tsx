@@ -20,6 +20,7 @@ import type { AreaPsiquiatria, PuntoOcupacionMensual } from "../api";
 import { fmtDecimal, fmtEntero, fmtMesCorto, fmtMesLargo } from "../format";
 import type { Tokens } from "../tokens";
 import { brilloCamas } from "./GraficoSerie";
+import { resumirPropuestas } from '../propuestaCamas';
 
 interface Props {
   meses: PuntoOcupacionMensual[];
@@ -42,7 +43,9 @@ interface Punto extends PuntoOcupacionMensual {
   capacidad: [number, number];
 }
 
-export function LeyendaOcupacion({ tokens, conDotacion }: { tokens: Tokens; conDotacion: boolean }) {
+export function LeyendaOcupacion({ tokens, conDotacion, anoPropuesta }: {
+  tokens: Tokens; conDotacion: boolean; anoPropuesta?: number | null;
+}) {
   return (
     <ul className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-2" aria-label="Leyenda del gráfico de ocupación">
       <li className="inline-flex items-center gap-1.5">
@@ -61,11 +64,19 @@ export function LeyendaOcupacion({ tokens, conDotacion }: { tokens: Tokens; conD
           Dotación declarada
         </li>
       )}
+      {anoPropuesta != null && (
+        <li className="inline-flex items-center gap-1.5">
+          <svg width="20" height="8" aria-hidden style={{ overflow: 'visible', opacity: 0.5, filter: brilloCamas(tokens['propuesta-camas'], true) }}>
+            <line x1="0" y1="4" x2="20" y2="4" stroke={tokens['propuesta-camas']} strokeWidth="1.5" strokeDasharray="2 5" strokeLinecap="round" />
+          </svg>
+          Propuesta de dotación, {anoPropuesta}
+        </li>
+      )}
     </ul>
   );
 }
 
-function GraficoOcupacion({ meses, dotacion, tokens, titulo }: Omit<Props, "areas"> & { titulo: string }) {
+function GraficoOcupacion({ meses, dotacion, tokens, titulo, propuesta }: Omit<Props, "areas"> & { titulo: string; propuesta: number | null }) {
   const puntos: Punto[] = meses.map((m) => ({ ...m, capacidad: [0, m.camas_disponibles_promedio] }));
   // Mismo hover que la linea de camas del grafico de hospitalizaciones: franja ancha
   // transparente sobre la linea de dotacion y un tooltip propio que oculta el del mes.
@@ -76,6 +87,17 @@ function GraficoOcupacion({ meses, dotacion, tokens, titulo }: Omit<Props, "area
     if (caja) setSobreDotacion({ x: e.clientX - caja.left, y: e.clientY - caja.top });
   };
   return (
+    <>
+    {(dotacion != null || propuesta != null) && (
+      <div className="mb-2 flex flex-wrap justify-end gap-x-4 gap-y-1 text-[11px] num" aria-label="Referencias de capacidad del gráfico">
+        {dotacion != null && <span style={{ color: tokens.camas }}>
+          Dotación: {Number.isInteger(dotacion) ? fmtEntero(dotacion) : fmtDecimal(dotacion)} camas
+        </span>}
+        {propuesta != null && <span style={{ color: tokens['propuesta-camas'] }}>
+          Propuesta: {Number.isInteger(propuesta) ? fmtEntero(propuesta) : fmtDecimal(propuesta)} camas
+        </span>}
+      </div>
+    )}
     <div
       ref={contenedor}
       className="relative h-56"
@@ -163,6 +185,12 @@ function GraficoOcupacion({ meses, dotacion, tokens, titulo }: Omit<Props, "area
             dot={false}
             isAnimationActive={false}
           />
+          {propuesta != null && (
+            <ReferenceLine y={propuesta} ifOverflow="extendDomain"
+              stroke={tokens['propuesta-camas']} strokeWidth={1.5} strokeOpacity={0.5}
+              strokeDasharray="2 5" strokeLinecap="round"
+              style={{ filter: brilloCamas(tokens['propuesta-camas'], true) }} />
+          )}
         </ComposedChart>
       </ResponsiveContainer>
       {sobreDotacion && dotacion != null && (
@@ -181,6 +209,7 @@ function GraficoOcupacion({ meses, dotacion, tokens, titulo }: Omit<Props, "area
         </div>
       )}
     </div>
+    </>
   );
 }
 
@@ -299,6 +328,15 @@ export function PanelOcupacion({ meses, areas, dotacion, tokens }: Props) {
   const sinCamas = ultimo.camas_disponibles_promedio === 0;
   // La dotación sigue a lo elegido: la del hospital (suma de sus áreas) o la del área.
   const dotacionVisible = area ? (area.dotacion_declarada ?? null) : dotacion;
+  const capacidadVisible = dotacionVisible ?? ultimo.camas_disponibles_promedio;
+  const anosDotacion = [...new Set((areas ?? []).flatMap((a) => a.ano_dotacion == null ? [] : [a.ano_dotacion]))];
+  const anoDotacionVisible = area?.ano_dotacion ?? (anosDotacion.length === 1 ? anosDotacion[0] : null);
+  const propuesta = area?.propuesta_camas;
+  const resumen = resumirPropuestas(areas, capacidadVisible);
+  const aumentoVisible = area ? (propuesta?.aumento_dotacion ?? null) : resumen.aumento;
+  const anoPropuesta = area ? propuesta?.ano_objetivo : resumen.ano;
+  const lineaPropuesta = aumentoVisible != null && aumentoVisible > 0
+    ? area ? (propuesta?.base_capacidad ?? capacidadVisible) + aumentoVisible : resumen.capacidadPropuesta : null;
   return (
     <section className="mt-6 border-t border-[var(--border)] pt-5" aria-labelledby="ocupacion-titulo">
       <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-2">
@@ -309,7 +347,8 @@ export function PanelOcupacion({ meses, areas, dotacion, tokens }: Props) {
             {fmtMesLargo(ultimo.fecha_inicio)}
           </p>
         </div>
-        <LeyendaOcupacion tokens={tokens} conDotacion={dotacionVisible != null} />
+        <LeyendaOcupacion tokens={tokens} conDotacion={dotacionVisible != null}
+          anoPropuesta={lineaPropuesta != null ? anoPropuesta : null} />
       </div>
 
       {areas && areas.length > 1 && (
@@ -370,7 +409,74 @@ export function PanelOcupacion({ meses, areas, dotacion, tokens }: Props) {
             <dd className="text-[12px] text-3">con camas habilitadas: menos de una libre por día, último mes</dd>
           </div>
         )}
+        <div>
+          <dt className="text-[12px] text-3">Camas de psiquiatría{area ? ' del área' : ' del hospital'}</dt>
+          <dd className="mt-0.5 text-xl font-semibold tracking-tight num">
+            {dotacionVisible == null ? fmtDecimal(capacidadVisible) : fmtEntero(capacidadVisible)}
+          </dd>
+          <dd className="text-[12px] text-3">
+            {dotacionVisible == null ? `Disponibles por día, REM-20 (${fmtMesLargo(ultimo.fecha_inicio)})`
+              : `Dotación declarada${anoDotacionVisible != null ? ` (${anoDotacionVisible})` : ''}`}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-[12px] text-3">Aumento de dotación propuesto{anoPropuesta ? `, ${anoPropuesta}` : ''}</dt>
+          <dd className="mt-0.5 text-xl font-semibold tracking-tight num">
+            {aumentoVisible == null ? 'Sin cálculo respaldado' : `+${fmtEntero(aumentoVisible)} camas`}
+          </dd>
+          <dd className="text-[12px] text-3">
+            {!area ? `${resumen.areasConPropuesta} de ${resumen.areasTotales} áreas de psiquiatría${resumen.parcial ? '; subtotal parcial' : '; suma por área'}` : propuesta?.motivo ? propuesta.motivo
+              : propuesta?.aumento_dotacion == null ? 'actualice los datos de capacidad'
+              : propuesta.fuente_base === 'disponibles_rem20' ? 'respecto de disponibles REM-20; estimación'
+              : 'respecto de la dotación declarada'}
+          </dd>
+        </div>
       </dl>
+
+      {area && propuesta && (
+        <div className="mt-4 max-w-[85ch] text-[13px] text-2" aria-live="polite">
+          <p className="font-semibold">Propuesta de capacidad para {propuesta.ano_objetivo} · {nombreArea(area.nivel_cuidado)}</p>
+          {propuesta.motivo ? <p className="mt-1 text-3">Sin propuesta: {propuesta.motivo}</p> : <>
+            <p className="mt-1 num">
+              Objetivo: <strong>{fmtEntero(propuesta.camas_objetivo)} camas habilitadas</strong>.
+              {propuesta.fuente_base === 'disponibles_rem20'
+                ? ` Aumento estimado de capacidad: +${fmtEntero(propuesta.aumento_dotacion)} camas respecto de ${fmtDecimal(propuesta.base_capacidad)} disponibles por día (REM-20). No permite distinguir camas nuevas de camas por rehabilitar.`
+                : ` Aumento de dotación: +${fmtEntero(propuesta.aumento_dotacion)} camas respecto de ${fmtEntero(dotacionVisible)} declaradas (${area.ano_dotacion}).`}
+              {propuesta.habilitar_existentes != null && propuesta.habilitar_existentes > 0
+                ? ` Antes de ampliar: evaluar habilitar hasta ${fmtCamas(propuesta.habilitar_existentes)} camas declaradas hoy no disponibles, en promedio.` : ''}
+            </p>
+            <details className="mt-2 text-[12px] text-3">
+              <summary className="cursor-pointer">Cálculo, evidencia y condiciones de implementación</summary>
+              <p className="mt-2 num">Escenario de continuidad: se repite la carga mensual de {propuesta.desde} a {propuesta.hasta},
+                sin crecimiento supuesto. Cálculo sin redondeos intermedios: techo(({fmtEntero(propuesta.pico_dias_cama_ocupados)} días cama ocupados
+                ÷ {fmtEntero(propuesta.pico_dias_mes)} días del mes de mayor carga) ÷ 0,85) = {fmtEntero(propuesta.camas_objetivo)} camas.
+                Con objetivo de 90%: {fmtEntero(propuesta.camas_objetivo_90)} camas.
+                Brecha frente a disponibles del último mes: {fmtCamas(propuesta.brecha_habilitacion)} camas por día.</p>
+              {!propuesta.referencia_aguda && <p className="mt-2">Para esta área, el 85% es un supuesto de planificación del escenario;
+                no se ha validado como umbral específico de esta especialidad.</p>}
+              <p className="mt-2">El 85% usa como referencia a <a className="underline" href="https://mentalhealthwatch.rcpsych.ac.uk/indicators/bed-occupancy-across-mental-health-trust" target="_blank" rel="noreferrer">Royal College of Psychiatrists</a>;
+                no es una norma chilena ni una garantía de cama cada día. No es un pronóstico anual validado: no mide espera,
+                derivaciones rechazadas ni picos diarios. Presupuesto, personal, espacio y plazos no están en estas fuentes;
+                la ejecución requiere validarlos localmente. Las camas de otras áreas no sustituyen las de esta área.</p>
+            </details>
+          </>}
+        </div>
+      )}
+      {!area && (
+        <details className="mt-3 text-[12px] text-3">
+          <summary className="cursor-pointer">Desglose de la propuesta de camas de psiquiatría del hospital</summary>
+          <p className="mt-2">Se suman los aumentos de cada área de psiquiatría, sin compensarlos con camas libres de otras áreas.
+            {resumen.parcial ? ' El subtotal excluye las áreas sin cálculo respaldado; no se consideran cero.' : ''}
+            {' '}Seleccione un área en la tabla para ver su capacidad y cálculo.</p>
+          <ul className="mt-2 space-y-1">
+            {(areas ?? []).map((a) => <li key={a.nivel_cuidado_codigo}>
+              {nombreArea(a.nivel_cuidado)}: {a.propuesta_camas?.aumento_dotacion == null
+                ? a.propuesta_camas?.motivo ?? 'sin datos para calcular'
+                : `+${fmtEntero(a.propuesta_camas.aumento_dotacion)} camas`}.
+            </li>)}
+          </ul>
+        </details>
+      )}
 
       <div className="mt-5">
         <GraficoOcupacion
@@ -378,7 +484,15 @@ export function PanelOcupacion({ meses, areas, dotacion, tokens }: Props) {
           dotacion={dotacionVisible}
           tokens={tokens}
           titulo={area ? nombreArea(area.nivel_cuidado) : "total del hospital"}
+          propuesta={lineaPropuesta}
         />
+        {lineaPropuesta != null && <p className="mt-1 text-[12px] text-2">
+          <svg className="mr-1.5 inline" width="20" height="8" aria-hidden="true"><line x1="0" y1="4" x2="20" y2="4"
+            stroke={tokens['propuesta-camas']} strokeWidth="1.5" strokeOpacity="0.5" strokeDasharray="2 5" strokeLinecap="round" /></svg>
+          Propuesta {anoPropuesta}: {Number.isInteger(lineaPropuesta) ? fmtEntero(lineaPropuesta) : fmtDecimal(lineaPropuesta)} camas
+          {dotacionVisible == null ? ' de capacidad estimada' : ' de dotación total'} (aumento +{fmtEntero(aumentoVisible)}).
+          {!area && resumen.parcial ? ' Subtotal de áreas con cálculo respaldado.' : ''}
+        </p>}
         {areas && areas.length > 0 && (
           <TablaAreas areas={areas} ventana={ventana} elegida={elegida} elegir={setElegida} />
         )}

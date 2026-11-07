@@ -51,6 +51,9 @@ from __future__ import annotations
 
 import argparse
 import calendar
+from datetime import date
+from fractions import Fraction
+import math
 import logging
 import os
 from pathlib import Path
@@ -272,6 +275,79 @@ def motivo_sin_dotacion(declarada: pd.Series | None, ano_libro: int | None, prim
         return (f"El área se habilitó en {primer_ano}, después del último año del libro de dotación "
                 f"({ano_libro}): aún no tiene dotación declarada.")
     return f"El área no figura en el libro de dotación {ano_libro}; la causa no es determinable con estos datos."
+
+
+def propuesta_camas(
+    serie: pd.DataFrame, dotacion: float | None, codigo_area: int, fecha_corte: date,
+) -> dict[str, object]:
+    """Escenario de continuidad, no pronóstico anual validado ni factibilidad financiera.
+
+    Repite las cargas diarias mensuales del último ciclo de 12 meses; dimensiona
+    para el mes de mayor carga, con reserva del 15%. Usa conteos sin redondear.
+    Fuera de corta estadía, el 85% es un supuesto explícito de escenario,
+    no un estándar clínico específico validado para larga estadía/forense.
+    """
+    resultado: dict[str, object] = dict(
+        ano_objetivo=fecha_corte.year + 1, fecha_corte=fecha_corte.isoformat(),
+        metodo='continuidad_pico_12m_v1', motivo=None, desde=None, hasta=None,
+        pico_camas_ocupadas=None, camas_objetivo=None, camas_objetivo_90=None,
+        pico_dias_cama_ocupados=None, pico_dias_mes=None,
+        aumento_dotacion=None, habilitar_existentes=None, brecha_habilitacion=None,
+        disponibles_ultimo_mes=None, ocupacion_resultante_pct=None,
+        base_capacidad=None, fuente_base=None,
+        referencia_aguda=codigo_area in (418, 421),
+    )
+
+    def abstener(motivo: str) -> dict[str, object]:
+        resultado['motivo'] = motivo
+        return resultado
+
+    if codigo_area not in (*range(418, 427), 428, 429):
+        return abstener('El código no corresponde a un área de psiquiatría del REM-20.')
+    if serie.empty:
+        return abstener('Se requieren 12 meses consecutivos publicados.')
+    indices = serie.ano * 12 + serie.mes
+    ultimo = int(indices.max())
+    actual = fecha_corte.year * 12 + fecha_corte.month
+    if ultimo >= actual or actual - ultimo > 12:
+        return abstener('Datos sin cierre mensual o antiguos: actualizar REM-20.')
+    ventana = serie.loc[indices > ultimo - 12].sort_values(['ano', 'mes'])
+    if ventana.duplicated(['ano', 'mes']).any():
+        return abstener('Meses duplicados: revisar el contrato de datos.')
+    if len(ventana) != 12:
+        return abstener('Se requieren 12 meses consecutivos publicados, sin imputación.')
+    columnas = ['dias_cama_ocupados', 'dias_cama_disponibles', 'dias_mes']
+    if (ventana[columnas].isna().any().any()
+            or not all(math.isfinite(float(v)) for v in ventana[columnas].to_numpy().flat)
+            or (ventana.dias_cama_ocupados < 0).any()
+            or (ventana.dias_cama_disponibles <= 0).any()
+            or (ventana.dias_mes <= 0).any()):
+        return abstener('Serie incompleta o con cierres: no se dimensiona sin revisar el área.')
+    # Racionales: un pico exactamente al 85% no debe sumar una cama por error binario.
+    pico_exacto = max(Fraction(str(o)) / Fraction(str(d)) for o, d in
+                      zip(ventana.dias_cama_ocupados, ventana.dias_mes))
+    pico = float(pico_exacto)
+    fila_pico = ventana.loc[(ventana.dias_cama_ocupados / ventana.dias_mes).idxmax()]
+    objetivo = math.ceil(pico_exacto / Fraction(85, 100))
+    disponibles = float(ventana.iloc[-1].dias_cama_disponibles / ventana.iloc[-1].dias_mes)
+    brecha = max(0.0, objetivo - disponibles)
+    declarada = (float(dotacion) if dotacion is not None and pd.notna(dotacion) else None)
+    if declarada is not None and (not math.isfinite(declarada) or declarada < 0):
+        return abstener('Dotación inválida: revisar la fuente.')
+    base = disponibles if declarada is None else declarada
+    resultado.update(
+        desde=f'{int(ventana.iloc[0].ano)}-{int(ventana.iloc[0].mes):02d}',
+        hasta=f'{int(ventana.iloc[-1].ano)}-{int(ventana.iloc[-1].mes):02d}',
+        pico_camas_ocupadas=pico, camas_objetivo=objetivo,
+        pico_dias_cama_ocupados=float(fila_pico.dias_cama_ocupados), pico_dias_mes=int(fila_pico.dias_mes),
+        camas_objetivo_90=math.ceil(pico_exacto / Fraction(90, 100)),
+        disponibles_ultimo_mes=disponibles, brecha_habilitacion=brecha,
+        base_capacidad=base, fuente_base='disponibles_rem20' if declarada is None else 'dotacion_declarada',
+        aumento_dotacion=max(0, math.ceil(objetivo - base)),
+        habilitar_existentes=None if declarada is None else min(brecha, max(0.0, declarada - disponibles)),
+        ocupacion_resultante_pct=100 * pico / objetivo if objetivo else 0.0,
+    )
+    return resultado
 
 
 def verificar_identidad(mart: pd.DataFrame) -> None:

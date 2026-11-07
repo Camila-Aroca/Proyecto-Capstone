@@ -317,6 +317,28 @@ class PuntoOcupacionMensual(BaseModel):
     )
 
 
+class PropuestaCamas(BaseModel):
+    referencia_aguda: bool
+    ano_objetivo: int
+    fecha_corte: str
+    metodo: str
+    motivo: str | None
+    desde: str | None
+    hasta: str | None
+    pico_camas_ocupadas: float | None
+    pico_dias_cama_ocupados: float | None
+    pico_dias_mes: int | None
+    camas_objetivo: int | None
+    camas_objetivo_90: int | None
+    disponibles_ultimo_mes: float | None
+    base_capacidad: float | None
+    fuente_base: str | None
+    aumento_dotacion: int | None
+    habilitar_existentes: float | None
+    brecha_habilitacion: float | None
+    ocupacion_resultante_pct: float | None
+
+
 class AreaPsiquiatria(BaseModel):
     nivel_cuidado_codigo: int
     nivel_cuidado: str
@@ -335,6 +357,7 @@ class AreaPsiquiatria(BaseModel):
         default=None, description="Por qué el área no tiene dotación declarada; null si la tiene.",
     )
     serie: list[PuntoOcupacionMensual] = Field(description="Ocupación mensual del área en la misma ventana.")
+    propuesta_camas: PropuestaCamas | None = None
 
 
 class EstablecimientoDetalle(BaseModel):

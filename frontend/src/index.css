@@ -69,6 +69,7 @@
   --alza: #b3412f;
   --alza-weak: rgba(179, 65, 47, 0.12);
   --baja: #2f74a8;
+  --propuesta-camas: #25824d;
   --baja-weak: rgba(47, 116, 168, 0.12);
   --estable: #e6ecef;
   --sin-dato: #6b8391;
@@ -133,6 +134,7 @@
     --alza: #e07a62;
     --alza-weak: rgba(224, 122, 98, 0.18);
     --baja: #6aa9d8;
+    --propuesta-camas: #70d79a;
     --baja-weak: rgba(106, 169, 216, 0.18);
     --estable: #2a414d;
     --sin-dato: #7b94a1;

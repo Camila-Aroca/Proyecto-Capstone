@@ -553,3 +553,46 @@ Si el entorno restringe el temporal del sistema, se puede agregar
 reemplazar su contenido. El método de aislamiento sin datasets y la evidencia
 de cierre de #40 están en
 [`reports/validation/issue40_fixtures.md`](reports/validation/issue40_fixtures.md).
+
+### Escenario anual de capacidad por área de psiquiatría
+
+Reutiliza el mart de ocupación y la dotación SNSS sin cambiar sus esquemas.
+`propuesta_camas` calcula `techo(max(O_m / D_m) / 0,85)` sobre los últimos
+12 meses consecutivos publicados. Es continuidad de carga, sin crecimiento
+supuesto, para el año siguiente a la fecha de corte explícita (fecha de consulta
+en la API). Calcula cada área de psiquiatría por separado. Fuera de corta estadía
+418/421, el 85% es un supuesto explícito de escenario y no un estándar específico
+validado para forense, intensivos o mediana/larga estadía. La aritmética racional
+evita camas extra por redondeo.
+Incluye sensibilidad al 90%, brecha frente a disponibles del último mes,
+habilitación potencial de dotación existente y ampliación entera positiva
+respecto de la declarada. Datos faltantes, cierres, duplicados o antigüedad
+mayor a 12 meses producen abstención. Sin dotación declarada usa las camas
+disponibles por día calculadas del último REM-20 como base explícita: el aumento
+es capacidad adicional estimada, sin distinguir camas nuevas de rehabilitación.
+La ventana gráfica no altera la historia usada para dimensionar.
+
+El QA forma parte de `eda_mart_ocupacion_psiquiatria_hospital_rm`, con los
+mismos upstream/downstream y outputs: tabla de propuestas, identidades de
+capacidad mínima, diagnóstico retrospectivo con cortes anuales no solapados
+y SHA256 de dotación. `SKIP` exige además fecha de corte y hash de dotación
+vigentes; `--force` regenera ambos informes. No requiere stages ni dependencias
+nuevos. Reproducción:
+`python scripts/run_pipeline.py --stage eda_mart_ocupacion_psiquiatria_hospital_rm --force`.
+Tests: `tests/test_propuesta_camas.py`, API, mart y orquestador.
+La API expone `areas_psiquiatria[].propuesta_camas`. El frontend muestra dotación
+y aumento junto a las métricas y referencia verde a **base + aumento**,
+solo con aumento positivo. No compensa camas entre áreas.
+Sin selección de área muestra desde el inicio el total hospitalario como suma
+de los aumentos por área; si falta soporte en alguna, identifica el subtotal
+como parcial y detalla las exclusiones. La holgura de un área nunca resta
+la ampliación necesaria en otra. Regresiones de esta presentación:
+`node --experimental-strip-types --test frontend/tests/propuestaCamas.test.mjs` (Node 22.6+).
+
+El [85% del Royal College of Psychiatrists](https://mentalhealthwatch.rcpsych.ac.uk/indicators/bed-occupancy-across-mental-health-trust)
+no es una norma chilena ni garantía de disponibilidad diaria.
+[Pratt y Wood (2021)](https://pubmed.ncbi.nlm.nih.gov/34219171/) advierten que
+el objetivo depende del tamaño, especialidad y tolerancia al desborde.
+No es un pronóstico anual validado ni acredita presupuesto, personal, espacio
+o plazos. No observa espera, demanda rechazada ni picos diarios. La evaluación
+retrospectiva mide cumplimiento del promedio mensual, no disponibilidad diaria.
