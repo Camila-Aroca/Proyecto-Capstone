@@ -1,0 +1,86 @@
+{
+  "filas": 18616,
+  "n_comunas": 52,
+  "semanas": 358,
+  "suicidios": 3943,
+  "suicidios_fuente": 3943,
+  "fecha_corte": "2026-10-24",
+  "ultimo_ano_cerrado": 2025,
+  "calendario": {
+    "fechas_verificadas": 2467,
+    "discrepancias": 0
+  },
+  "umbral_registro": 0.75,
+  "razon_registro_minima_interior": 0.787,
+  "semanas_registro_incompleto": [
+    "2026-S42"
+  ],
+  "cambio_nivel": {
+    "por_dia_2020_2021": 1.3201,
+    "por_dia_ventana": 1.7406,
+    "razon": 1.3185,
+    "p_valor": 9.97e-14
+  },
+  "homogeneidad_anos_ventana": {
+    "chi2": 12.98,
+    "gl": 3,
+    "p_valor": 0.00469
+  },
+  "estacionalidad": {
+    "semana_maxima": 52,
+    "semana_minima": 26,
+    "razon_maximo_minimo": 1.385,
+    "dispersion_pearson_k0": 1.154,
+    "dispersion_pearson_k1": 1.006,
+    "acf_residuos": {
+      "1": -0.031,
+      "2": 0.04,
+      "3": 0.065,
+      "4": -0.04,
+      "8": -0.106,
+      "13": 0.049,
+      "26": -0.01
+    },
+    "banda_acf": 0.139,
+    "semanas": 208,
+    "lrt": [
+      {
+        "armonicos": "1 frente a 0",
+        "LR": 33.43,
+        "gl": 2,
+        "p_valor": 5.49e-08
+      },
+      {
+        "armonicos": "2 frente a 1",
+        "LR": 1.58,
+        "gl": 2,
+        "p_valor": 0.453
+      },
+      {
+        "armonicos": "3 frente a 2",
+        "LR": 4.05,
+        "gl": 2,
+        "p_valor": 0.132
+      }
+    ]
+  },
+  "comunas": {
+    "chi2": 328.2,
+    "gl": 51,
+    "p_valor": 3.83e-42,
+    "media_semanal": {
+      "min": 0.019,
+      "25%": 0.111,
+      "50%": 0.192,
+      "75%": 0.308,
+      "max": 0.99
+    },
+    "tasa_region": 7.53,
+    "tasa_min": 2.57,
+    "tasa_max": 19.22,
+    "ceros_observados": 0.8033,
+    "ceros_esperados_poisson": 0.8035,
+    "razon_varianza_media_mediana": 0.971
+  },
+  "mart_sha256": "7d103046636fc5d8743fb88ac933841e1d6dbcdc17b94f4c32c713193c593b8e"
+}

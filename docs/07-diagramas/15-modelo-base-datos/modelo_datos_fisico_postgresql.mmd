@@ -7,7 +7,8 @@
 %% Los esquemas corresponden solo a los dominios representados en este modelo fisico
 %% (censo, geo, pobreza, urgencias, marts, egresos, contexto_genero, modeling, camas),
 %% con trazabilidad a sus datasets de origen; no abarcan todos los archivos processed.
-%% Defunciones figura solo en el modelo logico y se almacena actualmente en Parquet.
+%% Defunciones (registro nacional) figura solo en el modelo logico y se almacena en Parquet;
+%% su agregado semanal de suicidios por comuna si se persiste (marts.suicidios_comuna_weekly).
 
 erDiagram
 
@@ -289,6 +290,30 @@ erDiagram
         numeric indice_ocupacional "NULL sin camas disponibles"
     }
 
+    marts_suicidios_comuna_weekly {
+        char_5 comuna_codigo PK, FK "comuna de residencia"
+        smallint ano PK
+        smallint semana PK "CHECK 1-53"
+        date fecha_inicio_semana
+        smallint dias_semana "CHECK 1-10"
+        integer suicidios "CHECK 0 <= suicidios <= defunciones_total"
+        integer defunciones_total
+        bigint poblacion_anual
+        boolean registro_completo
+    }
+
+    modeling_pronostico_suicidios {
+        text series_id PK "comuna o agregado regional; sin FK: la fila regional no es una comuna"
+        smallint horizonte PK "CHECK BETWEEN 1 AND 8"
+        text nivel "CHECK IN (region, comuna)"
+        date fecha_inicio_semana
+        double_precision y_pred "CHECK >= 0"
+        double_precision y_inferior "CHECK y_inferior <= y_superior"
+        double_precision y_superior
+        double_precision cobertura_esperada "CHECK 0-1"
+        text modelo
+    }
+
     censo_cartografia_comunal ||--o{ censo_cartografia_distrital : "1 comuna, N distritos"
     censo_cartografia_distrital ||--o{ censo_cartografia_zonal : "1 distrito, N zonas urbanas"
     censo_cartografia_distrital ||--o{ censo_cartografia_entidades : "1 distrito, N entidades rurales"
@@ -316,4 +341,7 @@ erDiagram
     geo_dim_oferta_urgencia_rm |o..o{ camas_indicadores_hospitalarios_snss : "relacion documentada, NO enforced por FK fisica"
     camas_indicadores_hospitalarios_snss |o..o{ camas_categorizacion_riesgo_dependencia : "cruce por nombre documentado, NO enforced por FK fisica"
     geo_dim_oferta_urgencia_rm ||--o{ marts_ocupacion_psiquiatria_hospital_rm : "1 a N (area-mes de psiquiatria)"
+
+    censo_cartografia_comunal ||--o{ marts_suicidios_comuna_weekly : "1 a N (semanas, comuna de residencia)"
+    marts_suicidios_comuna_weekly |o..o{ modeling_pronostico_suicidios : "panel de entrada, NO enforced por FK fisica"
 

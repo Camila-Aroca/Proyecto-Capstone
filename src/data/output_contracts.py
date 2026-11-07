@@ -194,6 +194,44 @@ def validate_expected_schema(path: Path) -> bool:
     if name == "pronostico_demanda_sm_manifest.json":
         _require_forecast_manifest(path)
         return True
+    if name == "mart_suicidios_comuna_weekly.parquet":
+        from src.data.build_mart_suicidios_comuna_weekly import SCHEMA as ESQUEMA_SUICIDIOS
+        _require_parquet(path, {campo.name: campo.type for campo in ESQUEMA_SUICIDIOS})
+        return True
+    if name in {"eda_mart_suicidios_comuna_weekly.md", "eda_mart_suicidios_comuna_weekly_resumen.json"}:
+        from scripts.eda_mart_suicidios_comuna_weekly import validate_outputs as validar_eda_suicidios
+        validar_eda_suicidios()
+        return True
+    if name in {"benchmark_suicidios.md", "holdout_suicidios.md"}:
+        from scripts.evaluate_holdout_suicidios import TITULO as TITULO_HOLDOUT
+        from scripts.run_benchmark_suicidios import TITULO as TITULO_BENCHMARK
+        _require_report(path, TITULO_BENCHMARK if name.startswith("benchmark") else TITULO_HOLDOUT)
+        return True
+    if name in {"benchmark_suicidios_resumen.csv", "holdout_suicidios_resumen.csv"}:
+        _require_csv(path, {"series_id", "horizonte", "n", "mae", "rmse", "mase", "rmsse", "cobertura",
+                            "cobertura_esperada", "cobertura_nominal", "amplitud_media", "puntaje_intervalo",
+                            "modelo"},
+                     numeric={"horizonte", "n"}, floating={"rmse", "rmsse", "cobertura"},
+                     text={"series_id", "modelo"}, not_null={"horizonte", "n", "cobertura"}, all_rows=True)
+        return True
+    if name == "benchmark_suicidios_seleccion.json":
+        _require_selection(path)
+        return True
+    if name == "pronostico_suicidios.parquet":
+        from src.models.suicidios import ESQUEMA as ESQUEMA_PRONOSTICO_SUICIDIOS
+        _require_parquet(path, {campo.name: campo.type for campo in ESQUEMA_PRONOSTICO_SUICIDIOS})
+        return True
+    if name == "pronostico_suicidios_manifest.json":
+        # Vigencia como parte del contrato: un pronóstico sobre un mart o una selección
+        # que ya cambiaron no es un output válido y el orquestador lo regenera.
+        from src.models.suicidios import motivo_desactualizacion as motivo_suicidios
+        manifiesto = json.loads(path.read_text(encoding="utf-8"))
+        faltantes = {"generado_en_utc", "modelo", "nivel_intervalo", "horizontes", "entradas", "filas"} - set(manifiesto)
+        if faltantes:
+            raise ValueError(f"{path.name}: faltan claves {sorted(faltantes)}")
+        if motivo := motivo_suicidios(manifiesto):
+            raise ValueError(f"{path.name}: pronóstico desactualizado ({motivo})")
+        return True
     if name == "pronostico_establecimientos_sm.parquet":
         from src.models.pronostico_establecimientos import ESQUEMA as ESQUEMA_ESTAB
         _require_parquet(path, {campo.name: campo.type for campo in ESQUEMA_ESTAB})

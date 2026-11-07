@@ -359,6 +359,34 @@ erDiagram
         double indice_ocupacional "NULL sin camas disponibles"
     }
 
+    %% grain: 1 fila = 1 comuna de residencia RM x 1 semana DEIS (18616 filas, 52 comunas, 2020-2026), grilla completa
+    %% derivada de defunciones_nacional (causa externa X60-X84); comuna = residencia, sin enlace con Urgencias por persona
+    mart_suicidios_comuna_weekly {
+        string comuna_codigo PK "FK logica a cartografia_comunal; comuna de residencia"
+        int ano PK "anio calendario de la fecha"
+        int semana PK "semana epidemiologica DEIS; 53 = fragmento de borde de anio"
+        date fecha_inicio_semana
+        int dias_semana "4 a 9 en los bordes de anio"
+        int suicidios "0 = cero registrado, no ausencia de reporte"
+        int defunciones_total "todas las causas"
+        bigint poblacion_anual "proyeccion INE"
+        boolean registro_completo "False en semanas finales con inscripcion pendiente"
+    }
+
+    %% grain: 1 fila = 1 serie x horizonte (52 comunas + region, 8 horizontes)
+    %% Output del modelo, no dato observado: se regenera cuando cambia el mart o la seleccion.
+    pronostico_suicidios {
+        string series_id PK "comuna de residencia o agregado regional"
+        int horizonte PK "1-8 semanas despues de la ultima semana completa"
+        string nivel "region o comuna; las comunas suman la region"
+        date fecha_inicio_semana
+        double y_pred "suicidios esperados; en una comuna suele ser < 1"
+        double y_inferior "cuantil de un conteo"
+        double y_superior "cuantil de un conteo; puede quedar bajo y_pred"
+        double cobertura_esperada "probabilidad del intervalo segun el modelo"
+        string modelo
+    }
+
     cartografia_comunal ||--o{ cartografia_distrital : "1 comuna tiene N distritos"
     cartografia_distrital ||--o{ cartografia_zonal : "1 distrito tiene N zonas urbanas (parcial: 51/52 comunas)"
     cartografia_distrital ||--o{ cartografia_entidades : "1 distrito tiene N entidades rurales (parcial: 26/52 comunas)"
@@ -388,4 +416,8 @@ erDiagram
     indicadores_hospitalarios_snss |o..o{ categorizacion_riesgo_dependencia : "vinculo logico por ano, servicio de salud y nombre del establecimiento (sin codigo en la fuente)"
     dim_oferta_urgencia_rm ||--o{ mart_ocupacion_psiquiatria_hospital_rm : "1 hospital de la oferta, N area-mes de psiquiatria (14/45 hospitales)"
     indicadores_hospitalarios_snss |o..o{ mart_ocupacion_psiquiatria_hospital_rm : "derivacion: areas de psiquiatria del detalle, vinculo logico por establecimiento_codigo y nivel de cuidado"
+
+    cartografia_comunal ||--o{ mart_suicidios_comuna_weekly : "1 comuna de residencia, N semanas (52/52, ceros registrados)"
+    defunciones_nacional |o..o{ mart_suicidios_comuna_weekly : "derivacion: residentes RM con causa externa X60-X84 por comuna y semana; sin enlace por persona"
+    mart_suicidios_comuna_weekly ||--o{ pronostico_suicidios : "panel semanal -> N horizontes por serie (+1 serie regional sin comuna)"
 

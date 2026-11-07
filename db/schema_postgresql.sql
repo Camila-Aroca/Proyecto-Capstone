@@ -37,8 +37,9 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 -- -----------------------------------------------------------------------------
 -- Esquemas de los dominios efectivamente representados en este DDL,
 -- con trazabilidad a sus datasets de origen; no abarcan todos los archivos
--- de data/processed/. Defunciones se almacena actualmente solo en Parquet
--- y no tiene una tabla PostgreSQL definida en este modelo.
+-- de data/processed/. El registro nacional de Defunciones se almacena solo
+-- en Parquet y no tiene tabla en este modelo; su agregado semanal de suicidios
+-- por comuna de residencia si (marts.suicidios_comuna_weekly).
 -- -----------------------------------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS censo;
 CREATE SCHEMA IF NOT EXISTS pobreza;
@@ -868,6 +869,78 @@ COMMENT ON TABLE marts.ocupacion_psiquiatria_hospital_rm IS
     'la demanda de camas: la espera en camilla en la urgencia no se registra.';
 COMMENT ON COLUMN marts.ocupacion_psiquiatria_hospital_rm.camas_libres_promedio IS
     'Disponibles menos ocupadas por dia, en promedio del mes: la brecha. Negativa = sobre la capacidad.';
+
+-- =============================================================================
+-- marts.suicidios_comuna_weekly
+-- Grain: 1 fila = 1 comuna de residencia RM x 1 semana DEIS (grilla completa: 52
+-- comunas en cada semana publicada). Derivada (stage build_mart_suicidios_comuna_weekly)
+-- de las defunciones con causa externa X60-X84; el registro nacional no se persiste.
+-- =============================================================================
+CREATE TABLE marts.suicidios_comuna_weekly (
+    comuna_codigo        CHAR(5)    NOT NULL,
+    ano                  SMALLINT   NOT NULL,
+    semana               SMALLINT   NOT NULL,
+    fecha_inicio_semana  DATE       NOT NULL,
+    dias_semana          SMALLINT   NOT NULL,
+    suicidios            INTEGER    NOT NULL,
+    defunciones_total    INTEGER    NOT NULL,
+    poblacion_anual      BIGINT     NOT NULL,
+    registro_completo    BOOLEAN    NOT NULL,
+    CONSTRAINT pk_suicidios_comuna_weekly PRIMARY KEY (comuna_codigo, ano, semana),
+    CONSTRAINT fk_suicidios_comuna_weekly_comuna FOREIGN KEY (comuna_codigo)
+        REFERENCES censo.cartografia_comunal (comuna_codigo),
+    CONSTRAINT ck_suicidios_comuna_weekly_semana CHECK (semana BETWEEN 1 AND 53),
+    CONSTRAINT ck_suicidios_comuna_weekly_dias CHECK (dias_semana BETWEEN 1 AND 10),
+    CONSTRAINT ck_suicidios_comuna_weekly_conteos
+        CHECK (suicidios >= 0 AND suicidios <= defunciones_total)
+);
+
+COMMENT ON TABLE marts.suicidios_comuna_weekly IS
+    'Defunciones por lesiones autoinfligidas intencionalmente (CIE-10 X60-X84 en la causa '
+    'externa) de residentes de cada comuna RM por semana DEIS. La comuna es la de residencia, '
+    'no el lugar del hecho ni un establecimiento: la relacion con Urgencias es solo ecologica. '
+    'Un cero es cero registrado (registro censal), no ausencia de reporte.';
+COMMENT ON COLUMN marts.suicidios_comuna_weekly.dias_semana IS
+    'Dias de la semana dentro del anio calendario: 7 salvo en los bordes de anio (4 a 9).';
+COMMENT ON COLUMN marts.suicidios_comuna_weekly.registro_completo IS
+    'False en las semanas finales cuya inscripcion de defunciones aun esta incompleta.';
+
+-- =============================================================================
+-- modeling.pronostico_suicidios
+-- Grain: 1 fila = 1 serie (52 comunas de residencia + agregado regional) x horizonte.
+-- Output del modelo (stage forecast_suicidios); se reemplaza por completo cuando cambia
+-- el mart o la seleccion congelada del benchmark.
+-- =============================================================================
+CREATE TABLE modeling.pronostico_suicidios (
+    series_id            TEXT       NOT NULL,
+    horizonte            SMALLINT   NOT NULL,
+    nivel                TEXT       NOT NULL,
+    fecha_inicio_semana  DATE       NOT NULL,
+    y_pred               DOUBLE PRECISION NOT NULL,
+    y_inferior           DOUBLE PRECISION NOT NULL,
+    y_superior           DOUBLE PRECISION NOT NULL,
+    cobertura_esperada   DOUBLE PRECISION,
+    modelo               TEXT       NOT NULL,
+    CONSTRAINT pk_pronostico_suicidios PRIMARY KEY (series_id, horizonte),
+    CONSTRAINT ck_pronostico_suicidios_nivel CHECK (nivel IN ('region', 'comuna')),
+    CONSTRAINT ck_pronostico_suicidios_horizonte CHECK (horizonte BETWEEN 1 AND 8),
+    CONSTRAINT ck_pronostico_suicidios_intervalo
+        CHECK (y_pred >= 0 AND y_inferior >= 0 AND y_inferior <= y_superior),
+    CONSTRAINT ck_pronostico_suicidios_cobertura
+        CHECK (cobertura_esperada IS NULL OR cobertura_esperada BETWEEN 0 AND 1)
+);
+
+COMMENT ON TABLE modeling.pronostico_suicidios IS
+    'Pronostico vigente de suicidios semanales por territorio de residencia. La procedencia '
+    '(fecha, modelo, versiones y SHA256 de las entradas) vive en el manifiesto del output.';
+COMMENT ON COLUMN modeling.pronostico_suicidios.y_superior IS
+    'Cuantil de un conteo entero: con medias bajo 1 puede quedar bajo y_pred (p. ej. media '
+    '0,06 con intervalo 0-0), por eso no se exige y_pred <= y_superior.';
+COMMENT ON COLUMN modeling.pronostico_suicidios.cobertura_esperada IS
+    'Probabilidad que el modelo asigna al intervalo [y_inferior, y_superior]; en un conteo '
+    'es mayor o igual al nivel nominal.';
+
+CREATE INDEX ix_pronostico_suicidios_nivel ON modeling.pronostico_suicidios (nivel);
 
 -- =============================================================================
 -- camas.dim_psiquiatria_hospital_rm

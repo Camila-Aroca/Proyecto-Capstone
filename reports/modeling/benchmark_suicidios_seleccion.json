@@ -1,0 +1,36 @@
+{
+  "modelo_recomendado": "poisson_estacional_eb_vm52",
+  "construible": true,
+  "criterio": "menor RMSSE promedio entre los modelos que superan al baseline estacional en ambos niveles con cobertura compatible con la declarada en la región y en las comunas",
+  "nivel_intervalo": 0.8,
+  "horizontes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "semilla": 42,
+  "ano_inicio": 2022,
+  "periodo_backtest": {
+    "ano_min": 2022,
+    "ano_max": 2025,
+    "origenes": 13,
+    "paso": 4,
+    "t_primer_origen": 151,
+    "t_ultimo_origen": 199
+  },
+  "metricas_backtest": {
+    "rmsse_region": 0.7548,
+    "rmsse_comuna": 0.5942,
+    "mase_region": 0.6907,
+    "mase_comuna": 0.8621,
+    "cobertura_region": 0.8462,
+    "cobertura_comuna": 0.9663,
+    "cobertura_esperada_region": 0.8462,
+    "cobertura_esperada_comuna": 0.9642
+  }
+}

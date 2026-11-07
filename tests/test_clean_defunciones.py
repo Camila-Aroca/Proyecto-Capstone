@@ -222,7 +222,16 @@ def test_pipeline_registers_only_the_affected_branch(monkeypatch):
     monkeypatch.setattr(pipeline.sys, "argv", ["run_pipeline.py", "--stage", "clean_defunciones"])
     monkeypatch.setattr(pipeline, "run_stage", lambda name, **kwargs: calls.append(name) or True)
     pipeline.main()
-    assert calls == ["clean_defunciones"]
+    # Su único consumidor es la rama de suicidios: un cambio en Defunciones la regenera
+    # completa, y nada de Urgencias/Egresos.
+    assert calls == [
+        "clean_defunciones",
+        "build_mart_suicidios_comuna_weekly",
+        "eda_mart_suicidios_comuna_weekly",
+        "benchmark_suicidios",
+        "evaluate_holdout_suicidios",
+        "forecast_suicidios",
+    ]
 
 
 @pytest.mark.data_integration

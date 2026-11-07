@@ -1,0 +1,52 @@
+{
+  "dataset": "pronostico_suicidios",
+  "generado_en_utc": "2026-11-07T19:59:47.271239Z",
+  "generado_en_chile": "2026-11-07T16:59:47.271239-03:00",
+  "modelo": "poisson_estacional_eb_vm52",
+  "nivel_intervalo": 0.8,
+  "horizontes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "semilla": 42,
+  "ultima_semana_observada": {
+    "t": 248,
+    "ano": 2026,
+    "semana": 41
+  },
+  "fecha_corte_datos": "2026-10-24",
+  "semanas_registro_incompleto": [
+    "2026-S42"
+  ],
+  "series": {
+    "total": 53,
+    "region": 1,
+    "comuna": 52
+  },
+  "filas": 424,
+  "entradas": {
+    "mart_suicidios_comuna_weekly": {
+      "ruta": "data/processed/marts/mart_suicidios_comuna_weekly.parquet",
+      "sha256": "7d103046636fc5d8743fb88ac933841e1d6dbcdc17b94f4c32c713193c593b8e"
+    },
+    "seleccion_benchmark": {
+      "ruta": "reports/modeling/benchmark_suicidios_seleccion.json",
+      "sha256": "05fd7c29908ce1d5b71c23439e03f5a4f7b40364518daa086737c88ae2d23887"
+    }
+  },
+  "versiones": {
+    "python": "3.12.6",
+    "pandas": "3.0.5",
+    "numpy": "2.5.2",
+    "pyarrow": "25.0.1",
+    "scikit-learn": "1.9.1",
+    "statsmodels": "0.15.0",
+    "lightgbm": "4.7.0"
+  }
+}

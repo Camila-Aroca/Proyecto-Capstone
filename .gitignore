@@ -53,6 +53,8 @@ data/processed/modeling/*
 !data/processed/modeling/pronostico_demanda_sm_manifest.json
 !data/processed/modeling/pronostico_establecimientos_sm.parquet
 !data/processed/modeling/pronostico_establecimientos_sm_manifest.json
+!data/processed/modeling/pronostico_suicidios.parquet
+!data/processed/modeling/pronostico_suicidios_manifest.json
 data/raw/*
 !data/raw/.gitkeep
 !data/raw/provenance_manifest.json

@@ -376,3 +376,18 @@ class TestPipelineIdempotency(unittest.TestCase):
         self.assertIn("--year", args)
         self.assertIn("2026", args)
         self.assertIn("--force", args)
+
+
+def test_suicidios_stages_are_registered():
+    """Rama de suicidios: registrada, en orden y sin depender de Urgencias salvo para el calendario."""
+    import scripts.run_pipeline as rp
+    rama = ["build_mart_suicidios_comuna_weekly", "eda_mart_suicidios_comuna_weekly", "benchmark_suicidios",
+            "evaluate_holdout_suicidios", "forecast_suicidios"]
+    for stage in rama:
+        assert stage in rp.PIPELINE_ORDER and rp.STAGES[stage]["outputs"]
+    for stage in rama:
+        for dep in rp.STAGES[stage]["depends_on"]:
+            assert rp.PIPELINE_ORDER.index(dep) < rp.PIPELINE_ORDER.index(stage)
+    assert "clean_defunciones" in rp.STAGES["build_mart_suicidios_comuna_weekly"]["depends_on"]
+    assert rp.STAGES["forecast_suicidios"]["depends_on"] == ["benchmark_suicidios"]
+    assert rp.STAGES["evaluate_holdout_suicidios"]["depends_on"] == ["benchmark_suicidios"]

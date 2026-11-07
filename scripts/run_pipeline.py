@@ -315,6 +315,45 @@ STAGES = {
         ],
         "depends_on": ["benchmark_establecimientos_sm", "clean_urgencias"]
     },
+    "build_mart_suicidios_comuna_weekly": {
+        "module": "src.data.build_mart_suicidios_comuna_weekly",
+        "outputs": ["data/processed/marts/mart_suicidios_comuna_weekly.parquet"],
+        "depends_on": ["clean_defunciones", "clean_censo_poblacion", "clean_poblacion_proyecciones"]
+    },
+    "eda_mart_suicidios_comuna_weekly": {
+        "module": "scripts.eda_mart_suicidios_comuna_weekly",
+        "outputs": [
+            "reports/eda/eda_mart_suicidios_comuna_weekly.md",
+            "reports/eda/eda_mart_suicidios_comuna_weekly_resumen.json",
+        ],
+        # Urgencias solo se lee para verificar el calendario DEIS, nunca se cruza.
+        "depends_on": ["build_mart_suicidios_comuna_weekly", "clean_urgencias"]
+    },
+    "benchmark_suicidios": {
+        "module": "scripts.run_benchmark_suicidios",
+        "outputs": [
+            "reports/modeling/benchmark_suicidios.md",
+            "reports/modeling/benchmark_suicidios_resumen.csv",
+            "reports/modeling/benchmark_suicidios_seleccion.json",
+        ],
+        "depends_on": ["build_mart_suicidios_comuna_weekly"]
+    },
+    "evaluate_holdout_suicidios": {
+        "module": "scripts.evaluate_holdout_suicidios",
+        "outputs": [
+            "reports/modeling/holdout_suicidios.md",
+            "reports/modeling/holdout_suicidios_resumen.csv",
+        ],
+        "depends_on": ["benchmark_suicidios"]
+    },
+    "forecast_suicidios": {
+        "module": "scripts.run_forecast_suicidios",
+        "outputs": [
+            "data/processed/modeling/pronostico_suicidios.parquet",
+            "data/processed/modeling/pronostico_suicidios_manifest.json",
+        ],
+        "depends_on": ["benchmark_suicidios"]
+    },
     "eda_mart_urgencias_establecimiento_weekly": {
         "module": "scripts.eda_mart_urgencias_establecimiento_weekly",
         "outputs": [
@@ -488,7 +527,12 @@ PIPELINE_ORDER = [
     "forecast_demanda_sm",
     "benchmark_establecimientos_sm",
     "evaluate_holdout_establecimientos_sm",
-    "forecast_establecimientos_sm"
+    "forecast_establecimientos_sm",
+    "build_mart_suicidios_comuna_weekly",
+    "eda_mart_suicidios_comuna_weekly",
+    "benchmark_suicidios",
+    "evaluate_holdout_suicidios",
+    "forecast_suicidios"
 ]
 
 SUPPORTED_URGENCIAS_YEARS = tuple(range(2020, current_year_chile() + 1))

@@ -37,6 +37,7 @@ Se realizó una búsqueda dirigida antes de crear cualquier artefacto:
 - `dotacion_camas_snss` y `dotacion_camas_no_snss` (`data/processed/camas/`): dotación anual de camas hospitalarias (DEIS, DIGERA), un Parquet por libro de `data/raw/camas/`, con las mismas columnas que su libro.
 - `indicadores_hospitalarios_snss` y `categorizacion_riesgo_dependencia` (`data/processed/estadisticas_hospitalarias/`): Estadísticas Hospitalarias REM-20 del DEIS, un Parquet por familia de libros de `data/raw/estadisticas_hospitalarias/`: indicadores mensuales por establecimiento y nivel de cuidado (solo el detalle) y categorización trimestral CUDYR.
 - `mart_ocupacion_psiquiatria_hospital_rm` (`data/processed/marts/`): ocupación mensual de las camas de psiquiatría por área y hospital de la oferta RM, derivada del REM-20.
+- `mart_suicidios_comuna_weekly` (`data/processed/marts/`): suicidios semanales (defunciones con causa externa X60-X84) de residentes de cada comuna RM, derivado de `defunciones_nacional`, y su pronóstico `pronostico_suicidios` (`data/processed/modeling/`). La comuna es la de residencia; no hay enlace por persona con Urgencias.
 
 **Actualización de Defunciones:** el modelo lógico incorpora
 `data/processed/defunciones/defunciones_nacional.parquet`, con las 27 variables
@@ -467,6 +468,34 @@ erDiagram
         double indice_ocupacional "NULL sin camas disponibles"
     }
 
+    %% grain: 1 fila = 1 comuna de residencia RM x 1 semana DEIS (18616 filas, 52 comunas, 2020-2026), grilla completa
+    %% derivada de defunciones_nacional (causa externa X60-X84); comuna = residencia, sin enlace con Urgencias por persona
+    mart_suicidios_comuna_weekly {
+        string comuna_codigo PK "FK logica a cartografia_comunal; comuna de residencia"
+        int ano PK "anio calendario de la fecha"
+        int semana PK "semana epidemiologica DEIS; 53 = fragmento de borde de anio"
+        date fecha_inicio_semana
+        int dias_semana "4 a 9 en los bordes de anio"
+        int suicidios "0 = cero registrado, no ausencia de reporte"
+        int defunciones_total "todas las causas"
+        bigint poblacion_anual "proyeccion INE"
+        boolean registro_completo "False en semanas finales con inscripcion pendiente"
+    }
+
+    %% grain: 1 fila = 1 serie x horizonte (52 comunas + region, 8 horizontes)
+    %% Output del modelo, no dato observado: se regenera cuando cambia el mart o la seleccion.
+    pronostico_suicidios {
+        string series_id PK "comuna de residencia o agregado regional"
+        int horizonte PK "1-8 semanas despues de la ultima semana completa"
+        string nivel "region o comuna; las comunas suman la region"
+        date fecha_inicio_semana
+        double y_pred "suicidios esperados; en una comuna suele ser < 1"
+        double y_inferior "cuantil de un conteo"
+        double y_superior "cuantil de un conteo; puede quedar bajo y_pred"
+        double cobertura_esperada "probabilidad del intervalo segun el modelo"
+        string modelo
+    }
+
     cartografia_comunal ||--o{ cartografia_distrital : "1 comuna tiene N distritos"
     cartografia_distrital ||--o{ cartografia_zonal : "1 distrito tiene N zonas urbanas (parcial: 51/52 comunas)"
     cartografia_distrital ||--o{ cartografia_entidades : "1 distrito tiene N entidades rurales (parcial: 26/52 comunas)"
@@ -496,6 +525,10 @@ erDiagram
     indicadores_hospitalarios_snss |o..o{ categorizacion_riesgo_dependencia : "vinculo logico por ano, servicio de salud y nombre del establecimiento (sin codigo en la fuente)"
     dim_oferta_urgencia_rm ||--o{ mart_ocupacion_psiquiatria_hospital_rm : "1 hospital de la oferta, N area-mes de psiquiatria (14/45 hospitales)"
     indicadores_hospitalarios_snss |o..o{ mart_ocupacion_psiquiatria_hospital_rm : "derivacion: areas de psiquiatria del detalle, vinculo logico por establecimiento_codigo y nivel de cuidado"
+
+    cartografia_comunal ||--o{ mart_suicidios_comuna_weekly : "1 comuna de residencia, N semanas (52/52, ceros registrados)"
+    defunciones_nacional |o..o{ mart_suicidios_comuna_weekly : "derivacion: residentes RM con causa externa X60-X84 por comuna y semana; sin enlace por persona"
+    mart_suicidios_comuna_weekly ||--o{ pronostico_suicidios : "panel semanal -> N horizontes por serie (+1 serie regional sin comuna)"
 ```
 
 Fuente independiente (idéntica): [`modelo_datos_logico.mmd`](modelo_datos_logico.mmd).
@@ -803,6 +836,30 @@ erDiagram
         numeric indice_ocupacional "NULL sin camas disponibles"
     }
 
+    marts_suicidios_comuna_weekly {
+        char_5 comuna_codigo PK, FK "comuna de residencia"
+        smallint ano PK
+        smallint semana PK "CHECK 1-53"
+        date fecha_inicio_semana
+        smallint dias_semana "CHECK 1-10"
+        integer suicidios "CHECK 0 <= suicidios <= defunciones_total"
+        integer defunciones_total
+        bigint poblacion_anual
+        boolean registro_completo
+    }
+
+    modeling_pronostico_suicidios {
+        text series_id PK "comuna o agregado regional; sin FK: la fila regional no es una comuna"
+        smallint horizonte PK "CHECK BETWEEN 1 AND 8"
+        text nivel "CHECK IN (region, comuna)"
+        date fecha_inicio_semana
+        double_precision y_pred "CHECK >= 0"
+        double_precision y_inferior "CHECK y_inferior <= y_superior"
+        double_precision y_superior
+        double_precision cobertura_esperada "CHECK 0-1"
+        text modelo
+    }
+
     censo_cartografia_comunal ||--o{ censo_cartografia_distrital : "1 comuna, N distritos"
     censo_cartografia_distrital ||--o{ censo_cartografia_zonal : "1 distrito, N zonas urbanas"
     censo_cartografia_distrital ||--o{ censo_cartografia_entidades : "1 distrito, N entidades rurales"
@@ -831,6 +888,8 @@ erDiagram
     camas_indicadores_hospitalarios_snss |o..o{ camas_categorizacion_riesgo_dependencia : "cruce por nombre documentado, NO enforced por FK fisica"
     geo_dim_oferta_urgencia_rm ||--o{ marts_ocupacion_psiquiatria_hospital_rm : "1 a N (area-mes de psiquiatria)"
 
+    censo_cartografia_comunal ||--o{ marts_suicidios_comuna_weekly : "1 a N (semanas, comuna de residencia)"
+    marts_suicidios_comuna_weekly |o..o{ modeling_pronostico_suicidios : "panel de entrada, NO enforced por FK fisica"
 ```
 
 Fuente independiente (idéntica): [`modelo_datos_fisico_postgresql.mmd`](modelo_datos_fisico_postgresql.mmd).
@@ -843,7 +902,7 @@ Fuente independiente (idéntica): [`modelo_datos_fisico_postgresql.mmd`](modelo_
 | AWS / RDS | Despliegue futuro, **no implementado**. Este DDL no asume ni configura infraestructura cloud. |
 | OSM / GTFS / isócronas | Funcionalidad geoespacial de accesibilidad, **en backlog** (`PROJECT_CONTEXT.md`, "Pendientes principales"). No es requisito para modelar correctamente las geometrías censales que ya existen en los Parquet fuente; por eso las columnas `geom` sí usan tipos PostGIS nativos en este DDL. |
 
-Los nueve esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egresos`, `contexto_genero`, `modeling`, `camas`) corresponden a los dominios incluidos en este diseño físico y mantienen trazabilidad hacia sus datasets de origen. Esta correspondencia se limita a las entidades representadas en PostgreSQL; no implica que todo subdirectorio o archivo de `data/processed/` tenga una tabla objetivo. `defunciones_nacional` está representado en el modelo lógico y almacenado actualmente solo en Parquet, sin tabla PostgreSQL definida.
+Los nueve esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egresos`, `contexto_genero`, `modeling`, `camas`) corresponden a los dominios incluidos en este diseño físico y mantienen trazabilidad hacia sus datasets de origen. Esta correspondencia se limita a las entidades representadas en PostgreSQL; no implica que todo subdirectorio o archivo de `data/processed/` tenga una tabla objetivo. `defunciones_nacional` está representado en el modelo lógico y almacenado actualmente solo en Parquet, sin tabla PostgreSQL definida; su agregado semanal de suicidios por comuna sí tiene tabla (`marts.suicidios_comuna_weekly`), igual que su pronóstico (`modeling.pronostico_suicidios`).
 
 ## 7. Tabla resumen
 
@@ -874,6 +933,8 @@ Los nueve esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, 
 | `indicadores_hospitalarios_snss` | 1 indicador de 1 nivel de cuidado de 1 establecimiento SNSS en 1 año, con acumulado y 12 meses (160974 filas, 208 establecimientos, 2014-2026); solo detalle | `ano, servicio_salud_codigo, establecimiento_codigo, nivel_cuidado_codigo, indicador` | ninguna; vínculo lógico (no FK) a `dim_oferta_urgencia_rm` y `dotacion_camas_snss` | entidad aislada |
 | `categorizacion_riesgo_dependencia` | 1 nivel de cuidado de 1 establecimiento SNSS en 1 trimestre (8834 filas, 2024-T1 a 2025-T4) | `ano, trimestre, servicio_salud, establecimiento_nombre, nivel_cuidado_codigo` | ninguna; vínculo lógico por nombre a `indicadores_hospitalarios_snss` (sin código en la fuente) | entidad aislada |
 | `mart_ocupacion_psiquiatria_hospital_rm` | 1 área de psiquiatría de 1 hospital de la oferta en 1 mes publicado (3444 filas, 28 áreas, 14 hospitales, 2014-2026) | `establecimiento_codigo, nivel_cuidado_codigo, ano, mes` | `establecimiento_codigo` → `dim_oferta_urgencia_rm`; derivación lógica de `indicadores_hospitalarios_snss` | N → 1 hospital de la oferta |
+| `mart_suicidios_comuna_weekly` | 1 comuna de residencia RM x 1 semana DEIS (18616 filas, 52 comunas, 2020-2026, grilla completa) | `comuna_codigo, ano, semana` (clave lógica verificada) | `comuna_codigo` → `cartografia_comunal`; derivación lógica de `defunciones_nacional`, sin enlace por persona | N → 1 comuna |
+| `pronostico_suicidios` | 1 serie (52 comunas + región) x horizonte 1-8 | `series_id, horizonte` (clave lógica) | panel de entrada `mart_suicidios_comuna_weekly`; sin FK: la fila regional no es una comuna | N horizontes → 1 serie |
 
 ## 8. Decisiones de modelado (lógico → físico)
 
@@ -885,12 +946,13 @@ Los nueve esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, 
 6. **`egresos_f00_f99_nacional` no tiene FK hacia ninguna dimensión territorial.** `region_residencia`/`comuna_residencia` son la residencia del paciente (no la ubicación del hospital) y el dataset es de alcance **nacional**, no solo RM. Crear una FK hacia `censo.cartografia_comunal` (exclusivamente RM) invalidaría todas las filas de residentes fuera de la Región Metropolitana; el dominio territorial no coincide.
 7. **`urgencias.mart_establecimiento_monthly.establecimiento_codigo` no tiene FK física hacia `geo.dim_oferta_urgencia_rm`.** Se verificó que 3 de los 152 `establecimiento_codigo` históricos (2021-2025) no están en el snapshot vigente de 174 establecimientos: `dim_oferta_urgencia_rm` es un snapshot **actual**, mientras que el mart es histórico. Una FK física real rompería la carga de esas 3 filas; se documenta como relación lógica no forzada, con `COMMENT ON TABLE`.
 8. **Las geometrías se modelan con tipos PostGIS nativos (`geometry(MultiPolygon, 4674)`), no `BYTEA`.** El stack objetivo del proyecto ya incluye PostGIS (`README.md` raíz); el SRID 4674 (SIRGAS 2000) es el CRS real observado en el GeoParquet fuente (`reports/eda/eda_cartografia_censo2024_subcomunal.md`), sin ninguna reproyección.
-9. **Esquemas PostgreSQL por dominio** (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egresos`, `contexto_genero`, `modeling`, `camas`), con trazabilidad a los datasets de origen de las entidades incluidas en el modelo físico. Esta organización no asigna automáticamente tablas a todos los subdirectorios de `data/processed/`; Defunciones conserva únicamente su contrato Parquet actual. `contexto_genero` permanece aislado para preservar la naturaleza interpretativa de sus fuentes.
+9. **Esquemas PostgreSQL por dominio** (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, `egresos`, `contexto_genero`, `modeling`, `camas`), con trazabilidad a los datasets de origen de las entidades incluidas en el modelo físico. Esta organización no asigna automáticamente tablas a todos los subdirectorios de `data/processed/`; El registro nacional de Defunciones conserva únicamente su contrato Parquet; solo su agregado de suicidios (`marts`) y el pronóstico derivado (`modeling`) tienen tabla. `contexto_genero` permanece aislado para preservar la naturaleza interpretativa de sus fuentes.
 10. **Los cuatro indicadores de contexto de género alimentan `mart_contexto_genero_indicador_sexo`, no un mega-mart.** El mart canónico de serving conserva el contrato normalizado de cada input mediante `source_id`, geografía, `period`, `year`, `sex`, `indicator`, `unit`, `value` y `value_text`. La persistencia física equivalente es `contexto_genero.indicador_por_sexo`. No tiene FK hacia Urgencias, Egresos, cartografía ni otros marts; coincidir en sexo, año o geografía no habilita un join automático ni convierte estos indicadores en features.
 11. **Los datos de camas se modelan como dos entidades, una por libro de origen, con las columnas de su libro.** Los libros publican la misma magnitud con estructuras distintas (Servicio de Salud frente a SEREMI, tipo de establecimiento solo en el SNSS, un año por columna frente a una hoja por año), y fusionarlos obligaría a columnas mutuamente excluyentes. En el modelo lógico, `dotacion_camas_snss` tiene clave lógica verificada `servicio_salud, establecimiento_codigo, area_funcional_codigo` (sin duplicados ni nulos, porque el total del hospital es el área `100` del propio libro). `dotacion_camas_no_snss` declara ausencia de clave lógica sin nulos: la fila de total del establecimiento no trae área, y esa fila vacía se conserva tal cual en vez de inventarle un código.
 12. **En el modelo físico, el SNSS se normaliza y el no SNSS usa clave técnica.** `camas.dotacion_snss` transpone las 16 columnas `camas_AAAA` a filas (`ano`, `camas`), porque un grupo repetitivo de columnas por año no es un diseño relacional (cada año nuevo cambiaría el esquema); su PK natural es `servicio_salud, establecimiento_codigo, area_funcional_codigo, ano`. `camas.dotacion_no_snss` usa `dotacion_id`, una clave técnica de persistencia como `egreso_id` (no existe en la fuente), más un índice único sobre `ano, seremi, establecimiento_codigo, COALESCE(area_funcional_codigo, -1)` que verifica la llave lógica. Ninguna de las dos tiene FK hacia `geo.dim_oferta_urgencia_rm`: solo 44 de sus 174 establecimientos tienen registro de camas y la mayoría de los códigos de camas no está en la oferta; una FK rompería la carga. Se documenta como relación lógica no forzada, igual que en `mart_urgencias_establecimiento_monthly`.
 13. **Los totales de camas por territorio salen de una dimensión derivada, no de los libros.** `dim_camas_psiquiatria_hospital_rm` une por llave (`establecimiento_codigo`, el mismo código DEIS de 6 dígitos en ambas fuentes) los hospitales de la oferta con la dotación SNSS, sin cruzar por nombre ni por el código textual `NN-NNN` de Urgencias. Conserva los 45 hospitales de la oferta para que el vínculo sea auditable y marca con `reporto_id36_periodo` cuáles alimentaron el modelo; sumar solo esos evita contar, por ejemplo, un hospital psiquiátrico que nunca reportó ID36. A diferencia de los libros de camas, su relación con la oferta sí es FK física porque la dimensión nace de ella.
 14. **Los indicadores REM-20 conservan los meses como columnas.** A diferencia de `camas_AAAA`, los 12 meses son un conjunto cerrado que no crece con el tiempo, y el `acumulado` de una razón no es derivable de sus meses: transponer obligaría a codificar el acumulado como un mes ficticio. `camas.indicadores_hospitalarios_snss` replica la entidad lógica con PK natural y un `CHECK` sobre los 11 indicadores publicados; `camas.categorizacion_riesgo_dependencia` usa la llave lógica por nombre como PK (la fuente no trae código) y un `CHECK` de que el total sea la suma de sus 12 categorías. Ninguna tiene FK física: son libros de origen con establecimientos fuera de la oferta de urgencia.
+15. **El intervalo del pronóstico de suicidios no exige `y_pred <= y_superior`.** Sus límites son cuantiles de un conteo entero y en una comuna la media semanal suele estar bajo 1: con media 0,06 el intervalo de 80% es 0-0 (el modelo le asigna 94%). Por eso `modeling.pronostico_suicidios` solo exige `y_inferior <= y_superior` y valores no negativos, a diferencia de `modeling.pronostico_demanda_sm`, y guarda `cobertura_esperada` (la probabilidad que el modelo asigna al intervalo).
 
 ## 9. Limitaciones
 
@@ -903,4 +965,4 @@ Los nueve esquemas PostgreSQL (`censo`, `pobreza`, `geo`, `urgencias`, `marts`, 
 
 ## 10. Relación con `db/schema_postgresql.sql`
 
-El DDL ejecutable vive en [`db/schema_postgresql.sql`](../../../db/schema_postgresql.sql) (fuera de `docs/`, para no mezclar evidencia académica con código de infraestructura) y es coherente 1:1 con el diagrama de la sección 6 para los dominios físicos representados: mismos 9 esquemas, mismas 25 tablas, mismas PK/FK, mismos tipos. Defunciones no forma parte de este DDL. No contiene `INSERT`/`COPY`, credenciales, AWS/RDS, Docker, usuarios ni migrations — únicamente `CREATE EXTENSION` (PostGIS), `CREATE SCHEMA`, `CREATE TABLE` con `PRIMARY KEY`/`FOREIGN KEY`/`CHECK`/`COMMENT`, y los índices básicos necesarios para las FK no cubiertas por una PK compuesta y para las columnas `geometry` (`GIST`).
+El DDL ejecutable vive en [`db/schema_postgresql.sql`](../../../db/schema_postgresql.sql) (fuera de `docs/`, para no mezclar evidencia académica con código de infraestructura) y es coherente 1:1 con el diagrama de la sección 6 para los dominios físicos representados: mismos 9 esquemas, mismas 27 tablas, mismas PK/FK, mismos tipos. El registro nacional de Defunciones no forma parte de este DDL (sí su agregado de suicidios y el pronóstico). No contiene `INSERT`/`COPY`, credenciales, AWS/RDS, Docker, usuarios ni migrations — únicamente `CREATE EXTENSION` (PostGIS), `CREATE SCHEMA`, `CREATE TABLE` con `PRIMARY KEY`/`FOREIGN KEY`/`CHECK`/`COMMENT`, y los índices básicos necesarios para las FK no cubiertas por una PK compuesta y para las columnas `geometry` (`GIST`).

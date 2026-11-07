@@ -175,7 +175,13 @@ def test_pipeline_limits_descendants_to_defunciones_branch(monkeypatch):
     monkeypatch.setattr(pipeline.sys, "argv", ["run_pipeline.py", "--stage", "download_defunciones"])
     monkeypatch.setattr(pipeline, "run_stage", lambda name, **kwargs: calls.append(name) or True)
     pipeline.main()
-    assert calls == ["download_defunciones", "eda_defunciones", "clean_defunciones"]
+    # La rama de Defunciones llega hasta el pronóstico de suicidios, su único consumidor;
+    # nunca a Urgencias ni a Egresos.
+    assert calls == [
+        "download_defunciones", "eda_defunciones", "clean_defunciones",
+        "build_mart_suicidios_comuna_weekly", "eda_mart_suicidios_comuna_weekly",
+        "benchmark_suicidios", "evaluate_holdout_suicidios", "forecast_suicidios",
+    ]
 
 
 def test_output_contract_rejects_invalid_defunciones_csv(tmp_path):
