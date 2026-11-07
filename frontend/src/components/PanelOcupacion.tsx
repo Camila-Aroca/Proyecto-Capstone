@@ -447,17 +447,35 @@ export function PanelOcupacion({ meses, areas, dotacion, tokens }: Props) {
             </p>
             <details className="mt-2 text-[12px] text-3">
               <summary className="cursor-pointer">Cálculo, evidencia y condiciones de implementación</summary>
-              <p className="mt-2 num">Escenario de continuidad: se repite la carga mensual de {propuesta.desde} a {propuesta.hasta},
-                sin crecimiento supuesto. Cálculo sin redondeos intermedios: techo(({fmtEntero(propuesta.pico_dias_cama_ocupados)} días cama ocupados
-                ÷ {fmtEntero(propuesta.pico_dias_mes)} días del mes de mayor carga) ÷ 0,85) = {fmtEntero(propuesta.camas_objetivo)} camas.
-                Con objetivo de 90%: {fmtEntero(propuesta.camas_objetivo_90)} camas.
-                Brecha frente a disponibles del último mes: {fmtCamas(propuesta.brecha_habilitacion)} camas por día.</p>
-              {!propuesta.referencia_aguda && <p className="mt-2">Para esta área, el 85% es un supuesto de planificación del escenario;
-                no se ha validado como umbral específico de esta especialidad.</p>}
-              <p className="mt-2">El 85% usa como referencia a <a className="underline" href="https://mentalhealthwatch.rcpsych.ac.uk/indicators/bed-occupancy-across-mental-health-trust" target="_blank" rel="noreferrer">Royal College of Psychiatrists</a>;
-                no es una norma chilena ni una garantía de cama cada día. No es un pronóstico anual validado: no mide espera,
-                derivaciones rechazadas ni picos diarios. Presupuesto, personal, espacio y plazos no están en estas fuentes;
-                la ejecución requiere validarlos localmente. Las camas de otras áreas no sustituyen las de esta área.</p>
+              <p className="mt-3">Escenario de continuidad: se repite la carga de {propuesta.desde} a {propuesta.hasta}, sin crecimiento supuesto.</p>
+              <ol className="mt-3 grid gap-3 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] p-3 sm:grid-cols-3" aria-label="Cómo se calcula el objetivo de camas">
+                <li>
+                  <p className="text-[11px] text-3">1. Carga del mes de mayor demanda</p>
+                  <p className="mt-1 text-[15px] font-medium text-2 num">{fmtEntero(propuesta.pico_dias_cama_ocupados)} ÷ {fmtEntero(propuesta.pico_dias_mes)}</p>
+                  <p className="mt-1 text-[11px]">Días cama ocupados ÷ días del mes</p>
+                </li>
+                <li className="border-t border-[var(--border)] pt-2 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-3">
+                  <p className="text-[11px] text-3">2. Margen de planificación</p>
+                  <p className="mt-1 text-[15px] font-medium text-2 num">÷ 0,85</p>
+                  <p className="mt-1 text-[11px]">Objetivo de ocupación del 85%</p>
+                </li>
+                <li className="border-t border-[var(--border)] pt-2 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-3">
+                  <p className="text-[11px] text-3">3. Capacidad objetivo</p>
+                  <p className="mt-1 text-[15px] font-medium text-2 num">{fmtEntero(propuesta.camas_objetivo)} camas</p>
+                  <p className="mt-1 text-[11px]">Se redondea hacia arriba solo al final</p>
+                </li>
+              </ol>
+              <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
+                <div><dt className="inline">Con ocupación objetivo del 90%: </dt><dd className="inline font-medium text-2 num">{fmtEntero(propuesta.camas_objetivo_90)} camas</dd></div>
+                <div><dt className="inline">Brecha frente al último mes: </dt><dd className="inline font-medium text-2 num">{fmtCamas(propuesta.brecha_habilitacion)} camas/día</dd></div>
+              </dl>
+              {!propuesta.referencia_aguda && <p className="mt-3 border-l-2 border-[var(--border-strong)] pl-3">En esta área, el 85% es un supuesto de planificación; no está validado como umbral específico de la especialidad.</p>}
+              <details className="mt-3">
+                <summary className="cursor-pointer text-2">Referencia y condiciones de uso</summary>
+                <p className="mt-2">Referencia del 85%: <a className="underline" href="https://mentalhealthwatch.rcpsych.ac.uk/indicators/bed-occupancy-across-mental-health-trust" target="_blank" rel="noreferrer">Royal College of Psychiatrists</a>.
+                  No es una norma chilena, una garantía diaria de cama ni un pronóstico anual validado. No mide espera, derivaciones rechazadas ni picos diarios.</p>
+                <p className="mt-2">Implementar requiere validar presupuesto, personal, espacio y plazos localmente: estas fuentes no los incluyen. Las camas de otras áreas no sustituyen las de esta área.</p>
+              </details>
             </details>
           </>}
         </div>

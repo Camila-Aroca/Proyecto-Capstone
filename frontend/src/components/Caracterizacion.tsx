@@ -8,6 +8,49 @@ function colorSexo(etiqueta: string) {
     : sexo.startsWith("hombre") ? "var(--sexo-hombre)" : "var(--muted)";
 }
 
+export function TortaSexo({ titulo, datos, total }: {
+  titulo: string; datos: BarraCaracterizacion[]; total: number;
+}) {
+  let acumulado = 0;
+  const porciones = datos.map((dato) => {
+    const fraccion = total > 0 ? dato.valor / total : 0;
+    const inicio = acumulado * 2 * Math.PI - Math.PI / 2;
+    acumulado += fraccion;
+    const fin = acumulado * 2 * Math.PI - Math.PI / 2;
+    const medio = (inicio + fin) / 2;
+    return {
+      ...dato, fraccion, inicio, fin,
+      etiquetaX: 140 + 85 * Math.cos(medio),
+      etiquetaY: 130 + 85 * Math.sin(medio),
+    };
+  });
+  const porcentaje = (valor: number) => `${(total > 0 ? valor / total * 100 : 0).toLocaleString("es-CL", { maximumFractionDigits: 1 })}%`;
+  return <figure className="min-w-0">
+    <figcaption className="mb-3 text-[13px] font-medium">{titulo}</figcaption>
+    <ul className="mb-1 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-2" aria-label={`${titulo}: leyenda y valores`}>
+      {porciones.map((p) => <li key={p.etiqueta} className="flex items-center gap-1.5">
+        <span className="inline-block h-2 w-2 shrink-0 rounded-sm" style={{ background: colorSexo(p.etiqueta) }} aria-hidden />
+        <span>{p.etiqueta}<span className={p.fraccion >= 0.08 ? "sr-only" : "num text-3"}>: {fmtEntero(p.valor)} ({porcentaje(p.valor)})</span></span>
+      </li>)}
+    </ul>
+    {total > 0 ? <svg viewBox="0 0 280 260" className="mx-auto block w-full max-w-[224px]" role="img" aria-label={`${titulo}. ${datos.map((p) => `${p.etiqueta}: ${fmtEntero(p.valor)}, ${porcentaje(p.valor)}`).join("; ")}`}>
+      <circle cx="140" cy="130" r="116" fill="none" stroke="var(--border)" strokeWidth="1" />
+      {porciones.filter((p) => p.valor > 0).map((p) => <g key={p.etiqueta}>
+        <title>{`${p.etiqueta}: ${fmtEntero(p.valor)} eventos (${porcentaje(p.valor)})`}</title>
+        {p.fraccion === 1 ? <circle cx="140" cy="130" r="116" fill={colorSexo(p.etiqueta)} />
+          : <path d={`M 140 130 L ${140 + 116 * Math.cos(p.inicio)} ${130 + 116 * Math.sin(p.inicio)} A 116 116 0 ${p.fraccion > 0.5 ? 1 : 0} 1 ${140 + 116 * Math.cos(p.fin)} ${130 + 116 * Math.sin(p.fin)} Z`} fill={colorSexo(p.etiqueta)} stroke="var(--surface)" strokeWidth="2" />}
+        {p.fraccion >= 0.08 && <text x={p.etiquetaX} y={p.etiquetaY} textAnchor="middle" className="num" fontFamily="monospace" fill="var(--sexo-etiqueta)" fontSize="14" fontWeight="400">
+          <tspan x={p.etiquetaX} dy="-2">{porcentaje(p.valor)}</tspan>
+          <tspan x={p.etiquetaX} dy="16" fontSize="11" fillOpacity="0.8">{fmtEntero(p.valor)}</tspan>
+        </text>}
+      </g>)}
+      <circle cx="140" cy="130" r="54" fill="var(--surface)" />
+      <text x="140" y="128" textAnchor="middle" fill="var(--ink)" className="num" fontFamily="monospace" fontSize="23" fontWeight="300">{fmtEntero(total)}</text>
+      <text x="140" y="147" textAnchor="middle" fill="var(--ink-3)" fontSize="11">eventos</text>
+    </svg> : <p className="py-6 text-[12px] text-3">Sin eventos para representar.</p>}
+  </figure>;
+}
+
 /** Barras desde cero con etiquetas persistentes: también constituyen la tabla accesible. */
 function Barras({ titulo, datos, total, sexo = false }: {
   titulo: string; datos: BarraCaracterizacion[]; total: number; sexo?: boolean;
@@ -71,7 +114,7 @@ export function Caracterizacion({ serie, fuente = "urgencias" }: {
           {total === 0 && <p className="mb-3 text-[13px] text-3">Sin eventos registrados en estas semanas.</p>}
           <div className="grid gap-6 lg:grid-cols-2">
             <div>
-              {datos.sexo ? <Barras titulo="Sexo registrado" datos={datos.sexo} total={total} sexo /> : <>
+              {datos.sexo ? <TortaSexo titulo="Sexo registrado" datos={datos.sexo} total={total} /> : <>
                 <h4 className="text-[13px] font-medium">Sexo</h4>
                 <p className="mt-2 text-[12px] text-3">Urgencias no registra sexo. Los datos disponibles no miden identidad de género.</p>
                 {datos.escenario && <>
@@ -80,7 +123,7 @@ export function Caracterizacion({ serie, fuente = "urgencias" }: {
                     Explorar un reparto hipotético con referencia nacional
                   </label>
                   {explorar && <div className="mt-4 border-l-2 border-[var(--border)] pl-3">
-                    <Barras titulo="Escenario por sexo · no observado" datos={datos.escenario.sexo} total={total} sexo />
+                    <TortaSexo titulo="Escenario por sexo · no observado" datos={datos.escenario.sexo} total={total} />
                     <p className="mt-3 text-[12px] text-3">{datos.escenario.fuente}, {datos.escenario.ano_referencia}: {datos.escenario.referencia.map((d) => `${d.etiqueta}: ${fmtEntero(d.valor)}`).join(" · ")}.</p>
                     <p className="mt-1 text-[12px] text-3">{datos.escenario.metodo} {datos.escenario.advertencia}</p>
                   </div>}
