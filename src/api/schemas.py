@@ -17,6 +17,33 @@ Nivel = Literal["region", "comuna"]
 OrigenPronostico = Literal["persistido", "en_memoria"]
 
 
+class BarraCaracterizacion(BaseModel):
+    etiqueta: str
+    valor: int = Field(ge=0)
+
+
+class EscenarioContextual(BaseModel):
+    ano_referencia: int
+    sexo: list[BarraCaracterizacion]
+    referencia: list[BarraCaracterizacion]
+    fuente: str
+    metodo: str
+    advertencia: str
+
+
+class Caracterizacion(BaseModel):
+    total: int = Field(ge=0)
+    sexo: list[BarraCaracterizacion] | None
+    edad: list[BarraCaracterizacion]
+    desde: date
+    hasta: date
+    semanas: int
+    fuente: Literal['urgencias', 'hospitalizaciones', 'suicidios']
+    nivel: Literal['region', 'comuna', 'establecimiento']
+    codigo: str
+    escenario: EscenarioContextual | None
+
+
 class Salud(BaseModel):
     estado_datos: EstadoProceso
     estado_pronostico: EstadoProceso

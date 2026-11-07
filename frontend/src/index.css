@@ -39,6 +39,8 @@
   /* Texto sobre el acento: blanco sobre el petroleo claro (7,6:1). */
   --on-accent: #ffffff;
   --series-1: #0f5a78;
+  --sexo-mujer: #b64d7b;
+  --sexo-hombre: #327bab;
   --band: rgba(74, 159, 207, 0.22);
   /* Linea de referencia de camas: burdeos, distinto del petroleo de la serie y del
      rojo de alza. 8,9:1 sobre la superficie clara; contra el petróleo de la serie solo distingue el matiz, por eso va punteada. */
@@ -113,6 +115,8 @@
     /* En oscuro el acento es claro: el blanco quedaba en 2,9:1; la tinta de pagina da 6,9:1. */
     --on-accent: #0a141a;
     --series-1: #4a9fcf;
+    --sexo-mujer: #ed8ab4;
+    --sexo-hombre: #75b9e4;
     --band: rgba(74, 159, 207, 0.24);
     /* Burdeos claro para fondo oscuro: 5,2:1 sobre la superficie. */
     --camas: #e0627f;

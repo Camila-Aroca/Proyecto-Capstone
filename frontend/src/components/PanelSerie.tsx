@@ -5,6 +5,7 @@ import { fmtEntero, fmtFechaLarga, fmtPct } from "../format";
 import type { Tokens } from "../tokens";
 import { BadgeCambio } from "./BadgeCambio";
 import { BloqueSuicidios } from "./BloqueSuicidios";
+import { Caracterizacion } from "./Caracterizacion";
 import { ejeDeSerie, GraficoSerie, LeyendaSerie, TablaSerie } from "./GraficoSerie";
 
 interface Props {
@@ -151,6 +152,7 @@ export function PanelSerie({
           <div className="mt-5">
             <GraficoSerie serie={serie} tokens={tokens} intervalo={intervalo} semanaParcial={parcialAplicable} />
             <TablaSerie serie={serie} intervalo={intervalo} semanaParcial={parcialAplicable} camas={camas} />
+            <Caracterizacion serie={serie} />
           </div>
         </div>
       )}

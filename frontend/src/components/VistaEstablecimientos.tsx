@@ -23,6 +23,7 @@ import { AvisoLectura } from "./AvisoLectura";
 import { BadgeCambio } from "./BadgeCambio";
 import { BarraSuperior } from "./BarraSuperior";
 import { GraficoSerie, LeyendaSerie, TablaSerie } from "./GraficoSerie";
+import { Caracterizacion } from "./Caracterizacion";
 import { PanelOcupacion } from "./PanelOcupacion";
 
 const VENTANAS = [26, 52, 104] as const;
@@ -404,6 +405,7 @@ export function VistaEstablecimientos() {
               <div className="mt-5">
                 <GraficoSerie serie={serie} tokens={tokens} intervalo={intervalo} unidad={unidad} />
                 <TablaSerie serie={serie} intervalo={intervalo} unidad={unidad} />
+                <Caracterizacion serie={serie} fuente={objetivo === "hospitalizaciones_sm" ? "hospitalizaciones" : "urgencias"} />
               </div>
 
               {objetivo === "hospitalizaciones_sm" && detalle?.ocupacion_psiquiatria?.length ? (

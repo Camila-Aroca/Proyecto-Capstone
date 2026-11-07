@@ -8,6 +8,7 @@ import { fmtDecimal, fmtEntero, fmtFechaLarga, fmtMedia, fmtPct } from "../forma
 import type { Token, Tokens } from "../tokens";
 import { fechasMarca, type MarcaTemporal } from "./MarcasTemporales";
 import { GraficoSerie, LeyendaSerie, TablaSerie, type SemanaEje } from "./GraficoSerie";
+import { Caracterizacion } from "./Caracterizacion";
 
 interface Props {
   suicidios: SerieSuicidios | null;
@@ -210,6 +211,7 @@ export function BloqueSuicidios({ suicidios, error, tokens, eje, eventos = [] }:
               marcas={marcas}
             />
             <TablaSerie serie={alineada} intervalo={intervalo} unidad="suicidios" decimales />
+            <Caracterizacion serie={alineada} fuente="suicidios" />
             {marcasPeriodo.length > 0 && (
               <details className="mt-2 border-t border-[var(--border)] pt-3">
                 <summary className="cursor-pointer text-[13px] text-2 select-none">Ver las fechas marcadas</summary>

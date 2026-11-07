@@ -395,6 +395,10 @@ export function PanelOcupacion({ meses, areas, dotacion, tokens }: Props) {
           </p>
         )}
         <TablaMeses meses={serie} />
+        <details className="mt-2 border-t border-[var(--border)] pt-3">
+          <summary className="cursor-pointer text-[13px] text-2 select-none">Ver caracterización por género y edad</summary>
+          <p className="mt-3 text-[12px] text-3">REM-20 no publica sexo ni edad de quienes ocupan las camas. Las áreas de adultos e infanto-adolescentes se pueden consultar en el selector de áreas; no representan edades individuales.</p>
+        </details>
       </div>
     </section>
   );

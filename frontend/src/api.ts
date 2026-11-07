@@ -5,6 +5,24 @@ export type EstadoProceso = "pendiente" | "calculando" | "listo" | "error";
 export type Nivel = "region" | "comuna" | "establecimiento";
 export type CambioEsperado = "alza" | "baja" | "estable" | "sin_pronostico";
 
+export interface BarraCaracterizacion { etiqueta: string; valor: number }
+export interface Caracterizacion {
+  total: number;
+  sexo: BarraCaracterizacion[] | null;
+  edad: BarraCaracterizacion[];
+  desde: string;
+  hasta: string;
+  semanas: number;
+  escenario: {
+    ano_referencia: number;
+    sexo: BarraCaracterizacion[];
+    referencia: BarraCaracterizacion[];
+    fuente: string;
+    metodo: string;
+    advertencia: string;
+  } | null;
+}
+
 export interface PuntoHistorico {
   ano: number;
   semana: number;
@@ -324,6 +342,8 @@ async function obtener<T>(ruta: string, senal?: AbortSignal): Promise<T> {
 }
 
 export const api = {
+  caracterizacion: (fuente: string, nivel: Nivel, codigo: string, semanas: string, senal: AbortSignal) =>
+    obtener<Caracterizacion>(`/caracterizacion/${fuente}/${nivel}/${encodeURIComponent(codigo)}?semanas=${encodeURIComponent(semanas)}`, senal),
   salud: () => obtener<Salud>("/salud"),
   meta: () => obtener<Meta>("/meta"),
   territorios: () => obtener<Territorio[]>("/territorios"),

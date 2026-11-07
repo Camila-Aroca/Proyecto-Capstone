@@ -2,6 +2,35 @@
 
 Este documento centraliza las instrucciones para ejecutar el pipeline de datos de manera reproducible, ordenada e idempotente.
 
+## Caracterización en la web
+
+`/api/v1/caracterizacion/{fuente}/{nivel}/{codigo}` es una vista de consulta,
+no un nuevo artefacto del DAG. Suma los desgloses etarios publicados por
+`clean_urgencias` (ID36/ID42) y cuenta sexo/edad de `clean_defunciones`
+(X60–X84, residencia), exclusivamente en las claves año/semana DEIS observadas
+que envía el gráfico. No lee RAW, escribe outputs ni entrena modelos. La región
+usa el mismo universo de comunas que el panel servido, también en historia;
+no suma las comunas excluidas del gráfico por falta de cobertura. Rechaza una
+desagregación etaria que no concilia por registro; la web exige además que las
+sumas coincidan con la línea observada antes de mostrarla.
+
+Urgencias no registra sexo. El usuario puede activar un **escenario hipotético**:
+`N_s = N * C_s / sum(C_s)`, con los conteos nacionales por sexo de
+`egresos_intento_suicida_sexo_anio` de `normalize_contexto_genero`. Se elige el
+último año publicado no posterior al primer año de la ventana; los restos
+mayores conservan exactamente N al redondear. Al activarlo se muestran fuente,
+año, conteos, fórmula y supuesto. Transportar la composición nacional de egresos
+por intento suicida a las urgencias seleccionadas **no está validado** y no
+acredita precisión del reparto. No caracteriza sexo × edad ni identidad de
+género. No hay enlaces individuales, FK ni nuevas features; el contexto se
+mantiene independiente. Sin referencia se conserva la edad sin escenario.
+REM-20 no publica sexo/edad individual para caracterizar la ocupación de camas.
+
+QA sintético: `tests/test_api_caracterizacion.py`. QA de marts reales:
+`SAAD_QA_DATOS=1 python -m pytest tests/test_caracterizacion_integridad.py`.
+No hay cambios de entidades canónicas, persistencia ni SQL; ERD y UML no requieren
+modificaciones. Los productores de los inputs ya pertenecen al pipeline.
+
 ## 1. Requisitos
 Para preparar el entorno antes de correr el pipeline:
 
