@@ -83,13 +83,10 @@ export function CapaMarcas({ marcas, fechas }: { marcas: MarcaTemporal[]; fechas
   const lineas: ReactElement[] = [];
   for (const m of marcas) {
     const punteada = m.categoria === "festividad" ? "4 3" : undefined;
-    const titulo = `${m.nombre} (${fechasMarca(m)}). ${m.detalle}`;
     const linea = (x: number, clave: string) =>
       dentro(x) && lineas.push(
         <line key={clave} x1={x} x2={x} y1={area.y} y2={area.y + area.height} stroke={m.color}
-          strokeOpacity={OPACIDAD_LINEA} strokeWidth={1.25} strokeDasharray={punteada}>
-          <title>{titulo}</title>
-        </line>,
+          strokeOpacity={OPACIDAD_LINEA} strokeWidth={1.25} strokeDasharray={punteada} />,
       );
     if (m.inicio === m.fin) {
       // Un solo dia: una linea a mitad del dia.
@@ -103,16 +100,16 @@ export function CapaMarcas({ marcas, fechas }: { marcas: MarcaTemporal[]; fechas
     if (b > a) {
       bandas.push(
         <rect key={`${m.id}-banda`} x={a} y={area.y} width={b - a} height={area.height} fill={m.color}
-          fillOpacity={OPACIDAD_BANDA}>
-          <title>{titulo}</title>
-        </rect>,
+          fillOpacity={OPACIDAD_BANDA} />,
       );
     }
     linea(x1, `${m.id}-inicio`);
     linea(x2, `${m.id}-fin`);
   }
   return (
-    <g className="marcas-temporales" aria-hidden>
+    // Sin tooltip nativo (<title>) ni eventos de puntero: el hover lo atiende solo el Tooltip del grafico,
+    // que ya nombra las marcas de la semana; la regla completa esta en "Ver las fechas marcadas".
+    <g className="marcas-temporales" aria-hidden pointerEvents="none">
       {bandas}
       {lineas}
     </g>
