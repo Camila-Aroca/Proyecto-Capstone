@@ -37,6 +37,18 @@ function valor(fila: ResumenComuna, clave: Clave): number | string | null {
   return fila[clave];
 }
 
+// Desglose del total de oferta por tipo, en el orden de complejidad.
+function desgloseOferta(fila: ResumenComuna): string | null {
+  const partes = ([
+    [fila.n_hospitales, "hospital", "hospitales"],
+    [fila.n_sar, "SAR", "SAR"],
+    [fila.n_sapu, "SAPU", "SAPU"],
+    [fila.n_sur, "SUR", "SUR"],
+    [fila.n_otras_excepciones, "otro", "otros"],
+  ] as const).filter(([n]) => n != null && n > 0).map(([n, uno, varios]) => `${n} ${n === 1 ? uno : varios}`);
+  return partes.length ? partes.join(" · ") : null;
+}
+
 // Tabla ordenable: es tambien la vista accesible de lo que muestra el mapa.
 export function TablaComunal({ filas, seleccion, onSeleccionar, establecimientosPorComuna }: Props) {
   const [orden, setOrden] = useState<{ clave: Clave; asc: boolean }>({ clave: "cambio_esperado", asc: true });
@@ -148,17 +160,19 @@ export function TablaComunal({ filas, seleccion, onSeleccionar, establecimientos
                       {fila.indicador_vulnerabilidad == null ? <span className="text-3">—</span> : `${fmtDecimal(fila.indicador_vulnerabilidad * 100)}%`}
                     </td>
                     <td className="px-2.5 py-1.5 text-right">
-                      {establecimientosPorComuna.get(fila.series_id) ? (
-                        <a
-                          href={enlace(RUTA_ESTABLECIMIENTOS, { comuna: fila.series_id })}
-                          className="link-button"
-                          aria-label={`Ver los establecimientos de ${fila.nombre}`}
-                        >
-                          {fmtEntero(fila.oferta_urgencia_actual)}
-                        </a>
-                      ) : (
-                        fmtEntero(fila.oferta_urgencia_actual)
-                      )}
+                      <Tip texto={desgloseOferta(fila)} lado="derecha">
+                        {establecimientosPorComuna.get(fila.series_id) ? (
+                          <a
+                            href={enlace(RUTA_ESTABLECIMIENTOS, { comuna: fila.series_id })}
+                            className="link-button"
+                            aria-label={`Ver los establecimientos de ${fila.nombre}. ${desgloseOferta(fila) ?? ""}`}
+                          >
+                            {fmtEntero(fila.oferta_urgencia_actual)}
+                          </a>
+                        ) : (
+                          <span tabIndex={0}>{fmtEntero(fila.oferta_urgencia_actual)}</span>
+                        )}
+                      </Tip>
                     </td>
                   </tr>
                 );

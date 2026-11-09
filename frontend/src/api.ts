@@ -82,6 +82,17 @@ export interface ResumenComuna {
   tasa_pronostico_por_10000: number | null;
   indicador_vulnerabilidad: number | null;
   oferta_urgencia_actual: number | null;
+  n_hospitales: number | null;
+  n_sapu: number | null;
+  n_sar: number | null;
+  n_sur: number | null;
+  n_otras_excepciones: number | null;
+  /** Mitad de la poblacion a esta distancia o menos (linea recta) de la oferta; proximidad, no accesibilidad. */
+  distancia_mediana_km: number | null;
+  /** Igual, contando solo la oferta que atiende salud mental (ID36). */
+  distancia_mediana_id36_km: number | null;
+  /** Proporcion 0-1 de la poblacion a 5 km o menos de una urgencia con ID36. */
+  proporcion_poblacion_a_5km_id36: number | null;
 }
 
 export interface CoberturaNivel {
@@ -279,6 +290,9 @@ export interface MetaEstablecimientos {
   umbral_cambio_pct: number;
   pronostico_generado_en: string;
   objetivos: MetaObjetivoEstablecimiento[];
+  /** False si el pronostico se genero con datos que ya cambiaron: se sirve igual, marcado. */
+  vigente: boolean;
+  motivo_desactualizacion: string | null;
   advertencias: string[];
 }
 
@@ -335,6 +349,48 @@ export interface EventoCalendario {
   detalle: string;
 }
 
+// --- Hospitalizaciones de residentes (egresos F00-F99) ------------------
+// Por comuna de residencia y anual; Urgencias, en cambio, cuenta el establecimiento.
+
+export interface PuntoEgresosAnual {
+  ano: number;
+  egresos: number;
+  poblacion: number | null;
+  /** Null antes de 2021: sin proyeccion de poblacion, sin dato (no cero). */
+  tasa_por_10000: number | null;
+  dias_estada_mediana: number | null;
+  dias_estada_p90: number | null;
+  proporcion_snss: number | null;
+  proporcion_estadia_mayor_a_un_ano: number | null;
+}
+
+export interface CategoriaEgresos {
+  categoria: string;
+  egresos: number;
+  proporcion: number | null;
+}
+
+export interface ContrasteCamasAnual {
+  ano: number;
+  egresos_residentes_rm: number;
+  camas_equivalentes_egresos: number;
+  camas_equivalentes_egresos_snss: number;
+  camas_ocupadas_rem20: number;
+  camas_ocupadas_rem20_sin_forense: number;
+  razon_egresos_snss_rem20_sin_forense: number;
+}
+
+export interface HospitalizacionesResidentes {
+  series_id: string;
+  nombre: string;
+  nivel: "region" | "comuna";
+  anual: PuntoEgresosAnual[];
+  ano_desglose: number;
+  desglose: Partial<Record<"sexo" | "grupo_edad" | "grupo_diagnostico" | "prevision", CategoriaEgresos[]>>;
+  contraste_camas: ContrasteCamasAnual[] | null;
+  advertencias: string[];
+}
+
 const BASE = "/api/v1";
 const MAX_REINTENTOS = 30;
 
@@ -376,6 +432,8 @@ export const api = {
     obtener<CamasPsiquiatria>(`/camas-psiquiatria/${encodeURIComponent(id)}`, senal),
   resumenComunal: () => obtener<ResumenComuna[]>("/resumen-comunal"),
   geoComunas: () => obtener<GeoJSON.FeatureCollection>("/geo/comunas"),
+  hospitalizacionesResidentes: (id: string, senal?: AbortSignal) =>
+    obtener<HospitalizacionesResidentes>(`/hospitalizaciones-residentes/${encodeURIComponent(id)}`, senal),
   suicidios: (id: string, semanas: number, senal?: AbortSignal) =>
     obtener<SerieSuicidios>(`/suicidios/${encodeURIComponent(id)}?semanas=${semanas}`, senal),
   calendarioEventos: (desde: string, hasta: string) =>

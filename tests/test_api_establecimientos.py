@@ -23,6 +23,7 @@ from src.api.establecimientos import (
     motivo_sin_dotacion,
     ocupacion_en_ventana,
     resumen_establecimientos,
+    solo_futuro,
 )
 from src.api.main import create_app
 from src.data import build_mart_ocupacion_psiquiatria_hospital_rm as mart_ocupacion
@@ -280,3 +281,41 @@ class TestEstados:
         with TestClient(app) as c:
             respuesta = c.get("/api/v1/establecimientos-meta")
         assert respuesta.status_code == 503 and respuesta.headers["Retry-After"] == "5"
+
+
+class TestPronosticoDesactualizado:
+    """Un pronóstico vencido se sirve marcado, en vez de dejar la vista sin datos."""
+
+    def test_descarta_los_horizontes_ya_observados(self):
+        # La historia llega a la semana 10; el pronóstico parte en la 11.
+        pronostico = _pronostico()
+        semanal = _semanal()
+        assert solo_futuro(pronostico, semanal).equals(pronostico.reset_index(drop=True))
+        # Con dos semanas más observadas, el horizonte 1 (semana 11) ya ocurrió.
+        extra = semanal[semanal["semana"] == 10].assign(semana=11)
+        vigentes = solo_futuro(pronostico, pd.concat([semanal, extra], ignore_index=True))
+        assert set(vigentes["semana"]) == {12}
+
+    def test_la_semana_53_de_borde_no_cuenta_como_la_ultima(self):
+        # El DEIS codifica el 1-3 de enero como semana 53 del mismo año: no es la más reciente.
+        semanal = _semanal()
+        borde = semanal[semanal["semana"] == 1].assign(semana=53, fecha_inicio_semana="2026-01-01")
+        con_borde = pd.concat([semanal, borde], ignore_index=True)
+        assert solo_futuro(_pronostico(), con_borde).equals(_pronostico().reset_index(drop=True))
+
+    def test_la_meta_lo_marca_con_el_motivo_y_la_etapa(self):
+        servicio = _servicio()
+        servicio.desactualizado = "cambió 'urgencias_2026' respecto del snapshot con que se generó"
+        app = create_app(lambda: ServicioDemanda(), iniciar_calculos=False, fabrica_establecimientos=lambda: servicio)
+        with TestClient(app) as c:
+            meta = c.get("/api/v1/establecimientos-meta")
+            lista = c.get("/api/v1/establecimientos")
+        assert meta.status_code == 200 and lista.status_code == 200
+        cuerpo = meta.json()
+        assert cuerpo["vigente"] is False
+        assert "urgencias_2026" in cuerpo["motivo_desactualizacion"]
+        assert "forecast_establecimientos_sm" in cuerpo["motivo_desactualizacion"]
+
+    def test_vigente_por_defecto(self, cliente):
+        cuerpo = cliente.get("/api/v1/establecimientos-meta").json()
+        assert cuerpo["vigente"] is True and cuerpo["motivo_desactualizacion"] is None

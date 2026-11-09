@@ -1,18 +1,23 @@
 // Delimitacion explicita del MVP, alineada con la seccion 1.3 de la
 // Especificacion de Requisitos Funcionales (ERF-SAAD-2026 v1.1).
 
+// En el orden de la cadena que sigue la herramienta: demanda de urgencia ->
+// hospitalizacion -> ocupacion de camas -> propuesta de capacidad.
 const INCLUYE = [
   { titulo: "Proyección de demanda", detalle: "Atenciones semanales a 1–8 semanas, para la región y cada comuna, con intervalo de predicción.", disponible: true },
-  { titulo: "Proyección por establecimiento", detalle: "Atenciones de cada urgencia con historia suficiente y hospitalizaciones indicadas desde la urgencia en hospitales, con sus camas de psiquiatría declaradas como contexto.", disponible: true },
-  { titulo: "Análisis territorial", detalle: "Distribución comunal, variación esperada y contexto de oferta y vulnerabilidad.", disponible: true },
-  { titulo: "Visualización de resultados", detalle: "Series, mapa y tabla, con advertencias de interpretación.", disponible: true },
+  { titulo: "Proyección por establecimiento", detalle: "Atenciones de cada urgencia con historia suficiente y hospitalizaciones indicadas desde la urgencia en hospitales.", disponible: true },
+  { titulo: "Hospitalizaciones de residentes", detalle: "Egresos por salud mental según comuna de residencia: tasa, días de estada, diagnóstico, edad, sexo y previsión.", disponible: true },
+  { titulo: "Ocupación de camas de psiquiatría", detalle: "Promedio diario mensual por área y hospital (REM-20), con su nivel de saturación.", disponible: true },
+  { titulo: "Propuesta anual de camas", detalle: "Escenario por área: el pico mensual de ocupación frente a la dotación, con un 85% de ocupación objetivo; su escala se contrasta con los egresos.", disponible: true },
+  { titulo: "Suicidios como contexto", detalle: "Defunciones X60–X84 de residentes por comuna y semana, con su pronóstico; relación solo ecológica con las urgencias.", disponible: true },
+  { titulo: "Análisis territorial", detalle: "Distribución comunal, variación esperada, oferta por tipo, vulnerabilidad y proximidad en línea recta a la urgencia más cercana.", disponible: true },
   { titulo: "Accesibilidad a la red", detalle: "Tiempos de viaje por red vial y transporte público, y cobertura poblacional.", disponible: false },
-  { titulo: "Estimación de camas necesarias", detalle: "Hospitalizaciones esperadas por duración de estadía F00–F99, frente a la dotación declarada, por región y servicio de salud.", disponible: false },
 ];
 
 const EXCLUYE = [
   "Gestión de pacientes: no registra, sigue ni deriva personas, ni usa datos identificables.",
-  "Gestión de cupos u ocupación de camas en tiempo real: la dotación es la declarada en el año, no la disponible.",
+  "Gestión de cupos u ocupación en tiempo real: la ocupación es el promedio mensual publicado y la dotación, la declarada en el año.",
+  "Decisiones de inversión: la propuesta de camas es un escenario; no acredita personal, presupuesto, espacio ni plazos.",
   "Decisiones clínicas: no apoya diagnóstico, triage ni decisiones individuales.",
   "Predicción de riesgo de una persona.",
   "Integración en tiempo real con sistemas hospitalarios.",

@@ -346,6 +346,15 @@ def validate_expected_schema(path: Path) -> bool:
     elif name == "mart_ocupacion_psiquiatria_hospital_rm.parquet":
         from src.data.build_mart_ocupacion_psiquiatria_hospital_rm import SCHEMA
         schemas[name] = SCHEMA
+    elif name == "mart_egresos_f00_f99_rm_anual.parquet":
+        from src.data.build_mart_egresos_f00_f99_rm import SCHEMA_ANUAL
+        schemas[name] = SCHEMA_ANUAL
+    elif name == "mart_egresos_f00_f99_rm_desglose.parquet":
+        from src.data.build_mart_egresos_f00_f99_rm import SCHEMA_DESGLOSE
+        schemas[name] = SCHEMA_DESGLOSE
+    elif name == "contraste_camas_psiquiatria_rm.parquet":
+        from src.data.build_contraste_camas_psiquiatria_rm import SCHEMA
+        schemas[name] = SCHEMA
     elif ((name.endswith(".parquet") and "contexto_genero" in parts)
           or name == "mart_contexto_genero_indicador_sexo.parquet"):
         from src.data.normalize_gender_statistics import SCHEMA
@@ -371,7 +380,11 @@ def validate_expected_schema(path: Path) -> bool:
         from src.data.build_egresos_f00_f99 import COLUMNS
         from src.data.clean_egresos import SCHEMA_PARQUET
         source_fields = {field.name: field.type for field in SCHEMA_PARQUET}
-        _require_parquet(path, {**{column: source_fields[column] for column in COLUMNS}, "residente_rm": pa.bool_()})
+        _require_parquet(path, {
+            **{column: source_fields[column] for column in COLUMNS}, "residente_rm": pa.bool_(),
+            "sexo_armonizado": pa.string(), "grupo_edad_armonizado": pa.string(),
+            "dias_estada_acotado_anual": source_fields["dias_estada"], "estadia_mayor_a_un_ano": pa.bool_(),
+        })
         return True
     if name in {"establecimientos_rm_clean.parquet", "establecimientos_salud_clean.parquet"}:
         _require_parquet(path, {"establecimiento_codigo": "string", "region_codigo": "string",

@@ -132,6 +132,24 @@ class ResumenComuna(BaseModel):
         description="Tasa de pobreza por ingresos Casen 2022 (proporcion 0-1)."
     )
     oferta_urgencia_actual: int | None
+    n_hospitales: int | None = None
+    n_sapu: int | None = None
+    n_sar: int | None = None
+    n_sur: int | None = None
+    n_otras_excepciones: int | None = Field(default=None, description="Otras excepciones documentadas (p. ej. CEAR).")
+    distancia_mediana_km: float | None = Field(
+        default=None,
+        description=(
+            "Mitad de la poblacion vive a esta distancia en linea recta, o menos, de un establecimiento de la "
+            "oferta de urgencia. Proximidad, no accesibilidad. Null si falta la capa de cobertura."
+        ),
+    )
+    distancia_mediana_id36_km: float | None = Field(
+        default=None, description="Igual, contando solo la oferta que atiende salud mental (reporto ID36)."
+    )
+    proporcion_poblacion_a_5km_id36: float | None = Field(
+        default=None, description="Proporcion (0-1) de la poblacion a 5 km o menos de una urgencia con ID36."
+    )
 
 
 class HospitalCamas(BaseModel):
@@ -405,6 +423,16 @@ class MetaEstablecimientos(BaseModel):
     )
     pronostico_generado_en: datetime
     objetivos: list[MetaObjetivoEstablecimiento]
+    vigente: bool = Field(
+        default=True,
+        description=(
+            "False si el pronóstico servido se generó con datos que ya cambiaron. Se sigue "
+            "sirviendo, sin los horizontes ya observados, para que la vista no quede vacía."
+        ),
+    )
+    motivo_desactualizacion: str | None = Field(
+        default=None, description="Qué cambió y qué etapa del pipeline lo actualiza; null si está vigente."
+    )
     advertencias: list[str]
 
 
@@ -462,3 +490,51 @@ class EventoCalendario(BaseModel):
     fecha_inicio: date
     fecha_fin: date = Field(description="Último día incluido; igual al inicio si es un solo día.")
     detalle: str = Field(description="Regla con que se obtuvo la fecha.")
+
+
+# --- Hospitalizaciones de residentes (egresos F00-F99) ---------------------
+
+class PuntoEgresosAnual(BaseModel):
+    ano: int
+    egresos: int = Field(description="Egresos (eventos, no personas) con diagnóstico principal F00-F99.")
+    poblacion: int | None = Field(description="Proyección INE; null antes de 2021.")
+    tasa_por_10000: float | None = Field(description="Egresos por 10.000 habitantes; null sin población.")
+    dias_estada_mediana: float | None
+    dias_estada_p90: float | None
+    proporcion_snss: float | None = Field(description="Proporción 0-1 en hospitales del SNSS.")
+    proporcion_estadia_mayor_a_un_ano: float | None
+
+
+class CategoriaEgresos(BaseModel):
+    categoria: str
+    egresos: int
+    proporcion: float | None
+
+
+class ContrasteCamasAnual(BaseModel):
+    ano: int
+    egresos_residentes_rm: int
+    camas_equivalentes_egresos: float = Field(
+        description="Camas ocupadas en promedio según egresos de residentes RM (estadías acotadas al año)."
+    )
+    camas_equivalentes_egresos_snss: float = Field(description="Igual, solo hospitales del SNSS.")
+    camas_ocupadas_rem20: float = Field(description="Camas de psiquiatría ocupadas en promedio, REM-20.")
+    camas_ocupadas_rem20_sin_forense: float
+    razon_egresos_snss_rem20_sin_forense: float = Field(
+        description="Egresos SNSS / REM-20 sin forense: cerca de 1 si ambas fuentes cuentan la misma escala."
+    )
+
+
+class HospitalizacionesResidentes(BaseModel):
+    series_id: str
+    nombre: str
+    nivel: Literal["region", "comuna"]
+    anual: list[PuntoEgresosAnual]
+    ano_desglose: int
+    desglose: dict[str, list[CategoriaEgresos]] = Field(
+        description="Por dimensión (sexo, grupo_edad, grupo_diagnostico, prevision) del año `ano_desglose`."
+    )
+    contraste_camas: list[ContrasteCamasAnual] | None = Field(
+        description="Solo para la región: camas desde Egresos frente a REM-20, por año."
+    )
+    advertencias: list[str]

@@ -61,6 +61,12 @@ UMBRAL_CAMBIO_PCT: Final[float] = 7.0
 # Tolerancia de simplificacion de poligonos, en grados (~100 m): suficiente para
 # un mapa comunal y reduce el GeoJSON a una fraccion de su tamano.
 TOLERANCIA_GEOMETRIA: Final[float] = 0.001
+# Oferta por tipo del mart territorial: desglosa el total que muestra la tabla.
+OFERTA_POR_TIPO: Final[tuple[str, ...]] = ("n_hospitales", "n_sapu", "n_sar", "n_sur", "n_otras_excepciones")
+# Proximidad de la poblacion a la oferta (build_cobertura_urgencia_comuna).
+PROXIMIDAD: Final[tuple[str, ...]] = (
+    "distancia_mediana_km", "distancia_mediana_id36_km", "proporcion_poblacion_a_5km_id36",
+)
 
 
 @dataclass(frozen=True)
@@ -73,6 +79,8 @@ class Rutas:
     camas_psiquiatria: Path = Path(
         "data/processed/camas/dim_camas_psiquiatria_hospital_rm.parquet"
     )
+    # Capa opcional: sin ella el resumen comunal sale sin proximidad (null, no cero).
+    cobertura: Path = Path("data/processed/geo/cobertura_urgencia_comuna.parquet")
     seleccion: Path = Path("reports/modeling/benchmark_demanda_sm_seleccion.json")
     holdout_resumen: Path = Path("reports/modeling/holdout_demanda_sm_resumen.csv")
     pronostico: Path = RUTA_PRONOSTICO
@@ -227,11 +235,14 @@ def resumen_comunal(
     territorial: pd.DataFrame,
     motivos: dict[str, str],
     ventana: int = VENTANA_RECIENTE,
+    cobertura: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Una fila por comuna RM: nivel reciente, pronostico y contexto territorial.
 
     Incluye las comunas sin pronostico con su motivo y metricas en null, para
-    que el producto nunca las muestre como demanda cero.
+    que el producto nunca las muestre como demanda cero. El contexto suma la
+    oferta por tipo y, si existe la capa de cobertura, la proximidad de la
+    poblacion a la oferta (linea recta, no accesibilidad).
     """
     comunas = panel[panel["nivel"] == "comuna"]
     reciente = (
@@ -253,8 +264,15 @@ def resumen_comunal(
     )
 
     base = territorial.rename(columns={"comuna_codigo": "series_id", "comuna_glosa": "nombre"})
-    base = base[["series_id", "nombre", "indicador_vulnerabilidad", "n_oferta_urgencia_actual"]]
+    # El desglose por tipo es contexto: si el mart no lo trae, queda en null.
+    base = base.reindex(columns=["series_id", "nombre", "indicador_vulnerabilidad", "n_oferta_urgencia_actual",
+                                 *OFERTA_POR_TIPO])
     resumen = base.set_index("series_id").join(reciente).join(promedio).join(tasa).join(banda)
+    if cobertura is not None:
+        resumen = resumen.join(cobertura.set_index("comuna_codigo")[list(PROXIMIDAD)])
+    else:
+        for columna in PROXIMIDAD:
+            resumen[columna] = np.nan
     resumen["variacion_pct"] = (
         (resumen["pronostico_promedio"] / resumen["promedio_ultimas_semanas"] - 1) * 100
     ).where(resumen["promedio_ultimas_semanas"] > 0)
@@ -270,7 +288,8 @@ def resumen_comunal(
         ("promedio_ultimas_semanas", 1), ("pronostico_promedio", 1),
         ("variacion_pct", 1), ("tasa_pronostico_por_10000", 2),
         ("indicador_vulnerabilidad", 4), ("limite_inferior_promedio", 1),
-        ("limite_superior_promedio", 1),
+        ("limite_superior_promedio", 1), ("distancia_mediana_km", 2),
+        ("distancia_mediana_id36_km", 2), ("proporcion_poblacion_a_5km_id36", 4),
     ):
         resumen[columna] = resumen[columna].round(decimales)
     return resumen.reset_index().sort_values("pronostico_promedio", ascending=False, na_position="last")
@@ -370,6 +389,7 @@ class ServicioDemanda:
     datos: DatosActuales | None = None
     territorial: pd.DataFrame | None = None
     camas_psiquiatria: pd.DataFrame | None = None
+    cobertura: pd.DataFrame | None = None
     geojson: dict[str, Any] | None = None
     seleccion: dict[str, Any] | None = None
     pronostico: pd.DataFrame | None = None
@@ -402,6 +422,9 @@ class ServicioDemanda:
                 if self.rutas.camas_psiquiatria.exists()
                 else None
             )
+            cobertura = (
+                pq.read_table(self.rutas.cobertura).to_pandas() if self.rutas.cobertura.exists() else None
+            )
             seleccion = (
                 json.loads(self.rutas.seleccion.read_text(encoding="utf-8"))
                 if self.rutas.seleccion.exists()
@@ -415,6 +438,7 @@ class ServicioDemanda:
             datos, territorial, geojson, seleccion
         )
         self.camas_psiquiatria = camas
+        self.cobertura = cobertura
         self.nombres = nombres_series(datos.panel)
         self.motivos = exclusiones(datos.diagnostico)
         self.estado_datos.marcar("listo")

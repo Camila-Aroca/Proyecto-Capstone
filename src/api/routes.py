@@ -231,7 +231,8 @@ def resumen(servicio: Servicio) -> list[dict[str, Any]]:
     """Ranking comunal: nivel reciente, pronostico, variacion y contexto territorial."""
     _exigir_pronostico(servicio)
     tabla = resumen_comunal(
-        servicio.datos.panel, servicio.pronostico, servicio.territorial, servicio.motivos
+        servicio.datos.panel, servicio.pronostico, servicio.territorial, servicio.motivos,
+        cobertura=servicio.cobertura,
     )
     return registros(tabla)
 

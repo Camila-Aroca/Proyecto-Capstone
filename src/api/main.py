@@ -27,6 +27,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 from src.api.calendario import router as router_calendario
 from src.api.caracterizacion import router as router_caracterizacion
 from src.api.establecimientos import ServicioEstablecimientos
+from src.api.hospitalizaciones import router as router_hospitalizaciones
 from src.api.establecimientos import router as router_establecimientos
 from src.api.routes import router
 from src.api.service import ServicioDemanda
@@ -94,6 +95,7 @@ def create_app(
     app.include_router(router_suicidios)
     app.include_router(router_calendario)
     app.include_router(router_caracterizacion)
+    app.include_router(router_hospitalizaciones)
     return app
 
 

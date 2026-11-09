@@ -394,6 +394,19 @@ STAGES = {
         ],
         "depends_on": ["build_mart_ocupacion_psiquiatria_hospital_rm", "build_dim_camas_psiquiatria_hospital_rm"]
     },
+    "build_mart_egresos_f00_f99_rm": {
+        "module": "src.data.build_mart_egresos_f00_f99_rm",
+        "outputs": [
+            "data/processed/marts/mart_egresos_f00_f99_rm_anual.parquet",
+            "data/processed/marts/mart_egresos_f00_f99_rm_desglose.parquet",
+        ],
+        "depends_on": ["build_egresos_f00_f99", "clean_poblacion_proyecciones"]
+    },
+    "build_contraste_camas_psiquiatria_rm": {
+        "module": "src.data.build_contraste_camas_psiquiatria_rm",
+        "outputs": ["data/processed/marts/contraste_camas_psiquiatria_rm.parquet"],
+        "depends_on": ["build_egresos_f00_f99", "build_mart_ocupacion_psiquiatria_hospital_rm"]
+    },
     "build_capa_oferta_urgencia_rm": {
         "module": "src.geo.build_capa_oferta_urgencia_rm",
         "outputs": ["data/processed/geo/capa_oferta_urgencia_rm.parquet"],
@@ -515,6 +528,8 @@ PIPELINE_ORDER = [
     "build_dim_camas_psiquiatria_hospital_rm",
     "build_mart_ocupacion_psiquiatria_hospital_rm",
     "eda_mart_ocupacion_psiquiatria_hospital_rm",
+    "build_mart_egresos_f00_f99_rm",
+    "build_contraste_camas_psiquiatria_rm",
     "build_capa_oferta_urgencia_rm",
     "resolve_coordenadas_establecimientos",
     "build_cobertura_urgencia_comuna",

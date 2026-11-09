@@ -9,11 +9,12 @@ import { Alcance } from "./Alcance";
 // leen de la API en vivo, y si no responde la pagina se muestra igual sin ellas,
 // en vez de inventar un numero de ejemplo.
 
+// Las cuatro preguntas siguen la cadena de la herramienta, de la demanda a la cama.
 const PREGUNTAS = [
   {
     titulo: "¿Dónde se concentra la demanda?",
     detalle:
-      "Atenciones de urgencia por salud mental en cada una de las 52 comunas de la región, con su tasa por habitante.",
+      "Atenciones de urgencia por salud mental en cada una de las 52 comunas, con su tasa por habitante y su contexto de oferta y vulnerabilidad.",
   },
   {
     titulo: "¿Cuándo podría aumentar la presión?",
@@ -21,14 +22,14 @@ const PREGUNTAS = [
       "Proyección semanal con intervalo de predicción, para anticipar refuerzos antes de que la presión ocurra.",
   },
   {
-    titulo: "¿Qué territorios exigen atención?",
-    detalle:
-      "Variación esperada por comuna, cruzada con la oferta de urgencia vigente y la vulnerabilidad socioeconómica.",
-  },
-  {
     titulo: "¿En qué establecimientos se sentirá?",
     detalle:
-      "Dentro de cada comuna, el pronóstico de cada urgencia y de las hospitalizaciones que indican sus hospitales, junto a las camas de psiquiatría que declaran.",
+      "El pronóstico de cada urgencia y de las hospitalizaciones que indican sus hospitales.",
+  },
+  {
+    titulo: "¿Alcanzan las camas de psiquiatría?",
+    detalle:
+      "Ocupación mensual de cada área frente a su dotación, y un escenario anual de las camas que harían falta.",
   },
 ];
 
@@ -111,8 +112,9 @@ export function Landing() {
           <p className="mt-4 max-w-[62ch] text-[15px] text-2">
             La planificación de la red responde cuando la presión ya ocurrió. SAAD proyecta las atenciones
             de urgencia por salud mental de las próximas {rango}, desde la región hasta cada comuna y cada
-            establecimiento de urgencia, junto con las hospitalizaciones que esas urgencias indican. Todo a
-            partir de datos públicos oficiales, para que el refuerzo se decida antes y con evidencia.
+            establecimiento, sigue las hospitalizaciones que esas urgencias indican y las contrasta con la
+            ocupación de las camas de psiquiatría. Todo a partir de datos públicos oficiales, para que el
+            refuerzo se decida antes y con evidencia.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <a href={RUTA_TABLERO} className="boton-primario">
@@ -221,7 +223,7 @@ export function Landing() {
 
       <footer className="border-t py-6 text-[12px] text-3" style={{ borderColor: "var(--border)" }}>
         <p className="max-w-[90ch]">
-          Fuentes: DEIS/MINSAL (atenciones de urgencia y egresos hospitalarios), INE (proyecciones de población
+          Fuentes: DEIS/MINSAL (atenciones de urgencia, egresos hospitalarios, estadísticas hospitalarias REM-20 y defunciones), INE (proyecciones de población
           y Censo 2024), Ministerio de Desarrollo Social (Casen 2022). Camas: DEIS/DIGERA, dotación del SNSS. Las cifras son atenciones
           y hospitalizaciones, es decir eventos, no personas únicas, y reflejan utilización y oferta instalada, no prevalencia.
         </p>

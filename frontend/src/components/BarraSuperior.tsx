@@ -9,6 +9,8 @@ interface Props {
   ultima: { ano: number; semana: number; fecha_inicio?: string | null } | null;
   estadoPronostico: EstadoProceso;
   vista: Vista;
+  /** El pronostico existe pero se genero con datos anteriores a los actuales. */
+  desactualizado?: boolean;
 }
 
 const ESTADO: Record<EstadoProceso, string> = {
@@ -27,7 +29,7 @@ const VISTAS: { vista: Vista; etiqueta: string; href: string }[] = [
 
 // Identidad del producto y frescura del dato: lo primero que un planificador
 // necesita saber es hasta cuando llegan los datos. Ambas vistas la muestran igual.
-export function BarraSuperior({ ultima, estadoPronostico, vista }: Props) {
+export function BarraSuperior({ ultima, estadoPronostico, vista, desactualizado = false }: Props) {
   return (
     <header className="border-b" style={{ borderColor: "var(--border)", background: "var(--surface)" }}>
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2.5 px-4 py-3 sm:px-6">
@@ -70,11 +72,12 @@ export function BarraSuperior({ ultima, estadoPronostico, vista }: Props) {
               className="inline-block h-2 w-2 rounded-full"
               style={{
                 background:
-                  estadoPronostico === "listo" ? "var(--accent)"
-                    : estadoPronostico === "error" ? "var(--alza)" : "var(--muted)",
+                  estadoPronostico === "error" ? "var(--alza)"
+                    : desactualizado ? "var(--notice-ink)"
+                      : estadoPronostico === "listo" ? "var(--accent)" : "var(--muted)",
               }}
             />
-            {ESTADO[estadoPronostico]}
+            {estadoPronostico === "listo" && desactualizado ? "Pronóstico desactualizado" : ESTADO[estadoPronostico]}
           </span>
         </div>
       </div>

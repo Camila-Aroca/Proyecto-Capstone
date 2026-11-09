@@ -369,6 +369,25 @@ class TestFuncionesPuras:
         esperado = (fila["pronostico_promedio"] / fila["promedio_ultimas_semanas"] - 1) * 100
         assert fila["variacion_pct"] == pytest.approx(esperado, abs=1.0)
 
+    def test_resumen_suma_la_proximidad_si_existe_la_capa(self):
+        servicio = _servicio_listo()
+        cobertura = pd.DataFrame({
+            "comuna_codigo": ["13101"], "distancia_mediana_km": [1.234],
+            "distancia_mediana_id36_km": [2.5], "proporcion_poblacion_a_5km_id36": [0.81234],
+        })
+        tabla = resumen_comunal(
+            servicio.datos.panel, servicio.pronostico, servicio.territorial, servicio.motivos, cobertura=cobertura
+        ).set_index("series_id")
+        assert tabla.loc["13101", "distancia_mediana_id36_km"] == 2.5
+        assert tabla.loc["13101", "proporcion_poblacion_a_5km_id36"] == pytest.approx(0.8123)
+        # Una comuna ausente de la capa queda sin dato, no en cero.
+        assert pd.isna(tabla.drop(index="13101")["distancia_mediana_id36_km"]).all()
+
+    def test_resumen_sin_capa_de_cobertura_deja_la_proximidad_en_null(self):
+        servicio = _servicio_listo()
+        tabla = resumen_comunal(servicio.datos.panel, servicio.pronostico, servicio.territorial, servicio.motivos)
+        assert tabla["distancia_mediana_id36_km"].isna().all()
+
     def test_cobertura_holdout_sin_informe_es_none(self, tmp_path):
         assert cobertura_holdout(tmp_path / "no_existe.csv", "m", 0.8) is None
 

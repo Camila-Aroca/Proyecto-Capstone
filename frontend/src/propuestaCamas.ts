@@ -1,4 +1,4 @@
-import type { AreaPsiquiatria } from './api';
+import type { AreaPsiquiatria } from "./api";
 
 /** Suma déficits por área; una cama libre en otra área nunca los compensa. */
 export function resumirPropuestas(areas: AreaPsiquiatria[] | null, baseHospital: number) {

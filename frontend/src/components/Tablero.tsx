@@ -7,6 +7,7 @@ import { Alcance } from "./Alcance";
 import { AvisoLectura } from "./AvisoLectura";
 import { BarraSuperior } from "./BarraSuperior";
 import { MapaComunal } from "./MapaComunal";
+import { PanelHospitalizaciones } from "./PanelHospitalizaciones";
 import { PanelSerie } from "./PanelSerie";
 import { TablaComunal } from "./TablaComunal";
 import { useTokens } from "../tokens";
@@ -182,7 +183,14 @@ export function Tablero() {
         />
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] [&>*]:min-w-0">
-          <MapaComunal geo={geo} resumen={resumenPorId} seleccion={seleccion} onSeleccionar={setSeleccion} tokens={tokens} />
+          <MapaComunal
+            geo={geo}
+            resumen={resumenPorId}
+            seleccion={seleccion}
+            onSeleccionar={setSeleccion}
+            tokens={tokens}
+            establecimientos={establecimientos}
+          />
           <TablaComunal
             filas={resumen}
             seleccion={seleccion}
@@ -190,6 +198,9 @@ export function Tablero() {
             establecimientosPorComuna={establecimientosPorComuna}
           />
         </div>
+
+        {/* Despues de donde se atiende la gente (urgencias), quien se hospitaliza segun donde vive. */}
+        <PanelHospitalizaciones seriesId={seleccion} />
 
         <Alcance />
 

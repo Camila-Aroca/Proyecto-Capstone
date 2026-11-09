@@ -1,10 +1,13 @@
 """Endpoints del pronóstico por establecimiento.
 
 La API **no calcula** este pronóstico: lo lee del output persistido de
-`forecast_establecimientos_sm`. Si falta o quedó desactualizado frente a los
-datos (por ejemplo, tras una actualización del año en curso), responde `503`
-indicando la etapa que hay que ejecutar, en vez de recalcular en memoria o de
-servir un pronóstico cuyo origen ya no coincide con la historia que se muestra.
+`forecast_establecimientos_sm`. Si falta, responde `503` indicando la etapa que
+hay que ejecutar. Si existe pero quedó desactualizado frente a los datos (por
+ejemplo, tras una actualización del año en curso), lo sigue sirviendo marcado
+como tal en `/establecimientos-meta`, con el motivo y la etapa que lo actualiza:
+una actualización de Urgencias no debe dejar la vista sin datos. De ese
+pronóstico vencido se descartan los horizontes que ya quedaron observados, para
+no dibujar pronóstico encima de la historia nueva.
 
 Un pronóstico marcado `fuera_de_rango` por la guardia de plausibilidad no se
 publica: el establecimiento queda sin pronóstico y con el motivo.
@@ -260,6 +263,32 @@ def areas_en_ventana(
     return filas
 
 
+def solo_futuro(pronostico: pd.DataFrame, semanal: pd.DataFrame) -> pd.DataFrame:
+    """Horizontes posteriores a la última semana observada en los datos actuales.
+
+    Un pronóstico vencido puede tener horizontes que los datos nuevos ya
+    observaron: se descartan, para no dibujar pronóstico sobre la historia.
+    """
+    ultima = ultima_semana_regular(semanal)
+    if pronostico.empty or ultima is None:
+        return pronostico
+    clave = pronostico["ano"].astype(int) * 100 + pronostico["semana"].astype(int)
+    return pronostico.loc[clave > ultima["ano"] * 100 + ultima["semana"]].reset_index(drop=True)
+
+
+def ultima_semana_regular(semanal: pd.DataFrame) -> dict[str, int] | None:
+    """Última semana observada, sin la semana 53 de borde de año.
+
+    El DEIS codifica los primeros días de enero como semana 53 del año en curso:
+    ordenada por (año, semana) quedaría al final aunque sea de enero.
+    """
+    regular = semanal[semanal["semana"] != SEASONAL_PERIOD + 1]
+    if regular.empty:
+        return None
+    fila = regular.sort_values(["ano", "semana"]).iloc[-1]
+    return {"ano": int(fila["ano"]), "semana": int(fila["semana"])}
+
+
 def cobertura_objetivo(holdout: pd.DataFrame | None, objetivo: str, modelo: str) -> float | None:
     """Cobertura fuera de muestra del modelo en los establecimientos, ponderada por evaluaciones."""
     if holdout is None:
@@ -290,21 +319,21 @@ class ServicioEstablecimientos:
     ocupacion: pd.DataFrame | None = None
     dotacion_areas: pd.DataFrame | None = None
     colapso: pd.DataFrame | None = None
+    #: Motivo por el que el pronóstico servido ya no coincide con los datos; None si está vigente.
+    desactualizado: str | None = None
     estado: Estado = field(default_factory=Estado)
     _bloqueo: threading.Lock = field(default_factory=threading.Lock, repr=False)
 
     def cargar(self) -> None:
-        """Lee pronóstico, historia y atributos; un pronóstico vencido deja el estado en error."""
+        """Lee pronóstico, historia y atributos; un pronóstico vencido se sirve marcado como tal."""
         if not self._bloqueo.acquire(blocking=False):
             return
         self.estado.marcar("calculando")
         try:
             pronostico, manifiesto = cargar(self.rutas.pronostico, self.rutas.manifiesto)
-            if motivo := motivo_desactualizacion(manifiesto):
-                raise RuntimeError(
-                    f"El pronóstico por establecimiento está desactualizado ({motivo}): ejecute el "
-                    "stage `forecast_establecimientos_sm` del pipeline."
-                )
+            desactualizado = motivo_desactualizacion(manifiesto)
+            if desactualizado:
+                logger.warning("Se sirve un pronóstico por establecimiento desactualizado: %s", desactualizado)
             mart = load_mart()
             anos = holdout_years(int(mart["ano"].max()))
             actual = load_current_weekly(anos)[0] if anos else mart.iloc[0:0]
@@ -328,7 +357,10 @@ class ServicioEstablecimientos:
             self.dotacion_areas = dotacion_por_area(
                 pq.read_table(self.rutas.dotacion).to_pandas() if self.rutas.dotacion.exists() else None
             )
+            if desactualizado:
+                pronostico = solo_futuro(pronostico, semanal)
             self.semanal, self.pronostico, self.manifiesto = semanal, pronostico, manifiesto
+            self.desactualizado = desactualizado
             self.motivos = motivos_sin_pronostico(universo, pronostico, manifiesto)
             self.estado.marcar("listo")
         except Exception as error:  # noqa: BLE001 - se informa en los endpoints
@@ -429,7 +461,11 @@ def meta_establecimientos(servicio: ServicioE) -> dict[str, Any]:
             "cobertura_holdout": cobertura_objetivo(servicio.holdout, nombre, info["modelo"]),
             "pronosticos_fuera_de_rango": info.get("fuera_de_rango", 0),
         })
-    semana = {k: ultima[k] for k in ("ano", "semana")}
+    # La frescura del dato sale de la historia cargada, no del manifiesto: si el
+    # pronóstico está vencido, los datos llegan más lejos que su origen.
+    semana = ultima_semana_regular(servicio.semanal) if servicio.semanal is not None else None
+    if semana is None:
+        semana = {k: ultima[k] for k in ("ano", "semana")}
     calendario = servicio.calendario
     fecha = None
     if calendario is not None and not calendario.empty:
@@ -444,6 +480,11 @@ def meta_establecimientos(servicio: ServicioE) -> dict[str, Any]:
             str(servicio.manifiesto["generado_en_utc"]).replace("Z", "+00:00")
         ),
         "objetivos": objetivos,
+        "vigente": servicio.desactualizado is None,
+        "motivo_desactualizacion": (
+            None if servicio.desactualizado is None
+            else f"{servicio.desactualizado}. Ejecute el stage `forecast_establecimientos_sm` del pipeline."
+        ),
         "advertencias": [
             "Las cifras son atenciones y hospitalizaciones (eventos), no personas.",
             "Las hospitalizaciones se cuentan en el hospital donde ocurrió la urgencia, no donde "
