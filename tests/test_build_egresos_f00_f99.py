@@ -9,7 +9,13 @@ import scripts.run_pipeline as pipeline
 from src.data.build_egresos_f00_f99 import (
     DICCIONARIO_PATH,
     EXPECTED_F00_F99_SUBCATEGORIAS,
+    GRUPO_EDAD_ARMONIZADO,
+    GRUPO_EDAD_DOMAIN,
+    GRUPOS_EDAD_ARMONIZADOS,
     RM_REGION_CODE,
+    SEXO_ARMONIZADO,
+    SEXO_DOMAIN,
+    add_columnas_armonizadas,
     add_residente_rm_flag,
     build_dataset,
     filter_f00_f99,
@@ -148,3 +154,42 @@ def test_stage_is_registered_after_clean_egresos() -> None:
         pipeline.PIPELINE_ORDER.index("clean_egresos")
         < pipeline.PIPELINE_ORDER.index("build_egresos_f00_f99")
     )
+
+
+class TestArmonizacion:
+    """Sexo, edad y estadía comparables entre años, sin tocar las columnas originales."""
+
+    @staticmethod
+    def _tabla(sexo, edad, dias):
+        return pa.table({
+            "sexo": pa.array(sexo, type=pa.string()),
+            "grupo_edad": pa.array(edad, type=pa.string()),
+            "dias_estada": pa.array(dias, type=pa.int32()),
+        })
+
+    def test_cada_valor_documentado_tiene_regla(self):
+        assert set(SEXO_ARMONIZADO) == SEXO_DOMAIN
+        assert set(GRUPO_EDAD_ARMONIZADO) == GRUPO_EDAD_DOMAIN
+        assert set(GRUPO_EDAD_ARMONIZADO.values()) <= set(GRUPOS_EDAD_ARMONIZADOS)
+
+    def test_codigos_de_2021_se_leen_como_el_texto_de_los_otros_anos(self):
+        tabla = add_columnas_armonizadas(self._tabla(["1", "HOMBRE", "2", "MUJER", "*"], ["10 a 19"] * 5, [1] * 5))
+        assert tabla["sexo_armonizado"].to_pylist() == ["Hombre", "Hombre", "Mujer", "Mujer", "Sin dato"]
+        assert tabla["sexo"].to_pylist() == ["1", "HOMBRE", "2", "MUJER", "*"]
+
+    def test_quinquenales_de_2021_suman_a_su_decena_y_el_tramo_abierto_se_une(self):
+        edades = ["15 A 19 AÑOS", "10 a 19", "85 A MAS", "80 a 89", "90 y más", "7 A 27 DIAS"]
+        tabla = add_columnas_armonizadas(self._tabla(["MUJER"] * 6, edades, [1] * 6))
+        assert tabla["grupo_edad_armonizado"].to_pylist() == [
+            "10 a 19", "10 a 19", "80 y más", "80 y más", "80 y más", "Menor de 1 año",
+        ]
+
+    def test_estadia_se_acota_al_ano_del_egreso(self):
+        tabla = add_columnas_armonizadas(self._tabla(["MUJER"] * 3, ["20 a 29"] * 3, [12, 365, 22239]))
+        assert tabla["dias_estada_acotado_anual"].to_pylist() == [12, 365, 365]
+        assert tabla["estadia_mayor_a_un_ano"].to_pylist() == [False, False, True]
+        assert tabla["dias_estada"].to_pylist() == [12, 365, 22239]
+
+    def test_un_valor_sin_regla_hace_fallar(self):
+        with pytest.raises(ValueError, match="sin regla"):
+            add_columnas_armonizadas(self._tabla(["X"], ["10 a 19"], [1]))

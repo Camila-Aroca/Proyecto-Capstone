@@ -15,6 +15,12 @@ limitaciones se publican en `reports/geo/cobertura_urgencia_comuna.md`.
 El punto representativo de cada unidad es `point_on_surface` (siempre dentro
 del polígono). Las geometrías inválidas que publica el Censo no se reparan: para
 ellas se usa el centroide y se informan en el reporte.
+
+Un establecimiento de la oferta sin coordenadas publicadas (típicamente uno que
+el DEIS acaba de incorporar) se cuenta en su comuna pero no entra a las
+distancias, y se lista en el reporte; su coordenada no se imputa. La etapa falla
+si alguno reportó salud mental (ID36), porque alteraría la métrica principal, o
+si son más de `MAX_OFERTA_SIN_COORDENADAS`.
 """
 
 from __future__ import annotations
@@ -23,7 +29,7 @@ import argparse
 import logging
 import tempfile
 from pathlib import Path
-from typing import Final
+from typing import Any, Final
 
 import numpy as np
 import pandas as pd
@@ -48,6 +54,9 @@ REPORT_TITLE: Final[str] = "# Cobertura territorial simple de la oferta de urgen
 RADIO_TIERRA_KM: Final[float] = 6371.0088
 UMBRALES_KM: Final[tuple[int, ...]] = (2, 5, 10)
 BLOQUE_ESTABLECIMIENTOS: Final[int] = 25
+#: Establecimientos de la oferta sin coordenadas tolerados. Más que eso ya no es un
+#: rezago puntual de georreferenciación del DEIS y la métrica dejaría de representar la oferta.
+MAX_OFERTA_SIN_COORDENADAS: Final[int] = 3
 
 SCHEMA: Final[pa.Schema] = pa.schema([
     ("comuna_codigo", pa.string()),
@@ -161,7 +170,12 @@ def calcular_cobertura(
     `oferta` trae `longitud`, `latitud`, `comuna_codigo` y `reporto_id36_periodo`;
     `poblacion` es la dimensión oficial (`comuna_codigo`, `comuna_glosa`,
     `poblacion_censada`). Toda comuna de `poblacion` queda en la salida.
+
+    Un establecimiento sin coordenadas cuenta en `n_oferta_urgencia_en_comuna`
+    pero no en las distancias: no se sabe dónde está.
     """
+    todos = oferta
+    oferta = oferta.dropna(subset=["longitud", "latitud"])
     con_id36 = oferta[oferta["reporto_id36_periodo"].astype(bool)]
     unidades = unidades.assign(
         distancia_km=distancia_minima_km(
@@ -180,7 +194,7 @@ def calcular_cobertura(
     if desconocidas:
         raise ValueError(f"Unidades censales en comunas ausentes de la dimensión de población: {desconocidas}")
 
-    n_oferta = oferta.groupby("comuna_codigo").size()
+    n_oferta = todos.groupby("comuna_codigo").size()
     cobertura = poblacion.rename(columns={"poblacion_censada": "poblacion_censada_2024"})[
         ["comuna_codigo", "comuna_glosa", "poblacion_censada_2024"]
     ].merge(por_comuna, left_on="comuna_codigo", right_index=True, how="left", validate="one_to_one")
@@ -219,21 +233,38 @@ def validar_cobertura(cobertura: pd.DataFrame, n_oferta: int) -> None:
         raise ValueError("Los establecimientos por comuna no reconcilian con la oferta.")
 
 
+def validar_sin_coordenadas(sin_coordenadas: pd.DataFrame, maximo: int = MAX_OFERTA_SIN_COORDENADAS) -> None:
+    """Tolera un rezago puntual de georreferenciación, no uno que cambie la métrica."""
+    con_id36 = sin_coordenadas[sin_coordenadas["reporto_id36_periodo"].astype(bool)]
+    if not con_id36.empty:
+        raise ValueError(
+            "Establecimientos de la oferta con ID36 sin coordenadas: alterarían la distancia a la oferta de salud "
+            f"mental. Códigos: {con_id36['establecimiento_codigo'].tolist()}. Geocodificar desde una fuente verificable."
+        )
+    if len(sin_coordenadas) > maximo:
+        raise ValueError(
+            f"{len(sin_coordenadas)} establecimientos de la oferta sin coordenadas (máximo tolerado: {maximo}): "
+            "la cobertura ya no representaría la oferta. Códigos: "
+            f"{sin_coordenadas['establecimiento_codigo'].tolist()}."
+        )
+
+
 def build_cobertura_urgencia_comuna(
     censo_dir: Path = CENSO_DIR,
     poblacion_path: Path = POBLACION_PATH,
     oferta_path: Path = OFERTA_PATH,
     capa_oferta_path: Path = CAPA_OFERTA_PATH,
-) -> tuple[pd.DataFrame, dict[str, int]]:
+) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Construye y valida la cobertura comunal; devuelve también el resumen de insumos."""
     for path in (poblacion_path, oferta_path, capa_oferta_path):
         if not path.is_file():
             raise FileNotFoundError(f"No existe el insumo: {path.as_posix()}")
     capa = pq.read_table(capa_oferta_path, columns=["establecimiento_codigo", "comuna_codigo", "geometry"]).to_pandas()
     puntos = shapely.from_wkb(capa["geometry"].to_numpy())
-    if shapely.is_missing(puntos).any():
-        raise ValueError("Establecimientos de la oferta sin coordenadas: no se pueden medir distancias.")
-    flags = pq.read_table(oferta_path, columns=["establecimiento_codigo", "reporto_id36_periodo"]).to_pandas()
+    columnas_oferta = ["establecimiento_codigo", "reporto_id36_periodo"]
+    if "establecimiento_nombre" in pq.read_schema(oferta_path).names:
+        columnas_oferta.append("establecimiento_nombre")
+    flags = pq.read_table(oferta_path, columns=columnas_oferta).to_pandas()
     oferta = pd.DataFrame({
         "establecimiento_codigo": capa["establecimiento_codigo"].astype("int64"),
         "comuna_codigo": capa["comuna_codigo"],
@@ -243,6 +274,13 @@ def build_cobertura_urgencia_comuna(
              how="left", validate="one_to_one")
     if oferta["reporto_id36_periodo"].isna().any():
         raise ValueError("La capa de oferta tiene establecimientos ausentes de la dimensión de oferta.")
+    sin_coordenadas = oferta[oferta[["longitud", "latitud"]].isna().any(axis=1)]
+    validar_sin_coordenadas(sin_coordenadas)
+    if len(sin_coordenadas):
+        logger.warning(
+            "%s establecimiento(s) de la oferta sin coordenadas quedan fuera de las distancias: %s",
+            len(sin_coordenadas), sin_coordenadas["establecimiento_codigo"].tolist(),
+        )
 
     unidades, resumen = cargar_unidades_poblacion(censo_dir)
     poblacion = pq.read_table(
@@ -253,6 +291,11 @@ def build_cobertura_urgencia_comuna(
     resumen.update({
         "n_oferta": len(oferta),
         "n_oferta_id36": int(oferta["reporto_id36_periodo"].sum()),
+        "sin_coordenadas": [
+            f"{fila.get('establecimiento_nombre', 'Establecimiento')} ({fila['establecimiento_codigo']}, "
+            f"comuna {fila['comuna_codigo']})"
+            for _, fila in sin_coordenadas.iterrows()
+        ],
         "poblacion_unidades": int(unidades["poblacion"].sum()),
         "poblacion_oficial": int(poblacion["poblacion_censada"].sum()),
         **{f"poblacion_a_{u}km": int(round((cobertura[f"proporcion_poblacion_a_{u}km"]
@@ -274,7 +317,7 @@ def _miles(valor: float) -> str:
     return f"{valor:,.0f}".replace(",", ".")
 
 
-def render_reporte(cobertura: pd.DataFrame, resumen: dict[str, int]) -> str:
+def render_reporte(cobertura: pd.DataFrame, resumen: dict[str, Any]) -> str:
     """Reporte Markdown: método, resultados RM, tabla comunal y limitaciones."""
     total = resumen["poblacion_unidades"]
     peores = cobertura.sort_values("distancia_mediana_km", ascending=False).head(5)
@@ -330,10 +373,18 @@ def render_reporte(cobertura: pd.DataFrame, resumen: dict[str, int]) -> str:
             + "".join(f" {_pct(getattr(r, f'proporcion_poblacion_a_{u}km'))} |" for u in UMBRALES_KM)
             + f" {_km(r.distancia_mediana_id36_km)} | {_pct(r.proporcion_poblacion_a_5km_id36)} |"
         )
+    sin_coordenadas = resumen.get("sin_coordenadas", [])
     lineas += [
         "",
         "## Limitaciones",
         "",
+        *([
+            f"- **Oferta sin coordenadas.** {len(sin_coordenadas)} establecimiento(s) de la oferta no tienen"
+            " coordenadas publicadas en el maestro DEIS y no entran a las distancias, aunque sí al conteo por"
+            " comuna: " + "; ".join(sin_coordenadas) + ". Ninguno reportó ID36, así que las métricas `_id36` no"
+            " cambian; la distancia a la oferta general puede quedar sobrestimada cerca de ellos. No se imputan:"
+            " se resuelven geocodificándolos desde una fuente verificable.",
+        ] if sin_coordenadas else []),
         "- **Proximidad, no accesibilidad.** La distancia en línea recta subestima el recorrido real y no considera"
         " red vial, relieve, transporte público, horarios ni tiempos de viaje. Esa evaluación corresponde a"
         " OSM/GTFS e isócronas (NEXT-033/NEXT-034).",

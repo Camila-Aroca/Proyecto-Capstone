@@ -45,6 +45,28 @@ No se homologan silenciosamente heterogeneidades conocidas entre años (ver
   `glosa_region_residencia` de 2024-2025 ya está documentado en
   `reports/eda/eda_egresos_encoding_detalle.md`; se conserva tal cual.
 
+Las columnas originales no se modifican. Para analizar entre años se agregan
+columnas armonizadas, con su regla explícita (`add_columnas_armonizadas`):
+- `sexo_armonizado`: el texto de 2020 y 2022-2025 y los códigos de 2021
+  ("1" Hombre, "2" Mujer, "3"/"9" intersex o indeterminado). El diccionario de
+  Egresos no publica la tabla de códigos; la equivalencia se respalda en dos
+  evidencias independientes: (1) la convención de códigos de sexo del propio
+  DEIS en el diccionario de datos abiertos de Defunciones (1 Hombre, 2 Mujer,
+  9 Indeterminado) y (2) la distribución observada, estable entre años: en
+  F00-F99 nacional, "2" es 56,6% en 2021 y MUJER va de 52,1% a 56,6% en el
+  resto; "1" es 43,4% y HOMBRE va de 39,1% a 45,3%. "*" queda como sin dato.
+- `grupo_edad_armonizado`: tramos decenales comunes a todos los años. Los
+  quinquenales de 2021 se suman a su decena; los tramos de menores de un año
+  se agrupan en "Menor de 1 año". Como "85 A MAS" (2021) se solapa entre
+  "80 a 89" y "90 y más", los dos últimos se unen en "80 y más" para todos
+  los años: se pierde ese corte, sin asignar a nadie a un tramo que no le
+  corresponde.
+- `dias_estada_acotado_anual` y `estadia_mayor_a_un_ano`: Egresos publica el
+  año del egreso, no su fecha, así que los días cama que una estadía aportó al
+  año del egreso se acotan en 365 (cota superior). Las estadías más largas
+  (pacientes de larga estadía, hasta décadas) comenzaron en años anteriores y,
+  sin acotar, inflarían cualquier estimación anual de camas.
+
 Todos los dominios categóricos observados (`sexo`, `pertenencia_establecimiento_salud`,
 `grupo_edad`, `glosa_prevision`, `prevision`, `condicion_egreso`) se validan
 contra listas explícitas construidas desde la evidencia 2020-2025: un valor
@@ -223,6 +245,59 @@ def validate_no_pipeline_duplication(
         raise ValueError("Conteo por año no coincide entre el filtrado por año y el dataset final.")
 
 
+SEXO_ARMONIZADO: Final[dict[str, str]] = {
+    "HOMBRE": "Hombre", "MUJER": "Mujer", "INTERSEX (INDETERMINDADO)": "Intersex o indeterminado",
+    "1": "Hombre", "2": "Mujer", "3": "Intersex o indeterminado", "9": "Intersex o indeterminado",
+    "*": "Sin dato",
+}
+#: Orden de presentación de los tramos armonizados.
+GRUPOS_EDAD_ARMONIZADOS: Final[tuple[str, ...]] = (
+    "Menor de 1 año", "1 a 9", "10 a 19", "20 a 29", "30 a 39", "40 a 49",
+    "50 a 59", "60 a 69", "70 a 79", "80 y más", "Sin dato",
+)
+GRUPO_EDAD_ARMONIZADO: Final[dict[str, str]] = {
+    # Esquema decenal (2020, 2022-2025), con sus variantes de mojibake.
+    "menor a 7 días": "Menor de 1 año", "menor de un año": "Menor de 1 año", "menor de un a\ufffdo": "Menor de 1 año",
+    "1 a 9": "1 a 9", "10 a 19": "10 a 19", "20 a 29": "20 a 29", "30 a 39": "30 a 39",
+    "40 a 49": "40 a 49", "50 a 59": "50 a 59", "60 a 69": "60 a 69", "70 a 79": "70 a 79",
+    "80 a 89": "80 y más", "90 y más": "80 y más", "90 y m\ufffds": "80 y más",
+    # Esquema quinquenal y fino (2021).
+    "7 A 27 DIAS": "Menor de 1 año", "28 DIAS A 2 MES": "Menor de 1 año",
+    "2 MESES A MENOS DE 1 AÑO": "Menor de 1 año",
+    "1 A 4 AÑOS": "1 a 9", "5 A 9 AÑOS": "1 a 9",
+    "10 A 14 AÑOS": "10 a 19", "15 A 19 AÑOS": "10 a 19",
+    "20 A 24 AÑOS": "20 a 29", "25 A 29 AÑOS": "20 a 29",
+    "30 A 34 AÑOS": "30 a 39", "35 A 39 AÑOS": "30 a 39",
+    "40 A 44 AÑOS": "40 a 49", "45 A 49 AÑOS": "40 a 49",
+    "50 A 54 AÑOS": "50 a 59", "55 A 59 AÑOS": "50 a 59",
+    "60 A 64 AÑOS": "60 a 69", "65 A 69 AÑOS": "60 a 69",
+    "70 A 74 AÑOS": "70 a 79", "75 A 79 AÑOS": "70 a 79",
+    "80 A 84 AÑOS": "80 y más", "85 A MAS": "80 y más",
+    "*": "Sin dato",
+}
+DIAS_ANO: Final[int] = 365
+
+
+def add_columnas_armonizadas(table: pa.Table) -> pa.Table:
+    """Agrega sexo, edad y estadía armonizados entre años (las originales no cambian).
+
+    Falla si algún valor no tiene regla: un valor nuevo debe documentarse, no
+    caer en "sin dato" en silencio.
+    """
+    sexo = pd.Series(table["sexo"].to_pylist(), dtype="object")
+    edad = pd.Series(table["grupo_edad"].to_pylist(), dtype="object")
+    sin_regla = (set(sexo) - set(SEXO_ARMONIZADO)) | (set(edad) - set(GRUPO_EDAD_ARMONIZADO))
+    if sin_regla:
+        raise ValueError(f"Valores sin regla de armonización: {sorted(map(str, sin_regla))}")
+    dias = table["dias_estada"]
+    return (
+        table.append_column("sexo_armonizado", pa.array(sexo.map(SEXO_ARMONIZADO), type=pa.string()))
+        .append_column("grupo_edad_armonizado", pa.array(edad.map(GRUPO_EDAD_ARMONIZADO), type=pa.string()))
+        .append_column("dias_estada_acotado_anual", pc.min_element_wise(dias, pa.scalar(DIAS_ANO, dias.type)))
+        .append_column("estadia_mayor_a_un_ano", pc.greater(dias, pa.scalar(DIAS_ANO, dias.type)))
+    )
+
+
 def validate_dias_estada(table: pa.Table) -> None:
     """Verifica que `dias_estada` no tenga nulos ni valores no positivos (sin modificarla)."""
     dias = table["dias_estada"]
@@ -295,6 +370,7 @@ def build_dataset() -> tuple[pa.Table, dict[int, int], pd.DataFrame]:
 
     combined = pa.concat_tables(filtered_tables)
     combined = add_residente_rm_flag(combined)
+    combined = add_columnas_armonizadas(combined)
     return combined, per_year_counts, catalog
 
 

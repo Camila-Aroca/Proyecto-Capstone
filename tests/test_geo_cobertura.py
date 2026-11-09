@@ -20,6 +20,7 @@ from src.geo.build_cobertura_urgencia_comuna import (
     calcular_cobertura,
     cuantil_ponderado,
     distancia_minima_km,
+    MAX_OFERTA_SIN_COORDENADAS,
     escribir_cobertura,
     render_reporte,
     validar_cobertura,
@@ -112,6 +113,17 @@ def test_validacion_rechaza_oferta_sin_reconciliar() -> None:
         validar_cobertura(_cobertura_valida(), 53)
 
 
+def test_establecimiento_sin_coordenadas_cuenta_pero_no_mide_distancia() -> None:
+    oferta = _oferta([("13101", -70.0, -33.0, True), ("13102", float("nan"), float("nan"), False)])
+    unidades = pd.DataFrame({"comuna_codigo": ["13101", "13102"], "poblacion": [100, 100],
+                             "longitud": [-70.0, -70.0], "latitud": [-33.0, -33.03]})
+    cobertura = calcular_cobertura(unidades, oferta, _poblacion(["13101", "13102"])).set_index("comuna_codigo")
+    c2 = cobertura.loc["13102"]
+    # Cuenta en su comuna, pero la distancia se mide al único establecimiento con ubicación.
+    assert c2["n_oferta_urgencia_en_comuna"] == 1
+    assert c2["distancia_mediana_km"] == pytest.approx(0.03 * KM_POR_GRADO_LATITUD, rel=1e-6)
+
+
 def _escribir_insumos(tmp: Path) -> dict[str, Path]:
     """Una manzana poblada, una vacía y una entidad rural por comuna, y un establecimiento cada una."""
     censo = tmp / "censo"
@@ -159,6 +171,40 @@ def test_end_to_end_cumple_contrato_y_reporta_limitaciones(tmp_path: Path) -> No
     reporte = render_reporte(cobertura, resumen)
     assert reporte.startswith(REPORT_TITLE)
     assert "## Limitaciones" in reporte and "Proximidad, no accesibilidad" in reporte
+
+
+def _sin_coordenadas(insumos: dict[str, Path], indices: list[int]) -> None:
+    """Quita la geometría de los establecimientos indicados en la capa de oferta."""
+    capa = pq.read_table(insumos["capa_oferta_path"])
+    geometrias = capa["geometry"].to_pylist()
+    for i in indices:
+        geometrias[i] = None
+    pq.write_table(capa.set_column(capa.schema.get_field_index("geometry"), "geometry",
+                                   pa.array(geometrias, type=capa.schema.field("geometry").type)),
+                   insumos["capa_oferta_path"])
+
+
+def test_tolera_un_establecimiento_sin_coordenadas_y_lo_informa(tmp_path: Path) -> None:
+    insumos = _escribir_insumos(tmp_path)
+    _sin_coordenadas(insumos, [1])  # índice impar: no reportó ID36
+    cobertura, resumen = build_cobertura_urgencia_comuna(**insumos)
+    assert len(resumen["sin_coordenadas"]) == 1 and "2" in resumen["sin_coordenadas"][0]
+    assert cobertura["n_oferta_urgencia_en_comuna"].sum() == 52
+    assert "Oferta sin coordenadas" in render_reporte(cobertura, resumen)
+
+
+def test_falla_si_falta_la_ubicacion_de_un_establecimiento_con_id36(tmp_path: Path) -> None:
+    insumos = _escribir_insumos(tmp_path)
+    _sin_coordenadas(insumos, [0])  # índice par: reportó ID36
+    with pytest.raises(ValueError, match="ID36 sin coordenadas"):
+        build_cobertura_urgencia_comuna(**insumos)
+
+
+def test_falla_si_faltan_demasiadas_ubicaciones(tmp_path: Path) -> None:
+    insumos = _escribir_insumos(tmp_path)
+    _sin_coordenadas(insumos, [2 * i + 1 for i in range(MAX_OFERTA_SIN_COORDENADAS + 1)])
+    with pytest.raises(ValueError, match="máximo tolerado"):
+        build_cobertura_urgencia_comuna(**insumos)
 
 
 def test_falla_si_manzanas_y_entidades_comparten_unidad(tmp_path: Path) -> None:
