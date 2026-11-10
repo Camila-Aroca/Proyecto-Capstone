@@ -62,6 +62,34 @@ def test_registro_se_detiene_en_la_primera_semana_completa():
     assert b.marcar_registro(_semanal(serie)).tolist() == [True] * 12
 
 
+def test_registro_diario_detecta_un_ultimo_dia_rezagado_en_semana_no_detectada():
+    dias = pd.date_range("2026-08-30", periods=70)
+    diarios = pd.Series(100, index=dias.date)
+    diarios.iloc[-1] = 14
+    semanas = pd.DataFrame({"fecha_fin_semana": [dias[-8].date(), dias[-1].date()],
+                            "defunciones_total": [700, 614], "dias_semana": [7, 7]})
+    assert b.marcar_registro(semanas, referencia=1).tolist() == [True, True]
+    assert b.marcar_registro_diario(semanas, diarios).tolist() == [True, False]
+
+
+def test_registro_diario_no_marca_sin_historia_suficiente():
+    dias = pd.date_range("2026-10-01", periods=7)
+    semanas = pd.DataFrame({"fecha_fin_semana": [dias[-1].date()]})
+    assert b.marcar_registro_diario(semanas, pd.Series(1, index=dias.date)).tolist() == [True]
+
+
+def test_build_no_utiliza_semana_final_con_ultimo_dia_rezagado():
+    dias = pd.date_range("2026-08-30", periods=70).date
+    fechas = [dia for dia in dias for _ in range(14 if dia == dias[-1] else 100)]
+    eventos = pd.DataFrame({"fecha_defuncion": fechas, "comuna_codigo": "13101",
+                            "codigo_categoria_diag2": "I21", "codigo_grupo_diag2": "I20-I25"})
+    comunas = pd.DataFrame({"comuna_codigo": ["13101"], "comuna_glosa": ["Santiago"]})
+    poblacion = pd.DataFrame({"comuna_codigo": ["13101"], "ano": [2026], "poblacion": [500000]})
+    mart = b.build(eventos, comunas, poblacion, dias[0], dias[-1]).sort_values("fecha_inicio_semana")
+    assert bool(mart.iloc[-2]["registro_completo"])
+    assert not bool(mart.iloc[-1]["registro_completo"])
+
+
 def _insumos():
     comunas = pd.DataFrame({"comuna_codigo": ["13101", "13102"], "comuna_glosa": ["Santiago", "Cerrillos"]})
     poblacion = pd.DataFrame({"comuna_codigo": ["13101", "13102"] * 2, "ano": [2025, 2025, 2026, 2026],

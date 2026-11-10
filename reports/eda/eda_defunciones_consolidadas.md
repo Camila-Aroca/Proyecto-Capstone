@@ -2,7 +2,7 @@
 
 Una fila por registro publicado. Alcance nacional y todas las causas; no se deduplica, imputa ni enlaza con otras fuentes. EDA de staging normalizado, no certificación clínica.
 
-Filas: **879962**. Fechas observadas: 2020-01-01 a 2026-10-24. El último año puede ser parcial; el nombre/fecha del paquete no demuestra consolidación anual.
+Filas: **884580**. Fechas observadas: 2020-01-01 a 2026-11-07. El último año puede ser parcial; el nombre/fecha del paquete no demuestra consolidación anual.
 
 | Año | Filas |
 | --- | ---: |
@@ -12,18 +12,18 @@ Filas: **879962**. Fechas observadas: 2020-01-01 a 2026-10-24. El último año p
 | 2023 | 122218 |
 | 2024 | 126928 |
 | 2025 | 126466 |
-| 2026 | 103580 |
+| 2026 | 108198 |
 
 | Fuente | Leídas | Incluidas | Excluidas por periodo | SHA256 RAW |
 | --- | ---: | ---: | ---: | --- |
 | data/raw/defunciones/1990_2023/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv | 3182446 | 522988 | 2659458 | b763f5be857edbef5d06dc2da9437d7be8640f76719b5a0bb75b276282553ebb |
-| data/raw/defunciones/2024_2026_27102026/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.csv | 356974 | 356974 | 0 | 01cd5779ede07925716c1f01561f87f0e73e3a870bf7fbdb2a217b1a0eed82ea |
+| data/raw/defunciones/2024_2026_10112026/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.csv | 361592 | 361592 | 0 | 51bf6485bbc475fc122d36f78cda122be16cdc849c3f819681287b5d03f167d3 |
 
-Repeticiones adicionales de filas originales completas, por SHA256: **519**. Repeticiones de las 27 variables normalizadas: **542**. Se conservan todas: ausencia de identificador único de evento/paciente. Los hashes son comprobaciones criptográficas, no evidencia de identidad personal.
+Repeticiones adicionales de filas originales completas, por SHA256: **524**. Repeticiones de las 27 variables normalizadas: **549**. Se conservan todas: ausencia de identificador único de evento/paciente. Los hashes son comprobaciones criptográficas, no evidencia de identidad personal.
 
 | Excepción conservada | Filas |
 | --- | ---: |
-| comuna_ausente | 64 |
+| comuna_ausente | 65 |
 | diag1_jerarquia_incompleta | 2 |
 | edad_cantidad_ausente | 9 |
 | edad_ignorada_segun_unidad | 11 |
@@ -38,8 +38,8 @@ Repeticiones adicionales de filas originales completas, por SHA256: **519**. Rep
 | edad_tipo | 9 |
 | edad_cantidad | 9 |
 | comuna_codigo_original | 0 |
-| comuna_glosa | 64 |
-| region_glosa | 64 |
+| comuna_glosa | 65 |
+| region_glosa | 65 |
 | diag1 | 0 |
 | capitulo_diag1 | 2 |
 | glosa_capitulo_diag1 | 2 |
@@ -49,17 +49,17 @@ Repeticiones adicionales de filas originales completas, por SHA256: **519**. Rep
 | glosa_categoria_diag1 | 2 |
 | codigo_subcategoria_diag1 | 2 |
 | glosa_subcategoria_diag1 | 2 |
-| diag2 | 825200 |
-| capitulo_diag2 | 825200 |
-| glosa_capitulo_diag2 | 825200 |
-| codigo_grupo_diag2 | 825200 |
-| glosa_grupo_diag2 | 825200 |
-| codigo_categoria_diag2 | 825200 |
-| glosa_categoria_diag2 | 825200 |
-| codigo_subcategoria_diag2 | 825200 |
-| glosa_subcategoria_diag2 | 825200 |
+| diag2 | 829524 |
+| capitulo_diag2 | 829524 |
+| glosa_capitulo_diag2 | 829524 |
+| codigo_grupo_diag2 | 829524 |
+| glosa_grupo_diag2 | 829524 |
+| codigo_categoria_diag2 | 829524 |
+| glosa_categoria_diag2 | 829524 |
+| codigo_subcategoria_diag2 | 829524 |
+| glosa_subcategoria_diag2 | 829524 |
 | lugar_defuncion | 0 |
-| comuna_codigo | 64 |
+| comuna_codigo | 65 |
 | fecha_defuncion_original | 0 |
 | edad_tipo_original | 0 |
 | edad_cantidad_original | 0 |

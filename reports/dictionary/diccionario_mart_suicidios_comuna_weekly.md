@@ -18,7 +18,7 @@
 | `suicidios` | int32 | Defunciones con causa externa CIE-10 **X60-X84** (lesiones autoinfligidas intencionalmente). Cero = cero registrado. |
 | `defunciones_total` | int32 | Defunciones por todas las causas de residentes de la comuna en la semana. Denominador de la regla de registro. |
 | `poblacion_anual` | int64 | Población proyectada INE de la comuna en `ano` (no la censada 2024). |
-| `registro_completo` | bool | False en las semanas finales cuya inscripción aún está incompleta (regla abajo); True en el resto, incluidos los fragmentos. |
+| `registro_completo` | bool | False en semanas finales con alerta de rezago (reglas abajo); True en el resto, incluidos los fragmentos. True no certifica completitud. |
 
 ## Construcción
 
@@ -26,7 +26,7 @@
 2. **Territorio:** residentes RM (`comuna_codigo` con prefijo 13, idéntico a `region_glosa` RM en la fuente). Un residente RM con comuna fuera de las 52 hace fallar la etapa en vez de descartarse (en el snapshot vigente: 0).
 3. **Calendario:** `semana_deis(fecha)` = (año calendario, semana epidemiológica), la regla con que DEIS codifica Urgencias. El EDA la verifica en todas las fechas de Urgencias 2020-2026 (2.467 fechas, 0 discrepancias).
 4. **Corte:** solo semanas con todos sus días observados, hasta la última fecha de defunción del archivo nacional. Una semana que el corte deja truncada no se publica.
-5. **Registro incompleto:** desde la última semana hacia atrás, mientras las defunciones diarias por todas las causas de la RM estén bajo `UMBRAL_REGISTRO = 0,75` veces la mediana de las 8 semanas regulares previas, la semana queda con `registro_completo = False`. Se detiene en la primera semana que cumple: una caída interior no se marca. En el snapshot vigente ninguna semana interior de 2021 en adelante baja de 0,787 y la última semana (2026-S42) está en 0,723.
+5. **Alerta de rezago:** desde la última semana hacia atrás, se marca `registro_completo = False` si el promedio diario semanal de defunciones por todas las causas de la RM cae bajo 0,75 veces la mediana de las 8 semanas anteriores, o si el último día de la semana cae bajo 0,5 veces la mediana de los 8 mismos días de semana anteriores. Cada regla deja de recorrer al encontrar una semana que supera su umbral. Sin ocho semanas de referencia no se aplica la alerta diaria. La regla no prueba que los datos restantes estén completos y puede no detectar rezagos en días interiores; ver la evaluación retrospectiva en `reports/validation/c08_revalidacion_20261110.md`.
 6. **Ceros:** la base de defunciones es un registro censal; una comuna-semana sin defunciones registradas es cero, no ausencia de reporte (a diferencia de Urgencias, donde una semana sin fila no se imputa).
 7. **Conciliación:** la suma de `suicidios` debe igualar las defunciones X60-X84 de residentes RM de la fuente en el período publicado (en el snapshot vigente, 3.943 = 3.943).
 

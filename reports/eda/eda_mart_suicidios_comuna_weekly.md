@@ -1,12 +1,12 @@
 # EDA del mart semanal de suicidios por comuna de residencia (RM)
 
-Generado por `scripts/eda_mart_suicidios_comuna_weekly.py` (stage `eda_mart_suicidios_comuna_weekly`) desde `data/processed/marts/mart_suicidios_comuna_weekly.parquet` (SHA256 `7d103046636fc5d8743fb88ac933841e1d6dbcdc17b94f4c32c713193c593b8e`), `data/processed/defunciones/defunciones_nacional.parquet` y los Parquet anuales de Urgencias. Diccionario: `reports/dictionary/diccionario_mart_suicidios_comuna_weekly.md`.
+Generado por `scripts/eda_mart_suicidios_comuna_weekly.py` (stage `eda_mart_suicidios_comuna_weekly`) desde `data/processed/marts/mart_suicidios_comuna_weekly.parquet` (SHA256 `9f82ff74a16e499a7aaa9e96e0282ff97fa7ee3fdf9ed1c3e0c950acee9067bb`), `data/processed/defunciones/defunciones_nacional.parquet` y los Parquet anuales de Urgencias. Diccionario: `reports/dictionary/diccionario_mart_suicidios_comuna_weekly.md`.
 
 ## 1. Cobertura y conciliación
 
-- 18616 filas = 52 comunas x 358 semanas DEIS (incluidos los fragmentos `semana = 53`), desde 2020-01-01 hasta 2026-10-24. Última fecha de defunción del archivo nacional: 2026-10-24.
-- Suicidios en el mart: 3943; defunciones X60-X84 de residentes RM en la fuente para el mismo período: 3943 (diferencia 0).
-- La categoría X60-X84 de `codigo_categoria_diag2` coincide registro a registro con el grupo publicado `codigo_grupo_diag2 = X60-X84` (la etapa falla si no). Categorías más frecuentes: X70 3694 (93.7%), X80 98 (2.5%), X74 36 (0.9%), X69 25 (0.6%).
+- 18720 filas = 52 comunas x 360 semanas DEIS (incluidos los fragmentos `semana = 53`), desde 2020-01-01 hasta 2026-11-07. Última fecha de defunción del archivo nacional: 2026-11-07.
+- Suicidios en el mart: 3969; defunciones X60-X84 de residentes RM en la fuente para el mismo período: 3969 (diferencia 0).
+- La categoría X60-X84 de `codigo_categoria_diag2` coincide registro a registro con el grupo publicado `codigo_grupo_diag2 = X60-X84` (la etapa falla si no). Categorías más frecuentes: X70 3718 (93.7%), X80 98 (2.5%), X74 37 (0.9%), X69 25 (0.6%).
 
 | ano | dias | suicidios | por_dia | tasa_100mil_ano | defunciones | pct_de_defunciones |
 |---|---|---|---|---|---|---|
@@ -16,13 +16,13 @@ Generado por `scripts/eda_mart_suicidios_comuna_weekly.py` (stage `eda_mart_suic
 | 2023 | 365 | 615 | 1.685 | 7.35 | 44633 | 1.38 |
 | 2024 | 366 | 662 | 1.809 | 7.85 | 46872 | 1.41 |
 | 2025 | 365 | 573 | 1.57 | 6.77 | 46548 | 1.23 |
-| 2026 | 297 | 435 | 1.465 | 6.28 | 38547 | 1.13 |
+| 2026 | 311 | 461 | 1.482 | 6.35 | 40208 | 1.15 |
 
-2026 es parcial (297 días): sus totales no se comparan con años completos; su ritmo diario sí.
+2026 es parcial (311 días): sus totales no se comparan con años completos; su ritmo diario sí.
 
 ## 2. Calendario DEIS
 
-- `semana_deis` reproduce la codificación (año, semana) publicada por Urgencias en 2467 fechas de 2020 a 2026, con 0 discrepancias.
+- `semana_deis` reproduce la codificación (año, semana) publicada por Urgencias en 2505 fechas de 2020 a 2026, con 0 discrepancias.
 - Semanas con un número de días distinto de 7 (el modelo usa `dias_semana` como exposición):
 
 | ano | semana | fecha_inicio_semana | dias_semana |
@@ -42,19 +42,21 @@ Generado por `scripts/eda_mart_suicidios_comuna_weekly.py` (stage `eda_mart_suic
 
 Razón = defunciones diarias por todas las causas de la semana / mediana de las 8 semanas previas. Mínimo en semanas interiores de 2021 en adelante: 0.787; umbral de registro incompleto: 0.75.
 
+Además se marca una semana final si su último día tiene menos de 50% de la mediana de los 8 mismos días de semana anteriores. La regla es una alerta, no una prueba de completitud; no detecta necesariamente retrasos en días interiores.
+
 | ano | semana | inicio | dias | defunciones | suicidios | razon_registro | registro_completo |
 |---|---|---|---|---|---|---|---|
-| 2026 | 35 | 2026-08-30 | 7 | 886 | 11 | 0.894 | True |
-| 2026 | 36 | 2026-09-06 | 7 | 904 | 10 | 0.927 | True |
-| 2026 | 37 | 2026-09-13 | 7 | 978 | 13 | 1.028 | True |
+| 2026 | 37 | 2026-09-13 | 7 | 979 | 13 | 1.029 | True |
 | 2026 | 38 | 2026-09-20 | 7 | 941 | 13 | 0.989 | True |
-| 2026 | 39 | 2026-09-27 | 7 | 909 | 11 | 0.966 | True |
-| 2026 | 40 | 2026-10-04 | 7 | 886 | 10 | 0.942 | True |
-| 2026 | 41 | 2026-10-11 | 7 | 883 | 11 | 0.955 | True |
-| 2026 | 42 | 2026-10-18 | 7 | 655 | 8 | 0.723 | False |
+| 2026 | 39 | 2026-09-27 | 7 | 911 | 11 | 0.968 | True |
+| 2026 | 40 | 2026-10-04 | 7 | 887 | 10 | 0.943 | True |
+| 2026 | 41 | 2026-10-11 | 7 | 888 | 11 | 0.959 | True |
+| 2026 | 42 | 2026-10-18 | 7 | 779 | 10 | 0.858 | True |
+| 2026 | 43 | 2026-10-25 | 7 | 810 | 11 | 0.904 | True |
+| 2026 | 44 | 2026-11-01 | 7 | 714 | 12 | 0.797 | False |
 
-- Semanas marcadas con registro incompleto: 2026-S42.
-- Suicidios en las últimas 6 semanas completas: 11.33 por semana de 7 días, frente a 10.05 en el conjunto de semanas completas del mismo año: no se observa un déficit que indique rezago propio de esta causa en esas semanas.
+- Semanas marcadas con registro incompleto: 2026-S44.
+- Suicidios en las últimas 6 semanas completas: 11.00 por semana de 7 días, frente a 10.09 en el conjunto de semanas completas del mismo año: no se observa un déficit que indique rezago propio de esta causa en esas semanas.
 - **Límite:** con un único snapshot no es posible medir cuántas defunciones recientes se inscribirán o recodificarán después; la regla solo detecta el rezago visible en el total de defunciones.
 
 ## 4. Cambio de nivel 2020-2021

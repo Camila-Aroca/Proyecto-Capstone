@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 import pytest
 
-from tests.test_download_defunciones import archive_bytes, csv_bytes, paths
+from tests.test_download_defunciones import archive_bytes, csv_bytes, paths, preliminary_fixture
 
 
 def test_profile_counts_all_records_missingness_and_date_anomalies(tmp_path: Path):
@@ -53,7 +53,8 @@ def test_generate_report_uses_both_registered_raw_sources_without_modifying_them
     downloader = importlib.import_module("src.data.download_defunciones")
     eda = importlib.import_module("scripts.eda_defunciones")
     kwargs = paths(tmp_path)
-    for source in downloader.DEFUNCIONES_SOURCES:
+    sources = (downloader.OFFICIAL_SOURCE, preliminary_fixture(downloader))
+    for source in sources:
         payload = archive_bytes(source, csv_bytes(source.first_year))
         with patch.object(downloader.urllib.request, "urlopen", return_value=io.BytesIO(payload)):
             downloader.ingest_source(source, **kwargs)
@@ -66,7 +67,7 @@ def test_generate_report_uses_both_registered_raw_sources_without_modifying_them
     before = {p: p.read_bytes() for p in kwargs["dest_dir"].rglob("*") if p.is_file()}
     eda.generate_report()
     payload = json.loads(summary.read_text(encoding="utf-8"))
-    assert set(payload["sources"]) == {s.key for s in downloader.DEFUNCIONES_SOURCES}
+    assert set(payload["sources"]) == {s.key for s in sources}
     assert sum(s["profile"]["rows"] for s in payload["sources"].values()) == 2
     assert all(s["provenance_matches"] for s in payload["sources"].values())
     assert all(p.read_bytes() == content for p, content in before.items())

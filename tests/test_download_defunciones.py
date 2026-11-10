@@ -63,9 +63,95 @@ def paths(tmp_path: Path) -> dict:
             "manifest_path": tmp_path / "manifest.json"}
 
 
+def preliminary_fixture(module):
+    return module.DefuncionesSource("2024_2026_27102026", "DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026", 2024, 2026, "preliminar")
+
+
+def test_discovery_selects_unambiguous_official_preliminary_catalog_entry():
+    module = importlib.import_module("src.data.download_defunciones")
+    rows = [{"value": {"filtro_1": "Defunciones", "nombre": "Defunciones por Causa 2024 - 2026 CIFRAS PRELIMINARES (Actualización semanal)",
+                       "ver": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip"}}]
+    source = module.preliminary_source_from_catalog(rows)
+    assert source.key == "2024_2026_10112026"
+    assert source.first_year == 2024 and source.last_year == 2026
+    with pytest.raises(ValueError):
+        module.preliminary_source_from_catalog(rows + rows)
+
+
+def test_discovery_rejects_untrusted_catalog_url():
+    module = importlib.import_module("src.data.download_defunciones")
+    rows = [{"value": {"filtro_1": "Defunciones", "nombre": "CIFRAS PRELIMINARES",
+                       "ver": "https://example.com/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip"}}]
+    with pytest.raises(ValueError):
+        module.preliminary_source_from_catalog(rows)
+
+
+def test_discovery_accepts_zero_padded_day_and_month():
+    module = importlib.import_module("src.data.download_defunciones")
+    rows = [{"value": {"filtro_1": "Defunciones", "nombre": "CIFRAS PRELIMINARES",
+                       "ver": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2027_03012027.zip"}}]
+    assert module.preliminary_source_from_catalog(rows).key.endswith("03012027")
+
+
+def test_discovery_reads_catalog_and_its_official_table():
+    module = importlib.import_module("src.data.download_defunciones")
+    url = "https://deis.minsal.cl/deisajax?action=table"
+    config = {"title": "Datos Abiertos", "init_config": {"data_request_url": url}}
+    page = ("window['ninja_table_instance_1'] = " + json.dumps(config) + ";").encode()
+    rows = [{"value": {"filtro_1": "Defunciones", "nombre": "CIFRAS PRELIMINARES",
+                       "ver": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip"}}]
+    with patch.object(module.urllib.request, "urlopen", side_effect=[io.BytesIO(page), io.BytesIO(json.dumps(rows).encode())]):
+        assert module.discover_preliminary_source().key == "2024_2026_10112026"
+
+
+def test_active_source_uses_latest_recorded_publication_date():
+    module = importlib.import_module("src.data.download_defunciones")
+    base = "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_"
+    entries = [{"source_id": "deis_defunciones_2024_2026_" + date,
+                "snapshots": [{"source_url": base + "2024_2026_" + date + ".zip"}]}
+               for date in ("27102026", "10112026")]
+    assert module.active_preliminary_source(entries).key == "2024_2026_10112026"
+
+
+def test_new_preliminary_period_must_cover_old_period():
+    module = importlib.import_module("src.data.download_defunciones")
+    base = "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_"
+    keys = ("2024_2026_27102026", "2025_2027_11012027")
+    entries = [{"source_id": "deis_defunciones_" + key,
+                "snapshots": [{"source_url": base + key + ".zip"}]} for key in keys]
+    with pytest.raises(ValueError, match="periodo"):
+        module.active_preliminary_source(entries)
+
+
+def test_clean_start_discovers_catalog_instead_of_using_a_dated_constant(monkeypatch):
+    module = importlib.import_module("src.data.download_defunciones")
+    latest = module.DefuncionesSource("2024_2026_10112026", "DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026", 2024, 2026, "cifras_preliminares")
+    ingested = []
+    monkeypatch.setattr(module, "active_sources", lambda: (_ for _ in ()).throw(FileNotFoundError()))
+    monkeypatch.setattr(module, "discover_preliminary_source", lambda: latest)
+    monkeypatch.setattr(module, "ingest_source", lambda source, force=False: ingested.append(source))
+    monkeypatch.setattr("sys.argv", ["download_defunciones"])
+    module.main()
+    assert ingested == [module.OFFICIAL_SOURCE, latest]
+
+
+def test_clean_start_with_manifest_but_missing_raw_discovers_latest(tmp_path, monkeypatch):
+    module = importlib.import_module("src.data.download_defunciones")
+    old = preliminary_fixture(module)
+    latest = module.DefuncionesSource("2024_2026_10112026", "DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026", 2024, 2026, "cifras_preliminares")
+    ingested = []
+    monkeypatch.setattr(module, "DEST_DIR", tmp_path)
+    monkeypatch.setattr(module, "active_sources", lambda: (module.OFFICIAL_SOURCE, old))
+    monkeypatch.setattr(module, "discover_preliminary_source", lambda: latest)
+    monkeypatch.setattr(module, "ingest_source", lambda source, force=False: ingested.append(source))
+    monkeypatch.setattr("sys.argv", ["download_defunciones"])
+    module.main()
+    assert ingested == [module.OFFICIAL_SOURCE, latest]
+
+
 def test_ingestion_preserves_originals_registers_provenance_and_removes_zip(tmp_path):
     module = importlib.import_module("src.data.download_defunciones")
-    source = module.DEFUNCIONES_SOURCES[1]
+    source = preliminary_fixture(module)
     kwargs = paths(tmp_path)
     content = csv_bytes()
     with patch.object(module.urllib.request, "urlopen", return_value=io.BytesIO(archive_bytes(source, content))):
@@ -86,7 +172,7 @@ def test_ingestion_preserves_originals_registers_provenance_and_removes_zip(tmp_
 
 def test_skip_and_identical_force_preserve_raw_and_history(tmp_path):
     module = importlib.import_module("src.data.download_defunciones")
-    source = module.DEFUNCIONES_SOURCES[1]
+    source = preliminary_fixture(module)
     kwargs = paths(tmp_path)
     payload = archive_bytes(source)
     with patch.object(module.urllib.request, "urlopen", side_effect=lambda *a, **k: io.BytesIO(payload)) as download:
@@ -104,7 +190,7 @@ def test_skip_and_identical_force_preserve_raw_and_history(tmp_path):
 @pytest.mark.parametrize("extra", ["../escape.csv", "/absolute.csv", "C:/escape.csv", "..\\escape.csv", "unexpected.txt"])
 def test_unsafe_or_unexpected_archive_members_are_rejected(tmp_path, extra):
     module = importlib.import_module("src.data.download_defunciones")
-    source = module.DEFUNCIONES_SOURCES[1]
+    source = preliminary_fixture(module)
     with patch.object(module.urllib.request, "urlopen", return_value=io.BytesIO(archive_bytes(source, extra=extra))):
         with pytest.raises(ValueError):
             module.ingest_source(source, **paths(tmp_path))
@@ -115,7 +201,7 @@ def test_unsafe_or_unexpected_archive_members_are_rejected(tmp_path, extra):
 @pytest.mark.parametrize("content", [b"", b"html error", csv_bytes(2023), csv_bytes() + b"wrong;width\n"])
 def test_invalid_csv_does_not_replace_previous_snapshot(tmp_path, content):
     module = importlib.import_module("src.data.download_defunciones")
-    source = module.DEFUNCIONES_SOURCES[1]
+    source = preliminary_fixture(module)
     kwargs = paths(tmp_path)
     with patch.object(module.urllib.request, "urlopen", return_value=io.BytesIO(archive_bytes(source))):
         module.ingest_source(source, **kwargs)
@@ -131,7 +217,7 @@ def test_invalid_csv_does_not_replace_previous_snapshot(tmp_path, content):
 
 def test_manifest_failure_rolls_back_both_files(tmp_path):
     module = importlib.import_module("src.data.download_defunciones")
-    source = module.DEFUNCIONES_SOURCES[1]
+    source = preliminary_fixture(module)
     kwargs = paths(tmp_path)
     with patch.object(module.urllib.request, "urlopen", return_value=io.BytesIO(archive_bytes(source))):
         module.ingest_source(source, **kwargs)
@@ -158,7 +244,7 @@ def test_manifest_failure_rolls_back_both_files(tmp_path):
 
 def test_force_changed_source_appends_history_and_preserves_other_entries(tmp_path):
     module = importlib.import_module("src.data.download_defunciones")
-    source = module.DEFUNCIONES_SOURCES[1]
+    source = preliminary_fixture(module)
     kwargs = paths(tmp_path)
     kwargs["manifest_path"].write_text('[{"source_id":"existing","snapshots":[]}]', encoding="utf-8")
     for year in (2024, 2025):

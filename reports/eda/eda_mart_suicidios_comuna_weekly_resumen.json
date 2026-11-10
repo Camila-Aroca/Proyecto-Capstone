@@ -1,19 +1,19 @@
 {
-  "filas": 18616,
+  "filas": 18720,
   "n_comunas": 52,
-  "semanas": 358,
-  "suicidios": 3943,
-  "suicidios_fuente": 3943,
-  "fecha_corte": "2026-10-24",
+  "semanas": 360,
+  "suicidios": 3969,
+  "suicidios_fuente": 3969,
+  "fecha_corte": "2026-11-07",
   "ultimo_ano_cerrado": 2025,
   "calendario": {
-    "fechas_verificadas": 2467,
+    "fechas_verificadas": 2505,
     "discrepancias": 0
   },
   "umbral_registro": 0.75,
   "razon_registro_minima_interior": 0.787,
   "semanas_registro_incompleto": [
-    "2026-S42"
+    "2026-S44"
   ],
   "cambio_nivel": {
     "por_dia_2020_2021": 1.3201,
@@ -82,5 +82,5 @@
     "ceros_esperados_poisson": 0.8035,
     "razon_varianza_media_mediana": 0.971
   },
-  "mart_sha256": "7d103046636fc5d8743fb88ac933841e1d6dbcdc17b94f4c32c713193c593b8e"
+  "mart_sha256": "9f82ff74a16e499a7aaa9e96e0282ff97fa7ee3fdf9ed1c3e0c950acee9067bb"
 }

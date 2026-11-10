@@ -17,7 +17,7 @@ from typing import Any
 
 from src.chile_time import run_date_chile
 from src.data.download_defunciones import (
-    CSV_COLUMNS, DEFUNCIONES_SOURCES, DEST_DIR, DICTIONARY_FILENAME, MAX_RAW_BYTES,
+    CSV_COLUMNS, DEST_DIR, DICTIONARY_FILENAME, MAX_RAW_BYTES, active_sources,
     validate_dictionary,
 )
 from src.data.raw_provenance import MANIFEST_PATH, file_sha256
@@ -447,7 +447,8 @@ def validate_summary(path: Path) -> None:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict) or not isinstance(payload.get("sources"), dict):
         raise ValueError("Resumen EDA sin fuentes.")
-    if set(payload["sources"]) != {source.key for source in DEFUNCIONES_SOURCES}:
+    sources = active_sources(MANIFEST_PATH)
+    if set(payload["sources"]) != {source.key for source in sources}:
         raise ValueError("Resumen EDA no contiene ambos paquetes configurados.")
     if not payload.get("generated_at") or not payload.get("python_version"):
         raise ValueError("Resumen EDA sin metadatos de ejecución.")
@@ -462,7 +463,7 @@ def validate_summary(path: Path) -> None:
             raise ValueError("Contraste contextual desactualizado.")
     elif comparison.get("status") != "not_available":
         raise ValueError("Fuente contextual del resumen ya no está disponible.")
-    for source in DEFUNCIONES_SOURCES:
+    for source in sources:
         entry = payload["sources"][source.key]
         for field in ("raw_sha256", "dictionary_sha256"):
             if re.fullmatch(r"[0-9a-f]{64}", entry.get(field, "")) is None:
@@ -514,7 +515,7 @@ def generate_report() -> None:
         "python_version": platform.python_version(), "sources": {},
         "mental_health_years": list(HEALTH_YEARS),
     }
-    for source in DEFUNCIONES_SOURCES:
+    for source in active_sources(MANIFEST_PATH):
         raw = DEST_DIR / source.key / source.csv_filename
         dictionary = raw.parent / DICTIONARY_FILENAME
         validate_dictionary(dictionary)

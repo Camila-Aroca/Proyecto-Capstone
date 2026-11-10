@@ -68,6 +68,28 @@ def load(tree):
     return module, module.load_config(tree[0])
 
 
+def test_consolidation_selects_latest_preliminary_snapshot_without_deleting_history(tree):
+    module, settings = load(tree)
+    _, _, _, write = tree
+    write("deis_defunciones_2024_2026_27102026", [record(2024)])
+    write("deis_defunciones_2024_2026_10112026", [record(2024, DIAG1="F320")])
+    manifest = Path(settings["provenance_manifest"])
+    entries = json.loads(manifest.read_text(encoding="utf-8"))
+    for entry in entries:
+        if entry["source_id"].startswith("deis_defunciones_2024_"):
+            entry["snapshots"][-1]["source_url"] = ("https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_"
+                                                      + entry["source_id"].removeprefix("deis_defunciones_") + ".zip")
+    manifest.write_text(json.dumps(entries), encoding="utf-8")
+    sources = module.discover_inputs(settings)
+    ids = {source["source_id"] for source in sources}
+    assert "deis_defunciones_2024_2026_10112026" in ids
+    assert "deis_defunciones_2024_2026_27102026" not in ids
+    assert Path(settings["raw_root"], "deis_defunciones_2024_2026_27102026.csv").exists()
+    # Un clon nuevo puede conservar la procedencia histórica sin el RAW viejo.
+    Path(settings["raw_root"], "deis_defunciones_2024_2026_27102026.csv").unlink()
+    assert {source["source_id"] for source in module.discover_inputs(settings)} == ids
+
+
 def test_concatenates_all_columns_preserving_duplicates_and_exception_values(tree):
     module, settings = load(tree)
     config = tree[1]

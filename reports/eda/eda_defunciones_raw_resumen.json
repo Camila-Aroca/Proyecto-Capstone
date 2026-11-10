@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-03T01:14:15.891224+00:00",
+  "generated_at": "2026-11-10T23:03:49.945719+00:00",
   "python_version": "3.12.6",
   "sources": {
     "1990_2023": {
@@ -1401,24 +1401,24 @@
         }
       }
     },
-    "2024_2026_27102026": {
-      "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.zip",
-      "raw_path": "data/raw/defunciones/2024_2026_27102026/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.csv",
-      "raw_size": 108034433,
-      "raw_sha256": "01cd5779ede07925716c1f01561f87f0e73e3a870bf7fbdb2a217b1a0eed82ea",
+    "2024_2026_10112026": {
+      "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip",
+      "raw_path": "data/raw/defunciones/2024_2026_10112026/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.csv",
+      "raw_size": 109442787,
+      "raw_sha256": "51bf6485bbc475fc122d36f78cda122be16cdc849c3f819681287b5d03f167d3",
       "dictionary_sha256": "298600901a454f91bfb5634359efdbcb163d8a61d6e1b8dcdae01768ec38c60f",
       "provenance_matches": true,
       "profile": {
-        "rows": 356974,
+        "rows": 361592,
         "invalid_dates": 0,
         "date_year_mismatch": 0,
         "future_dates": 0,
-        "invalid_commune_shape": 176862,
-        "rm_commune_prefix_rows": 131967,
-        "diag1_f_prefix": 10693,
+        "invalid_commune_shape": 179154,
+        "rm_commune_prefix_rows": 133628,
+        "diag1_f_prefix": 10821,
         "diag1_numeric": 0,
-        "diag1_cie10_shape": 356974,
-        "diag2_cie10_shape": 21827,
+        "diag1_cie10_shape": 361592,
+        "diag2_cie10_shape": 22121,
         "diag1_other_shape": 0,
         "columns": [
           "AÑO",
@@ -1457,9 +1457,9 @@
           "SEXO_NOMBRE": 0,
           "EDAD_TIPO": 0,
           "EDAD_CANT": 0,
-          "COD_COMUNA": 64,
-          "COMUNA": 64,
-          "NOMBRE_REGION": 64,
+          "COD_COMUNA": 65,
+          "COMUNA": 65,
+          "NOMBRE_REGION": 65,
           "DIAG1": 0,
           "CAPITULO_DIAG1": 2,
           "GLOSA_CAPITULO_DIAG1": 2,
@@ -1469,15 +1469,15 @@
           "GLOSA_CATEGORIA_DIAG1": 2,
           "CODIGO_SUBCATEGORIA_DIAG1": 2,
           "GLOSA_SUBCATEGORIA_DIAG1": 2,
-          "DIAG2": 335147,
-          "CAPITULO_DIAG2": 335147,
-          "GLOSA_CAPITULO_DIAG2": 335147,
-          "CODIGO_GRUPO_DIAG2": 335147,
-          "GLOSA_GRUPO_DIAG2": 335147,
-          "CODIGO_CATEGORIA_DIAG2": 335147,
-          "GLOSA_CATEGORIA_DIAG2": 335147,
-          "CODIGO_SUBCATEGORIA_DIAG2": 335147,
-          "GLOSA_SUBCATEGORIA_DIAG2": 335147,
+          "DIAG2": 339471,
+          "CAPITULO_DIAG2": 339471,
+          "GLOSA_CAPITULO_DIAG2": 339471,
+          "CODIGO_GRUPO_DIAG2": 339471,
+          "GLOSA_GRUPO_DIAG2": 339471,
+          "CODIGO_CATEGORIA_DIAG2": 339471,
+          "GLOSA_CATEGORIA_DIAG2": 339471,
+          "CODIGO_SUBCATEGORIA_DIAG2": 339471,
+          "GLOSA_SUBCATEGORIA_DIAG2": 339471,
           "LUGAR_DEFUNCION": 0
         },
         "asterisk": {
@@ -1512,7 +1512,7 @@
         "years": {
           "2024": 126928,
           "2025": 126466,
-          "2026": 103580
+          "2026": 108198
         },
         "months_by_valid_date": {
           "2024-01": 10111,
@@ -1539,79 +1539,80 @@
           "2025-10": 10740,
           "2025-11": 10067,
           "2025-12": 10009,
-          "2026-01": 10508,
-          "2026-02": 8888,
-          "2026-03": 9922,
-          "2026-04": 10069,
-          "2026-05": 11032,
+          "2026-01": 10509,
+          "2026-02": 8889,
+          "2026-03": 9923,
+          "2026-04": 10071,
+          "2026-05": 11034,
           "2026-06": 11301,
           "2026-07": 12388,
-          "2026-08": 11127,
-          "2026-09": 10763,
-          "2026-10": 7582
+          "2026-08": 11131,
+          "2026-09": 10772,
+          "2026-10": 10410,
+          "2026-11": 1770
         },
         "sexes": {
-          "Hombre": 185563,
-          "Mujer": 171400,
+          "Hombre": 187951,
+          "Mujer": 173630,
           "Indeterminado": 11
         },
         "regions": {
-          "De Los Lagos": 17741,
-          "Metropolitana de Santiago": 131967,
-          "Del Bíobío": 32823,
-          "Del Maule": 23134,
-          "De Valparaíso": 42864,
-          "De Ñuble": 11858,
-          "De La Araucanía": 21700,
-          "De Antofagasta": 10118,
-          "Del Libertador B. O'Higgins": 19923,
-          "De Coquimbo": 15714,
-          "De Aisén del Gral. C. Ibáñez del Campo": 1691,
-          "De Los Ríos": 8855,
-          "De Magallanes y de La Antártica Chilena": 3425,
-          "De Arica y Parinacota": 4545,
-          "De Tarapacá": 5061,
-          "De Atacama": 5461,
-          "": 64,
-          "Ignorada": 30
+          "De Aisén del Gral. C. Ibáñez del Campo": 1713,
+          "Metropolitana de Santiago": 133628,
+          "De Ñuble": 12022,
+          "De Coquimbo": 15900,
+          "Del Libertador B. O'Higgins": 20177,
+          "De Antofagasta": 10259,
+          "De La Araucanía": 21977,
+          "De Tarapacá": 5130,
+          "De Arica y Parinacota": 4624,
+          "De Valparaíso": 43408,
+          "De Los Lagos": 17982,
+          "Del Bíobío": 33272,
+          "Del Maule": 23430,
+          "De Atacama": 5536,
+          "De Los Ríos": 8973,
+          "De Magallanes y de La Antártica Chilena": 3465,
+          "": 65,
+          "Ignorada": 31
         },
         "age_types": {
-          "1": 354437,
-          "2": 594,
-          "4": 985,
-          "3": 949,
+          "1": 359012,
+          "3": 962,
+          "4": 1007,
+          "2": 602,
           "0": 9
         },
         "age_quantity_by_type": {
           "1": {
-            "numeric": 354437,
+            "numeric": 359012,
             "non_numeric": 0,
             "min": 1,
             "max": 140,
             "negative": 0,
             "literal_999": 0
           },
-          "2": {
-            "numeric": 594,
+          "3": {
+            "numeric": 962,
             "non_numeric": 0,
             "min": 1,
-            "max": 11,
+            "max": 30,
             "negative": 0,
             "literal_999": 0
           },
           "4": {
-            "numeric": 985,
+            "numeric": 1007,
             "non_numeric": 0,
             "min": 1,
             "max": 23,
             "negative": 0,
             "literal_999": 0
           },
-          "3": {
-            "numeric": 949,
+          "2": {
+            "numeric": 602,
             "non_numeric": 0,
             "min": 1,
-            "max": 30,
+            "max": 11,
             "negative": 0,
             "literal_999": 0
           },
@@ -1625,13 +1626,13 @@
           }
         },
         "locations": {
-          "Casa habitación": 178975,
-          "Hospital o Clínica": 146412,
-          "Otro": 31587
+          "Casa habitación": 181248,
+          "Hospital o Clínica": 148363,
+          "Otro": 31981
         },
         "unique_well_formed_communes": 138,
         "min_date": "2024-01-01",
-        "max_date": "2026-10-24",
+        "max_date": "2026-11-07",
         "missing_expected_years": [],
         "diagnostic_by_year": {
           "2024": {
@@ -1646,8 +1647,8 @@
           },
           "2026": {
             "numeric": 0,
-            "cie10_shape": 103580,
-            "f_prefix": 3378
+            "cie10_shape": 108198,
+            "f_prefix": 3506
           }
         },
         "scope": "complete_file_streaming_no_sampling",
@@ -1678,10 +1679,10 @@
               "rm_undetermined_diag2": 1
             },
             "2026": {
-              "f_diag1": 3378,
-              "rm_f_diag1": 1364,
-              "self_diag2": 1458,
-              "rm_self_diag2": 435,
+              "f_diag1": 3506,
+              "rm_f_diag1": 1412,
+              "self_diag2": 1553,
+              "rm_self_diag2": 461,
               "self_diag1": 0,
               "rm_self_diag1": 0,
               "sequela_diag2": 0,

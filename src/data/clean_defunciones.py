@@ -89,6 +89,10 @@ def discover_inputs(settings: dict[str, Any]) -> list[dict[str, Any]]:
     """Descubre CSV registrados; rechaza omisiones, copias y hashes desalineados."""
     root = _relative(settings["raw_root"])
     manifest = json.loads(_relative(settings["provenance_manifest"]).read_text(encoding="utf-8"))
+    from src.data.download_defunciones import active_preliminary_source
+    pattern = r"deis_defunciones_\d{4}_\d{4}_\d{8}"
+    has_preliminaries = any(re.fullmatch(pattern, entry.get("source_id", "")) for entry in manifest)
+    active_id = active_preliminary_source(manifest).source_id if has_preliminaries else None
     sources = []
     for entry in manifest:
         if entry.get("dataset") != "defunciones" or not entry.get("snapshots"):
@@ -99,6 +103,8 @@ def discover_inputs(settings: dict[str, Any]) -> list[dict[str, Any]]:
             continue
         if not path.resolve().is_relative_to(root.resolve()) or path.is_symlink():
             raise ValueError("RAW registrado fuera de la carpeta autorizada.")
+        if not path.exists() and re.fullmatch(pattern, entry["source_id"]) and entry["source_id"] != active_id:
+            continue  # El manifiesto puede conservar historia cuyo RAW no está en un clon nuevo.
         digest = file_sha256(path)
         if digest != latest["raw_sha256"]:
             raise ValueError("RAW modificado sin procedencia vigente.")
@@ -108,8 +114,15 @@ def discover_inputs(settings: dict[str, Any]) -> list[dict[str, Any]]:
     found = {p.as_posix() for p in root.rglob("*.csv")}
     if len(sources) < 2 or registered != found or len(registered) != len(sources):
         raise ValueError("CSV faltantes, repetidos o no registrados en procedencia.")
+    # Las publicaciones preliminares reemplazan el mismo intervalo: se conserva
+    # cada RAW para auditoría, pero solo el snapshot más reciente alimenta el mart.
+    preliminaries = [source for source in sources if re.fullmatch(
+        pattern, source["source_id"])]
+    if preliminaries:
+        sources = [source for source in sources
+                   if source not in preliminaries or source["source_id"] == active_id]
     if len({s["sha256"] for s in sources}) != len(sources):
-        raise ValueError("Fuentes con contenido duplicado; posible solapamiento.")
+        raise ValueError("Fuentes activas con contenido duplicado; posible solapamiento.")
     return sorted(sources, key=lambda source: source["path"])
 
 

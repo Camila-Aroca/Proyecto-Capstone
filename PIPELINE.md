@@ -162,8 +162,15 @@ La lógica reutilizable de ingesta, descarga, limpieza y normalización se organ
 python scripts/run_pipeline.py --stage download_defunciones
 ```
 
-Evalúa exclusivamente la rama `download_defunciones` → `eda_defunciones` y
-`clean_defunciones`. Para consolidar los RAW existentes sin volver a descargar
+Evalúa la rama de Defunciones hasta el pronóstico de suicidios. En un arranque
+sin snapshot preliminar se consulta el catálogo oficial; si los outputs ya
+existen se reutilizan. Para consultar de nuevo el catálogo y actualizar:
+
+```bash
+python scripts/run_pipeline.py --stage download_defunciones --force
+```
+
+Para consolidar los RAW existentes sin volver a descargar
 ni generar el EDA histórico completo:
 
 ```bash
@@ -171,15 +178,15 @@ python scripts/run_pipeline.py --stage clean_defunciones
 ```
 
 `download_defunciones` (`src/data/download_defunciones.py`) no tiene upstream y
-sus downstream son `eda_defunciones` y `clean_defunciones`. Sus inputs son los dos ZIP oficiales:
+sus downstream son `eda_defunciones` y `clean_defunciones`. Los inputs son los ZIP oficiales:
 
 - [Cifras oficiales 1990–2023](https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.zip).
-- [Paquete 2024–2026 fechado 27/10/2026](https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.zip).
+- El paquete preliminar por causa anunciado por la tabla Datos Abiertos de [DEIS](https://deis.minsal.cl/), descubierto al iniciar desde cero o al solicitar `--force`.
 
 Publica cuatro archivos: el CSV original y el XLSX
 `Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx` de cada ZIP,
-en `data/raw/defunciones/1990_2023/` y
-`data/raw/defunciones/2024_2026_27102026/`, respectivamente. Los nombres y bytes
+en `data/raw/defunciones/1990_2023/` y en un directorio identificado por el
+periodo y fecha del paquete preliminar. Los nombres y bytes
 se conservan; los diccionarios homónimos no se sobrescriben entre paquetes.
 Descarga con TLS estándar a `.cache/downloads/defunciones/`, comprueba tamaño de
 transporte si se publica `Content-Length`, miembros exactos y sin duplicados,
@@ -193,22 +200,27 @@ CSV 2 GiB. El perfil no certifica exhaustividad del registro nacional.
 El CSV y diccionario se publican con reemplazo atómico por archivo y rollback
 conjunto si falla cualquier publicación o el registro del manifiesto. El
 historial común `data/raw/provenance_manifest.json` usa los identificadores
-`deis_defunciones_1990_2023`, `deis_defunciones_2024_2026_27102026` y sus variantes
+`deis_defunciones_1990_2023` y `deis_defunciones_<periodo>_<fecha>`, y sus variantes
 con sufijo `_dictionary`: guarda URL, hora real UTC de descarga, SHA256 y tamaño
 del ZIP y de cada archivo RAW, miembro del ZIP y Last-Modified/ETag observados.
 El ZIP se elimina **solo después** de validar y publicar RAW y procedencia;
 ante fallo queda únicamente en cache para diagnóstico, y el RAW anterior se
 conserva. Las dos fuentes se intentan independientemente; cualquier error
-termina la etapa con código distinto de cero.
+termina la etapa con código distinto de cero. Cada publicación preliminar se
+conserva en el equipo que la descargó; la consolidación usa solo la más reciente
+registrada y valida los hashes de las anteriores que estén presentes, evitando
+sumar cortes superpuestos. Un clon nuevo no necesita los CSV históricos ausentes;
+un hash por sí solo no permite reconstruirlos.
 
 El orquestador hace `SKIP` si los cuatro archivos existen y pasan sus contratos
 mínimos: cabecera exacta y hasta 100 filas del CSV, y hojas/legibilidad del XLSX.
 Esto no equivale al escaneo completo de ingesta ni verifica vigencia frente a
-ediciones manuales previas. `--force` vuelve a descargar ambas URLs explícitas;
-un contenido idéntico ya registrado no reemplaza RAW ni duplica el historial.
-No se descubre automáticamente una nueva URL fechada ni se afirma que el
-paquete reciente sea consolidado: 2026 es parcial y su corte real se obtiene
-de `FECHA_DEF`. Pruebas: `tests/test_download_defunciones.py`.
+ediciones manuales previas. `--force` consulta la tabla, exige un único enlace
+preliminar del dominio y formato oficiales y rechaza retrocesos; solo vuelve a
+descargar el paquete preliminar. No se construye una URL suponiendo la fecha de
+publicación. Un contenido idéntico ya registrado no reemplaza RAW ni duplica el
+historial. El paquete es preliminar y su corte real se obtiene de `FECHA_DEF`;
+la fecha máxima no garantiza registro completo. Pruebas: `tests/test_download_defunciones.py`.
 
 `eda_defunciones` (`scripts/eda_defunciones.py`) depende únicamente de la descarga
 y no tiene downstream. Lee los cuatro RAW y el manifiesto sin modificarlos;
@@ -465,7 +477,7 @@ La API lo sirve en `/api/v1/establecimientos` (listado con promedio reciente, pr
 
 **Rama de suicidios.** Toda la rama lee la base de defunciones ya consolidada; no se cruza con Urgencias ni con Egresos por persona (el territorio es la comuna de **residencia**) y Urgencias solo se lee para verificar el calendario.
 
-- `build_mart_suicidios_comuna_weekly` (`src/data/build_mart_suicidios_comuna_weekly.py`). Inputs: `data/processed/defunciones/defunciones_nacional.parquet`, `data/processed/censo/dim_poblacion_comuna_censo2024.parquet` y la proyección INE (`load_rm_population`). Upstream: `clean_defunciones`, `clean_censo_poblacion`, `clean_poblacion_proyecciones`. Downstream: `eda_mart_suicidios_comuna_weekly`, `benchmark_suicidios` (y, por la selección, holdout y pronóstico). Output: `data/processed/marts/mart_suicidios_comuna_weekly.parquet` (diccionario en `reports/dictionary/diccionario_mart_suicidios_comuna_weekly.md`): una fila por comuna de residencia RM y semana DEIS, grilla completa con ceros registrados, `dias_semana` (las semanas de borde de año tienen 4 a 9 días) y `registro_completo` (False en las semanas finales cuyas defunciones diarias por todas las causas caen bajo 0,75 veces la mediana de las 8 previas). Valida que la categoría X60-X84 coincida con el grupo publicado, que ningún residente RM tenga comuna fuera de las 52, la llave, la grilla y la conciliación exacta del total con la fuente; escribe de forma atómica con `zstd`. `SKIP` con esquema válido; `--force` lo regenera. Pruebas: `tests/test_build_mart_suicidios_comuna_weekly.py`.
+- `build_mart_suicidios_comuna_weekly` (`src/data/build_mart_suicidios_comuna_weekly.py`). Inputs: `data/processed/defunciones/defunciones_nacional.parquet`, `data/processed/censo/dim_poblacion_comuna_censo2024.parquet` y la proyección INE (`load_rm_population`). Upstream: `clean_defunciones`, `clean_censo_poblacion`, `clean_poblacion_proyecciones`. Downstream: `eda_mart_suicidios_comuna_weekly`, `benchmark_suicidios` (y, por la selección, holdout y pronóstico). Output: `data/processed/marts/mart_suicidios_comuna_weekly.parquet` (diccionario en `reports/dictionary/diccionario_mart_suicidios_comuna_weekly.md`): una fila por comuna de residencia RM y semana DEIS, grilla completa con ceros registrados, `dias_semana` (las semanas de borde de año tienen 4 a 9 días) y `registro_completo` (False en semanas finales si el promedio diario semanal cae bajo 0,75 veces la mediana de las 8 semanas previas o si su último día cae bajo 0,5 veces la mediana de los 8 mismos días de semana anteriores; son alertas, no certifican completitud). Valida que la categoría X60-X84 coincida con el grupo publicado, que ningún residente RM tenga comuna fuera de las 52, la llave, la grilla y la conciliación exacta del total con la fuente; escribe de forma atómica con `zstd`. `SKIP` con esquema válido; `--force` lo regenera. Pruebas: `tests/test_build_mart_suicidios_comuna_weekly.py`.
 - `eda_mart_suicidios_comuna_weekly` (`scripts/eda_mart_suicidios_comuna_weekly.py`). Upstream: el mart y `clean_urgencias` (calendario). Outputs: `reports/eda/eda_mart_suicidios_comuna_weekly.md` y `_resumen.json`. Recalcula la conciliación con la fuente, verifica `semana_deis` en todas las fechas de Urgencias, la regla de registro, el cambio de nivel 2020-2021 (prueba binomial exacta), la estacionalidad (LRT de armónicos en un GLM de Poisson con efecto de año), la dispersión, la autocorrelación de residuos, el exceso de ceros y la heterogeneidad comunal. `SKIP` exige título, claves del resumen, conciliación y cero discrepancias de calendario; `--force` lo regenera.
 - `benchmark_suicidios` (`scripts/run_benchmark_suicidios.py`, lógica en `src/models/suicidios.py`). Upstream: el mart. Outputs: `reports/modeling/benchmark_suicidios.md`, `_resumen.csv` y `_seleccion.json`. Backtesting con el mismo motor del modelo de demanda (13 orígenes cada 4 semanas, horizontes 1-8, años cerrados desde 2022) del baseline estacional, los modelos del registro y `PoissonEstacionalJerarquico` (GLM de Poisson regional con un armónico, exposición en días y nivel ponderado por vida media 26/52/104 semanas, más un reparto top-down a comunas con tasas de Bayes empírico Gamma-Poisson; las comunas suman la región). Selecciona por **RMSSE** (con series casi siempre en cero, MAE/MASE premian pronosticar cero) entre los modelos que superan al baseline en ambos niveles y cuya cobertura es compatible con la declarada (en conteos, un intervalo de enteros no cubre exactamente 80%). `SKIP` con outputs válidos; `--force` lo regenera.
 - `evaluate_holdout_suicidios` (`scripts/evaluate_holdout_suicidios.py`). Upstream: `benchmark_suicidios`. Outputs: `reports/modeling/holdout_suicidios.md` y `_resumen.csv`. Evalúa la selección congelada en las semanas completas del año en curso (un origen por semana), contra el baseline y las alternativas con Wilcoxon y ajuste de Holm. `SKIP`/`--force` como el benchmark.

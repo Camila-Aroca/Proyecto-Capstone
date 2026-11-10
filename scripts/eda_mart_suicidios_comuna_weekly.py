@@ -217,6 +217,9 @@ def build_report() -> tuple[str, dict[str, Any]]:
         f"Razón = defunciones diarias por todas las causas de la semana / mediana de las {b.SEMANAS_REFERENCIA} "
         f"semanas previas. Mínimo en semanas interiores de 2021 en adelante: {minimo_interior:.3f}; umbral de "
         f"registro incompleto: {b.UMBRAL_REGISTRO}.", "",
+        f"Además se marca una semana final si su último día tiene menos de {b.UMBRAL_ULTIMO_DIA:.0%} de la mediana "
+        f"de los {b.SEMANAS_REFERENCIA} mismos días de semana anteriores. La regla es una alerta, no una prueba de completitud; "
+        "no detecta necesariamente retrasos en días interiores.", "",
         tabla_md(finales), "",
         f"- Semanas marcadas con registro incompleto: {', '.join(resumen['semanas_registro_incompleto']) or 'ninguna'}.",
         f"- Suicidios en las últimas 6 semanas completas: {ritmo_reciente:.2f} por semana de 7 días, frente a "

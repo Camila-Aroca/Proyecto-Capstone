@@ -19,7 +19,7 @@
     }
   },
   "config_sha256": "fe23c0c40cb3f068b55b872a75c9d2905c50b1a3e2a8f01b5aaa8ec0c6fa3585",
-  "producer_sha256": "06f7674d81c50c92153c3ca9c813f383e19929c36321b3fb4c4e0896f3262d9e",
+  "producer_sha256": "5c7fe49078ddf4abce3ef34cfafe25627e44c3943d9891a774b531b5975519b3",
   "inputs": [
     {
       "source_id": "deis_defunciones_1990_2023",
@@ -30,15 +30,15 @@
       "selected_rows": 522988
     },
     {
-      "source_id": "deis_defunciones_2024_2026_27102026",
-      "path": "data/raw/defunciones/2024_2026_27102026/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.csv",
-      "sha256": "01cd5779ede07925716c1f01561f87f0e73e3a870bf7fbdb2a217b1a0eed82ea",
-      "size": 108034433,
-      "scanned_rows": 356974,
-      "selected_rows": 356974
+      "source_id": "deis_defunciones_2024_2026_10112026",
+      "path": "data/raw/defunciones/2024_2026_10112026/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.csv",
+      "sha256": "51bf6485bbc475fc122d36f78cda122be16cdc849c3f819681287b5d03f167d3",
+      "size": 109442787,
+      "scanned_rows": 361592,
+      "selected_rows": 361592
     }
   ],
-  "rows": 879962,
+  "rows": 884580,
   "counts_by_year": {
     "2020": 126169,
     "2021": 137629,
@@ -46,20 +46,20 @@
     "2023": 122218,
     "2024": 126928,
     "2025": 126466,
-    "2026": 103580
+    "2026": 108198
   },
   "counts_by_source": {
     "deis_defunciones_1990_2023": 522988,
-    "deis_defunciones_2024_2026_27102026": 356974
+    "deis_defunciones_2024_2026_10112026": 361592
   },
   "counts_by_source_year": {
     "deis_defunciones_1990_2023:2020": 126169,
     "deis_defunciones_1990_2023:2021": 137629,
     "deis_defunciones_1990_2023:2022": 136972,
     "deis_defunciones_1990_2023:2023": 122218,
-    "deis_defunciones_2024_2026_27102026:2026": 103580,
-    "deis_defunciones_2024_2026_27102026:2025": 126466,
-    "deis_defunciones_2024_2026_27102026:2024": 126928
+    "deis_defunciones_2024_2026_10112026:2026": 108198,
+    "deis_defunciones_2024_2026_10112026:2025": 126466,
+    "deis_defunciones_2024_2026_10112026:2024": 126928
   },
   "null_counts": {
     "ano_defuncion": 0,
@@ -68,8 +68,8 @@
     "edad_tipo": 9,
     "edad_cantidad": 9,
     "comuna_codigo_original": 0,
-    "comuna_glosa": 64,
-    "region_glosa": 64,
+    "comuna_glosa": 65,
+    "region_glosa": 65,
     "diag1": 0,
     "capitulo_diag1": 2,
     "glosa_capitulo_diag1": 2,
@@ -79,17 +79,17 @@
     "glosa_categoria_diag1": 2,
     "codigo_subcategoria_diag1": 2,
     "glosa_subcategoria_diag1": 2,
-    "diag2": 825200,
-    "capitulo_diag2": 825200,
-    "glosa_capitulo_diag2": 825200,
-    "codigo_grupo_diag2": 825200,
-    "glosa_grupo_diag2": 825200,
-    "codigo_categoria_diag2": 825200,
-    "glosa_categoria_diag2": 825200,
-    "codigo_subcategoria_diag2": 825200,
-    "glosa_subcategoria_diag2": 825200,
+    "diag2": 829524,
+    "capitulo_diag2": 829524,
+    "glosa_capitulo_diag2": 829524,
+    "codigo_grupo_diag2": 829524,
+    "glosa_grupo_diag2": 829524,
+    "codigo_categoria_diag2": 829524,
+    "glosa_categoria_diag2": 829524,
+    "codigo_subcategoria_diag2": 829524,
+    "glosa_subcategoria_diag2": 829524,
     "lugar_defuncion": 0,
-    "comuna_codigo": 64,
+    "comuna_codigo": 65,
     "fecha_defuncion_original": 0,
     "edad_tipo_original": 0,
     "edad_cantidad_original": 0,
@@ -104,18 +104,18 @@
     "fecha_ausente": 10,
     "edad_tipo_ausente": 9,
     "edad_cantidad_ausente": 9,
-    "comuna_ausente": 64,
+    "comuna_ausente": 65,
     "diag1_jerarquia_incompleta": 2
   },
-  "normalized_sequence_sha256": "66556cd978c7a9966bc36dfd0987761888b70d78271b29e29cb07cab6c1d65d7",
+  "normalized_sequence_sha256": "678a6f5281a2e027cde9c35c2dad9eb4e0a29864c03cde84b2cc68b9db2eb96e",
   "min_date": "2020-01-01",
-  "max_date": "2026-10-24",
-  "raw_duplicates": 519,
-  "normalized_duplicates": 542,
+  "max_date": "2026-11-07",
+  "raw_duplicates": 524,
+  "normalized_duplicates": 549,
   "preservation_verified": true,
   "artifact_sha256": {
-    "parquet": "2262ce81c94546f4a312f4e4c618525e46188d491874827180a1de4abd6e4e48",
-    "report": "7e8698f9576d8d904c66e4897a34b0da627ba69ead632d4c02d9a7e6228efbbc",
+    "parquet": "b139ee96b3523d0ae73bd90dcb3c5003e276b8662ea3c6baf8969209c37b4eb1",
+    "report": "0300677a759200fcbb59a19fe80d161e6e8ea166477e056bc93bde0bff5918c5",
     "dictionary": "cc984b29005406937a87f9200b81caa00ae3bd88d7d4e0fcfbfae7bd53a489d2"
   }
 }

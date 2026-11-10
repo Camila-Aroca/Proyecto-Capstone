@@ -4,7 +4,7 @@
 
 Perfil exploratorio nacional de los dos paquetes publicados por DEIS. Grano: una fila del CSV de defunciones disociadas publicado; no representa personas enlazables. Escaneo completo por streaming de los archivos, sin muestreo ni carga integral en memoria. Se conserva toda la fuente, sin filtrar RM, causas ni años, sin imputar ni deduplicar. No hay joins, modelos, tasas ni outputs processed.
 
-Generado UTC: `2026-11-03T01:14:15.891224+00:00`. Python: `3.12.6`. Parser estándar `csv`, delimitador `;`, lectura `latin-1` consistente con los bytes de la cabecera `AÑO`. No se recodifican los archivos. Límite por CSV: 2 GiB; campos categóricos y comunas: hasta 4.096 valores por agregado; caché de fechas: 65.536 valores. Los excesos detienen el proceso.
+Generado UTC: `2026-11-10T23:03:49.945719+00:00`. Python: `3.12.6`. Parser estándar `csv`, delimitador `;`, lectura `latin-1` consistente con los bytes de la cabecera `AÑO`. No se recodifican los archivos. Límite por CSV: 2 GiB; campos categóricos y comunas: hasta 4.096 valores por agregado; caché de fechas: 65.536 valores. Los excesos detienen el proceso.
 
 Reproducción: `python scripts/run_pipeline.py --stage download_defunciones`; para regenerar solo el perfil: `python scripts/run_pipeline.py --stage eda_defunciones --force`.
 
@@ -164,27 +164,27 @@ SHA256 CSV: `b763f5be857edbef5d06dc2da9437d7be8640f76719b5a0bb75b276282553ebb`. 
 | 3 | 25471 | 1 | 31 | 0 | 0 | 0 |
 | 4 | 23246 | 1 | 24 | 0 | 0 | 0 |
 
-## Observaciones: 2024_2026_27102026
+## Observaciones: 2024_2026_10112026
 
-Fuente: [ZIP oficial DEIS](https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.zip). RAW: `data/raw/defunciones/2024_2026_27102026/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.csv`.
+Fuente: [ZIP oficial DEIS](https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip). RAW: `data/raw/defunciones/2024_2026_10112026/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.csv`.
 
-Filas leídas: **356,974**. Columnas: **27**. Fechas válidas: `2024-01-01` a `2026-10-24`. Años esperados sin filas: `[]`.
+Filas leídas: **361,592**. Columnas: **27**. Fechas válidas: `2024-01-01` a `2026-11-07`. Años esperados sin filas: `[]`.
 
-SHA256 CSV: `01cd5779ede07925716c1f01561f87f0e73e3a870bf7fbdb2a217b1a0eed82ea`. Tamaño: 108,034,433 bytes. SHA256 diccionario: `298600901a454f91bfb5634359efdbcb163d8a61d6e1b8dcdae01768ec38c60f`. Procedencia coincide con el último snapshot registrado: **True**.
+SHA256 CSV: `51bf6485bbc475fc122d36f78cda122be16cdc849c3f819681287b5d03f167d3`. Tamaño: 109,442,787 bytes. SHA256 diccionario: `298600901a454f91bfb5634359efdbcb163d8a61d6e1b8dcdae01768ec38c60f`. Procedencia coincide con el último snapshot registrado: **True**.
 
 | Control | Registros |
 | --- | --- |
 | Fecha no interpretable con los tres formatos declarados | 0 |
 | Año de FECHA_DEF distinto de AÑO | 0 |
 | Fecha posterior a fecha civil de ejecución en Chile | 0 |
-| COD_COMUNA sin forma de cinco dígitos (incluye blanco) | 176862 |
-| COD_COMUNA de cinco dígitos con prefijo 13 | 131967 |
+| COD_COMUNA sin forma de cinco dígitos (incluye blanco) | 179154 |
+| COD_COMUNA de cinco dígitos con prefijo 13 | 133628 |
 | Comunas distintas con forma de cinco dígitos | 138 |
 | DIAG1 numérico | 0 |
-| DIAG1 con forma CIE-10, sin validar catálogo | 356974 |
+| DIAG1 con forma CIE-10, sin validar catálogo | 361592 |
 | DIAG1 no blanco con otra forma (incluye *) | 0 |
-| DIAG1 con prefijo textual F | 10693 |
-| DIAG2 con forma CIE-10, sin validar catálogo | 21827 |
+| DIAG1 con prefijo textual F | 10821 |
+| DIAG2 con forma CIE-10, sin validar catálogo | 22121 |
 
 ### Cobertura anual y forma diagnóstica
 
@@ -192,7 +192,7 @@ SHA256 CSV: `01cd5779ede07925716c1f01561f87f0e73e3a870bf7fbdb2a217b1a0eed82ea`. 
 | --- | --- | --- | --- | --- |
 | 2024 | 126928 | 0 | 126928 | 3639 |
 | 2025 | 126466 | 0 | 126466 | 3676 |
-| 2026 | 103580 | 0 | 103580 | 3378 |
+| 2026 | 108198 | 0 | 108198 | 3506 |
 
 ### Ausencias y marcadores, sin recodificar
 
@@ -203,9 +203,9 @@ SHA256 CSV: `01cd5779ede07925716c1f01561f87f0e73e3a870bf7fbdb2a217b1a0eed82ea`. 
 | SEXO_NOMBRE | 0 | 0.000 | 0 |
 | EDAD_TIPO | 0 | 0.000 | 0 |
 | EDAD_CANT | 0 | 0.000 | 0 |
-| COD_COMUNA | 64 | 0.018 | 0 |
-| COMUNA | 64 | 0.018 | 0 |
-| NOMBRE_REGION | 64 | 0.018 | 0 |
+| COD_COMUNA | 65 | 0.018 | 0 |
+| COMUNA | 65 | 0.018 | 0 |
+| NOMBRE_REGION | 65 | 0.018 | 0 |
 | DIAG1 | 0 | 0.000 | 0 |
 | CAPITULO_DIAG1 | 2 | 0.001 | 0 |
 | GLOSA_CAPITULO_DIAG1 | 2 | 0.001 | 0 |
@@ -215,65 +215,65 @@ SHA256 CSV: `01cd5779ede07925716c1f01561f87f0e73e3a870bf7fbdb2a217b1a0eed82ea`. 
 | GLOSA_CATEGORIA_DIAG1 | 2 | 0.001 | 0 |
 | CODIGO_SUBCATEGORIA_DIAG1 | 2 | 0.001 | 0 |
 | GLOSA_SUBCATEGORIA_DIAG1 | 2 | 0.001 | 0 |
-| DIAG2 | 335147 | 93.886 | 0 |
-| CAPITULO_DIAG2 | 335147 | 93.886 | 0 |
-| GLOSA_CAPITULO_DIAG2 | 335147 | 93.886 | 0 |
-| CODIGO_GRUPO_DIAG2 | 335147 | 93.886 | 0 |
-| GLOSA_GRUPO_DIAG2 | 335147 | 93.886 | 0 |
-| CODIGO_CATEGORIA_DIAG2 | 335147 | 93.886 | 0 |
-| GLOSA_CATEGORIA_DIAG2 | 335147 | 93.886 | 0 |
-| CODIGO_SUBCATEGORIA_DIAG2 | 335147 | 93.886 | 0 |
-| GLOSA_SUBCATEGORIA_DIAG2 | 335147 | 93.886 | 0 |
+| DIAG2 | 339471 | 93.882 | 0 |
+| CAPITULO_DIAG2 | 339471 | 93.882 | 0 |
+| GLOSA_CAPITULO_DIAG2 | 339471 | 93.882 | 0 |
+| CODIGO_GRUPO_DIAG2 | 339471 | 93.882 | 0 |
+| GLOSA_GRUPO_DIAG2 | 339471 | 93.882 | 0 |
+| CODIGO_CATEGORIA_DIAG2 | 339471 | 93.882 | 0 |
+| GLOSA_CATEGORIA_DIAG2 | 339471 | 93.882 | 0 |
+| CODIGO_SUBCATEGORIA_DIAG2 | 339471 | 93.882 | 0 |
+| GLOSA_SUBCATEGORIA_DIAG2 | 339471 | 93.882 | 0 |
 | LUGAR_DEFUNCION | 0 | 0.000 | 0 |
 
 ### Sexo publicado
 
 | Valor agregado | Filas |
 | --- | --- |
-| Hombre | 185563 |
+| Hombre | 187951 |
 | Indeterminado | 11 |
-| Mujer | 171400 |
+| Mujer | 173630 |
 
 ### Región publicada
 
 | Valor agregado | Filas |
 | --- | --- |
-| (blanco) | 64 |
-| De Aisén del Gral. C. Ibáñez del Campo | 1691 |
-| De Antofagasta | 10118 |
-| De Arica y Parinacota | 4545 |
-| De Atacama | 5461 |
-| De Coquimbo | 15714 |
-| De La Araucanía | 21700 |
-| De Los Lagos | 17741 |
-| De Los Ríos | 8855 |
-| De Magallanes y de La Antártica Chilena | 3425 |
-| De Tarapacá | 5061 |
-| De Valparaíso | 42864 |
-| De Ñuble | 11858 |
-| Del Bíobío | 32823 |
-| Del Libertador B. O'Higgins | 19923 |
-| Del Maule | 23134 |
-| Ignorada | 30 |
-| Metropolitana de Santiago | 131967 |
+| (blanco) | 65 |
+| De Aisén del Gral. C. Ibáñez del Campo | 1713 |
+| De Antofagasta | 10259 |
+| De Arica y Parinacota | 4624 |
+| De Atacama | 5536 |
+| De Coquimbo | 15900 |
+| De La Araucanía | 21977 |
+| De Los Lagos | 17982 |
+| De Los Ríos | 8973 |
+| De Magallanes y de La Antártica Chilena | 3465 |
+| De Tarapacá | 5130 |
+| De Valparaíso | 43408 |
+| De Ñuble | 12022 |
+| Del Bíobío | 33272 |
+| Del Libertador B. O'Higgins | 20177 |
+| Del Maule | 23430 |
+| Ignorada | 31 |
+| Metropolitana de Santiago | 133628 |
 
 ### Lugar de defunción publicado
 
 | Valor agregado | Filas |
 | --- | --- |
-| Casa habitación | 178975 |
-| Hospital o Clínica | 146412 |
-| Otro | 31587 |
+| Casa habitación | 181248 |
+| Hospital o Clínica | 148363 |
+| Otro | 31981 |
 
 ### Cantidad de edad por unidad publicada
 
 | EDAD_TIPO | Filas | Mínimo | Máximo | No numérico | Negativo | Literal 999 |
 | --- | --- | --- | --- | --- | --- | --- |
 | 0 | 9 | 0 | 0 | 0 | 0 | 0 |
-| 1 | 354437 | 1 | 140 | 0 | 0 | 0 |
-| 2 | 594 | 1 | 11 | 0 | 0 | 0 |
-| 3 | 949 | 1 | 30 | 0 | 0 | 0 |
-| 4 | 985 | 1 | 23 | 0 | 0 | 0 |
+| 1 | 359012 | 1 | 140 | 0 | 0 | 0 |
+| 2 | 602 | 1 | 11 | 0 | 0 | 0 |
+| 3 | 962 | 1 | 30 | 0 | 0 | 0 |
+| 4 | 1007 | 1 | 23 | 0 | 0 | 0 |
 
 ## Hallazgos de salud mental y suicidio
 
@@ -420,7 +420,7 @@ Los códigos numéricos históricos no se interpretan como CIE-10; la ausencia d
 | 2023 | 2056 | 615 | 0 | 0 |
 | 2024 | 1984 | 662 | 0 | 0 |
 | 2025 | 1927 | 573 | 1 | 1 |
-| 2026 | 1458 | 435 | 0 | 0 |
+| 2026 | 1553 | 461 | 0 | 0 |
 
 2026 es parcial; consultar el corte observado en las secciones por paquete. No comparar directamente años parciales y completos ni inferir tendencias de riesgo desde estos conteos: se requieren denominadores y ajustes apropiados. La causa de diferencias históricas y la magnitud del subregistro no son identificables aquí. No es posible determinarlo con los datos disponibles.
 

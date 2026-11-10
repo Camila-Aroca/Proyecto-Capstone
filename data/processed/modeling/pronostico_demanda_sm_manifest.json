@@ -1,7 +1,7 @@
 {
   "dataset": "pronostico_demanda_sm",
-  "generado_en_utc": "2026-10-11T04:42:26.138181Z",
-  "generado_en_chile": "2026-10-11T01:42:26.141571-03:00",
+  "generado_en_utc": "2026-11-10T23:00:32.504878Z",
+  "generado_en_chile": "2026-11-10T20:00:32.516574-03:00",
   "modelo": "hibrido_glm_region_lgbm_comuna_conformal",
   "nivel_intervalo": 0.8,
   "horizontes": [
@@ -16,9 +16,9 @@
   ],
   "semilla": 42,
   "ultima_semana_observada": {
-    "t": 298,
+    "t": 303,
     "ano": 2026,
-    "semana": 39
+    "semana": 44
   },
   "series": {
     "total": 51,
@@ -37,7 +37,7 @@
     }
   },
   "versiones": {
-    "python": "3.12.5",
+    "python": "3.12.6",
     "pandas": "3.0.5",
     "numpy": "2.5.2",
     "pyarrow": "25.0.1",

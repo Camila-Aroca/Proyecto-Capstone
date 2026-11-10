@@ -355,6 +355,18 @@
         "raw_filename": "AtencionesUrgencia2026.csv",
         "raw_size": 1535120865,
         "raw_sha256": "c26ddb054460b2557b6075c145c941ceaa851d71e0f5c560f2244eb3ccc3f724"
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/SistemaAtencionesUrgencia/AtencionesUrgencia2026.zip",
+        "downloaded_at": "2026-11-10T22:50:10.036647+00:00",
+        "zip_filename": "deis_urgencias_2026_AtencionesUrgencia2026.zip",
+        "zip_size": 48281808,
+        "zip_sha256": "a15b4bf60581fa8c8d027aec0797a3e8446fa0d351c78cf648849fac0f5c8afa",
+        "archive_member": "AtencionesUrgencia2026.csv",
+        "raw_path": "data/raw/urgencias/AtencionesUrgencia2026.csv",
+        "raw_filename": "AtencionesUrgencia2026.csv",
+        "raw_size": 1726151513,
+        "raw_sha256": "e58789a1ea3cbdd7d085f9d1b837933ccf6a22d0c63831b37cd2cc89e10ca5ab"
       }
     ]
   },
@@ -1122,5 +1134,55 @@
     "dataset": "deis_rem20_diccionario",
     "institucion": "Ministerio de Salud, DEIS (publicado en datos.gob.cl)",
     "alcance": "Diccionario de campos de los indicadores hospitalarios REM-20"
+  },
+  {
+    "source_id": "deis_defunciones_2024_2026_10112026",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip",
+        "downloaded_at": "2026-11-10T23:03:41.313540+00:00",
+        "raw_path": "data/raw/defunciones/2024_2026_10112026/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.csv",
+        "raw_filename": "DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.csv",
+        "raw_size": 109442787,
+        "raw_sha256": "51bf6485bbc475fc122d36f78cda122be16cdc849c3f819681287b5d03f167d3",
+        "transport": {
+          "filename": "DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip",
+          "size": 13107008,
+          "sha256": "9f8d6f385a237a2dc84845ab96855c5edc07143f1a235c1bc20dc69bbfd9165d",
+          "Last-Modified": "Tue, 10 Nov 2026 19:43:27 GMT",
+          "ETag": "\"d127c6c14b71dd1:0\"",
+          "downloaded_at": "2026-11-10T23:03:41.313540+00:00",
+          "archive_member": "DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.csv"
+        }
+      }
+    ],
+    "dataset": "defunciones",
+    "periodo": "2024-2026",
+    "estado_fuente": "cifras_preliminares"
+  },
+  {
+    "source_id": "deis_defunciones_2024_2026_10112026_dictionary",
+    "snapshots": [
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip",
+        "downloaded_at": "2026-11-10T23:03:41.313540+00:00",
+        "raw_path": "data/raw/defunciones/2024_2026_10112026/Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
+        "raw_filename": "Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
+        "raw_size": 37148,
+        "raw_sha256": "298600901a454f91bfb5634359efdbcb163d8a61d6e1b8dcdae01768ec38c60f",
+        "transport": {
+          "filename": "DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip",
+          "size": 13107008,
+          "sha256": "9f8d6f385a237a2dc84845ab96855c5edc07143f1a235c1bc20dc69bbfd9165d",
+          "Last-Modified": "Tue, 10 Nov 2026 19:43:27 GMT",
+          "ETag": "\"d127c6c14b71dd1:0\"",
+          "downloaded_at": "2026-11-10T23:03:41.313540+00:00",
+          "archive_member": "Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx"
+        }
+      }
+    ],
+    "dataset": "defunciones",
+    "periodo": "2024-2026",
+    "estado_fuente": "cifras_preliminares"
   }
 ]

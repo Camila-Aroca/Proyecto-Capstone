@@ -30,8 +30,10 @@ ocurre en Urgencias). La grilla es completa: las 52 comunas por cada semana.
 anteriores o iguales a la última fecha de defunción del archivo. Las defunciones de
 los últimos días tardan en inscribirse: `registro_completo` es False para las
 semanas finales cuyas defunciones por todas las causas de la RM, por día, caen bajo
-`UMBRAL_REGISTRO` veces la mediana de las `SEMANAS_REFERENCIA` semanas previas. Se
-marca, no se corrige ni se imputa; el modelo solo usa semanas completas.
+`UMBRAL_REGISTRO` veces la mediana de las `SEMANAS_REFERENCIA` semanas previas.
+También alerta si el último día cae bajo la mitad de la mediana de los ocho
+días equivalentes anteriores. Se marca, no se corrige ni se imputa; superar las
+alertas no demuestra completitud y el modelo usa solo semanas no marcadas.
 """
 
 from __future__ import annotations
@@ -74,6 +76,8 @@ SEMANA_FRAGMENTO: Final[int] = 53
 # observada del período, es inscripción pendiente. Cifras recalculadas en el EDA.
 SEMANAS_REFERENCIA: Final[int] = 8
 UMBRAL_REGISTRO: Final[float] = 0.75
+# Alerta conservadora del último día, contrastado con ocho días equivalentes.
+UMBRAL_ULTIMO_DIA: Final[float] = 0.5
 
 KEY: Final[tuple[str, ...]] = ("comuna_codigo", "ano", "semana")
 SCHEMA: Final[pa.Schema] = pa.schema([
@@ -182,6 +186,30 @@ def marcar_registro(semanal_rm: pd.DataFrame, umbral: float = UMBRAL_REGISTRO,
     return pd.Series(completo, index=semanal_rm.index)
 
 
+def marcar_registro_diario(semanal_rm: pd.DataFrame, diarios_rm: pd.Series,
+                           umbral: float = UMBRAL_ULTIMO_DIA,
+                           referencia: int = SEMANAS_REFERENCIA) -> pd.Series:
+    """Alerta en semanas finales si su último día cae frente a días equivalentes.
+
+    Es una alerta conservadora, no una prueba de completitud. No evalúa días
+    interiores de la semana ni marca cuando faltan ocho semanas de historia.
+    """
+    completo = pd.Series(True, index=semanal_rm.index)
+    if diarios_rm.empty:
+        return completo
+    inicio = min(diarios_rm.index)
+    for i in reversed(semanal_rm.index):
+        dia = semanal_rm.loc[i, "fecha_fin_semana"]
+        fechas = [dia - timedelta(days=7 * n) for n in range(1, referencia + 1)]
+        if min(fechas) < inicio:
+            break
+        mediana = float(np.median([diarios_rm.get(fecha, 0) for fecha in fechas]))
+        if mediana <= 0 or diarios_rm.get(dia, 0) >= umbral * mediana:
+            break
+        completo.loc[i] = False
+    return completo
+
+
 def build(defunciones: pd.DataFrame, comunas: pd.DataFrame, poblacion: pd.DataFrame,
           desde: date, corte: date) -> pd.DataFrame:
     """Grilla completa comuna x semana DEIS hasta la última semana con todos sus días observados."""
@@ -217,7 +245,9 @@ def build(defunciones: pd.DataFrame, comunas: pd.DataFrame, poblacion: pd.DataFr
     totales = mart.groupby(["ano", "semana"])["defunciones_total"].sum()
     regulares["defunciones_total"] = totales.reindex(
         pd.MultiIndex.from_frame(regulares[["ano", "semana"]])).to_numpy()
-    regulares["registro_completo"] = marcar_registro(regulares.reset_index(drop=True)).to_numpy()
+    regulares = regulares.reset_index(drop=True)
+    diarios = defunciones.groupby("fecha_defuncion").size()
+    regulares["registro_completo"] = (marcar_registro(regulares) & marcar_registro_diario(regulares, diarios)).to_numpy()
     mart = mart.merge(regulares[["ano", "semana", "registro_completo"]], on=["ano", "semana"], how="left")
     # Los fragmentos (semana 53) no entran al modelo; se publican como observados.
     mart["registro_completo"] = mart["registro_completo"].fillna(True).astype(bool)

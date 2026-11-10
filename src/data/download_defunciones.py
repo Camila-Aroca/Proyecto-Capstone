@@ -10,12 +10,14 @@ import json
 import logging
 import os
 from pathlib import Path
+import re
 import shutil
 import ssl
 import stat
 from tempfile import TemporaryDirectory
 from typing import Any
 import urllib.request
+from urllib.parse import urlsplit
 import zipfile
 
 from openpyxl import load_workbook
@@ -60,18 +62,97 @@ class DefuncionesSource:
         return "deis_defunciones_" + self.key
 
 
-DEFUNCIONES_SOURCES = (
-    DefuncionesSource("1990_2023", "DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES",
-                      1990, 2023, "cifras_oficiales_segun_nombre_fuente"),
-    DefuncionesSource("2024_2026_27102026", "DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026",
-                      2024, 2026, "snapshot_fechado_27102026_sin_afirmar_cierre_anual"),
-)
+OFFICIAL_SOURCE = DefuncionesSource("1990_2023", "DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES",
+                                   1990, 2023, "cifras_oficiales_segun_nombre_fuente")
+
+
+def preliminary_source_from_catalog(rows: list[dict[str, Any]]) -> DefuncionesSource:
+    """Acepta exactamente un enlace preliminar publicado por el catálogo DEIS."""
+    pattern = re.compile(r"https://repositoriodeis\.minsal\.cl/DatosAbiertos/VITALES/"
+                         r"DEFUNCIONES_FUENTE_DEIS_(\d{4})_(\d{4})_(\d{8})\.zip")
+    sources = []
+    for row in rows:
+        value = row.get("value", {})
+        if value.get("filtro_1") != "Defunciones" or "CIFRAS PRELIMINARES" not in value.get("nombre", "").upper():
+            continue
+        match = pattern.fullmatch(value.get("ver", ""))
+        if match is None:
+            raise ValueError("Enlace preliminar DEIS inesperado.")
+        first, last, published = match.groups()
+        dt.datetime.strptime(published, "%d%m%Y")
+        if int(first) > int(last):
+            raise ValueError("Periodo preliminar inválido.")
+        key = f"{first}_{last}_{published}"
+        sources.append(DefuncionesSource(key, f"DEFUNCIONES_FUENTE_DEIS_{key}",
+                                         int(first), int(last), "cifras_preliminares"))
+    if len(sources) != 1:
+        raise ValueError("El catálogo debe tener exactamente una fuente preliminar de defunciones.")
+    return sources[0]
+
+
+def discover_preliminary_source() -> DefuncionesSource:
+    """Consulta la tabla pública Datos Abiertos; falla si cambia su contrato."""
+    headers = {"User-Agent": "Mozilla/5.0"}
+    request = urllib.request.Request("https://deis.minsal.cl/", headers=headers)
+    with urllib.request.urlopen(request, timeout=120) as response:
+        page = response.read(8 * 1024 * 1024).decode("utf-8")
+    configs = []
+    for raw in re.findall(r"window\['ninja_table_instance_\d+'\]\s*=\s*(\{.*?\});", page):
+        config = json.loads(raw)
+        if config.get("title") == "Datos Abiertos":
+            configs.append(config)
+    if len(configs) != 1:
+        raise ValueError("Catálogo DEIS sin una tabla Datos Abiertos inequívoca.")
+    url = configs[0]["init_config"]["data_request_url"]
+    parts = urlsplit(url)
+    if parts.scheme != "https" or parts.netloc != "deis.minsal.cl" or parts.path != "/deisajax":
+        raise ValueError("URL de tabla DEIS inesperada.")
+    with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=120) as response:
+        rows = json.loads(response.read(8 * 1024 * 1024))
+    if not isinstance(rows, list):
+        raise ValueError("Respuesta del catálogo DEIS inesperada.")
+    return preliminary_source_from_catalog(rows)
+
+
+def active_preliminary_source(entries: list[dict[str, Any]]) -> DefuncionesSource:
+    candidates: list[tuple[dt.datetime, DefuncionesSource]] = []
+    for entry in entries:
+        source_id = entry.get("source_id", "")
+        if not re.fullmatch(r"deis_defunciones_\d{4}_\d{4}_\d{8}", source_id):
+            continue
+        snapshots = entry.get("snapshots", [])
+        if not snapshots:
+            raise ValueError("Snapshot preliminar sin procedencia.")
+        value = {"filtro_1": "Defunciones", "nombre": "CIFRAS PRELIMINARES",
+                 "ver": snapshots[-1].get("source_url", "")}
+        source = preliminary_source_from_catalog([{"value": value}])
+        if source.source_id != source_id:
+            raise ValueError("Identificador preliminar no corresponde a la URL.")
+        candidates.append((dt.datetime.strptime(source.key[-8:], "%d%m%Y"), source))
+    if not candidates:
+        raise ValueError("No hay snapshot preliminar registrado.")
+    candidates.sort(key=lambda candidate: candidate[0])
+    if len(candidates) > 1 and candidates[-1][0] == candidates[-2][0]:
+        raise ValueError("Snapshots preliminares ambiguos.")
+    active = candidates[-1][1]
+    if any(active.first_year > source.first_year or active.last_year < source.last_year
+           for _, source in candidates[:-1]):
+        raise ValueError("El periodo preliminar reciente no cubre los snapshots anteriores.")
+    return active
+
+
+def active_sources(manifest_path: Path = MANIFEST_PATH) -> tuple[DefuncionesSource, DefuncionesSource]:
+    entries = json.loads(manifest_path.read_text(encoding="utf-8"))
+    return OFFICIAL_SOURCE, active_preliminary_source(entries)
 
 
 def source_for_csv(path: Path) -> DefuncionesSource:
-    for source in DEFUNCIONES_SOURCES:
-        if path.name == source.csv_filename:
-            return source
+    if path.name == OFFICIAL_SOURCE.csv_filename:
+        return OFFICIAL_SOURCE
+    if re.fullmatch(r"DEFUNCIONES_FUENTE_DEIS_\d{4}_\d{4}_\d{8}\.csv", path.name):
+        url = "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/" + path.stem + ".zip"
+        return preliminary_source_from_catalog([{"value": {"filtro_1": "Defunciones",
+                                               "nombre": "CIFRAS PRELIMINARES", "ver": url}}])
     raise ValueError("CSV de Defunciones no configurado.")
 
 
@@ -271,13 +352,33 @@ def ingest_source(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--force", action="store_true", help="Solicitar nuevamente ambos paquetes oficiales.")
+    parser.add_argument("--force", action="store_true", help="Consultar el catálogo y actualizar el paquete preliminar.")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
     failures = []
-    for source in DEFUNCIONES_SOURCES:
+    try:
+        active = active_sources()[1]
+    except FileNotFoundError:
+        active = None
+    except ValueError as error:
+        if "No hay snapshot preliminar registrado" not in str(error):
+            raise
+        active = None
+    active_raw_missing = active is not None and not all(
+        (DEST_DIR / active.key / name).is_file()
+        for name in (active.csv_filename, DICTIONARY_FILENAME)
+    )
+    if args.force or active is None or active_raw_missing:
+        preliminary = discover_preliminary_source()
+        if active is not None and dt.datetime.strptime(preliminary.key[-8:], "%d%m%Y") < dt.datetime.strptime(active.key[-8:], "%d%m%Y"):
+            raise ValueError("El catálogo retrocede respecto del snapshot registrado.")
+        if active is not None and (preliminary.first_year > active.first_year or preliminary.last_year < active.last_year):
+            raise ValueError("El periodo preliminar nuevo no cubre el snapshot anterior.")
+    else:
+        preliminary = active
+    for source in (OFFICIAL_SOURCE, preliminary):
         try:
-            ingest_source(source, force=args.force)
+            ingest_source(source, force=args.force and source == preliminary)
         except Exception as error:
             logger.error("%s: %s: %s", source.key, type(error).__name__, error)
             failures.append(source.key)

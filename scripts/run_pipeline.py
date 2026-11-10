@@ -78,12 +78,7 @@ STAGES = {
     },
     "download_defunciones": {
         "module": "src.data.download_defunciones",
-        "outputs": [
-            "data/raw/defunciones/1990_2023/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv",
-            "data/raw/defunciones/1990_2023/Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
-            "data/raw/defunciones/2024_2026_27102026/DEFUNCIONES_FUENTE_DEIS_2024_2026_27102026.csv",
-            "data/raw/defunciones/2024_2026_27102026/Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
-        ],
+        "outputs": [],  # Derivados del manifiesto por stage_outputs, no de una fecha fija.
         "depends_on": []
     },
     "eda_defunciones": {
@@ -625,6 +620,14 @@ def require_stage_outputs(stage_name: str, outputs: list[str]) -> None:
 def stage_outputs(stage_name: str, year: int | None = None) -> list[str]:
     """Devuelve outputs de la etapa, acotados al año si corresponde."""
     if year is None:
+        if stage_name == "download_defunciones":
+            from src.data.download_defunciones import active_sources, DEST_DIR, DICTIONARY_FILENAME
+            try:
+                sources = active_sources()
+            except (FileNotFoundError, ValueError):
+                return STAGES[stage_name]["outputs"]
+            return [str(DEST_DIR / source.key / name) for source in sources
+                    for name in (source.csv_filename, DICTIONARY_FILENAME)]
         return STAGES[stage_name]["outputs"]
     if stage_name != "clean_urgencias":
         raise ValueError("--year solo está disponible para clean_urgencias.")
@@ -686,7 +689,7 @@ def run_stage(
                 logger.warning("El Parquet urgencias_rm_%s no corresponde al RAW vigente: "
                                "se regenera aunque el snapshot no cambió.", ingest_year)
             return published or stale
-        require_stage_outputs(stage_name, outputs)
+        require_stage_outputs(stage_name, stage_outputs(stage_name, year))
         logger.info(f"[EXITO] Etapa '{stage_name}' finalizada correctamente.\n")
         return True
     except subprocess.CalledProcessError as e:
