@@ -39,7 +39,11 @@ infra/aws/scripts/desplegar.sh 8d81b38 1
 
 La URL aparece en la salida `Url` del paso 4.
 
-`desplegar.sh` también construye el frontend (`npm run build`) y lo publica en el bucket del sitio. El valor del encabezado secreto CloudFront → ALB se genera la primera vez en `infra/aws/cdk/.origin-secret`, que está fuera de Git.
+`desplegar.sh` también construye el frontend (`npm run build`) y lo publica en el bucket del sitio.
+
+## Configuración local (`infra/aws/.env`)
+
+Los datos propios de cada cuenta (número de cuenta, encabezado secreto CloudFront → ALB, nombres de buckets, URL) van en `infra/aws/.env`, que está fuera de Git. Copiar [`infra/aws/.env.example`](../.env.example) y completarlo; los scripts lo leen solos, y una variable definida en la terminal tiene prioridad. `desplegar.sh` genera `SAAD_ORIGIN_SECRET` la primera vez si falta. CDK escribe además `cdk.context.json` con datos de la cuenta; también queda fuera de Git.
 
 ## Operación
 

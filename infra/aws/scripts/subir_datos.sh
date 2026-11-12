@@ -4,10 +4,8 @@
 # Uso: infra/aws/scripts/subir_datos.sh [--sin-reinicio]
 set -euo pipefail
 
-REGION="${AWS_REGION:-us-east-1}"
-export AWS_REGION="$REGION" AWS_DEFAULT_REGION="$REGION"   # el perfil puede no tener región
+source "$(dirname "${BASH_SOURCE[0]}")/_entorno.sh"   # RAIZ, REGION e infra/aws/.env
 PILA="${SAAD_STACK:-Saad}"
-RAIZ="$(git rev-parse --show-toplevel)"
 cd "$RAIZ"
 
 salida() {

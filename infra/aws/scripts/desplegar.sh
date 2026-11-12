@@ -8,19 +8,17 @@ set -euo pipefail
 
 TAG="${1:?Indica la etiqueta de la imagen (salida de publicar_imagen.sh)}"
 DESEADAS="${2:-1}"
-REGION="${AWS_REGION:-us-east-1}"
-export AWS_REGION="$REGION" AWS_DEFAULT_REGION="$REGION"   # el perfil puede no tener región
-RAIZ="$(git rev-parse --show-toplevel)"
-SECRETO_ARCHIVO="$RAIZ/infra/aws/cdk/.origin-secret"
+source "$(dirname "${BASH_SOURCE[0]}")/_entorno.sh"   # RAIZ, REGION e infra/aws/.env
 
 PREFIX_LIST="$(aws ec2 describe-managed-prefix-lists --region "$REGION" \
   --filters Name=prefix-list-name,Values=com.amazonaws.global.cloudfront.origin-facing \
   --query 'PrefixLists[0].PrefixListId' --output text)"
 
-# El encabezado secreto CloudFront → ALB se genera una vez y se guarda fuera de Git.
-if [[ ! -s "$SECRETO_ARCHIVO" ]]; then
-  openssl rand -hex 24 > "$SECRETO_ARCHIVO"
-  chmod 600 "$SECRETO_ARCHIVO"
+# El encabezado secreto CloudFront → ALB se genera una vez y se guarda en infra/aws/.env.
+if [[ -z "${SAAD_ORIGIN_SECRET:-}" ]]; then
+  SAAD_ORIGIN_SECRET="$(openssl rand -hex 24)"
+  touch "$ENV_AWS" && chmod 600 "$ENV_AWS"
+  printf '\nSAAD_ORIGIN_SECRET=%s\n' "$SAAD_ORIGIN_SECRET" >> "$ENV_AWS"
 fi
 
 (cd "$RAIZ/frontend" && npm ci && npm run build)
@@ -39,4 +37,4 @@ npx --yes aws-cdk@2 deploy Saad --require-approval never \
   -c api_memory="${SAAD_API_MEMORY:-2048}" \
   -c api_pronostico_desactualizado="${SAAD_USAR_PRONOSTICO_DESACTUALIZADO:-0}" \
   -c cloudfront_prefix_list="$PREFIX_LIST" \
-  -c origin_secret="$(cat "$SECRETO_ARCHIVO")"
+  -c origin_secret="$SAAD_ORIGIN_SECRET"
