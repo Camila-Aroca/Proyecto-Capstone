@@ -59,3 +59,25 @@ Los datos propios de cada cuenta (número de cuenta, encabezado secreto CloudFro
 ## Cómo obtiene sus datos la API
 
 Al arrancar, el contenedor ejecuta `src/cloud/api_arranque.py`: si existe `SAAD_S3_BUCKET` (la pila lo define), baja `data/` y `reports/` del bucket de datos y luego inicia `uvicorn`. El rol de la tarea solo puede leer ese bucket. Si la descarga falla, la tarea termina con error en vez de servir una API sin datos. Sin `SAAD_S3_BUCKET` (Docker Compose) usa el volumen montado, como antes.
+
+## Alarmas
+
+La pila crea estas alarmas de CloudWatch. Todas avisan al tema SNS `Alarmas SAAD` al entrar en alarma y al volver a OK:
+
+| Alarma | Se activa cuando |
+|---|---|
+| `saad-api-sin-tareas-sanas` | No hay ninguna tarea sana detrás del ALB durante 3 minutos (solo si la API está encendida) |
+| `saad-api-errores-5xx` | La API responde 10 o más errores 5xx en 5 minutos |
+| `saad-alb-errores-5xx` | El ALB genera 5 o más errores 5xx propios (502/503/504) en 5 minutos |
+| `saad-api-memoria-alta` | La tarea usa 90 % o más de memoria durante 10 minutos |
+| `saad-api-cpu-alta` | La tarea usa 90 % o más de CPU durante 15 minutos |
+| `saad-api-errores-en-logs` | La API escribe `[ERROR]` o `Traceback` en sus logs |
+| `saad-cloudfront-errores-5xx` | Más del 5 % de las solicitudes a CloudFront terminan en 5xx durante 10 minutos |
+
+Para recibirlas por correo, definir `SAAD_ALARM_EMAIL` en `infra/aws/.env` antes de desplegar y aceptar el correo de confirmación que envía AWS. Costo aproximado: US$0,10 por alarma al mes.
+
+Ver el estado de las alarmas:
+
+```bash
+aws cloudwatch describe-alarms --alarm-name-prefix saad- --query "MetricAlarms[].[AlarmName,StateValue]" --output table
+```

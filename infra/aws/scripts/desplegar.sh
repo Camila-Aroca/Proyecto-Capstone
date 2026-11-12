@@ -36,5 +36,6 @@ npx --yes aws-cdk@2 deploy Saad --require-approval never \
   -c api_cpu="${SAAD_API_CPU:-512}" \
   -c api_memory="${SAAD_API_MEMORY:-2048}" \
   -c api_pronostico_desactualizado="${SAAD_USAR_PRONOSTICO_DESACTUALIZADO:-0}" \
+  -c alarm_email="${SAAD_ALARM_EMAIL:-}" \
   -c cloudfront_prefix_list="$PREFIX_LIST" \
   -c origin_secret="$SAAD_ORIGIN_SECRET"
