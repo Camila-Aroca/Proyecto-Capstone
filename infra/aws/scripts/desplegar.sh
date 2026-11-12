@@ -9,6 +9,7 @@ set -euo pipefail
 TAG="${1:?Indica la etiqueta de la imagen (salida de publicar_imagen.sh)}"
 DESEADAS="${2:-1}"
 REGION="${AWS_REGION:-us-east-1}"
+export AWS_REGION="$REGION" AWS_DEFAULT_REGION="$REGION"   # el perfil puede no tener región
 RAIZ="$(git rev-parse --show-toplevel)"
 SECRETO_ARCHIVO="$RAIZ/infra/aws/cdk/.origin-secret"
 

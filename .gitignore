@@ -73,3 +73,5 @@ PENDIENTES_DOCKER.md
 infra/aws/cdk/.venv/
 infra/aws/cdk/cdk.out/
 infra/aws/cdk/.origin-secret
+infra/aws/cdk/cdk.context.json
+infra/aws/.env

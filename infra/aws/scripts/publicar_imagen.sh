@@ -4,6 +4,7 @@
 set -euo pipefail
 
 REGION="${AWS_REGION:-us-east-1}"
+export AWS_REGION="$REGION" AWS_DEFAULT_REGION="$REGION"   # el perfil puede no tener región
 REPO="${SAAD_ECR_REPO:-saad-api}"
 RAIZ="$(git rev-parse --show-toplevel)"
 cd "$RAIZ"
