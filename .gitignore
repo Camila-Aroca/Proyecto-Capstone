@@ -67,3 +67,9 @@ scratch/
 
 # Notas locales
 PENDIENTES_DOCKER.md
+.notas-locales/
+
+# Infraestructura AWS (CDK)
+infra/aws/cdk/.venv/
+infra/aws/cdk/cdk.out/
+infra/aws/cdk/.origin-secret

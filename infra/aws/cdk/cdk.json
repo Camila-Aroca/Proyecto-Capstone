@@ -1,0 +1,7 @@
+{
+  "app": "python3 app.py",
+  "context": {
+    "api_desired_count": "1",
+    "ecr_repo": "saad-api"
+  }
+}

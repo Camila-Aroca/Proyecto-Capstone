@@ -33,4 +33,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/salud', timeout=4)"
 
-CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Con SAAD_S3_BUCKET baja sus datos desde S3 antes de iniciar uvicorn (src/cloud/api_arranque.py).
+CMD ["python", "-m", "src.cloud.api_arranque"]
