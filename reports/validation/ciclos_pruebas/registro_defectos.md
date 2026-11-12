@@ -7,18 +7,24 @@ Columnas: **ID** · **Título** · **Criticidad** · **Entorno** · **Detectado 
 
 ---
 
-## Defectos de datos y outputs del pipeline
+## Defectos de datos y outputs del pipeline (cerrados en el ciclo 4)
 
-Estos defectos bloquean múltiples casos del catálogo porque la API responde 404 o 503 cuando
-falta el archivo de entrada. La corrección depende de que se ejecute el pipeline con los stages
-correspondientes y se publiquen los outputs con `subir_datos.sh`.
+Estos defectos bloqueaban múltiples casos del catálogo porque la API respondía 404 o 503 cuando
+faltaba el archivo de entrada. Se cerraron ejecutando el pipeline con los stages correspondientes
+y publicando los outputs con `subir_datos.sh`.
 
 | ID | Título | Criticidad | Entorno | Detectado en | Responsable | Corrección | Retest | Estado |
 |---|---|---|---|---|---|---|---|---|
 | DEF-01 | `camas-psiquiatria` responde 404: falta `dim_camas_psiquiatria_hospital_rm` | Alta | LOCAL · AWS | Ciclo 1 (CP-025) | Felipe (pipeline) | Pipeline ejecutado con `--sin-evaluacion` (stage `build_dim_camas_psiquiatria_hospital_rm`); publicado con `subir_datos.sh`; API local y ECS reiniciados para tomar los datos | Ciclo 4: CP-025 APROBADO en LOCAL y AWS | **Cerrado** |
 | DEF-02 | Establecimientos responde 503: falta `mart_urgencias_establecimiento_weekly` y su pronóstico | Alta | LOCAL · AWS | Ciclo 1 (CP-037) | Felipe (pipeline) / Cristopher (API) | Pipeline ejecutado con `--sin-evaluacion` (stage `build_urgencias_establecimiento_weekly_mart` y `forecast_establecimientos_sm`); publicado con `subir_datos.sh`; API redesplegada | Ciclo 4: CP-037 APROBADO en LOCAL y AWS | **Cerrado** |
 | DEF-03 | Suicidios responde 503: falta `mart_suicidios_comuna_weekly` en el pronóstico persistido | Alta | LOCAL · AWS | Ciclo 1 (CP-047) | Felipe (pipeline) | Pipeline ejecutado con `--sin-evaluacion` (stage `build_mart_suicidios_comuna_weekly` y `forecast_suicidios`); publicado con `subir_datos.sh`; API local y ECS reiniciados | Ciclo 4: CP-047 APROBADO en LOCAL y AWS | **Cerrado** |
-| DEF-04 | Pronóstico de urgencias desactualizado: JSON de selección no versionado en S3 | Alta | LOCAL · AWS | Ciclo 1 (meta `motivo_desactualizacion`) | Felipe (pipeline) / Cristopher (API) | Pipeline completo corrido el 2026-11-12 regenera los tres pronósticos con datos frescos; flag `SAAD_USAR_PRONOSTICO_DESACTUALIZADO` desactivado en el redespliegue (`95d00f8`). Causa raíz (JSON de selección no versionado en S3) sigue sin corregirse: si el pipeline no corre a tiempo, el pronóstico volverá a quedar desactualizado | Ciclo 4: pronóstico vigente, sin advertencia de desactualización | **Abierto (causa raíz pendiente; síntoma resuelto)** |
+| DEF-04 | Pronóstico de urgencias desactualizado: la selección de benchmark cambió sin regenerar el pronóstico | Alta | LOCAL · AWS | Ciclo 1 (meta `motivo_desactualizacion`) | Felipe (pipeline) / Cristopher (API) | El JSON de selección (`reports/modeling/benchmark_demanda_sm_seleccion.json`) ya se sube a S3 dentro de `reports/` con `subir_datos.sh`; la causa real era que alguien había actualizado la selección sin volver a ejecutar `forecast_demanda_sm`. Al correr el pipeline completo (`--sin-evaluacion`) el 2026-11-12, selección y pronóstico quedaron generados en la misma corrida y el SHA-256 vuelve a coincidir. Flag `SAAD_USAR_PRONOSTICO_DESACTUALIZADO` desactivado en el redespliegue (`95d00f8`) | Ciclo 4: pronóstico vigente, sin advertencia de desactualización | **Cerrado** |
+
+**Nota operativa (no es un defecto de código):** el pronóstico y la selección de benchmark pueden
+volver a desincronizarse si se modifica uno sin regenerar el otro. El pipeline detecta esto solo
+(comparando el SHA-256 de la selección contra el manifiesto) y recalcula automáticamente al
+correr sin `--sin-evaluacion` sobre la etapa de forecast, o con `--sin-evaluacion` si la selección
+no cambió. Mientras el equipo mantenga esa disciplina, el pronóstico se mantiene vigente.
 
 ### Hallazgo del retest: reinicio manual requerido tras publicar datos nuevos
 
@@ -89,10 +95,9 @@ carpeta de ciclo.
 | Estado | Defectos |
 |---|---|
 | Abierto | DEF-11 |
-| Abierto (causa raíz pendiente) | DEF-04 |
-| Cerrado | DEF-01, DEF-02, DEF-03, DEF-05, DEF-06, DEF-07, DEF-08, DEF-09, DEF-10 |
+| Cerrado | DEF-01, DEF-02, DEF-03, DEF-04, DEF-05, DEF-06, DEF-07, DEF-08, DEF-09, DEF-10 |
 
-DEF-01, DEF-02 y DEF-03 se cerraron en el ciclo 4 (2026-11-12) tras ejecutar el pipeline con
+DEF-01 a DEF-04 se cerraron en el ciclo 4 (2026-11-12) tras ejecutar el pipeline con
 `--sin-evaluacion`, publicar los outputs con `subir_datos.sh` y reiniciar la API en ambos
-entornos. DEF-04 queda con el síntoma resuelto (pronóstico vigente) pero la causa raíz (JSON de
-selección sin versionar en S3) sigue pendiente. DEF-11 sigue abierto.
+entornos (local con `docker compose restart api`, AWS con el redespliegue `95d00f8` y un nuevo
+`force-new-deployment`). Solo DEF-11 sigue abierto.
