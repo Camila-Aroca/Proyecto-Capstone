@@ -1,0 +1,640 @@
+{
+  "meta": {
+    "fecha_utc": "2026-11-12T13:17:20+00:00",
+    "commit": "22ccb27",
+    "imagen_aws": "90965fc",
+    "local": "http://localhost:8080",
+    "comando": "scripts/qa_e2e_local_vs_aws.py --reinicio"
+  },
+  "conteo": {
+    "APROBADO": 21,
+    "FALLIDO": 4,
+    "BLOQUEADO": 0,
+    "NO EJECUTADO": 6
+  },
+  "casos": [
+    {
+      "id": "CP-SAAD-017",
+      "nombre": "GET /api/v1/salud",
+      "entorno": "LOCAL+AWS",
+      "estado": "APROBADO",
+      "detalle": "Igual en LOCAL y AWS",
+      "evidencia": {
+        "local": {
+          "http": 200,
+          "ms": 25.9,
+          "estado": 200,
+          "estado_datos": "listo",
+          "estado_pronostico": "listo"
+        },
+        "aws": {
+          "http": 200,
+          "ms": 334.1,
+          "estado": 200,
+          "estado_datos": "listo",
+          "estado_pronostico": "listo"
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-018",
+      "nombre": "GET /api/v1/meta",
+      "entorno": "LOCAL+AWS",
+      "estado": "APROBADO",
+      "detalle": "Igual en LOCAL y AWS",
+      "evidencia": {
+        "local": {
+          "http": 200,
+          "ms": 74.4,
+          "estado": 200,
+          "modelo": "hibrido_glm_region_lgbm_comuna_conformal",
+          "ultima_semana_observada": {
+            "ano": 2026,
+            "semana": 39,
+            "fecha_inicio": "2026-09-27",
+            "atenciones": 2295.0
+          },
+          "horizontes": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "comunas_con_pronostico": 50
+        },
+        "aws": {
+          "http": 200,
+          "ms": 172.4,
+          "estado": 200,
+          "modelo": "hibrido_glm_region_lgbm_comuna_conformal",
+          "ultima_semana_observada": {
+            "ano": 2026,
+            "semana": 39,
+            "fecha_inicio": "2026-09-27",
+            "atenciones": 2295.0
+          },
+          "horizontes": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "comunas_con_pronostico": 50
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-019",
+      "nombre": "GET /api/v1/territorios",
+      "entorno": "LOCAL+AWS",
+      "estado": "APROBADO",
+      "detalle": "Igual en LOCAL y AWS",
+      "evidencia": {
+        "local": {
+          "http": 200,
+          "ms": 10.3,
+          "estado": 200,
+          "n": 53,
+          "ids": [
+            "13101",
+            "13102",
+            "13103",
+            "13104",
+            "13105",
+            "13106",
+            "13107",
+            "13108",
+            "13109",
+            "13110",
+            "13111",
+            "13112",
+            "13113",
+            "13114",
+            "13115",
+            "13116",
+            "13117",
+            "13118",
+            "13119",
+            "13120",
+            "13121",
+            "13122",
+            "13123",
+            "13124",
+            "13125",
+            "13126",
+            "13127",
+            "13128",
+            "13129",
+            "13130",
+            "13131",
+            "13132",
+            "13201",
+            "13202",
+            "13203",
+            "13301",
+            "13302",
+            "13303",
+            "13401",
+            "13402",
+            "13403",
+            "13404",
+            "13501",
+            "13502",
+            "13503",
+            "13504",
+            "13505",
+            "13601",
+            "13602",
+            "13603",
+            "13604",
+            "13605",
+            "RM"
+          ],
+          "con_pronostico": 51
+        },
+        "aws": {
+          "http": 200,
+          "ms": 241.7,
+          "estado": 200,
+          "n": 53,
+          "ids": [
+            "13101",
+            "13102",
+            "13103",
+            "13104",
+            "13105",
+            "13106",
+            "13107",
+            "13108",
+            "13109",
+            "13110",
+            "13111",
+            "13112",
+            "13113",
+            "13114",
+            "13115",
+            "13116",
+            "13117",
+            "13118",
+            "13119",
+            "13120",
+            "13121",
+            "13122",
+            "13123",
+            "13124",
+            "13125",
+            "13126",
+            "13127",
+            "13128",
+            "13129",
+            "13130",
+            "13131",
+            "13132",
+            "13201",
+            "13202",
+            "13203",
+            "13301",
+            "13302",
+            "13303",
+            "13401",
+            "13402",
+            "13403",
+            "13404",
+            "13501",
+            "13502",
+            "13503",
+            "13504",
+            "13505",
+            "13601",
+            "13602",
+            "13603",
+            "13604",
+            "13605",
+            "RM"
+          ],
+          "con_pronostico": 51
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-020",
+      "nombre": "GET /api/v1/series/RM",
+      "entorno": "LOCAL+AWS",
+      "estado": "APROBADO",
+      "detalle": "Igual en LOCAL y AWS",
+      "evidencia": {
+        "local": {
+          "http": 200,
+          "ms": 20.4,
+          "estado": 200,
+          "n_historico": 104,
+          "ultima_semana": {
+            "ano": 2026,
+            "semana": 39,
+            "fecha_inicio": "2026-09-27",
+            "atenciones": 2295.0
+          },
+          "n_pronostico": 8,
+          "primer_pronostico": {
+            "horizonte": 1,
+            "ano": 2026,
+            "semana": 45,
+            "fecha_inicio": "2026-11-08",
+            "pronostico": 2345.0,
+            "limite_inferior": 2004.5,
+            "limite_superior": 2643.0
+          }
+        },
+        "aws": {
+          "http": 200,
+          "ms": 171.6,
+          "estado": 200,
+          "n_historico": 104,
+          "ultima_semana": {
+            "ano": 2026,
+            "semana": 39,
+            "fecha_inicio": "2026-09-27",
+            "atenciones": 2295.0
+          },
+          "n_pronostico": 8,
+          "primer_pronostico": {
+            "horizonte": 1,
+            "ano": 2026,
+            "semana": 45,
+            "fecha_inicio": "2026-11-08",
+            "pronostico": 2345.0,
+            "limite_inferior": 2004.5,
+            "limite_superior": 2643.0
+          }
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-021",
+      "nombre": "GET /api/v1/series/99999",
+      "entorno": "LOCAL+AWS",
+      "estado": "APROBADO",
+      "detalle": "Igual en LOCAL y AWS",
+      "evidencia": {
+        "local": {
+          "http": 404,
+          "ms": 4.0,
+          "estado": 404
+        },
+        "aws": {
+          "http": 404,
+          "ms": 263.0,
+          "estado": 404
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-022",
+      "nombre": "GET /api/v1/pronosticos",
+      "entorno": "LOCAL+AWS",
+      "estado": "APROBADO",
+      "detalle": "Igual en LOCAL y AWS",
+      "evidencia": {
+        "local": {
+          "http": 200,
+          "ms": 20.2,
+          "estado": 200,
+          "n": 408
+        },
+        "aws": {
+          "http": 200,
+          "ms": 287.4,
+          "estado": 200,
+          "n": 408
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-023",
+      "nombre": "GET /api/v1/resumen-comunal",
+      "entorno": "LOCAL+AWS",
+      "estado": "APROBADO",
+      "detalle": "Igual en LOCAL y AWS",
+      "evidencia": {
+        "local": {
+          "http": 200,
+          "ms": 33.5,
+          "estado": 200,
+          "n": 52
+        },
+        "aws": {
+          "http": 200,
+          "ms": 175.9,
+          "estado": 200,
+          "n": 52
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-024",
+      "nombre": "GET /api/v1/geo/comunas",
+      "entorno": "LOCAL+AWS",
+      "estado": "APROBADO",
+      "detalle": "Igual en LOCAL y AWS",
+      "evidencia": {
+        "local": {
+          "http": 200,
+          "ms": 15.7,
+          "estado": 200,
+          "tipo": "FeatureCollection",
+          "n_features": 52
+        },
+        "aws": {
+          "http": 200,
+          "ms": 388.5,
+          "estado": 200,
+          "tipo": "FeatureCollection",
+          "n_features": 52
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-025",
+      "nombre": "GET /api/v1/camas-psiquiatria/RM",
+      "entorno": "LOCAL+AWS",
+      "estado": "FALLIDO",
+      "detalle": "LOCAL: HTTP 404 (se esperaba 200); AWS: HTTP 404 (se esperaba 200)",
+      "evidencia": {
+        "local": {
+          "http": 404,
+          "ms": 2.4,
+          "estado": 404
+        },
+        "aws": {
+          "http": 404,
+          "ms": 242.0,
+          "estado": 404
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-026",
+      "nombre": "GET /api/v1/calendario-eventos?desde=2025-11-01&hasta=2026-12-31",
+      "entorno": "LOCAL+AWS",
+      "estado": "APROBADO",
+      "detalle": "Igual en LOCAL y AWS",
+      "evidencia": {
+        "local": {
+          "http": 200,
+          "ms": 13.0,
+          "estado": 200,
+          "n": 16
+        },
+        "aws": {
+          "http": 200,
+          "ms": 147.4,
+          "estado": 200,
+          "n": 16
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-037",
+      "nombre": "GET /api/v1/establecimientos",
+      "entorno": "LOCAL+AWS",
+      "estado": "FALLIDO",
+      "detalle": "LOCAL: HTTP 503 (se esperaba 200); AWS: HTTP 503 (se esperaba 200)",
+      "evidencia": {
+        "local": {
+          "http": 503,
+          "ms": 11.2,
+          "estado": 503
+        },
+        "aws": {
+          "http": 503,
+          "ms": 131.5,
+          "estado": 503
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-037",
+      "nombre": "GET /api/v1/establecimientos-meta",
+      "entorno": "LOCAL+AWS",
+      "estado": "FALLIDO",
+      "detalle": "LOCAL: HTTP 503 (se esperaba 200); AWS: HTTP 503 (se esperaba 200)",
+      "evidencia": {
+        "local": {
+          "http": 503,
+          "ms": 2.3,
+          "estado": 503
+        },
+        "aws": {
+          "http": 503,
+          "ms": 261.9,
+          "estado": 503
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-047",
+      "nombre": "GET /api/v1/suicidios/RM",
+      "entorno": "LOCAL+AWS",
+      "estado": "FALLIDO",
+      "detalle": "LOCAL: HTTP 503 (se esperaba 200); AWS: HTTP 503 (se esperaba 200)",
+      "evidencia": {
+        "local": {
+          "http": 503,
+          "ms": 2.9,
+          "estado": 503
+        },
+        "aws": {
+          "http": 503,
+          "ms": 124.2,
+          "estado": 503
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-001",
+      "nombre": "Portal por HTTPS y CloudFront",
+      "entorno": "AWS",
+      "estado": "APROBADO",
+      "detalle": "HTTP 200, certificado TLS validado por el cliente, servido por 1.1 1fed814aaf4270ef08cf94d4ec58fe22.cloudfront.net (CloudFront)",
+      "evidencia": {
+        "http": 200,
+        "ms": 20.5,
+        "x-cache": "Hit from cloudfront"
+      }
+    },
+    {
+      "id": "CP-SAAD-060",
+      "nombre": "HTTP redirige a HTTPS",
+      "entorno": "AWS",
+      "estado": "APROBADO",
+      "detalle": "HTTP 301 → <URL_AWS>/",
+      "evidencia": {
+        "http": 301
+      }
+    },
+    {
+      "id": "CP-SAAD-003",
+      "nombre": "CloudFront enruta /api/* al ALB",
+      "entorno": "AWS",
+      "estado": "APROBADO",
+      "detalle": "HTTP 200, content-type application/json, cache Miss from cloudfront",
+      "evidencia": {
+        "http": 200,
+        "ms": 248.3
+      }
+    },
+    {
+      "id": "CP-SAAD-004",
+      "nombre": "Bucket del sitio privado (acceso anónimo directo a S3)",
+      "entorno": "AWS",
+      "estado": "APROBADO",
+      "detalle": "Acceso anónimo: HTTP 403 (se esperaba 403)",
+      "evidencia": {
+        "http": 403
+      }
+    },
+    {
+      "id": "CP-SAAD-062",
+      "nombre": "Bucket de datos privado (acceso anónimo directo a S3)",
+      "entorno": "AWS",
+      "estado": "APROBADO",
+      "detalle": "Acceso anónimo: HTTP 403 (se esperaba 403)",
+      "evidencia": {
+        "http": 403
+      }
+    },
+    {
+      "id": "CP-SAAD-062",
+      "nombre": "ALB inaccesible salvo desde CloudFront",
+      "entorno": "AWS",
+      "estado": "APROBADO",
+      "detalle": "Conexión directa al ALB rechazada o sin respuesta (TimeoutError)",
+      "evidencia": {}
+    },
+    {
+      "id": "CP-SAAD-005",
+      "nombre": "Tareas ECS en ejecución",
+      "entorno": "AWS",
+      "estado": "APROBADO",
+      "detalle": "running=1 desired=1, despliegue COMPLETED",
+      "evidencia": {
+        "tareas": 1
+      }
+    },
+    {
+      "id": "CP-SAAD-007",
+      "nombre": "Imagen ECR trazable a un commit",
+      "entorno": "AWS",
+      "estado": "APROBADO",
+      "detalle": "Imagen saad-api:90965fc; commit del repositorio al probar: 22ccb27. Tarea 512 CPU / 2048 MiB",
+      "evidencia": {
+        "etiqueta": "90965fc",
+        "cpu": "512",
+        "memoria": "2048",
+        "pronostico_desactualizado": "1"
+      }
+    },
+    {
+      "id": "CP-SAAD-008",
+      "nombre": "Solicitudes y errores registrados en CloudWatch",
+      "entorno": "AWS",
+      "estado": "APROBADO",
+      "detalle": "200+ eventos en la última hora (se leen hasta 200); 0 con [ERROR] o Traceback",
+      "evidencia": {
+        "errores": []
+      }
+    },
+    {
+      "id": "CP-SAAD-008",
+      "nombre": "Alarmas de CloudWatch configuradas",
+      "entorno": "AWS",
+      "estado": "APROBADO",
+      "detalle": "7 alarmas; en ALARM: ninguna",
+      "evidencia": {
+        "alarmas": {
+          "saad-alb-errores-5xx": "OK",
+          "saad-api-cpu-alta": "OK",
+          "saad-api-errores-5xx": "OK",
+          "saad-api-errores-en-logs": "OK",
+          "saad-api-memoria-alta": "OK",
+          "saad-api-sin-tareas-sanas": "OK",
+          "saad-cloudfront-errores-5xx": "OK"
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-063",
+      "nombre": "Sin secretos en el frontend publicado",
+      "entorno": "AWS",
+      "estado": "APROBADO",
+      "detalle": "Revisados index.html y 1 archivos JS: sin coincidencias",
+      "evidencia": {}
+    },
+    {
+      "id": "CP-SAAD-065",
+      "nombre": "Recuperación tras reemplazo de tarea ECS",
+      "entorno": "AWS",
+      "estado": "APROBADO",
+      "detalle": "Nuevo despliegue completo en 179 s; 0 sondeos sin respuesta 200 durante el cambio",
+      "evidencia": {
+        "segundos": 179
+      }
+    },
+    {
+      "id": "CP-SAAD-011",
+      "nombre": "Refresh semanal manual",
+      "entorno": "AWS",
+      "estado": "NO EJECUTADO",
+      "detalle": "No aplica en Fargate: el pipeline corre en el equipo y se publica con subir_datos.sh (cambio de alcance de C-42).",
+      "evidencia": {}
+    },
+    {
+      "id": "CP-SAAD-012",
+      "nombre": "EventBridge dispara la tarea",
+      "entorno": "AWS",
+      "estado": "NO EJECUTADO",
+      "detalle": "No aplica: no hay tarea programada (pipeline local).",
+      "evidencia": {}
+    },
+    {
+      "id": "CP-SAAD-013",
+      "nombre": "Falla de etapa no promueve artefactos",
+      "entorno": "AWS",
+      "estado": "NO EJECUTADO",
+      "detalle": "No aplica en AWS: el pipeline no corre en Fargate.",
+      "evidencia": {}
+    },
+    {
+      "id": "CP-SAAD-014",
+      "nombre": "Nuevos outputs visibles tras redespliegue",
+      "entorno": "AWS",
+      "estado": "NO EJECUTADO",
+      "detalle": "Requiere publicar datos nuevos con subir_datos.sh; no se hizo en esta corrida.",
+      "evidencia": {}
+    },
+    {
+      "id": "CP-SAAD-015",
+      "nombre": "503 y Retry-After durante la inicialización",
+      "entorno": "AWS",
+      "estado": "NO EJECUTADO",
+      "detalle": "No observable desde fuera: el despliegue mantiene la tarea anterior hasta que la nueva está sana. Cubierto por pruebas unitarias de la API (tests/test_api.py).",
+      "evidencia": {}
+    },
+    {
+      "id": "CP-SAAD-016",
+      "nombre": "Almacenamiento efímero del pipeline",
+      "entorno": "AWS",
+      "estado": "NO EJECUTADO",
+      "detalle": "No aplica: el pipeline no corre en Fargate.",
+      "evidencia": {}
+    }
+  ]
+}
