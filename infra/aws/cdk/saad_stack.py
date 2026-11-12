@@ -19,6 +19,11 @@ Contexto (`-c clave=valor` o `cdk.json`):
 - `cloudfront_prefix_list` (obligatorio): id de `com.amazonaws.global.cloudfront.origin-facing`.
 - `origin_secret` (obligatorio): valor del encabezado secreto CloudFront → ALB.
 - `api_desired_count` (opcional, 1): 0 deja el servicio creado pero apagado.
+- `api_cpu` y `api_memory` (opcionales, 512 y 2048): tamaño de la tarea en unidades de CPU y MiB.
+  Subirlos temporalmente (p. ej. 4096 y 8192) acelera el cálculo del pronóstico en memoria
+  cuando el persistido no está vigente.
+- `api_pronostico_desactualizado` (opcional, 0): con 1, la API sirve el pronóstico guardado
+  aunque no esté vigente, con una advertencia visible, en vez de recalcularlo.
 - `ecr_repo` (opcional, `saad-api`): repositorio ECR, creado por `publicar_imagen.sh`.
 """
 
@@ -67,6 +72,9 @@ class SaadStack(Stack):
         prefix_list = _contexto(self, "cloudfront_prefix_list")
         origin_secret = _contexto(self, "origin_secret")
         desired_count = int(_contexto(self, "api_desired_count", "1"))
+        api_cpu = int(_contexto(self, "api_cpu", "512"))
+        api_memory = int(_contexto(self, "api_memory", "2048"))
+        pronostico_desactualizado = _contexto(self, "api_pronostico_desactualizado", "0")
         repo_nombre = _contexto(self, "ecr_repo", "saad-api")
 
         # --- Red ---------------------------------------------------------------
@@ -106,8 +114,8 @@ class SaadStack(Stack):
 
         tarea = ecs.FargateTaskDefinition(
             self, "TareaApi",
-            cpu=512,
-            memory_limit_mib=2048,
+            cpu=api_cpu,
+            memory_limit_mib=api_memory,
             runtime_platform=ecs.RuntimePlatform(
                 cpu_architecture=ecs.CpuArchitecture.X86_64,
                 operating_system_family=ecs.OperatingSystemFamily.LINUX,
@@ -118,7 +126,11 @@ class SaadStack(Stack):
             "api",
             image=ecs.ContainerImage.from_ecr_repository(repo, api_tag),
             port_mappings=[ecs.PortMapping(container_port=PUERTO_API)],
-            environment={"SAAD_S3_BUCKET": datos.bucket_name, "SAAD_S3_PREFIX": ""},
+            environment={
+                "SAAD_S3_BUCKET": datos.bucket_name,
+                "SAAD_S3_PREFIX": "",
+                "SAAD_USAR_PRONOSTICO_DESACTUALIZADO": pronostico_desactualizado,
+            },
             logging=ecs.LogDrivers.aws_logs(
                 stream_prefix="api",
                 log_group=logs.LogGroup(

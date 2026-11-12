@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import threading
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -381,6 +382,10 @@ def cobertura_holdout(ruta: Path, modelo: str, nivel: float) -> list[dict[str, A
 # Servicio con estado
 # --------------------------------------------------------------------------
 
+# Interruptor temporal: servir el pronostico persistido aunque no este vigente (ver _obtener_pronostico).
+VARIABLE_PRONOSTICO_DESACTUALIZADO = "SAAD_USAR_PRONOSTICO_DESACTUALIZADO"
+
+
 @dataclass
 class ServicioDemanda:
     """Estado en memoria de la API: datos cargados y pronostico calculado."""
@@ -453,17 +458,31 @@ class ServicioDemanda:
             return f"el manifiesto del pronóstico no es legible ({error})"
 
     def _obtener_pronostico(self) -> tuple[pd.DataFrame, str, datetime, str | None]:
-        """Reutiliza el pronostico del disco; si no sirve, lo recalcula y lo informa."""
+        """Reutiliza el pronostico del disco; si no sirve, lo recalcula y lo informa.
+
+        Con `SAAD_USAR_PRONOSTICO_DESACTUALIZADO=1` sirve el persistido aunque no este vigente,
+        con una advertencia visible. Es una vista temporal para cuando no se puede regenerar
+        el pronostico ni esperar el recalculo; no cambia los datos ni el manifiesto.
+        """
         motivo = self._motivo_recalculo()
-        if motivo is None:
+        forzar = os.environ.get(VARIABLE_PRONOSTICO_DESACTUALIZADO, "").strip() == "1"
+        if motivo is None or (forzar and self.rutas.pronostico.exists()
+                              and self.rutas.manifiesto_pronostico.exists()):
             pronostico, manifiesto = cargar_pronostico_persistido(
                 self.rutas.pronostico, self.rutas.manifiesto_pronostico
             )
             generado = datetime.fromisoformat(
                 str(manifiesto["generado_en_utc"]).replace("Z", "+00:00")
             )
-            logger.info("Pronostico reutilizado desde %s", self.rutas.pronostico.as_posix())
-            return pronostico, "persistido", generado, None
+            if motivo is None:
+                logger.info("Pronostico reutilizado desde %s", self.rutas.pronostico.as_posix())
+                return pronostico, "persistido", generado, None
+            logger.warning("Se sirve el pronostico persistido NO vigente (%s) por %s=1.",
+                           motivo, VARIABLE_PRONOSTICO_DESACTUALIZADO)
+            return pronostico, "persistido", generado, (
+                f"Vista temporal: se muestra un pronóstico guardado que no está vigente porque "
+                f"{motivo}. Sus cifras pueden no corresponder al modelo seleccionado."
+            )
 
         logger.info("Se recalcula el pronostico en memoria: %s", motivo)
         return (
