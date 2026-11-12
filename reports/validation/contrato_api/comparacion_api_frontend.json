@@ -1,0 +1,331 @@
+{
+  "fecha_utc": "2026-11-12T14:02:41+00:00",
+  "commit": "08fd7cc",
+  "conteo": {
+    "ERROR": 0,
+    "ADVERTENCIA": 12,
+    "INFO": 9
+  },
+  "endpoints": [
+    {
+      "metodo": "caracterizacion",
+      "ruta": "/api/v1/caracterizacion/{fuente}/{nivel}/{codigo}",
+      "tipo_frontend": "Caracterizacion",
+      "esquema_api": "Caracterizacion",
+      "parametros": {
+        "semanas": true
+      },
+      "errores": [
+        404,
+        409,
+        422,
+        503
+      ],
+      "retry_after": false,
+      "manejo": "Caracterizacion.tsx: muestra el mensaje de error"
+    },
+    {
+      "metodo": "salud",
+      "ruta": "/api/v1/salud",
+      "tipo_frontend": "Salud",
+      "esquema_api": "Salud",
+      "parametros": {},
+      "errores": [],
+      "retry_after": false,
+      "manejo": "—"
+    },
+    {
+      "metodo": "meta",
+      "ruta": "/api/v1/meta",
+      "tipo_frontend": "Meta",
+      "esquema_api": "Meta",
+      "parametros": {},
+      "errores": [
+        503
+      ],
+      "retry_after": true,
+      "manejo": "Landing.tsx: se ignora (la vista sigue sin ese dato); Tablero.tsx: muestra el mensaje de error; Tablero.tsx: se ignora (la vista sigue sin ese dato)"
+    },
+    {
+      "metodo": "territorios",
+      "ruta": "/api/v1/territorios",
+      "tipo_frontend": "Territorio[]",
+      "esquema_api": "Territorio[]",
+      "parametros": {},
+      "errores": [
+        503
+      ],
+      "retry_after": true,
+      "manejo": "Tablero.tsx: muestra el mensaje de error"
+    },
+    {
+      "metodo": "serie",
+      "ruta": "/api/v1/series/{series_id}",
+      "tipo_frontend": "SerieConPronostico",
+      "esquema_api": "SerieConPronostico",
+      "parametros": {
+        "semanas": false
+      },
+      "errores": [
+        404,
+        422,
+        503
+      ],
+      "retry_after": true,
+      "manejo": "Tablero.tsx: muestra el mensaje de error"
+    },
+    {
+      "metodo": "camasPsiquiatria",
+      "ruta": "/api/v1/camas-psiquiatria/{series_id}",
+      "tipo_frontend": "CamasPsiquiatria",
+      "esquema_api": "CamasPsiquiatriaTerritorio",
+      "parametros": {},
+      "errores": [
+        404,
+        422,
+        503
+      ],
+      "retry_after": true,
+      "manejo": "Tablero.tsx: se ignora (la vista sigue sin ese dato)"
+    },
+    {
+      "metodo": "resumenComunal",
+      "ruta": "/api/v1/resumen-comunal",
+      "tipo_frontend": "ResumenComuna[]",
+      "esquema_api": "ResumenComuna[]",
+      "parametros": {},
+      "errores": [
+        503
+      ],
+      "retry_after": true,
+      "manejo": "Tablero.tsx: muestra el mensaje de error"
+    },
+    {
+      "metodo": "geoComunas",
+      "ruta": "/api/v1/geo/comunas",
+      "tipo_frontend": "GeoJSON.FeatureCollection",
+      "esquema_api": "GeoJSON (sin esquema)",
+      "parametros": {},
+      "errores": [
+        503
+      ],
+      "retry_after": true,
+      "manejo": "Tablero.tsx: muestra el mensaje de error"
+    },
+    {
+      "metodo": "hospitalizacionesResidentes",
+      "ruta": "/api/v1/hospitalizaciones-residentes/{series_id}",
+      "tipo_frontend": "HospitalizacionesResidentes",
+      "esquema_api": "HospitalizacionesResidentes",
+      "parametros": {
+        "ano": false
+      },
+      "errores": [
+        404,
+        422,
+        503
+      ],
+      "retry_after": false,
+      "manejo": "PanelHospitalizaciones.tsx: muestra el mensaje de error"
+    },
+    {
+      "metodo": "suicidios",
+      "ruta": "/api/v1/suicidios/{series_id}",
+      "tipo_frontend": "SerieSuicidios",
+      "esquema_api": "SerieSuicidios",
+      "parametros": {
+        "semanas": false
+      },
+      "errores": [
+        404,
+        422,
+        503
+      ],
+      "retry_after": true,
+      "manejo": "Tablero.tsx: muestra el mensaje de error"
+    },
+    {
+      "metodo": "calendarioEventos",
+      "ruta": "/api/v1/calendario-eventos",
+      "tipo_frontend": "EventoCalendario[]",
+      "esquema_api": "EventoCalendario[]",
+      "parametros": {
+        "desde": true,
+        "hasta": true
+      },
+      "errores": [
+        422
+      ],
+      "retry_after": false,
+      "manejo": "Tablero.tsx: se ignora (la vista sigue sin ese dato)"
+    },
+    {
+      "metodo": "establecimientos",
+      "ruta": "/api/v1/establecimientos",
+      "tipo_frontend": "EstablecimientoResumen[]",
+      "esquema_api": "EstablecimientoResumen[]",
+      "parametros": {},
+      "errores": [
+        503
+      ],
+      "retry_after": true,
+      "manejo": "Tablero.tsx: se ignora (la vista sigue sin ese dato); VistaEstablecimientos.tsx: muestra el mensaje de error"
+    },
+    {
+      "metodo": "metaEstablecimientos",
+      "ruta": "/api/v1/establecimientos-meta",
+      "tipo_frontend": "MetaEstablecimientos",
+      "esquema_api": "MetaEstablecimientos",
+      "parametros": {},
+      "errores": [
+        503
+      ],
+      "retry_after": true,
+      "manejo": "Landing.tsx: se ignora (la vista sigue sin ese dato); VistaEstablecimientos.tsx: muestra el mensaje de error"
+    },
+    {
+      "metodo": "establecimiento",
+      "ruta": "/api/v1/establecimientos/{codigo}",
+      "tipo_frontend": "EstablecimientoDetalle",
+      "esquema_api": "EstablecimientoDetalle",
+      "parametros": {
+        "semanas": false
+      },
+      "errores": [
+        404,
+        422,
+        503
+      ],
+      "retry_after": true,
+      "manejo": "VistaEstablecimientos.tsx: muestra el mensaje de error"
+    }
+  ],
+  "hallazgos": [
+    {
+      "severidad": "INFO",
+      "ruta": "/api/v1/caracterizacion/{fuente}/{nivel}/{codigo}",
+      "campo": "codigo",
+      "detalle": "La API lo envía y el frontend no lo tipa (lo ignora)."
+    },
+    {
+      "severidad": "INFO",
+      "ruta": "/api/v1/caracterizacion/{fuente}/{nivel}/{codigo}",
+      "campo": "fuente",
+      "detalle": "La API lo envía y el frontend no lo tipa (lo ignora)."
+    },
+    {
+      "severidad": "INFO",
+      "ruta": "/api/v1/caracterizacion/{fuente}/{nivel}/{codigo}",
+      "campo": "nivel",
+      "detalle": "La API lo envía y el frontend no lo tipa (lo ignora)."
+    },
+    {
+      "severidad": "INFO",
+      "ruta": "/api/v1/meta",
+      "campo": "cobertura_holdout[].nivel",
+      "detalle": "Valores distintos: solo en API —, solo en frontend ['establecimiento']."
+    },
+    {
+      "severidad": "INFO",
+      "ruta": "/api/v1/territorios",
+      "campo": "[].nivel",
+      "detalle": "Valores distintos: solo en API —, solo en frontend ['establecimiento']."
+    },
+    {
+      "severidad": "INFO",
+      "ruta": "/api/v1/series/{series_id}",
+      "campo": "nivel",
+      "detalle": "Valores distintos: solo en API —, solo en frontend ['establecimiento']."
+    },
+    {
+      "severidad": "INFO",
+      "ruta": "/api/v1/suicidios/{series_id}",
+      "campo": "nivel",
+      "detalle": "Valores distintos: solo en API —, solo en frontend ['establecimiento']."
+    },
+    {
+      "severidad": "INFO",
+      "ruta": "/api/v1/suicidios/{series_id}",
+      "campo": "pronostico[].cobertura_esperada",
+      "detalle": "La API lo envía y el frontend no lo tipa (lo ignora)."
+    },
+    {
+      "severidad": "INFO",
+      "ruta": "/api/v1/pronosticos",
+      "campo": "(ruta)",
+      "detalle": "La API expone la ruta y el frontend no la usa."
+    },
+    {
+      "severidad": "ADVERTENCIA",
+      "ruta": "/api/v1/caracterizacion/{fuente}/{nivel}/{codigo}",
+      "campo": "(errores)",
+      "detalle": "Lanza 404, 409, 503 y el OpenAPI no lo declara (solo 200, 422)."
+    },
+    {
+      "severidad": "ADVERTENCIA",
+      "ruta": "/api/v1/meta",
+      "campo": "(errores)",
+      "detalle": "Lanza 503 y el OpenAPI no lo declara (solo 200)."
+    },
+    {
+      "severidad": "ADVERTENCIA",
+      "ruta": "/api/v1/territorios",
+      "campo": "(errores)",
+      "detalle": "Lanza 503 y el OpenAPI no lo declara (solo 200)."
+    },
+    {
+      "severidad": "ADVERTENCIA",
+      "ruta": "/api/v1/series/{series_id}",
+      "campo": "(errores)",
+      "detalle": "Lanza 404, 503 y el OpenAPI no lo declara (solo 200, 422)."
+    },
+    {
+      "severidad": "ADVERTENCIA",
+      "ruta": "/api/v1/camas-psiquiatria/{series_id}",
+      "campo": "(errores)",
+      "detalle": "Lanza 404, 503 y el OpenAPI no lo declara (solo 200, 422)."
+    },
+    {
+      "severidad": "ADVERTENCIA",
+      "ruta": "/api/v1/resumen-comunal",
+      "campo": "(errores)",
+      "detalle": "Lanza 503 y el OpenAPI no lo declara (solo 200)."
+    },
+    {
+      "severidad": "ADVERTENCIA",
+      "ruta": "/api/v1/geo/comunas",
+      "campo": "(errores)",
+      "detalle": "Lanza 503 y el OpenAPI no lo declara (solo 200)."
+    },
+    {
+      "severidad": "ADVERTENCIA",
+      "ruta": "/api/v1/hospitalizaciones-residentes/{series_id}",
+      "campo": "(errores)",
+      "detalle": "Lanza 404, 503 y el OpenAPI no lo declara (solo 200, 422)."
+    },
+    {
+      "severidad": "ADVERTENCIA",
+      "ruta": "/api/v1/suicidios/{series_id}",
+      "campo": "(errores)",
+      "detalle": "Lanza 404, 503 y el OpenAPI no lo declara (solo 200, 422)."
+    },
+    {
+      "severidad": "ADVERTENCIA",
+      "ruta": "/api/v1/establecimientos",
+      "campo": "(errores)",
+      "detalle": "Lanza 503 y el OpenAPI no lo declara (solo 200)."
+    },
+    {
+      "severidad": "ADVERTENCIA",
+      "ruta": "/api/v1/establecimientos-meta",
+      "campo": "(errores)",
+      "detalle": "Lanza 503 y el OpenAPI no lo declara (solo 200)."
+    },
+    {
+      "severidad": "ADVERTENCIA",
+      "ruta": "/api/v1/establecimientos/{codigo}",
+      "campo": "(errores)",
+      "detalle": "Lanza 404, 503 y el OpenAPI no lo declara (solo 200, 422)."
+    }
+  ]
+}

@@ -1,0 +1,3186 @@
+{
+  "components": {
+    "schemas": {
+      "AreaPsiquiatria": {
+        "properties": {
+          "ano_dotacion": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ano Dotacion"
+          },
+          "dotacion_declarada": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Camas declaradas del área en el último año del libro de dotación; null si no declara.",
+            "title": "Dotacion Declarada"
+          },
+          "indice_ocupacional": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Del período, como razón de sumas.",
+            "title": "Indice Ocupacional"
+          },
+          "meses": {
+            "description": "Meses de la ventana con camas disponibles (habilitadas) en el área.",
+            "title": "Meses",
+            "type": "integer"
+          },
+          "meses_sin_holgura": {
+            "description": "Meses con menos de una cama libre por día, en promedio.",
+            "title": "Meses Sin Holgura",
+            "type": "integer"
+          },
+          "meses_sobre_capacidad": {
+            "description": "Meses con más días cama ocupados que disponibles.",
+            "title": "Meses Sobre Capacidad",
+            "type": "integer"
+          },
+          "motivo_sin_dotacion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Por qué el área no tiene dotación declarada; null si la tiene.",
+            "title": "Motivo Sin Dotacion"
+          },
+          "nivel_cuidado": {
+            "title": "Nivel Cuidado",
+            "type": "string"
+          },
+          "nivel_cuidado_codigo": {
+            "title": "Nivel Cuidado Codigo",
+            "type": "integer"
+          },
+          "propuesta_camas": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PropuestaCamas"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "serie": {
+            "description": "Ocupación mensual del área en la misma ventana.",
+            "items": {
+              "$ref": "#/components/schemas/PuntoOcupacionMensual"
+            },
+            "title": "Serie",
+            "type": "array"
+          },
+          "ultimo_camas_disponibles_promedio": {
+            "title": "Ultimo Camas Disponibles Promedio",
+            "type": "number"
+          },
+          "ultimo_camas_libres_promedio": {
+            "title": "Ultimo Camas Libres Promedio",
+            "type": "number"
+          },
+          "ultimo_camas_ocupadas_promedio": {
+            "title": "Ultimo Camas Ocupadas Promedio",
+            "type": "number"
+          }
+        },
+        "required": [
+          "nivel_cuidado_codigo",
+          "nivel_cuidado",
+          "meses",
+          "meses_sin_holgura",
+          "meses_sobre_capacidad",
+          "indice_ocupacional",
+          "ultimo_camas_ocupadas_promedio",
+          "ultimo_camas_disponibles_promedio",
+          "ultimo_camas_libres_promedio",
+          "serie"
+        ],
+        "title": "AreaPsiquiatria",
+        "type": "object"
+      },
+      "BarraCaracterizacion": {
+        "properties": {
+          "etiqueta": {
+            "title": "Etiqueta",
+            "type": "string"
+          },
+          "valor": {
+            "minimum": 0.0,
+            "title": "Valor",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "etiqueta",
+          "valor"
+        ],
+        "title": "BarraCaracterizacion",
+        "type": "object"
+      },
+      "CamasPsiquiatriaTerritorio": {
+        "properties": {
+          "ano_camas": {
+            "description": "Ultimo ano de la dotacion de camas del SNSS.",
+            "title": "Ano Camas",
+            "type": "integer"
+          },
+          "hospitales": {
+            "items": {
+              "$ref": "#/components/schemas/HospitalCamas"
+            },
+            "title": "Hospitales",
+            "type": "array"
+          },
+          "n_hospitales_con_camas": {
+            "description": "Hospitales del territorio con cifra de psiquiatria; los que suman.",
+            "title": "N Hospitales Con Camas",
+            "type": "integer"
+          },
+          "n_hospitales_modelo": {
+            "description": "Hospitales del territorio que reportaron ID36 en 2021-2025 (alimentan el modelo), tengan o no camas de psiquiatria.",
+            "title": "N Hospitales Modelo",
+            "type": "integer"
+          },
+          "n_hospitales_snss": {
+            "description": "Hospitales del modelo en el territorio que figuran en la dotacion SNSS.",
+            "title": "N Hospitales Snss",
+            "type": "integer"
+          },
+          "series_id": {
+            "title": "Series Id",
+            "type": "string"
+          },
+          "total_camas_psiquiatria": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Suma de camas de las areas de psiquiatria de los hospitales del territorio que reportaron ID36 en 2021-2025 (los que alimentan el modelo). Null si ninguno declara cifra: ausencia de dato, no cero. Es dotacion declarada, no ocupacion ni disponibilidad.",
+            "title": "Total Camas Psiquiatria"
+          }
+        },
+        "required": [
+          "series_id",
+          "ano_camas",
+          "total_camas_psiquiatria",
+          "n_hospitales_con_camas",
+          "n_hospitales_snss",
+          "n_hospitales_modelo",
+          "hospitales"
+        ],
+        "title": "CamasPsiquiatriaTerritorio",
+        "type": "object"
+      },
+      "Caracterizacion": {
+        "properties": {
+          "codigo": {
+            "title": "Codigo",
+            "type": "string"
+          },
+          "desde": {
+            "format": "date",
+            "title": "Desde",
+            "type": "string"
+          },
+          "edad": {
+            "items": {
+              "$ref": "#/components/schemas/BarraCaracterizacion"
+            },
+            "title": "Edad",
+            "type": "array"
+          },
+          "escenario": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EscenarioContextual"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fuente": {
+            "enum": [
+              "urgencias",
+              "hospitalizaciones",
+              "suicidios"
+            ],
+            "title": "Fuente",
+            "type": "string"
+          },
+          "hasta": {
+            "format": "date",
+            "title": "Hasta",
+            "type": "string"
+          },
+          "nivel": {
+            "enum": [
+              "region",
+              "comuna",
+              "establecimiento"
+            ],
+            "title": "Nivel",
+            "type": "string"
+          },
+          "semanas": {
+            "title": "Semanas",
+            "type": "integer"
+          },
+          "sexo": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/BarraCaracterizacion"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sexo"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total",
+          "sexo",
+          "edad",
+          "desde",
+          "hasta",
+          "semanas",
+          "fuente",
+          "nivel",
+          "codigo",
+          "escenario"
+        ],
+        "title": "Caracterizacion",
+        "type": "object"
+      },
+      "CategoriaEgresos": {
+        "properties": {
+          "categoria": {
+            "title": "Categoria",
+            "type": "string"
+          },
+          "egresos": {
+            "title": "Egresos",
+            "type": "integer"
+          },
+          "proporcion": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proporcion"
+          }
+        },
+        "required": [
+          "categoria",
+          "egresos",
+          "proporcion"
+        ],
+        "title": "CategoriaEgresos",
+        "type": "object"
+      },
+      "CoberturaNivel": {
+        "properties": {
+          "cobertura_observada": {
+            "title": "Cobertura Observada",
+            "type": "number"
+          },
+          "dentro_de_tolerancia": {
+            "title": "Dentro De Tolerancia",
+            "type": "boolean"
+          },
+          "evaluaciones": {
+            "title": "Evaluaciones",
+            "type": "integer"
+          },
+          "nivel": {
+            "enum": [
+              "region",
+              "comuna"
+            ],
+            "title": "Nivel",
+            "type": "string"
+          }
+        },
+        "required": [
+          "nivel",
+          "cobertura_observada",
+          "evaluaciones",
+          "dentro_de_tolerancia"
+        ],
+        "title": "CoberturaNivel",
+        "type": "object"
+      },
+      "CoberturaSuicidios": {
+        "properties": {
+          "esperada": {
+            "description": "Cobertura que el modelo declaró para esos mismos intervalos.",
+            "title": "Esperada",
+            "type": "number"
+          },
+          "evaluaciones": {
+            "title": "Evaluaciones",
+            "type": "integer"
+          },
+          "observada": {
+            "description": "Cobertura real de los intervalos del nivel, fuera de muestra.",
+            "title": "Observada",
+            "type": "number"
+          }
+        },
+        "required": [
+          "observada",
+          "esperada",
+          "evaluaciones"
+        ],
+        "title": "CoberturaSuicidios",
+        "type": "object"
+      },
+      "ColapsoPsiquiatria": {
+        "properties": {
+          "area_mes_sobre_capacidad": {
+            "title": "Area Mes Sobre Capacidad",
+            "type": "integer"
+          },
+          "desde": {
+            "format": "date",
+            "title": "Desde",
+            "type": "string"
+          },
+          "hasta": {
+            "format": "date",
+            "title": "Hasta",
+            "type": "string"
+          },
+          "indice_ocupacional": {
+            "title": "Indice Ocupacional",
+            "type": "number"
+          },
+          "meses": {
+            "description": "Meses de la ventana con camas habilitadas en el hospital.",
+            "title": "Meses",
+            "type": "integer"
+          },
+          "nivel": {
+            "description": "Ocupación de las camas de psiquiatría del hospital en la ventana (razón de sumas): holgura < 85 %, presión 85-90 %, saturación >= 90 %; sobre_capacidad si algún área superó sus camas disponibles.",
+            "enum": [
+              "holgura",
+              "presion",
+              "saturacion",
+              "sobre_capacidad"
+            ],
+            "title": "Nivel",
+            "type": "string"
+          }
+        },
+        "required": [
+          "nivel",
+          "indice_ocupacional",
+          "meses",
+          "area_mes_sobre_capacidad",
+          "desde",
+          "hasta"
+        ],
+        "title": "ColapsoPsiquiatria",
+        "type": "object"
+      },
+      "ContrasteCamasAnual": {
+        "properties": {
+          "ano": {
+            "title": "Ano",
+            "type": "integer"
+          },
+          "camas_equivalentes_egresos": {
+            "description": "Camas ocupadas en promedio según egresos de residentes RM (estadías acotadas al año).",
+            "title": "Camas Equivalentes Egresos",
+            "type": "number"
+          },
+          "camas_equivalentes_egresos_snss": {
+            "description": "Igual, solo hospitales del SNSS.",
+            "title": "Camas Equivalentes Egresos Snss",
+            "type": "number"
+          },
+          "camas_ocupadas_rem20": {
+            "description": "Camas de psiquiatría ocupadas en promedio, REM-20.",
+            "title": "Camas Ocupadas Rem20",
+            "type": "number"
+          },
+          "camas_ocupadas_rem20_sin_forense": {
+            "title": "Camas Ocupadas Rem20 Sin Forense",
+            "type": "number"
+          },
+          "egresos_residentes_rm": {
+            "title": "Egresos Residentes Rm",
+            "type": "integer"
+          },
+          "razon_egresos_snss_rem20_sin_forense": {
+            "description": "Egresos SNSS / REM-20 sin forense: cerca de 1 si ambas fuentes cuentan la misma escala.",
+            "title": "Razon Egresos Snss Rem20 Sin Forense",
+            "type": "number"
+          }
+        },
+        "required": [
+          "ano",
+          "egresos_residentes_rm",
+          "camas_equivalentes_egresos",
+          "camas_equivalentes_egresos_snss",
+          "camas_ocupadas_rem20",
+          "camas_ocupadas_rem20_sin_forense",
+          "razon_egresos_snss_rem20_sin_forense"
+        ],
+        "title": "ContrasteCamasAnual",
+        "type": "object"
+      },
+      "EscenarioContextual": {
+        "properties": {
+          "advertencia": {
+            "title": "Advertencia",
+            "type": "string"
+          },
+          "ano_referencia": {
+            "title": "Ano Referencia",
+            "type": "integer"
+          },
+          "fuente": {
+            "title": "Fuente",
+            "type": "string"
+          },
+          "metodo": {
+            "title": "Metodo",
+            "type": "string"
+          },
+          "referencia": {
+            "items": {
+              "$ref": "#/components/schemas/BarraCaracterizacion"
+            },
+            "title": "Referencia",
+            "type": "array"
+          },
+          "sexo": {
+            "items": {
+              "$ref": "#/components/schemas/BarraCaracterizacion"
+            },
+            "title": "Sexo",
+            "type": "array"
+          }
+        },
+        "required": [
+          "ano_referencia",
+          "sexo",
+          "referencia",
+          "fuente",
+          "metodo",
+          "advertencia"
+        ],
+        "title": "EscenarioContextual",
+        "type": "object"
+      },
+      "EstablecimientoDetalle": {
+        "properties": {
+          "areas_psiquiatria": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/AreaPsiquiatria"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Saturación de cada área de psiquiatría en la misma ventana; null si no hay.",
+            "title": "Areas Psiquiatria"
+          },
+          "camas_psiquiatria": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Camas Psiquiatria"
+          },
+          "comuna": {
+            "title": "Comuna",
+            "type": "string"
+          },
+          "comuna_codigo": {
+            "title": "Comuna Codigo",
+            "type": "string"
+          },
+          "establecimiento_codigo": {
+            "title": "Establecimiento Codigo",
+            "type": "integer"
+          },
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          },
+          "ocupacion_psiquiatria": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PuntoOcupacionMensual"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Ocupación mensual de las camas de psiquiatría (REM-20, último mes publicado), en la ventana de la historia semanal. Null si el hospital no tiene áreas de psiquiatría en el REM-20 o la capa no existe.",
+            "title": "Ocupacion Psiquiatria"
+          },
+          "series": {
+            "items": {
+              "$ref": "#/components/schemas/SerieObjetivoEstablecimiento"
+            },
+            "title": "Series",
+            "type": "array"
+          },
+          "tipo": {
+            "title": "Tipo",
+            "type": "string"
+          }
+        },
+        "required": [
+          "establecimiento_codigo",
+          "nombre",
+          "tipo",
+          "comuna_codigo",
+          "comuna",
+          "camas_psiquiatria",
+          "series"
+        ],
+        "title": "EstablecimientoDetalle",
+        "type": "object"
+      },
+      "EstablecimientoResumen": {
+        "properties": {
+          "camas_psiquiatria": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Dotación declarada de psiquiatría (último año del libro SNSS); null si no informa.",
+            "title": "Camas Psiquiatria"
+          },
+          "colapso_psiquiatria": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ColapsoPsiquiatria"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Null si el establecimiento no tiene áreas de psiquiatría en el REM-20."
+          },
+          "comuna": {
+            "title": "Comuna",
+            "type": "string"
+          },
+          "comuna_codigo": {
+            "title": "Comuna Codigo",
+            "type": "string"
+          },
+          "establecimiento_codigo": {
+            "title": "Establecimiento Codigo",
+            "type": "integer"
+          },
+          "latitud": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Null si el maestro DEIS no lo georreferencia.",
+            "title": "Latitud"
+          },
+          "longitud": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitud"
+          },
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          },
+          "objetivos": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ResumenObjetivoEstablecimiento"
+            },
+            "propertyNames": {
+              "enum": [
+                "atenciones_sm",
+                "hospitalizaciones_sm"
+              ]
+            },
+            "title": "Objetivos",
+            "type": "object"
+          },
+          "tipo": {
+            "description": "Tipo según Urgencias: Hospital, SAPU, SAR, SUR o CEAR.",
+            "title": "Tipo",
+            "type": "string"
+          }
+        },
+        "required": [
+          "establecimiento_codigo",
+          "nombre",
+          "tipo",
+          "comuna_codigo",
+          "comuna",
+          "latitud",
+          "longitud",
+          "camas_psiquiatria",
+          "objetivos"
+        ],
+        "title": "EstablecimientoResumen",
+        "type": "object"
+      },
+      "EventoCalendario": {
+        "properties": {
+          "categoria": {
+            "enum": [
+              "festividad",
+              "estacion"
+            ],
+            "title": "Categoria",
+            "type": "string"
+          },
+          "detalle": {
+            "description": "Regla con que se obtuvo la fecha.",
+            "title": "Detalle",
+            "type": "string"
+          },
+          "evento_id": {
+            "title": "Evento Id",
+            "type": "string"
+          },
+          "fecha_fin": {
+            "description": "Último día incluido; igual al inicio si es un solo día.",
+            "format": "date",
+            "title": "Fecha Fin",
+            "type": "string"
+          },
+          "fecha_inicio": {
+            "format": "date",
+            "title": "Fecha Inicio",
+            "type": "string"
+          },
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          }
+        },
+        "required": [
+          "evento_id",
+          "nombre",
+          "categoria",
+          "fecha_inicio",
+          "fecha_fin",
+          "detalle"
+        ],
+        "title": "EventoCalendario",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HospitalCamas": {
+        "properties": {
+          "camas_psiquiatria": {
+            "title": "Camas Psiquiatria",
+            "type": "number"
+          },
+          "establecimiento_codigo": {
+            "title": "Establecimiento Codigo",
+            "type": "integer"
+          },
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          }
+        },
+        "required": [
+          "establecimiento_codigo",
+          "nombre",
+          "camas_psiquiatria"
+        ],
+        "title": "HospitalCamas",
+        "type": "object"
+      },
+      "HospitalizacionesResidentes": {
+        "properties": {
+          "advertencias": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Advertencias",
+            "type": "array"
+          },
+          "ano_desglose": {
+            "title": "Ano Desglose",
+            "type": "integer"
+          },
+          "anual": {
+            "items": {
+              "$ref": "#/components/schemas/PuntoEgresosAnual"
+            },
+            "title": "Anual",
+            "type": "array"
+          },
+          "contraste_camas": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ContrasteCamasAnual"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Solo para la región: camas desde Egresos frente a REM-20, por año.",
+            "title": "Contraste Camas"
+          },
+          "desglose": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/CategoriaEgresos"
+              },
+              "type": "array"
+            },
+            "description": "Por dimensión (sexo, grupo_edad, grupo_diagnostico, prevision) del año `ano_desglose`.",
+            "title": "Desglose",
+            "type": "object"
+          },
+          "nivel": {
+            "enum": [
+              "region",
+              "comuna"
+            ],
+            "title": "Nivel",
+            "type": "string"
+          },
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          },
+          "series_id": {
+            "title": "Series Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "series_id",
+          "nombre",
+          "nivel",
+          "anual",
+          "ano_desglose",
+          "desglose",
+          "contraste_camas",
+          "advertencias"
+        ],
+        "title": "HospitalizacionesResidentes",
+        "type": "object"
+      },
+      "Meta": {
+        "properties": {
+          "advertencias": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Advertencias",
+            "type": "array"
+          },
+          "cobertura_holdout": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/CoberturaNivel"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Cobertura real de los intervalos fuera de muestra, si el informe existe.",
+            "title": "Cobertura Holdout"
+          },
+          "comunas_con_pronostico": {
+            "title": "Comunas Con Pronostico",
+            "type": "integer"
+          },
+          "horizontes": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Horizontes",
+            "type": "array"
+          },
+          "metricas_backtest": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metricas Backtest"
+          },
+          "modelo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Modelo"
+          },
+          "nivel_intervalo": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nivel Intervalo"
+          },
+          "origen_pronostico": {
+            "anyOf": [
+              {
+                "enum": [
+                  "persistido",
+                  "en_memoria"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "'persistido': se reutilizo el output del stage `forecast_demanda_sm`; 'en_memoria': se recalculo al arrancar porque ese output faltaba o estaba desactualizado.",
+            "title": "Origen Pronostico"
+          },
+          "pronostico_calculado_en": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pronostico Calculado En"
+          },
+          "semana_en_curso": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SemanaParcial"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Semana parcial en curso a nivel regional: publicada pero aun incompleta. Excluida del modelo y NO comparable con semanas completas; se entrega solo para mostrarla etiquetada como provisional."
+          },
+          "ultima_semana_observada": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PuntoHistorico"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "umbral_cambio_pct": {
+            "description": "Variacion esperada, en por ciento, a partir de la cual el resumen comunal declara alza o baja.",
+            "title": "Umbral Cambio Pct",
+            "type": "number"
+          }
+        },
+        "required": [
+          "modelo",
+          "horizontes",
+          "umbral_cambio_pct",
+          "nivel_intervalo",
+          "ultima_semana_observada",
+          "pronostico_calculado_en",
+          "comunas_con_pronostico",
+          "metricas_backtest",
+          "cobertura_holdout",
+          "advertencias"
+        ],
+        "title": "Meta",
+        "type": "object"
+      },
+      "MetaEstablecimientos": {
+        "properties": {
+          "advertencias": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Advertencias",
+            "type": "array"
+          },
+          "motivo_desactualizacion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Qué cambió y qué etapa del pipeline lo actualiza; null si está vigente.",
+            "title": "Motivo Desactualizacion"
+          },
+          "objetivos": {
+            "items": {
+              "$ref": "#/components/schemas/MetaObjetivoEstablecimiento"
+            },
+            "title": "Objetivos",
+            "type": "array"
+          },
+          "pronostico_generado_en": {
+            "format": "date-time",
+            "title": "Pronostico Generado En",
+            "type": "string"
+          },
+          "ultima_semana_fecha_inicio": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Inicio de la última semana observada, del calendario común.",
+            "title": "Ultima Semana Fecha Inicio"
+          },
+          "ultima_semana_observada": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Ultima Semana Observada",
+            "type": "object"
+          },
+          "umbral_cambio_pct": {
+            "description": "Mismo umbral de alza o baja que el resumen comunal, para leer ambas vistas igual.",
+            "title": "Umbral Cambio Pct",
+            "type": "number"
+          },
+          "vigente": {
+            "default": true,
+            "description": "False si el pronóstico servido se generó con datos que ya cambiaron. Se sigue sirviendo, sin los horizontes ya observados, para que la vista no quede vacía.",
+            "title": "Vigente",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ultima_semana_observada",
+          "umbral_cambio_pct",
+          "pronostico_generado_en",
+          "objetivos",
+          "advertencias"
+        ],
+        "title": "MetaEstablecimientos",
+        "type": "object"
+      },
+      "MetaObjetivoEstablecimiento": {
+        "properties": {
+          "cobertura_holdout": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Cobertura real de los intervalos en los establecimientos, fuera de muestra.",
+            "title": "Cobertura Holdout"
+          },
+          "descripcion": {
+            "title": "Descripcion",
+            "type": "string"
+          },
+          "establecimientos_con_pronostico": {
+            "title": "Establecimientos Con Pronostico",
+            "type": "integer"
+          },
+          "horizontes": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Horizontes",
+            "type": "array"
+          },
+          "modelo": {
+            "title": "Modelo",
+            "type": "string"
+          },
+          "nivel_intervalo": {
+            "title": "Nivel Intervalo",
+            "type": "number"
+          },
+          "objetivo": {
+            "enum": [
+              "atenciones_sm",
+              "hospitalizaciones_sm"
+            ],
+            "title": "Objetivo",
+            "type": "string"
+          },
+          "pronosticos_fuera_de_rango": {
+            "description": "Pronósticos retenidos por exceder el doble del máximo reciente del establecimiento.",
+            "title": "Pronosticos Fuera De Rango",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "objetivo",
+          "descripcion",
+          "modelo",
+          "horizontes",
+          "nivel_intervalo",
+          "establecimientos_con_pronostico",
+          "cobertura_holdout",
+          "pronosticos_fuera_de_rango"
+        ],
+        "title": "MetaObjetivoEstablecimiento",
+        "type": "object"
+      },
+      "PronosticoSerie": {
+        "properties": {
+          "ano": {
+            "title": "Ano",
+            "type": "integer"
+          },
+          "fecha_inicio": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fecha Inicio"
+          },
+          "horizonte": {
+            "description": "Semanas despues de la ultima semana observada.",
+            "title": "Horizonte",
+            "type": "integer"
+          },
+          "limite_inferior": {
+            "title": "Limite Inferior",
+            "type": "number"
+          },
+          "limite_superior": {
+            "title": "Limite Superior",
+            "type": "number"
+          },
+          "nivel": {
+            "enum": [
+              "region",
+              "comuna"
+            ],
+            "title": "Nivel",
+            "type": "string"
+          },
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          },
+          "pronostico": {
+            "title": "Pronostico",
+            "type": "number"
+          },
+          "semana": {
+            "title": "Semana",
+            "type": "integer"
+          },
+          "series_id": {
+            "title": "Series Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "horizonte",
+          "ano",
+          "semana",
+          "fecha_inicio",
+          "pronostico",
+          "limite_inferior",
+          "limite_superior",
+          "series_id",
+          "nombre",
+          "nivel"
+        ],
+        "title": "PronosticoSerie",
+        "type": "object"
+      },
+      "PropuestaCamas": {
+        "properties": {
+          "ano_objetivo": {
+            "title": "Ano Objetivo",
+            "type": "integer"
+          },
+          "aumento_dotacion": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Aumento Dotacion"
+          },
+          "base_capacidad": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base Capacidad"
+          },
+          "brecha_habilitacion": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brecha Habilitacion"
+          },
+          "camas_objetivo": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Camas Objetivo"
+          },
+          "camas_objetivo_90": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Camas Objetivo 90"
+          },
+          "desde": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desde"
+          },
+          "disponibles_ultimo_mes": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disponibles Ultimo Mes"
+          },
+          "fecha_corte": {
+            "title": "Fecha Corte",
+            "type": "string"
+          },
+          "fuente_base": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fuente Base"
+          },
+          "habilitar_existentes": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Habilitar Existentes"
+          },
+          "hasta": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasta"
+          },
+          "metodo": {
+            "title": "Metodo",
+            "type": "string"
+          },
+          "motivo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Motivo"
+          },
+          "ocupacion_resultante_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ocupacion Resultante Pct"
+          },
+          "pico_camas_ocupadas": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pico Camas Ocupadas"
+          },
+          "pico_dias_cama_ocupados": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pico Dias Cama Ocupados"
+          },
+          "pico_dias_mes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pico Dias Mes"
+          },
+          "referencia_aguda": {
+            "title": "Referencia Aguda",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "referencia_aguda",
+          "ano_objetivo",
+          "fecha_corte",
+          "metodo",
+          "motivo",
+          "desde",
+          "hasta",
+          "pico_camas_ocupadas",
+          "pico_dias_cama_ocupados",
+          "pico_dias_mes",
+          "camas_objetivo",
+          "camas_objetivo_90",
+          "disponibles_ultimo_mes",
+          "base_capacidad",
+          "fuente_base",
+          "aumento_dotacion",
+          "habilitar_existentes",
+          "brecha_habilitacion",
+          "ocupacion_resultante_pct"
+        ],
+        "title": "PropuestaCamas",
+        "type": "object"
+      },
+      "PuntoEgresosAnual": {
+        "properties": {
+          "ano": {
+            "title": "Ano",
+            "type": "integer"
+          },
+          "dias_estada_mediana": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dias Estada Mediana"
+          },
+          "dias_estada_p90": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dias Estada P90"
+          },
+          "egresos": {
+            "description": "Egresos (eventos, no personas) con diagnóstico principal F00-F99.",
+            "title": "Egresos",
+            "type": "integer"
+          },
+          "poblacion": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Proyección INE; null antes de 2021.",
+            "title": "Poblacion"
+          },
+          "proporcion_estadia_mayor_a_un_ano": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proporcion Estadia Mayor A Un Ano"
+          },
+          "proporcion_snss": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Proporción 0-1 en hospitales del SNSS.",
+            "title": "Proporcion Snss"
+          },
+          "tasa_por_10000": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Egresos por 10.000 habitantes; null sin población.",
+            "title": "Tasa Por 10000"
+          }
+        },
+        "required": [
+          "ano",
+          "egresos",
+          "poblacion",
+          "tasa_por_10000",
+          "dias_estada_mediana",
+          "dias_estada_p90",
+          "proporcion_snss",
+          "proporcion_estadia_mayor_a_un_ano"
+        ],
+        "title": "PuntoEgresosAnual",
+        "type": "object"
+      },
+      "PuntoHistorico": {
+        "properties": {
+          "ano": {
+            "title": "Ano",
+            "type": "integer"
+          },
+          "atenciones": {
+            "title": "Atenciones",
+            "type": "number"
+          },
+          "fecha_inicio": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fecha Inicio"
+          },
+          "semana": {
+            "title": "Semana",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ano",
+          "semana",
+          "fecha_inicio",
+          "atenciones"
+        ],
+        "title": "PuntoHistorico",
+        "type": "object"
+      },
+      "PuntoOcupacionMensual": {
+        "properties": {
+          "ano": {
+            "title": "Ano",
+            "type": "integer"
+          },
+          "camas_disponibles_promedio": {
+            "description": "Días cama disponibles del mes / días del mes.",
+            "title": "Camas Disponibles Promedio",
+            "type": "number"
+          },
+          "camas_libres_promedio": {
+            "description": "Disponibles − ocupadas, por día en promedio: la brecha de capacidad. Negativa = sobre la capacidad.",
+            "title": "Camas Libres Promedio",
+            "type": "number"
+          },
+          "camas_ocupadas_promedio": {
+            "description": "Días cama ocupados del mes / días del mes: pacientes en cama de psiquiatría por día, en promedio.",
+            "title": "Camas Ocupadas Promedio",
+            "type": "number"
+          },
+          "fecha_inicio": {
+            "format": "date",
+            "title": "Fecha Inicio",
+            "type": "string"
+          },
+          "indice_ocupacional": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "100 · ocupados / disponibles del mes (razón de sumas); null si no hubo camas disponibles.",
+            "title": "Indice Ocupacional"
+          },
+          "mes": {
+            "title": "Mes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ano",
+          "mes",
+          "fecha_inicio",
+          "camas_ocupadas_promedio",
+          "camas_disponibles_promedio",
+          "camas_libres_promedio",
+          "indice_ocupacional"
+        ],
+        "title": "PuntoOcupacionMensual",
+        "type": "object"
+      },
+      "PuntoPronostico": {
+        "properties": {
+          "ano": {
+            "title": "Ano",
+            "type": "integer"
+          },
+          "fecha_inicio": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fecha Inicio"
+          },
+          "horizonte": {
+            "description": "Semanas despues de la ultima semana observada.",
+            "title": "Horizonte",
+            "type": "integer"
+          },
+          "limite_inferior": {
+            "title": "Limite Inferior",
+            "type": "number"
+          },
+          "limite_superior": {
+            "title": "Limite Superior",
+            "type": "number"
+          },
+          "pronostico": {
+            "title": "Pronostico",
+            "type": "number"
+          },
+          "semana": {
+            "title": "Semana",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "horizonte",
+          "ano",
+          "semana",
+          "fecha_inicio",
+          "pronostico",
+          "limite_inferior",
+          "limite_superior"
+        ],
+        "title": "PuntoPronostico",
+        "type": "object"
+      },
+      "PuntoPronosticoEstablecimiento": {
+        "properties": {
+          "ano": {
+            "title": "Ano",
+            "type": "integer"
+          },
+          "fecha_inicio": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fecha Inicio"
+          },
+          "horizonte": {
+            "title": "Horizonte",
+            "type": "integer"
+          },
+          "limite_inferior": {
+            "title": "Limite Inferior",
+            "type": "number"
+          },
+          "limite_superior": {
+            "title": "Limite Superior",
+            "type": "number"
+          },
+          "pronostico": {
+            "title": "Pronostico",
+            "type": "number"
+          },
+          "semana": {
+            "title": "Semana",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "horizonte",
+          "ano",
+          "semana",
+          "fecha_inicio",
+          "pronostico",
+          "limite_inferior",
+          "limite_superior"
+        ],
+        "title": "PuntoPronosticoEstablecimiento",
+        "type": "object"
+      },
+      "PuntoPronosticoSuicidios": {
+        "properties": {
+          "ano": {
+            "title": "Ano",
+            "type": "integer"
+          },
+          "cobertura_esperada": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Probabilidad que el modelo asigna al intervalo: en un conteo es mayor o igual al nivel.",
+            "title": "Cobertura Esperada"
+          },
+          "fecha_inicio": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fecha Inicio"
+          },
+          "horizonte": {
+            "description": "Semanas despues de la ultima semana observada.",
+            "title": "Horizonte",
+            "type": "integer"
+          },
+          "limite_inferior": {
+            "title": "Limite Inferior",
+            "type": "number"
+          },
+          "limite_superior": {
+            "title": "Limite Superior",
+            "type": "number"
+          },
+          "pronostico": {
+            "title": "Pronostico",
+            "type": "number"
+          },
+          "semana": {
+            "title": "Semana",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "horizonte",
+          "ano",
+          "semana",
+          "fecha_inicio",
+          "pronostico",
+          "limite_inferior",
+          "limite_superior",
+          "cobertura_esperada"
+        ],
+        "title": "PuntoPronosticoSuicidios",
+        "type": "object"
+      },
+      "PuntoSemanal": {
+        "properties": {
+          "ano": {
+            "title": "Ano",
+            "type": "integer"
+          },
+          "fecha_inicio": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fecha Inicio"
+          },
+          "semana": {
+            "title": "Semana",
+            "type": "integer"
+          },
+          "valor": {
+            "title": "Valor",
+            "type": "number"
+          }
+        },
+        "required": [
+          "ano",
+          "semana",
+          "fecha_inicio",
+          "valor"
+        ],
+        "title": "PuntoSemanal",
+        "type": "object"
+      },
+      "PuntoSuicidios": {
+        "properties": {
+          "ano": {
+            "title": "Ano",
+            "type": "integer"
+          },
+          "fecha_inicio": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fecha Inicio"
+          },
+          "semana": {
+            "title": "Semana",
+            "type": "integer"
+          },
+          "suicidios": {
+            "description": "Defunciones registradas por lesiones autoinfligidas (X60-X84).",
+            "title": "Suicidios",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ano",
+          "semana",
+          "fecha_inicio",
+          "suicidios"
+        ],
+        "title": "PuntoSuicidios",
+        "type": "object"
+      },
+      "ResumenComuna": {
+        "properties": {
+          "cambio_esperado": {
+            "description": "Alza o baja cuando la variacion esperada alcanza el umbral declarado en `/meta` (`umbral_cambio_pct`); si no, 'estable'. Es el tamano del cambio, no su significancia: para eso esta `fuera_del_intervalo`.",
+            "enum": [
+              "alza",
+              "baja",
+              "estable",
+              "sin_pronostico"
+            ],
+            "title": "Cambio Esperado",
+            "type": "string"
+          },
+          "distancia_mediana_id36_km": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Igual, contando solo la oferta que atiende salud mental (reporto ID36).",
+            "title": "Distancia Mediana Id36 Km"
+          },
+          "distancia_mediana_km": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Mitad de la poblacion vive a esta distancia en linea recta, o menos, de un establecimiento de la oferta de urgencia. Proximidad, no accesibilidad. Null si falta la capa de cobertura.",
+            "title": "Distancia Mediana Km"
+          },
+          "fuera_del_intervalo": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "True si el nivel reciente queda fuera del intervalo del pronostico: el cambio se distingue de la fluctuacion semanal. False si queda dentro, caso en que el movimiento es compatible con el ruido. Null si no hay pronostico.",
+            "title": "Fuera Del Intervalo"
+          },
+          "indicador_vulnerabilidad": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Tasa de pobreza por ingresos Casen 2022 (proporcion 0-1).",
+            "title": "Indicador Vulnerabilidad"
+          },
+          "limite_inferior_promedio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Media del limite inferior del intervalo sobre los horizontes.",
+            "title": "Limite Inferior Promedio"
+          },
+          "limite_superior_promedio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Media del limite superior del intervalo sobre los horizontes.",
+            "title": "Limite Superior Promedio"
+          },
+          "motivo_sin_pronostico": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Motivo Sin Pronostico"
+          },
+          "n_hospitales": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "N Hospitales"
+          },
+          "n_otras_excepciones": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Otras excepciones documentadas (p. ej. CEAR).",
+            "title": "N Otras Excepciones"
+          },
+          "n_sapu": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "N Sapu"
+          },
+          "n_sar": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "N Sar"
+          },
+          "n_sur": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "N Sur"
+          },
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          },
+          "oferta_urgencia_actual": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Oferta Urgencia Actual"
+          },
+          "promedio_ultimas_semanas": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Media de atenciones de las ultimas semanas observadas.",
+            "title": "Promedio Ultimas Semanas"
+          },
+          "pronostico_promedio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Media del pronostico puntual sobre los horizontes.",
+            "title": "Pronostico Promedio"
+          },
+          "proporcion_poblacion_a_5km_id36": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Proporcion (0-1) de la poblacion a 5 km o menos de una urgencia con ID36.",
+            "title": "Proporcion Poblacion A 5Km Id36"
+          },
+          "series_id": {
+            "title": "Series Id",
+            "type": "string"
+          },
+          "tasa_pronostico_por_10000": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Intensidad de atenciones pronosticada por 10.000 habitantes (no prevalencia).",
+            "title": "Tasa Pronostico Por 10000"
+          },
+          "tiene_pronostico": {
+            "title": "Tiene Pronostico",
+            "type": "boolean"
+          },
+          "variacion_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variacion Pct"
+          }
+        },
+        "required": [
+          "series_id",
+          "nombre",
+          "tiene_pronostico",
+          "promedio_ultimas_semanas",
+          "pronostico_promedio",
+          "variacion_pct",
+          "limite_inferior_promedio",
+          "limite_superior_promedio",
+          "cambio_esperado",
+          "tasa_pronostico_por_10000",
+          "indicador_vulnerabilidad",
+          "oferta_urgencia_actual"
+        ],
+        "title": "ResumenComuna",
+        "type": "object"
+      },
+      "ResumenObjetivoEstablecimiento": {
+        "properties": {
+          "incluido": {
+            "description": "Si el establecimiento tiene pronóstico para este objetivo.",
+            "title": "Incluido",
+            "type": "boolean"
+          },
+          "limite_inferior_promedio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Limite Inferior Promedio"
+          },
+          "limite_superior_promedio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Limite Superior Promedio"
+          },
+          "motivo_sin_pronostico": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Motivo Sin Pronostico"
+          },
+          "promedio_ultimas_semanas": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Media de las últimas semanas observadas; null si no reporta.",
+            "title": "Promedio Ultimas Semanas"
+          },
+          "pronostico_promedio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Media del pronóstico puntual sobre los horizontes publicables.",
+            "title": "Pronostico Promedio"
+          },
+          "variacion_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variacion Pct"
+          }
+        },
+        "required": [
+          "incluido",
+          "promedio_ultimas_semanas",
+          "pronostico_promedio",
+          "variacion_pct",
+          "limite_inferior_promedio",
+          "limite_superior_promedio"
+        ],
+        "title": "ResumenObjetivoEstablecimiento",
+        "type": "object"
+      },
+      "Salud": {
+        "properties": {
+          "detalle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detalle"
+          },
+          "estado_datos": {
+            "enum": [
+              "pendiente",
+              "calculando",
+              "listo",
+              "error"
+            ],
+            "title": "Estado Datos",
+            "type": "string"
+          },
+          "estado_pronostico": {
+            "enum": [
+              "pendiente",
+              "calculando",
+              "listo",
+              "error"
+            ],
+            "title": "Estado Pronostico",
+            "type": "string"
+          }
+        },
+        "required": [
+          "estado_datos",
+          "estado_pronostico"
+        ],
+        "title": "Salud",
+        "type": "object"
+      },
+      "SemanaParcial": {
+        "properties": {
+          "ano": {
+            "title": "Ano",
+            "type": "integer"
+          },
+          "atenciones": {
+            "description": "Acumulado de los dias ya publicados, no el total de la semana.",
+            "title": "Atenciones",
+            "type": "number"
+          },
+          "dias_esperados": {
+            "title": "Dias Esperados",
+            "type": "integer"
+          },
+          "dias_observados": {
+            "title": "Dias Observados",
+            "type": "integer"
+          },
+          "semana": {
+            "title": "Semana",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ano",
+          "semana",
+          "dias_observados",
+          "dias_esperados",
+          "atenciones"
+        ],
+        "title": "SemanaParcial",
+        "type": "object"
+      },
+      "SerieConPronostico": {
+        "properties": {
+          "estado_pronostico": {
+            "enum": [
+              "pendiente",
+              "calculando",
+              "listo",
+              "error"
+            ],
+            "title": "Estado Pronostico",
+            "type": "string"
+          },
+          "historico": {
+            "items": {
+              "$ref": "#/components/schemas/PuntoHistorico"
+            },
+            "title": "Historico",
+            "type": "array"
+          },
+          "nivel": {
+            "enum": [
+              "region",
+              "comuna"
+            ],
+            "title": "Nivel",
+            "type": "string"
+          },
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          },
+          "pronostico": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PuntoPronostico"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Null mientras el pronostico se esta calculando.",
+            "title": "Pronostico"
+          },
+          "series_id": {
+            "title": "Series Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "series_id",
+          "nombre",
+          "nivel",
+          "historico",
+          "pronostico",
+          "estado_pronostico"
+        ],
+        "title": "SerieConPronostico",
+        "type": "object"
+      },
+      "SerieObjetivoEstablecimiento": {
+        "properties": {
+          "descripcion": {
+            "title": "Descripcion",
+            "type": "string"
+          },
+          "historico": {
+            "items": {
+              "$ref": "#/components/schemas/PuntoSemanal"
+            },
+            "title": "Historico",
+            "type": "array"
+          },
+          "motivo_sin_pronostico": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Motivo Sin Pronostico"
+          },
+          "objetivo": {
+            "enum": [
+              "atenciones_sm",
+              "hospitalizaciones_sm"
+            ],
+            "title": "Objetivo",
+            "type": "string"
+          },
+          "pronostico": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PuntoPronosticoEstablecimiento"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Null si el establecimiento no tiene pronóstico; el motivo viene aparte.",
+            "title": "Pronostico"
+          }
+        },
+        "required": [
+          "objetivo",
+          "descripcion",
+          "historico",
+          "pronostico"
+        ],
+        "title": "SerieObjetivoEstablecimiento",
+        "type": "object"
+      },
+      "SerieSuicidios": {
+        "properties": {
+          "advertencias": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Advertencias",
+            "type": "array"
+          },
+          "cobertura_holdout": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CoberturaSuicidios"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fecha_corte_datos": {
+            "format": "date",
+            "title": "Fecha Corte Datos",
+            "type": "string"
+          },
+          "historico": {
+            "items": {
+              "$ref": "#/components/schemas/PuntoSuicidios"
+            },
+            "title": "Historico",
+            "type": "array"
+          },
+          "modelo": {
+            "title": "Modelo",
+            "type": "string"
+          },
+          "nivel": {
+            "enum": [
+              "region",
+              "comuna"
+            ],
+            "title": "Nivel",
+            "type": "string"
+          },
+          "nivel_intervalo": {
+            "title": "Nivel Intervalo",
+            "type": "number"
+          },
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          },
+          "pronostico": {
+            "items": {
+              "$ref": "#/components/schemas/PuntoPronosticoSuicidios"
+            },
+            "title": "Pronostico",
+            "type": "array"
+          },
+          "semanas_registro_incompleto": {
+            "description": "Semanas finales excluidas porque su inscripción aún no está completa.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Semanas Registro Incompleto",
+            "type": "array"
+          },
+          "series_id": {
+            "title": "Series Id",
+            "type": "string"
+          },
+          "suicidios_ultimas_52_semanas": {
+            "description": "Suicidios de los 364 días que terminan en la última semana completa, incluidos los fragmentos de borde de año.",
+            "title": "Suicidios Ultimas 52 Semanas",
+            "type": "integer"
+          },
+          "tasa_anual_por_100000": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Esos suicidios anualizados por 100.000 habitantes (población INE proyectada del último año).",
+            "title": "Tasa Anual Por 100000"
+          },
+          "ultima_semana_observada": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Ultima Semana Observada",
+            "type": "object"
+          }
+        },
+        "required": [
+          "series_id",
+          "nombre",
+          "nivel",
+          "historico",
+          "pronostico",
+          "suicidios_ultimas_52_semanas",
+          "tasa_anual_por_100000",
+          "modelo",
+          "nivel_intervalo",
+          "ultima_semana_observada",
+          "fecha_corte_datos",
+          "semanas_registro_incompleto",
+          "cobertura_holdout",
+          "advertencias"
+        ],
+        "title": "SerieSuicidios",
+        "type": "object"
+      },
+      "Territorio": {
+        "properties": {
+          "motivo_sin_pronostico": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Motivo Sin Pronostico"
+          },
+          "nivel": {
+            "enum": [
+              "region",
+              "comuna"
+            ],
+            "title": "Nivel",
+            "type": "string"
+          },
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          },
+          "series_id": {
+            "title": "Series Id",
+            "type": "string"
+          },
+          "tiene_pronostico": {
+            "title": "Tiene Pronostico",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "series_id",
+          "nombre",
+          "nivel",
+          "tiene_pronostico"
+        ],
+        "title": "Territorio",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Demanda de urgencia en salud mental en la Region Metropolitana: datos observados y pronostico a 4-8 semanas del modelo seleccionado.",
+    "title": "SAAD API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/calendario-eventos": {
+      "get": {
+        "description": "Festividades y estaciones que se superponen con el período, ordenadas por inicio.",
+        "operationId": "calendario_eventos_api_v1_calendario_eventos_get",
+        "parameters": [
+          {
+            "description": "Primer día del período (AAAA-MM-DD).",
+            "in": "query",
+            "name": "desde",
+            "required": true,
+            "schema": {
+              "description": "Primer día del período (AAAA-MM-DD).",
+              "format": "date",
+              "title": "Desde",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Último día del período (AAAA-MM-DD).",
+            "in": "query",
+            "name": "hasta",
+            "required": true,
+            "schema": {
+              "description": "Último día del período (AAAA-MM-DD).",
+              "format": "date",
+              "title": "Hasta",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/EventoCalendario"
+                  },
+                  "title": "Response Calendario Eventos Api V1 Calendario Eventos Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Calendario Eventos"
+      }
+    },
+    "/api/v1/camas-psiquiatria/{series_id}": {
+      "get": {
+        "description": "Total de camas de psiquiatria de los hospitales de un territorio (ultimo ano de la dotacion).",
+        "operationId": "camas_psiquiatria_api_v1_camas_psiquiatria__series_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "series_id",
+            "required": true,
+            "schema": {
+              "title": "Series Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CamasPsiquiatriaTerritorio"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Camas Psiquiatria"
+      }
+    },
+    "/api/v1/caracterizacion/{fuente}/{nivel}/{codigo}": {
+      "get": {
+        "operationId": "caracterizacion_api_v1_caracterizacion__fuente___nivel___codigo__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fuente",
+            "required": true,
+            "schema": {
+              "enum": [
+                "urgencias",
+                "hospitalizaciones",
+                "suicidios"
+              ],
+              "title": "Fuente",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "nivel",
+            "required": true,
+            "schema": {
+              "enum": [
+                "region",
+                "comuna",
+                "establecimiento"
+              ],
+              "title": "Nivel",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "codigo",
+            "required": true,
+            "schema": {
+              "title": "Codigo",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "semanas",
+            "required": true,
+            "schema": {
+              "maxLength": 5000,
+              "pattern": "^\\d{4}-\\d{1,2}(,\\d{4}-\\d{1,2})*$",
+              "title": "Semanas",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Caracterizacion"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Caracterizacion"
+      }
+    },
+    "/api/v1/establecimientos": {
+      "get": {
+        "description": "Establecimientos de urgencia con su resumen de atenciones y hospitalizaciones esperadas.",
+        "operationId": "listar_establecimientos_api_v1_establecimientos_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/EstablecimientoResumen"
+                  },
+                  "title": "Response Listar Establecimientos Api V1 Establecimientos Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Listar Establecimientos"
+      }
+    },
+    "/api/v1/establecimientos-meta": {
+      "get": {
+        "description": "Modelos servidos, cobertura real fuera de muestra y advertencias de lectura.",
+        "operationId": "meta_establecimientos_api_v1_establecimientos_meta_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaEstablecimientos"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Meta Establecimientos"
+      }
+    },
+    "/api/v1/establecimientos/{codigo}": {
+      "get": {
+        "description": "Historia semanal y pronóstico de un establecimiento.",
+        "operationId": "establecimiento_api_v1_establecimientos__codigo__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "codigo",
+            "required": true,
+            "schema": {
+              "title": "Codigo",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Semanas históricas a devolver.",
+            "in": "query",
+            "name": "semanas",
+            "required": false,
+            "schema": {
+              "default": 52,
+              "description": "Semanas históricas a devolver.",
+              "maximum": 520,
+              "minimum": 1,
+              "title": "Semanas",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstablecimientoDetalle"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Establecimiento"
+      }
+    },
+    "/api/v1/geo/comunas": {
+      "get": {
+        "description": "Limites comunales RM (Censo 2024) simplificados, en GeoJSON.",
+        "operationId": "geo_comunas_api_v1_geo_comunas_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Geo Comunas"
+      }
+    },
+    "/api/v1/hospitalizaciones-residentes/{series_id}": {
+      "get": {
+        "description": "Egresos por salud mental de quienes viven en el territorio: tasa, estadía y perfil.",
+        "operationId": "hospitalizaciones_residentes_api_v1_hospitalizaciones_residentes__series_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "series_id",
+            "required": true,
+            "schema": {
+              "title": "Series Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Año de los desgloses; por defecto, el último publicado.",
+            "in": "query",
+            "name": "ano",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Año de los desgloses; por defecto, el último publicado.",
+              "title": "Ano"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HospitalizacionesResidentes"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Hospitalizaciones Residentes"
+      }
+    },
+    "/api/v1/meta": {
+      "get": {
+        "description": "Que modelo se sirve, hasta que semana hay datos y cuanto confiar en los intervalos.",
+        "operationId": "meta_api_v1_meta_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Meta"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Meta"
+      }
+    },
+    "/api/v1/pronosticos": {
+      "get": {
+        "description": "Pronostico de todas las series, filtrable por nivel y horizonte.",
+        "operationId": "pronosticos_api_v1_pronosticos_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "nivel",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "pattern": "^(region|comuna)$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Nivel"
+            }
+          },
+          {
+            "in": "query",
+            "name": "horizonte",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Horizonte"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PronosticoSerie"
+                  },
+                  "title": "Response Pronosticos Api V1 Pronosticos Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Pronosticos"
+      }
+    },
+    "/api/v1/resumen-comunal": {
+      "get": {
+        "description": "Ranking comunal: nivel reciente, pronostico, variacion y contexto territorial.",
+        "operationId": "resumen_api_v1_resumen_comunal_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ResumenComuna"
+                  },
+                  "title": "Response Resumen Api V1 Resumen Comunal Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Resumen"
+      }
+    },
+    "/api/v1/salud": {
+      "get": {
+        "operationId": "salud_api_v1_salud_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Salud"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Salud"
+      }
+    },
+    "/api/v1/series/{series_id}": {
+      "get": {
+        "description": "Historia observada de una serie y, si ya esta calculado, su pronostico.",
+        "operationId": "serie_api_v1_series__series_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "series_id",
+            "required": true,
+            "schema": {
+              "title": "Series Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Semanas historicas a devolver.",
+            "in": "query",
+            "name": "semanas",
+            "required": false,
+            "schema": {
+              "default": 104,
+              "description": "Semanas historicas a devolver.",
+              "maximum": 520,
+              "minimum": 1,
+              "title": "Semanas",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SerieConPronostico"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Serie"
+      }
+    },
+    "/api/v1/suicidios/{series_id}": {
+      "get": {
+        "description": "Suicidios semanales observados y pronosticados de la región o de una comuna de residencia.",
+        "operationId": "suicidios_api_v1_suicidios__series_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "series_id",
+            "required": true,
+            "schema": {
+              "title": "Series Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Semanas históricas a devolver.",
+            "in": "query",
+            "name": "semanas",
+            "required": false,
+            "schema": {
+              "default": 52,
+              "description": "Semanas históricas a devolver.",
+              "maximum": 520,
+              "minimum": 1,
+              "title": "Semanas",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SerieSuicidios"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Suicidios"
+      }
+    },
+    "/api/v1/territorios": {
+      "get": {
+        "description": "Region y las 52 comunas RM, indicando cuales tienen pronostico y por que no.",
+        "operationId": "territorios_api_v1_territorios_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Territorio"
+                  },
+                  "title": "Response Territorios Api V1 Territorios Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Territorios"
+      }
+    }
+  }
+}
