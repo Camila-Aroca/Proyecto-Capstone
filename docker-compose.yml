@@ -7,6 +7,9 @@ services:
       target: api
     image: saad-api
     restart: unless-stopped
+    environment:
+      # 1: sirve el pronóstico guardado aunque no esté vigente, con advertencia (igual que en AWS).
+      SAAD_USAR_PRONOSTICO_DESACTUALIZADO: ${SAAD_USAR_PRONOSTICO_DESACTUALIZADO:-0}
     volumes:
       # Se monta data/ completo: al arrancar, la API tambien lee RAW de Urgencias
       # y poblacion para el holdout reciente.
