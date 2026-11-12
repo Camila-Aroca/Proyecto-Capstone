@@ -1,0 +1,531 @@
+{
+  "ciclo": 2,
+  "fecha_utc": "2026-11-12T14:29:47+00:00",
+  "commit": "3f1fd84",
+  "pytest": {
+    "estado": "APROBADO",
+    "total": 866,
+    "aprobados": 858,
+    "fallidos": 0,
+    "omitidos": 8,
+    "deseleccionados": 29,
+    "tests_fallidos": []
+  },
+  "ci": {
+    "estado": "APROBADO",
+    "detalle": "2 plantillas sintetizadas; cfn-lint sin errores, 4 advertencias de recursos internos de CDK",
+    "conexion": "PENDING"
+  },
+  "contrato": {
+    "estado": "APROBADO",
+    "ERROR": 0,
+    "ADVERTENCIA": 12,
+    "INFO": 9
+  },
+  "catalogo": [
+    {
+      "caso": "CP-SAAD-001",
+      "nombre": "Portal publicado mediante HTTPS y CloudFront",
+      "local": "—",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-002",
+      "nombre": "Rutas hash al refrescar y al compartir",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-003",
+      "nombre": "Enrutamiento CloudFront /api/* al ALB",
+      "local": "—",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-004",
+      "nombre": "Bucket del frontend privado y distribución autorizada",
+      "local": "—",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-005",
+      "nombre": "Salud de targets ALB y tareas ECS",
+      "local": "—",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-006",
+      "nombre": "Lectura de outputs en API después de arranque Fargate",
+      "local": "—",
+      "aws": "APROBADO",
+      "nota": "Cubierto por CP-SAAD-020."
+    },
+    {
+      "caso": "CP-SAAD-007",
+      "nombre": "Imagen ECR identificable y versión de despliegue trazable",
+      "local": "—",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-008",
+      "nombre": "Registro de solicitudes y errores en CloudWatch",
+      "local": "—",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-009",
+      "nombre": "Inventario S3 de RAW, processed, reports y manifest",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-010",
+      "nombre": "Permisos del rol de tarea pipeline",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-011",
+      "nombre": "Ejecución manual controlada del refresh semanal",
+      "local": "—",
+      "aws": "NO EJECUTADO",
+      "nota": "No aplica en Fargate: el pipeline corre en el equipo y se publica con subir_datos.sh (cambio de alcance de C-42)."
+    },
+    {
+      "caso": "CP-SAAD-012",
+      "nombre": "EventBridge Scheduler dispara tarea esperada",
+      "local": "—",
+      "aws": "NO EJECUTADO",
+      "nota": "No aplica: no hay tarea programada (pipeline local)."
+    },
+    {
+      "caso": "CP-SAAD-013",
+      "nombre": "Falla de etapa no promueve artefactos incompletos",
+      "local": "—",
+      "aws": "NO EJECUTADO",
+      "nota": "No aplica en AWS: el pipeline no corre en Fargate."
+    },
+    {
+      "caso": "CP-SAAD-014",
+      "nombre": "Nuevos outputs visibles tras redespliegue de API",
+      "local": "—",
+      "aws": "NO EJECUTADO",
+      "nota": "Requiere publicar datos nuevos con subir_datos.sh; no se hizo en esta corrida."
+    },
+    {
+      "caso": "CP-SAAD-015",
+      "nombre": "Estado temporal 503 y Retry-After durante inicialización",
+      "local": "—",
+      "aws": "NO EJECUTADO",
+      "nota": "No observable desde fuera: el despliegue mantiene la tarea anterior hasta que la nueva está sana. Cubierto por pruebas unitarias de la API (tests/test_api.py)."
+    },
+    {
+      "caso": "CP-SAAD-016",
+      "nombre": "Insuficiencia de almacenamiento efímero del pipeline",
+      "local": "—",
+      "aws": "NO EJECUTADO",
+      "nota": "No aplica: el pipeline no corre en Fargate."
+    },
+    {
+      "caso": "CP-SAAD-017",
+      "nombre": "GET /api/v1/salud reporta estados reales",
+      "local": "APROBADO",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-018",
+      "nombre": "GET /api/v1/meta: trazabilidad y advertencias",
+      "local": "APROBADO",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-019",
+      "nombre": "GET /api/v1/territorios conserva 52 comunas y región",
+      "local": "APROBADO",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-020",
+      "nombre": "GET /api/v1/series/{series_id} para RM",
+      "local": "APROBADO",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-021",
+      "nombre": "Serie inexistente y parámetros fuera de rango",
+      "local": "APROBADO",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-022",
+      "nombre": "GET /api/v1/pronosticos filtrado por nivel y horizonte",
+      "local": "APROBADO",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-023",
+      "nombre": "GET /api/v1/resumen-comunal consistente con series",
+      "local": "APROBADO",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-024",
+      "nombre": "GET /api/v1/geo/comunas devuelve GeoJSON válido",
+      "local": "APROBADO",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-025",
+      "nombre": "GET /api/v1/camas-psiquiatria/{series_id}",
+      "local": "FALLIDO",
+      "aws": "FALLIDO",
+      "nota": "HTTP 404 (se esperaba 200); detalle de la API: Falta la dotacion de camas: ejecute el stage `build_dim_camas_psiquiatria_hospital_rm` del pipeline."
+    },
+    {
+      "caso": "CP-SAAD-026",
+      "nombre": "GET /api/v1/calendario-eventos",
+      "local": "APROBADO",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-027",
+      "nombre": "Caracterización: combinaciones admitidas y rechazadas",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-028",
+      "nombre": "Landing SAAD y alcance comunicado",
+      "local": "APROBADO",
+      "aws": "—",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-029",
+      "nombre": "Navegar landing → tablero → establecimientos",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-030",
+      "nombre": "Gráfico regional: historia, pronóstico e intervalo",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-031",
+      "nombre": "Cambio de comuna actualiza toda la vista",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-032",
+      "nombre": "Comuna sin pronóstico: no representarla como cero",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-033",
+      "nombre": "Mapa de concentración y cambio de métrica",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-034",
+      "nombre": "Tooltip y tabla comunal sincronizados",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-035",
+      "nombre": "Ventanas de semanas y fechas de corte",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-036",
+      "nombre": "Carga, error y recuperación visible",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-037",
+      "nombre": "Listado de establecimientos y métricas disponibles",
+      "local": "FALLIDO",
+      "aws": "FALLIDO",
+      "nota": "HTTP 503 (se esperaba 200); detalle de la API: data/processed/marts/mart_urgencias_establecimiento_weekly.parquet; HTTP 503 (se esperaba 200); detalle de la API: data/processed/marts/mart_urgencias_establecimiento_weekly.parquet"
+    },
+    {
+      "caso": "CP-SAAD-038",
+      "nombre": "Búsqueda, filtro por tipo y por comuna",
+      "local": "BLOCKED",
+      "aws": "BLOCKED",
+      "nota": "DEF-02: sin datos de establecimientos (mart semanal y pronóstico no publicados)"
+    },
+    {
+      "caso": "CP-SAAD-039",
+      "nombre": "Atenciones SM ID36 por establecimiento",
+      "local": "BLOCKED",
+      "aws": "BLOCKED",
+      "nota": "DEF-02: sin datos de establecimientos (mart semanal y pronóstico no publicados)"
+    },
+    {
+      "caso": "CP-SAAD-040",
+      "nombre": "Hospitalizaciones ID42 solo en hospitales",
+      "local": "BLOCKED",
+      "aws": "BLOCKED",
+      "nota": "DEF-02: sin datos de establecimientos (mart semanal y pronóstico no publicados)"
+    },
+    {
+      "caso": "CP-SAAD-041",
+      "nombre": "Establecimiento sin pronóstico o fuera de rango",
+      "local": "BLOCKED",
+      "aws": "BLOCKED",
+      "nota": "DEF-02: sin datos de establecimientos (mart semanal y pronóstico no publicados)"
+    },
+    {
+      "caso": "CP-SAAD-042",
+      "nombre": "Ocupación mensual REM-20 en hospitales",
+      "local": "BLOCKED",
+      "aws": "BLOCKED",
+      "nota": "DEF-01: sin dotación ni ocupación de camas de psiquiatría"
+    },
+    {
+      "caso": "CP-SAAD-043",
+      "nombre": "Niveles de presión, saturación y sobrecapacidad",
+      "local": "BLOCKED",
+      "aws": "BLOCKED",
+      "nota": "DEF-01: sin dotación ni ocupación de camas de psiquiatría"
+    },
+    {
+      "caso": "CP-SAAD-044",
+      "nombre": "Dotación anual vs disponibilidad mensual vs capacidad",
+      "local": "BLOCKED",
+      "aws": "BLOCKED",
+      "nota": "DEF-01: sin dotación ni ocupación de camas de psiquiatría"
+    },
+    {
+      "caso": "CP-SAAD-045",
+      "nombre": "Propuesta de camas como estimación condicionada",
+      "local": "BLOCKED",
+      "aws": "BLOCKED",
+      "nota": "DEF-01: sin dotación ni ocupación de camas de psiquiatría"
+    },
+    {
+      "caso": "CP-SAAD-046",
+      "nombre": "Caracterización por sexo y edad del flujo",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-047",
+      "nombre": "Suicidios: pronóstico y tasa por residencia",
+      "local": "FALLIDO",
+      "aws": "FALLIDO",
+      "nota": "HTTP 503 (se esperaba 200); detalle de la API: El pronóstico de suicidios está desactualizado (falta la entrada 'mart_suicidios_comuna_weekly' (data/processed/marts/mart_suicidios_comuna_weekly.parquet)): ejecute el stage `forecast_suicidios` del pipeline."
+    },
+    {
+      "caso": "CP-SAAD-048",
+      "nombre": "Calendario y marcas del gráfico de suicidios",
+      "local": "BLOCKED",
+      "aws": "BLOCKED",
+      "nota": "DEF-03: sin mart ni pronóstico de suicidios"
+    },
+    {
+      "caso": "CP-SAAD-049",
+      "nombre": "Pronóstico suicidios desactualizado o ausente",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-050",
+      "nombre": "Alineación temporal entre suicidios y urgencias",
+      "local": "BLOCKED",
+      "aws": "BLOCKED",
+      "nota": "DEF-03: sin mart ni pronóstico de suicidios"
+    },
+    {
+      "caso": "CP-SAAD-051",
+      "nombre": "Mensajes de prevención e interpretación responsable",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-052",
+      "nombre": "Semanas con recuento muy bajo no parecen picos artificiales",
+      "local": "BLOCKED",
+      "aws": "BLOCKED",
+      "nota": "DEF-03: sin mart ni pronóstico de suicidios"
+    },
+    {
+      "caso": "CP-SAAD-053",
+      "nombre": "Horizontes ofertados corresponden a modelo y meta",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-054",
+      "nombre": "Orden lógico de intervalos de predicción",
+      "local": "APROBADO",
+      "aws": "APROBADO",
+      "nota": "Cubierto por CP-SAAD-022."
+    },
+    {
+      "caso": "CP-SAAD-055",
+      "nombre": "Cobertura holdout declarada sin engaño",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-056",
+      "nombre": "Semana parcial no sustituye semana cerrada",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-057",
+      "nombre": "Tasas y denominadores territoriales",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-058",
+      "nombre": "Trazabilidad de datos DEIS y fecha del modelo",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-059",
+      "nombre": "Diferenciar hospitalizaciones ID42 de ocupación REM-20",
+      "local": "BLOCKED",
+      "aws": "BLOCKED",
+      "nota": "DEF-01: sin dotación ni ocupación de camas de psiquiatría"
+    },
+    {
+      "caso": "CP-SAAD-060",
+      "nombre": "Cifrado TLS y respuesta HTTP→HTTPS",
+      "local": "—",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-061",
+      "nombre": "Acceso público de solo lectura sin autenticar (según MVP)",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-062",
+      "nombre": "IAM mínimo en servicio API y bucket de datos",
+      "local": "—",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-063",
+      "nombre": "Ausencia de secretos en frontend, logs y configuración",
+      "local": "—",
+      "aws": "APROBADO",
+      "nota": ""
+    },
+    {
+      "caso": "CP-SAAD-064",
+      "nombre": "Cache CloudFront tras nueva versión",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-065",
+      "nombre": "Recuperación después de reemplazo de tarea ECS",
+      "local": "—",
+      "aws": "NO EJECUTADO",
+      "nota": "Se ejecuta con --reinicio porque reemplaza la tarea en servicio."
+    },
+    {
+      "caso": "CP-SAAD-066",
+      "nombre": "Error HTTP/timeout no deja frontend con datos cruzados",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-067",
+      "nombre": "Navegación por teclado y foco visible",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-068",
+      "nombre": "Diseño y lectura en móvil y escritorio",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-069",
+      "nombre": "Presupuesto, etiquetas y costo del ambiente de evaluación",
+      "local": "NO EJECUTADO",
+      "aws": "NO EJECUTADO",
+      "nota": "Prueba manual de interfaz o de operación; no automatizada en este ciclo."
+    },
+    {
+      "caso": "CP-SAAD-070",
+      "nombre": "Ciclo completo AWS y comparación con baseline local",
+      "local": "—",
+      "aws": "FALLIDO",
+      "nota": "Ciclo completo ejecutado y comparado con local; 4 casos fallan en ambos entornos (ver casos fallidos)."
+    }
+  ],
+  "conteo_local": {
+    "APROBADO": 11,
+    "FALLIDO": 3,
+    "BLOCKED": 12,
+    "NO EJECUTADO": 26,
+    "—": 18
+  },
+  "conteo_aws": {
+    "APROBADO": 20,
+    "FALLIDO": 4,
+    "BLOCKED": 12,
+    "NO EJECUTADO": 33,
+    "—": 1
+  }
+}

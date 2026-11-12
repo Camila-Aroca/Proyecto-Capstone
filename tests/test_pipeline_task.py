@@ -14,6 +14,16 @@ from src.cloud.pipeline_task import MARGEN_DISCO, MODOS, ejecutar, ruta_local
 TASK_DEFINITION = Path(__file__).resolve().parents[1] / "infra/aws/pipeline-task-definition.json"
 
 
+@pytest.fixture(autouse=True)
+def _disco_suficiente(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Aísla los tests del disco real: sin esto fallan en equipos con menos de MARGEN_DISCO libre.
+
+    El test de espacio insuficiente inyecta su propio `espacio_libre`, así que no lo afecta.
+    """
+    monkeypatch.setattr("src.cloud.pipeline_task.shutil.disk_usage",
+                        lambda _ruta: SimpleNamespace(free=MARGEN_DISCO * 10))
+
+
 class FakeS3:
     """Bucket en memoria con la parte de la API de boto3 que usa la tarea."""
 
