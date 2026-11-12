@@ -1,7 +1,7 @@
 {
   "dataset": "pronostico_demanda_sm",
-  "generado_en_utc": "2026-11-10T23:00:32.504878Z",
-  "generado_en_chile": "2026-11-10T20:00:32.516574-03:00",
+  "generado_en_utc": "2026-11-12T14:53:07.182869Z",
+  "generado_en_chile": "2026-11-12T11:53:07.184894-03:00",
   "modelo": "hibrido_glm_region_lgbm_comuna_conformal",
   "nivel_intervalo": 0.8,
   "horizontes": [
@@ -16,9 +16,9 @@
   ],
   "semilla": 42,
   "ultima_semana_observada": {
-    "t": 303,
+    "t": 298,
     "ano": 2026,
-    "semana": 44
+    "semana": 39
   },
   "series": {
     "total": 51,
@@ -33,11 +33,11 @@
     },
     "seleccion_benchmark": {
       "ruta": "reports/modeling/benchmark_demanda_sm_seleccion.json",
-      "sha256": "e072f33cd0ac06b898355cd56acf1276f3ce38deafbd5cff857be4b49b6e9db7"
+      "sha256": "128c852000269366756391f7007c4988f145aaed4be787e18dc6a7c33947e445"
     }
   },
   "versiones": {
-    "python": "3.12.6",
+    "python": "3.12.3",
     "pandas": "3.0.5",
     "numpy": "2.5.2",
     "pyarrow": "25.0.1",

@@ -160,7 +160,7 @@ Lectura: son magnitudes distintas. El ID42 cuenta, por semana, hospitalizaciones
 
 ## Propuesta anual de camas: escenario de continuidad
 
-Corte reproducible: 2026-11-07. Método `continuidad_pico_12m_v1`.
+Corte reproducible: 2026-11-12. Método `continuidad_pico_12m_v1`.
 
 Objetivo = techo(max(días cama ocupados / días del mes) / 0,85), últimos 12 meses consecutivos. Sensibilidad a 90%. Cada área de psiquiatría se calcula por separado. Fuera de corta estadía 418/421, el 85% es un supuesto explícito del escenario, no un estándar clínico específico validado. Primero evaluar habilitación de dotación existente; ampliar solo la brecha positiva respecto de la declarada. Sin cifra declarada, la base es la disponibilidad diaria calculada del último REM-20: el aumento es capacidad adicional estimada y no distingue camas nuevas de rehabilitación. Las disponibles son promedios: la habilitación calculada puede ser fraccionaria; las camas nuevas son enteras.
 

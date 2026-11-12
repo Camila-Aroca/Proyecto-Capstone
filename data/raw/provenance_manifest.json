@@ -690,6 +690,21 @@
           "http_last_modified": "Mon, 01 Dec 2025 19:56:00 GMT",
           "http_etag": "\"0c8fd83fc62dc1:0\""
         }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/Estadisticas/DOTACION_CAMAS/Dotaci%C3%B3n%20de%20camas%202010-2025%20Establecimientos%20Pertenecientes%20al%20SNSS_01-12-2025.xlsx",
+        "downloaded_at": "2026-11-12T14:37:48.022606+00:00",
+        "raw_path": "data/raw/camas/dotacion_camas_snss_2010_2025.xlsx",
+        "raw_filename": "dotacion_camas_snss_2010_2025.xlsx",
+        "raw_size": 179409,
+        "raw_sha256": "9f4257b69c6f5370a3ac5b6ad8ecbfef85ac071e09416c6f8623b063750bfac8",
+        "transport": {
+          "filename": "dotacion_camas_snss_2010_2025.xlsx",
+          "size": 179409,
+          "sha256": "9f4257b69c6f5370a3ac5b6ad8ecbfef85ac071e09416c6f8623b063750bfac8",
+          "http_last_modified": "Mon, 01 Dec 2025 19:56:00 GMT",
+          "http_etag": "\"0c8fd83fc62dc1:0\""
+        }
       }
     ],
     "dataset": "deis_dotacion_camas_establecimientos_snss",
@@ -704,6 +719,21 @@
       {
         "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/Estadisticas/DOTACION_CAMAS/Dotaci%C3%B3n%20de%20camas%202019-2025%20Establecimientos%20No%20pertenecientes%20al%20SNSS.xlsx",
         "downloaded_at": "2026-10-28T22:40:50.540812+00:00",
+        "raw_path": "data/raw/camas/dotacion_camas_no_snss_2019_2025.xlsx",
+        "raw_filename": "dotacion_camas_no_snss_2019_2025.xlsx",
+        "raw_size": 178588,
+        "raw_sha256": "71293a61753e10ff520caca3dd67c1535ba0c1d25dddd41771756f17ccc09c46",
+        "transport": {
+          "filename": "dotacion_camas_no_snss_2019_2025.xlsx",
+          "size": 178588,
+          "sha256": "71293a61753e10ff520caca3dd67c1535ba0c1d25dddd41771756f17ccc09c46",
+          "http_last_modified": "Mon, 20 Oct 2025 16:12:50 GMT",
+          "http_etag": "\"67e5d561dc41dc1:0\""
+        }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/Estadisticas/DOTACION_CAMAS/Dotaci%C3%B3n%20de%20camas%202019-2025%20Establecimientos%20No%20pertenecientes%20al%20SNSS.xlsx",
+        "downloaded_at": "2026-11-12T14:37:48.303657+00:00",
         "raw_path": "data/raw/camas/dotacion_camas_no_snss_2019_2025.xlsx",
         "raw_filename": "dotacion_camas_no_snss_2019_2025.xlsx",
         "raw_size": 178588,
@@ -741,6 +771,23 @@
           "downloaded_at": "2026-11-03T00:32:13.971231+00:00",
           "archive_member": "DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv"
         }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.zip",
+        "downloaded_at": "2026-11-12T14:38:30.990269+00:00",
+        "raw_path": "data/raw/defunciones/1990_2023/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv",
+        "raw_filename": "DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv",
+        "raw_size": 869415741,
+        "raw_sha256": "b763f5be857edbef5d06dc2da9437d7be8640f76719b5a0bb75b276282553ebb",
+        "transport": {
+          "filename": "DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.zip",
+          "size": 93202577,
+          "sha256": "311b56533a60cc5b554575de3cec6575063aa1a1ce17d25c6017a2895cdd60e7",
+          "Last-Modified": "Wed, 06 May 2026 15:28:57 GMT",
+          "ETag": "\"3c24ee6ddddc1:0\"",
+          "downloaded_at": "2026-11-12T14:38:30.990269+00:00",
+          "archive_member": "DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv"
+        }
       }
     ],
     "dataset": "defunciones",
@@ -764,6 +811,23 @@
           "Last-Modified": "Wed, 06 May 2026 15:28:57 GMT",
           "ETag": "\"3c24ee6ddddc1:0\"",
           "downloaded_at": "2026-11-03T00:32:13.971231+00:00",
+          "archive_member": "Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx"
+        }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.zip",
+        "downloaded_at": "2026-11-12T14:38:30.990269+00:00",
+        "raw_path": "data/raw/defunciones/1990_2023/Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
+        "raw_filename": "Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
+        "raw_size": 37148,
+        "raw_sha256": "298600901a454f91bfb5634359efdbcb163d8a61d6e1b8dcdae01768ec38c60f",
+        "transport": {
+          "filename": "DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.zip",
+          "size": 93202577,
+          "sha256": "311b56533a60cc5b554575de3cec6575063aa1a1ce17d25c6017a2895cdd60e7",
+          "Last-Modified": "Wed, 06 May 2026 15:28:57 GMT",
+          "ETag": "\"3c24ee6ddddc1:0\"",
+          "downloaded_at": "2026-11-12T14:38:30.990269+00:00",
           "archive_member": "Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx"
         }
       }
@@ -839,6 +903,21 @@
           "http_last_modified": "Fri, 04 Oct 2024 15:32:54 GMT",
           "http_etag": "\"6e9779ae7216db1:0\""
         }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Consolidado%20Estad%C3%ADsticas%20Hospitalarias%202014-2023.xlsx",
+        "downloaded_at": "2026-11-12T14:37:58.321169+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2014_2023.xlsx",
+        "raw_filename": "indicadores_hospitalarios_2014_2023.xlsx",
+        "raw_size": 15726409,
+        "raw_sha256": "f4d00bc86086843011b380b9be5ecb6263c9f549ab4c6dab79a66a9d1ca85bf1",
+        "transport": {
+          "filename": "indicadores_hospitalarios_2014_2023.xlsx",
+          "size": 15726409,
+          "sha256": "f4d00bc86086843011b380b9be5ecb6263c9f549ab4c6dab79a66a9d1ca85bf1",
+          "http_last_modified": "Fri, 04 Oct 2024 15:32:54 GMT",
+          "http_etag": "\"6e9779ae7216db1:0\""
+        }
       }
     ],
     "dataset": "deis_rem20_indicadores_hospitalarios",
@@ -852,6 +931,21 @@
       {
         "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Estad%C3%ADsticas%20Hospitalarias%20A%C3%B1o%202024.xlsx",
         "downloaded_at": "2026-11-05T22:26:25.155148+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2024.xlsx",
+        "raw_filename": "indicadores_hospitalarios_2024.xlsx",
+        "raw_size": 1602568,
+        "raw_sha256": "4c4578b81f87c4ea85086750815ea05903bd12b6fca1ec78529ce9f27ee9e06f",
+        "transport": {
+          "filename": "indicadores_hospitalarios_2024.xlsx",
+          "size": 1602568,
+          "sha256": "4c4578b81f87c4ea85086750815ea05903bd12b6fca1ec78529ce9f27ee9e06f",
+          "http_last_modified": "Fri, 09 Jan 2026 12:19:06 GMT",
+          "http_etag": "\"bfd535266281dc1:0\""
+        }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Estad%C3%ADsticas%20Hospitalarias%20A%C3%B1o%202024.xlsx",
+        "downloaded_at": "2026-11-12T14:37:59.229931+00:00",
         "raw_path": "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2024.xlsx",
         "raw_filename": "indicadores_hospitalarios_2024.xlsx",
         "raw_size": 1602568,
@@ -887,6 +981,21 @@
           "http_last_modified": "Fri, 17 Apr 2026 13:31:43 GMT",
           "http_etag": "\"52931b886ecedc1:0\""
         }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2025/Estad%C3%ADsticas%20Hospitalarias%20a%C3%B1o%202025-_16042026.xlsx",
+        "downloaded_at": "2026-11-12T14:38:00.105793+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2025.xlsx",
+        "raw_filename": "indicadores_hospitalarios_2025.xlsx",
+        "raw_size": 1556072,
+        "raw_sha256": "71e3a3a7c035eeb624162635ca8f4ea2fa24e5e47061c91b554e3e1278284d5c",
+        "transport": {
+          "filename": "indicadores_hospitalarios_2025.xlsx",
+          "size": 1556072,
+          "sha256": "71e3a3a7c035eeb624162635ca8f4ea2fa24e5e47061c91b554e3e1278284d5c",
+          "http_last_modified": "Fri, 17 Apr 2026 13:31:43 GMT",
+          "http_etag": "\"52931b886ecedc1:0\""
+        }
       }
     ],
     "dataset": "deis_rem20_indicadores_hospitalarios",
@@ -900,6 +1009,21 @@
       {
         "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Categorizaci%C3%B3n%20riesgo%20dependencia%20Primer%20Trimestre%202024.xlsx",
         "downloaded_at": "2026-11-05T22:26:29.291746+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t1.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2024_t1.xlsx",
+        "raw_size": 108780,
+        "raw_sha256": "2e61da246b027e22596abfc5d9a3363d79292f743c249bf9f5c68f45ec89b466",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2024_t1.xlsx",
+          "size": 108780,
+          "sha256": "2e61da246b027e22596abfc5d9a3363d79292f743c249bf9f5c68f45ec89b466",
+          "http_last_modified": "Thu, 01 Aug 2024 22:15:36 GMT",
+          "http_etag": "\"e9eb8e5560e4da1:0\""
+        }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Categorizaci%C3%B3n%20riesgo%20dependencia%20Primer%20Trimestre%202024.xlsx",
+        "downloaded_at": "2026-11-12T14:38:00.314245+00:00",
         "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t1.xlsx",
         "raw_filename": "categorizacion_riesgo_dependencia_2024_t1.xlsx",
         "raw_size": 108780,
@@ -935,6 +1059,21 @@
           "http_last_modified": "Thu, 01 Aug 2024 22:16:36 GMT",
           "http_etag": "\"232f527960e4da1:0\""
         }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Categorizaci%C3%B3n%20riesgo%20dependencia%20SegundoTrimestre%202024.xlsx",
+        "downloaded_at": "2026-11-12T14:38:00.527123+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t2.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2024_t2.xlsx",
+        "raw_size": 108385,
+        "raw_sha256": "c87b1bad168e0efd72691bd6c9bb25e655f2a088e85cef3be0296b2204cc57c7",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2024_t2.xlsx",
+          "size": 108385,
+          "sha256": "c87b1bad168e0efd72691bd6c9bb25e655f2a088e85cef3be0296b2204cc57c7",
+          "http_last_modified": "Thu, 01 Aug 2024 22:16:36 GMT",
+          "http_etag": "\"232f527960e4da1:0\""
+        }
       }
     ],
     "dataset": "deis_rem20_categorizacion_riesgo_dependencia",
@@ -948,6 +1087,21 @@
       {
         "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Categorizaci%C3%B3n%20riesgo%20dependencia%20Tercer%20Trimestre%202024.xlsx",
         "downloaded_at": "2026-11-05T22:26:30.429851+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t3.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2024_t3.xlsx",
+        "raw_size": 108633,
+        "raw_sha256": "ba021d76c4f28136ba945b946ea37f03d88375f5939f6d0b4b1c2e42720dc543",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2024_t3.xlsx",
+          "size": 108633,
+          "sha256": "ba021d76c4f28136ba945b946ea37f03d88375f5939f6d0b4b1c2e42720dc543",
+          "http_last_modified": "Wed, 04 Dec 2024 12:59:17 GMT",
+          "http_etag": "\"39bac2534c46db1:0\""
+        }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Categorizaci%C3%B3n%20riesgo%20dependencia%20Tercer%20Trimestre%202024.xlsx",
+        "downloaded_at": "2026-11-12T14:38:00.742793+00:00",
         "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t3.xlsx",
         "raw_filename": "categorizacion_riesgo_dependencia_2024_t3.xlsx",
         "raw_size": 108633,
@@ -983,6 +1137,21 @@
           "http_last_modified": "Fri, 24 Jan 2025 15:41:10 GMT",
           "http_etag": "\"832d7764766edb1:0\""
         }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/Categorizaci%C3%B3n%20riesgo%20dependencia%20Cuarto%20Trimestre%202024.xlsx",
+        "downloaded_at": "2026-11-12T14:38:00.865625+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t4.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2024_t4.xlsx",
+        "raw_size": 108092,
+        "raw_sha256": "c6d5c01da2e2ab404e120d69014da58a9e61f8db2543d9ae080606be79b599fd",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2024_t4.xlsx",
+          "size": 108092,
+          "sha256": "c6d5c01da2e2ab404e120d69014da58a9e61f8db2543d9ae080606be79b599fd",
+          "http_last_modified": "Fri, 24 Jan 2025 15:41:10 GMT",
+          "http_etag": "\"832d7764766edb1:0\""
+        }
       }
     ],
     "dataset": "deis_rem20_categorizacion_riesgo_dependencia",
@@ -996,6 +1165,21 @@
       {
         "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2025/Categorizaci%C3%B3n%20riesgo%20dependencia%20Primer%20Trimestre%202025.xlsx",
         "downloaded_at": "2026-11-05T22:26:31.490146+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t1.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2025_t1.xlsx",
+        "raw_size": 108260,
+        "raw_sha256": "c88a6361d87dea144716e02cc197f75e600d3102cd7f939e09ec7f5d7cdb85ae",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2025_t1.xlsx",
+          "size": 108260,
+          "sha256": "c88a6361d87dea144716e02cc197f75e600d3102cd7f939e09ec7f5d7cdb85ae",
+          "http_last_modified": "Fri, 23 May 2025 15:25:45 GMT",
+          "http_etag": "\"eb7c33f4f6cbdb1:0\""
+        }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2025/Categorizaci%C3%B3n%20riesgo%20dependencia%20Primer%20Trimestre%202025.xlsx",
+        "downloaded_at": "2026-11-12T14:38:01.054981+00:00",
         "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t1.xlsx",
         "raw_filename": "categorizacion_riesgo_dependencia_2025_t1.xlsx",
         "raw_size": 108260,
@@ -1031,6 +1215,21 @@
           "http_last_modified": "Fri, 08 Aug 2025 15:19:34 GMT",
           "http_etag": "\"e1a7d9d8778dc1:0\""
         }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2025/Categorizaci%C3%B3n%20riesgo%20dependencia%20Segundo%20Trimestre%202025.xlsx",
+        "downloaded_at": "2026-11-12T14:38:01.255028+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t2.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2025_t2.xlsx",
+        "raw_size": 103635,
+        "raw_sha256": "cd8a4f3075a779697fa06b216516ec52d482ab44a25f834f80c87bdc2d263d2a",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2025_t2.xlsx",
+          "size": 103635,
+          "sha256": "cd8a4f3075a779697fa06b216516ec52d482ab44a25f834f80c87bdc2d263d2a",
+          "http_last_modified": "Fri, 08 Aug 2025 15:19:34 GMT",
+          "http_etag": "\"e1a7d9d8778dc1:0\""
+        }
       }
     ],
     "dataset": "deis_rem20_categorizacion_riesgo_dependencia",
@@ -1044,6 +1243,21 @@
       {
         "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2025/Categorizaci%C3%B3n%20riesgo%20dependencia%20Tercer%20Trimestre%202025.xlsx",
         "downloaded_at": "2026-11-05T22:26:32.577074+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t3.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2025_t3.xlsx",
+        "raw_size": 103936,
+        "raw_sha256": "e40c07d32d63f48d0f1311541d6e3792da17b470a04b3a82bafb3a7efe7ece3d",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2025_t3.xlsx",
+          "size": 103936,
+          "sha256": "e40c07d32d63f48d0f1311541d6e3792da17b470a04b3a82bafb3a7efe7ece3d",
+          "http_last_modified": "Mon, 26 Jan 2026 13:38:43 GMT",
+          "http_etag": "\"4fdefd16c98edc1:0\""
+        }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2025/Categorizaci%C3%B3n%20riesgo%20dependencia%20Tercer%20Trimestre%202025.xlsx",
+        "downloaded_at": "2026-11-12T14:38:01.411873+00:00",
         "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t3.xlsx",
         "raw_filename": "categorizacion_riesgo_dependencia_2025_t3.xlsx",
         "raw_size": 103936,
@@ -1079,6 +1293,21 @@
           "http_last_modified": "Fri, 13 Mar 2026 19:42:20 GMT",
           "http_etag": "\"80db668121b3dc1:0\""
         }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2025/Categorizaci%C3%B3n%20riesgo%20dependencia%20Cuarto%20Trimestre%202025.xlsx",
+        "downloaded_at": "2026-11-12T14:38:01.608622+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t4.xlsx",
+        "raw_filename": "categorizacion_riesgo_dependencia_2025_t4.xlsx",
+        "raw_size": 103407,
+        "raw_sha256": "23f6de90a58dca40fa4ee0a97dd9da78d5f998d3bff4be1f90b5ecda6f75ba83",
+        "transport": {
+          "filename": "categorizacion_riesgo_dependencia_2025_t4.xlsx",
+          "size": 103407,
+          "sha256": "23f6de90a58dca40fa4ee0a97dd9da78d5f998d3bff4be1f90b5ecda6f75ba83",
+          "http_last_modified": "Fri, 13 Mar 2026 19:42:20 GMT",
+          "http_etag": "\"80db668121b3dc1:0\""
+        }
       }
     ],
     "dataset": "deis_rem20_categorizacion_riesgo_dependencia",
@@ -1092,6 +1321,22 @@
       {
         "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2026/Estad%C3%ADsticas%20Hospitalarias%20Septiembre%202026.xlsx",
         "downloaded_at": "2026-11-05T22:26:36.879915+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2026.xlsx",
+        "raw_filename": "indicadores_hospitalarios_2026.xlsx",
+        "raw_size": 1278111,
+        "raw_sha256": "5fb17397c3f5f5b1191fb8b26955b57f2456f8b22788b8afb07b47dcf18dddc6",
+        "transport": {
+          "filename": "indicadores_hospitalarios_2026.xlsx",
+          "size": 1278111,
+          "sha256": "5fb17397c3f5f5b1191fb8b26955b57f2456f8b22788b8afb07b47dcf18dddc6",
+          "http_last_modified": "Mon, 26 Oct 2026 12:36:19 GMT",
+          "http_etag": "\"a8e309a4665dd1:0\"",
+          "corte_mes": 9
+        }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/ContenidoSitioWeb2020/REM20/2026/Estad%C3%ADsticas%20Hospitalarias%20Septiembre%202026.xlsx",
+        "downloaded_at": "2026-11-12T14:38:02.479080+00:00",
         "raw_path": "data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2026.xlsx",
         "raw_filename": "indicadores_hospitalarios_2026.xlsx",
         "raw_size": 1278111,
@@ -1129,6 +1374,21 @@
           "http_last_modified": "Fri, 27 Sep 2024 16:38:30 GMT",
           "http_etag": "\"1727455110.209-31584-2063602386\""
         }
+      },
+      {
+        "source_url": "https://datos.gob.cl/dataset/a756323f-85ba-4759-87dc-f5d5e63868cc/resource/6c7c8a9d-204d-4947-9c8e-82a893fc3f2e/download/diccionario-rem20.xlsx",
+        "downloaded_at": "2026-11-12T14:37:50.685412+00:00",
+        "raw_path": "data/raw/estadisticas_hospitalarias/diccionario_rem20.xlsx",
+        "raw_filename": "diccionario_rem20.xlsx",
+        "raw_size": 31584,
+        "raw_sha256": "6feebecdce70cf9f850054c37d07a292183747d9df1323084d15abf97be26c9a",
+        "transport": {
+          "filename": "diccionario_rem20.xlsx",
+          "size": 31584,
+          "sha256": "6feebecdce70cf9f850054c37d07a292183747d9df1323084d15abf97be26c9a",
+          "http_last_modified": "Fri, 27 Sep 2024 16:38:30 GMT",
+          "http_etag": "\"1727455110.209-31584-2063602386\""
+        }
       }
     ],
     "dataset": "deis_rem20_diccionario",
@@ -1154,6 +1414,23 @@
           "downloaded_at": "2026-11-10T23:03:41.313540+00:00",
           "archive_member": "DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.csv"
         }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip",
+        "downloaded_at": "2026-11-12T14:38:44.053123+00:00",
+        "raw_path": "data/raw/defunciones/2024_2026_10112026/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.csv",
+        "raw_filename": "DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.csv",
+        "raw_size": 109442787,
+        "raw_sha256": "51bf6485bbc475fc122d36f78cda122be16cdc849c3f819681287b5d03f167d3",
+        "transport": {
+          "filename": "DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip",
+          "size": 13107008,
+          "sha256": "9f8d6f385a237a2dc84845ab96855c5edc07143f1a235c1bc20dc69bbfd9165d",
+          "Last-Modified": "Tue, 10 Nov 2026 19:43:27 GMT",
+          "ETag": "\"d127c6c14b71dd1:0\"",
+          "downloaded_at": "2026-11-12T14:38:44.053123+00:00",
+          "archive_member": "DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.csv"
+        }
       }
     ],
     "dataset": "defunciones",
@@ -1177,6 +1454,23 @@
           "Last-Modified": "Tue, 10 Nov 2026 19:43:27 GMT",
           "ETag": "\"d127c6c14b71dd1:0\"",
           "downloaded_at": "2026-11-10T23:03:41.313540+00:00",
+          "archive_member": "Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx"
+        }
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip",
+        "downloaded_at": "2026-11-12T14:38:44.053123+00:00",
+        "raw_path": "data/raw/defunciones/2024_2026_10112026/Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
+        "raw_filename": "Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx",
+        "raw_size": 37148,
+        "raw_sha256": "298600901a454f91bfb5634359efdbcb163d8a61d6e1b8dcdae01768ec38c60f",
+        "transport": {
+          "filename": "DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip",
+          "size": 13107008,
+          "sha256": "9f8d6f385a237a2dc84845ab96855c5edc07143f1a235c1bc20dc69bbfd9165d",
+          "Last-Modified": "Tue, 10 Nov 2026 19:43:27 GMT",
+          "ETag": "\"d127c6c14b71dd1:0\"",
+          "downloaded_at": "2026-11-12T14:38:44.053123+00:00",
           "archive_member": "Diccionario de Datos y Manual de Uso BBDD-COVID19 liberada.xlsx"
         }
       }

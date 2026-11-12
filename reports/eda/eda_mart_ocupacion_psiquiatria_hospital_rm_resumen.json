@@ -1243,11 +1243,11 @@
     ]
   },
   "propuestas_camas": {
-    "fecha_corte": "2026-11-07",
+    "fecha_corte": "2026-11-12",
     "propuestas": [
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1270,7 +1270,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1293,7 +1293,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1316,7 +1316,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": "Serie incompleta o con cierres: no se dimensiona sin revisar el área.",
         "desde": null,
@@ -1339,7 +1339,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": "Datos sin cierre mensual o antiguos: actualizar REM-20.",
         "desde": null,
@@ -1362,7 +1362,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1385,7 +1385,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1408,7 +1408,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": "Datos sin cierre mensual o antiguos: actualizar REM-20.",
         "desde": null,
@@ -1431,7 +1431,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1454,7 +1454,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1477,7 +1477,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1500,7 +1500,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1523,7 +1523,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1546,7 +1546,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1569,7 +1569,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1592,7 +1592,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": "Se requieren 12 meses consecutivos publicados, sin imputación.",
         "desde": null,
@@ -1615,7 +1615,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1638,7 +1638,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": "Datos sin cierre mensual o antiguos: actualizar REM-20.",
         "desde": null,
@@ -1661,7 +1661,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1684,7 +1684,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1707,7 +1707,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1730,7 +1730,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1753,7 +1753,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1776,7 +1776,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1799,7 +1799,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1822,7 +1822,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1845,7 +1845,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": null,
         "desde": "2025-10",
@@ -1868,7 +1868,7 @@
       },
       {
         "ano_objetivo": 2027,
-        "fecha_corte": "2026-11-07",
+        "fecha_corte": "2026-11-12",
         "metodo": "continuidad_pico_12m_v1",
         "motivo": "Datos sin cierre mensual o antiguos: actualizar REM-20.",
         "desde": null,

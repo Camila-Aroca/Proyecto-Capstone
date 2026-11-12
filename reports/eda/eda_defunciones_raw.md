@@ -4,7 +4,7 @@
 
 Perfil exploratorio nacional de los dos paquetes publicados por DEIS. Grano: una fila del CSV de defunciones disociadas publicado; no representa personas enlazables. Escaneo completo por streaming de los archivos, sin muestreo ni carga integral en memoria. Se conserva toda la fuente, sin filtrar RM, causas ni años, sin imputar ni deduplicar. No hay joins, modelos, tasas ni outputs processed.
 
-Generado UTC: `2026-11-10T23:03:49.945719+00:00`. Python: `3.12.6`. Parser estándar `csv`, delimitador `;`, lectura `latin-1` consistente con los bytes de la cabecera `AÑO`. No se recodifican los archivos. Límite por CSV: 2 GiB; campos categóricos y comunas: hasta 4.096 valores por agregado; caché de fechas: 65.536 valores. Los excesos detienen el proceso.
+Generado UTC: `2026-11-12T14:38:45.325150+00:00`. Python: `3.12.3`. Parser estándar `csv`, delimitador `;`, lectura `latin-1` consistente con los bytes de la cabecera `AÑO`. No se recodifican los archivos. Límite por CSV: 2 GiB; campos categóricos y comunas: hasta 4.096 valores por agregado; caché de fechas: 65.536 valores. Los excesos detienen el proceso.
 
 Reproducción: `python scripts/run_pipeline.py --stage download_defunciones`; para regenerar solo el perfil: `python scripts/run_pipeline.py --stage eda_defunciones --force`.
 

@@ -1,7 +1,7 @@
 {
   "dataset": "pronostico_establecimientos_sm",
-  "generado_en_utc": "2026-11-10T23:03:10.133771Z",
-  "generado_en_chile": "2026-11-10T20:03:10.133771-03:00",
+  "generado_en_utc": "2026-11-12T14:56:13.938884Z",
+  "generado_en_chile": "2026-11-12T11:56:13.938897-03:00",
   "objetivos": {
     "atenciones_sm": {
       "modelo": "poisson_glm_global_conformal",
@@ -17,25 +17,23 @@
       ],
       "nivel_intervalo": 0.8,
       "ultima_semana_observada": {
-        "t": 251,
+        "t": 246,
         "ano": 2026,
-        "semana": 44
+        "semana": 39
       },
-      "establecimientos": 123,
+      "establecimientos": 125,
       "fuera_de_rango": 0,
       "excluidos_por_cobertura_en_curso": [
         112820,
         200124,
         200142,
-        114821,
         109813,
         200135,
-        109104,
         200132,
         200041,
         109890
       ],
-      "filas": 984
+      "filas": 1000
     },
     "hospitalizaciones_sm": {
       "modelo": "lightgbm_global_conformal",
@@ -51,9 +49,9 @@
       ],
       "nivel_intervalo": 0.8,
       "ultima_semana_observada": {
-        "t": 251,
+        "t": 246,
         "ano": 2026,
-        "semana": 44
+        "semana": 39
       },
       "establecimientos": 12,
       "fuera_de_rango": 0,
@@ -61,7 +59,7 @@
       "filas": 96
     }
   },
-  "filas": 1080,
+  "filas": 1096,
   "entradas": {
     "mart_urgencias_establecimiento_weekly": {
       "ruta": "data/processed/marts/mart_urgencias_establecimiento_weekly.parquet",
@@ -69,11 +67,11 @@
     },
     "seleccion_benchmark": {
       "ruta": "reports/modeling/benchmark_establecimientos_sm_seleccion.json",
-      "sha256": "e64950ef1353416d7f4dc53b3aeb5a11503de99bae02002801b539c9359e4ca1"
+      "sha256": "f5fe27abf4cb32f6acebd044e8e70f71a4df9d95400aa839d0242430bb5ea774"
     },
     "urgencias_2026": {
       "ruta": "data/processed/urgencias/urgencias_rm_2026.parquet",
-      "sha256": "e58789a1ea3cbdd7d085f9d1b837933ccf6a22d0c63831b37cd2cc89e10ca5ab",
+      "sha256": "c26ddb054460b2557b6075c145c941ceaa851d71e0f5c560f2244eb3ccc3f724",
       "tipo": "raw_sha256"
     }
   }

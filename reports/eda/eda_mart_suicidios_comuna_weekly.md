@@ -22,7 +22,7 @@ Generado por `scripts/eda_mart_suicidios_comuna_weekly.py` (stage `eda_mart_suic
 
 ## 2. Calendario DEIS
 
-- `semana_deis` reproduce la codificación (año, semana) publicada por Urgencias en 2505 fechas de 2020 a 2026, con 0 discrepancias.
+- `semana_deis` reproduce la codificación (año, semana) publicada por Urgencias en 2471 fechas de 2020 a 2026, con 0 discrepancias.
 - Semanas con un número de días distinto de 7 (el modelo usa `dias_semana` como exposición):
 
 | ano | semana | fecha_inicio_semana | dias_semana |
