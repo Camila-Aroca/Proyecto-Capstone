@@ -88,9 +88,10 @@ aws cloudwatch describe-alarms --alarm-name-prefix saad- --query "MetricAlarms[]
 
 | Pipeline | Se activa con | Etapas |
 |---|---|---|
-| `saad-pr` | Cada pull request hacia `main` (abierto o actualizado) | Fuente → **Verificar** |
+| `saad-pr` | Push a cualquier rama del repositorio distinta de `main` | Fuente → **Verificar** |
 | `saad-despliegue` | Push a `main` que cambie `infra/aws/**` o `frontend/**` | Fuente → **Verificar** → **Desplegar** |
 
+- **Por qué push y no pull request:** el repositorio es público y cualquiera puede abrir un PR desde un fork. La verificación ejecuta el código y el buildspec del cambio, así que activarla con eventos de PR ejecutaría código de desconocidos en la cuenta. Solo los colaboradores pueden hacer push de ramas al repositorio; sus PR salen de esas ramas y quedan verificados. Los PR de forks no activan nada.
 - **Verificar** (CodeBuild `saad-verificar`, [`../buildspecs/verificar.yml`](../buildspecs/verificar.yml)): ejecuta `pytest` (publica el resultado como informe de pruebas de CodeBuild), sintetiza las plantillas con CDK y les aplica `cfn-lint`. Falla con errores de lint; las advertencias W3005 vienen de recursos internos de CDK.
 - **Desplegar** (CodeBuild `saad-desplegar`, [`../buildspecs/desplegar.yml`](../buildspecs/desplegar.yml)): construye el frontend y ejecuta `cdk deploy Saad`, que aplica la plantilla en CloudFormation. Conserva la imagen, el tamaño y la configuración de la API en servicio ([`../scripts/contexto_en_servicio.sh`](../scripts/contexto_en_servicio.sh)): una versión nueva de la API se sigue publicando con `publicar_imagen.sh` y `desplegar.sh`.
 

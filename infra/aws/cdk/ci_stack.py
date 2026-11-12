@@ -10,7 +10,11 @@
   imagen y la configuración de la API que están en servicio.
 - Pipeline `saad-despliegue`: push a `main` que toque infraestructura o frontend →
   verificar → desplegar.
-- Pipeline `saad-pr`: cada pull request hacia `main` → verificar (CI del issue #64).
+- Pipeline `saad-pr`: push a cualquier rama distinta de `main` → verificar (CI del issue #64).
+  No se activa con eventos de pull request a propósito: el repositorio es público y
+  cualquiera puede abrir un PR desde un fork, y la verificación ejecuta el código y el
+  buildspec del cambio. Solo quienes tienen permiso de escritura pueden hacer push de ramas al
+  repositorio, así que solo se verifica código del equipo; sus PR salen de esas ramas.
 
 Datos que no van en el repositorio, en Parameter Store (se crean una vez a mano):
 - `/saad/origin-secret` (SecureString): encabezado secreto CloudFront → ALB.
@@ -146,7 +150,7 @@ class SaadCiStack(Stack):
             )],
         )
 
-        # --- Integración continua: cada pull request → verificar ------------------------
+        # --- Integración continua: push a ramas del equipo → verificar -----------------
         codigo_pr = codepipeline.Artifact("CodigoPr")
         origen_pr = fuente("GitHub", codigo_pr)
         pr = codepipeline.Pipeline(
@@ -165,10 +169,8 @@ class SaadCiStack(Stack):
                 provider_type=codepipeline.ProviderType.CODE_STAR_SOURCE_CONNECTION,
                 git_configuration=codepipeline.GitConfiguration(
                     source_action=origen_pr,
-                    pull_request_filter=[codepipeline.GitPullRequestFilter(
-                        branches_includes=[RAMA],
-                        events=[codepipeline.GitPullRequestEvent.OPEN, codepipeline.GitPullRequestEvent.UPDATED],
-                    )],
+                    push_filter=[codepipeline.GitPushFilter(
+                        branches_includes=["**"], branches_excludes=[RAMA])],
                 ),
             )],
         )
