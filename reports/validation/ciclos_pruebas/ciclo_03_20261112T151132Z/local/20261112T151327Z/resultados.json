@@ -1,0 +1,343 @@
+{
+  "fecha_utc": "2026-11-12T15:13:27+00:00",
+  "local": "http://localhost:8080",
+  "comando": "scripts/qa_baseline_local.py",
+  "entorno": {
+    "commit": "95d00f8",
+    "rama": "main",
+    "cambios_sin_commit_en_codigo": false,
+    "sistema_operativo": "Ubuntu 24.04.5 LTS",
+    "kernel": "7.0.0-43-generic",
+    "cpu": "13th Gen Intel(R) Core(TM) i5-1335U",
+    "nucleos": 12,
+    "memoria_gib": 15.3,
+    "docker": "29.6.1",
+    "docker_compose": "5.3.1",
+    "python_equipo": "3.12.3",
+    "node_equipo": "v22.15.1"
+  },
+  "contenedores": [
+    {
+      "servicio": "api",
+      "estado": "running",
+      "detalle": "Up 46 minutes (healthy)",
+      "imagen": "saad-api",
+      "id_imagen": "sha256:7d9ebc1abafb",
+      "imagen_creada": "2026-11-12T10:00:19.166948526-03:00",
+      "versiones": {
+        "python": "3.12.16",
+        "fastapi": "0.141.1",
+        "pandas": "3.0.5",
+        "pyarrow": "25.0.1",
+        "lightgbm": "4.7.0"
+      },
+      "SAAD_USAR_PRONOSTICO_DESACTUALIZADO": "1"
+    },
+    {
+      "servicio": "web",
+      "estado": "running",
+      "detalle": "Up 46 minutes",
+      "imagen": "saad-web",
+      "id_imagen": "sha256:d0c86065d635",
+      "imagen_creada": "2026-11-12T10:00:30.369555986-03:00"
+    }
+  ],
+  "dataset": {
+    "archivos": 149,
+    "megabytes": 265.1,
+    "huella_sha256": "5d1a7971329d7e376b99dd3a90487a5e2d64a5afe26b0a75c8db2ea1155816bb",
+    "manifiestos_pronostico": {
+      "pronostico_demanda_sm_manifest.json": {
+        "generado_en_utc": "2026-11-12T14:53:07.182869Z",
+        "modelo": "hibrido_glm_region_lgbm_comuna_conformal"
+      },
+      "pronostico_establecimientos_sm_manifest.json": {
+        "generado_en_utc": "2026-11-12T14:56:13.938884Z",
+        "modelo": null
+      },
+      "pronostico_suicidios_manifest.json": {
+        "generado_en_utc": "2026-11-12T14:56:22.838399Z",
+        "modelo": "poisson_estacional_eb_vm52"
+      }
+    }
+  },
+  "advertencias": [
+    "Las cifras son atenciones de urgencia (eventos), no personas únicas ni prevalencia.",
+    "Intervalo 80%: fuera de muestra cubrió 70% en el nivel regional. Interpretar los límites como orientativos.",
+    "Intervalo 80%: fuera de muestra cubrió 77% en el nivel comunal. Interpretar los límites como orientativos.",
+    "2 comuna(s) sin pronóstico por falta de datos; se muestran como 'sin pronóstico', nunca como cero.",
+    "Vista temporal: se muestra un pronóstico guardado que no está vigente porque cambió 'seleccion_benchmark' respecto del snapshot con que se generó. Sus cifras pueden no corresponder al modelo seleccionado."
+  ],
+  "logs": [
+    "api.log",
+    "web.log"
+  ],
+  "casos": [
+    {
+      "id": "CP-SAAD-028",
+      "nombre": "Portal local (nginx)",
+      "entorno": "LOCAL",
+      "estado": "APROBADO",
+      "detalle": "HTTP 200",
+      "evidencia": {
+        "http": 200,
+        "ms": 2.8
+      }
+    },
+    {
+      "id": "CP-SAAD-017",
+      "nombre": "GET /api/v1/salud",
+      "entorno": "LOCAL",
+      "estado": "APROBADO",
+      "detalle": "HTTP 200 en 2.5 ms",
+      "evidencia": {
+        "http": 200,
+        "ms": 2.5,
+        "estado": 200,
+        "estado_datos": "listo",
+        "estado_pronostico": "listo"
+      }
+    },
+    {
+      "id": "CP-SAAD-018",
+      "nombre": "GET /api/v1/meta",
+      "entorno": "LOCAL",
+      "estado": "APROBADO",
+      "detalle": "HTTP 200 en 13.8 ms",
+      "evidencia": {
+        "http": 200,
+        "ms": 13.8,
+        "estado": 200,
+        "modelo": "hibrido_glm_region_lgbm_comuna_conformal",
+        "ultima_semana_observada": {
+          "ano": 2026,
+          "semana": 39,
+          "fecha_inicio": "2026-09-27",
+          "atenciones": 2295.0
+        },
+        "horizontes": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "comunas_con_pronostico": 50
+      }
+    },
+    {
+      "id": "CP-SAAD-019",
+      "nombre": "GET /api/v1/territorios",
+      "entorno": "LOCAL",
+      "estado": "APROBADO",
+      "detalle": "HTTP 200 en 5.1 ms",
+      "evidencia": {
+        "http": 200,
+        "ms": 5.1,
+        "estado": 200,
+        "n": 53,
+        "ids": [
+          "13101",
+          "13102",
+          "13103",
+          "13104",
+          "13105",
+          "13106",
+          "13107",
+          "13108",
+          "13109",
+          "13110",
+          "13111",
+          "13112",
+          "13113",
+          "13114",
+          "13115",
+          "13116",
+          "13117",
+          "13118",
+          "13119",
+          "13120",
+          "13121",
+          "13122",
+          "13123",
+          "13124",
+          "13125",
+          "13126",
+          "13127",
+          "13128",
+          "13129",
+          "13130",
+          "13131",
+          "13132",
+          "13201",
+          "13202",
+          "13203",
+          "13301",
+          "13302",
+          "13303",
+          "13401",
+          "13402",
+          "13403",
+          "13404",
+          "13501",
+          "13502",
+          "13503",
+          "13504",
+          "13505",
+          "13601",
+          "13602",
+          "13603",
+          "13604",
+          "13605",
+          "RM"
+        ],
+        "con_pronostico": 51
+      }
+    },
+    {
+      "id": "CP-SAAD-020",
+      "nombre": "GET /api/v1/series/RM",
+      "entorno": "LOCAL",
+      "estado": "APROBADO",
+      "detalle": "HTTP 200 en 10.6 ms",
+      "evidencia": {
+        "http": 200,
+        "ms": 10.6,
+        "estado": 200,
+        "n_historico": 104,
+        "ultima_semana": {
+          "ano": 2026,
+          "semana": 39,
+          "fecha_inicio": "2026-09-27",
+          "atenciones": 2295.0
+        },
+        "n_pronostico": 8,
+        "primer_pronostico": {
+          "horizonte": 1,
+          "ano": 2026,
+          "semana": 45,
+          "fecha_inicio": "2026-11-08",
+          "pronostico": 2345.0,
+          "limite_inferior": 2004.5,
+          "limite_superior": 2643.0
+        }
+      }
+    },
+    {
+      "id": "CP-SAAD-021",
+      "nombre": "GET /api/v1/series/99999",
+      "entorno": "LOCAL",
+      "estado": "APROBADO",
+      "detalle": "HTTP 404 en 2.2 ms",
+      "evidencia": {
+        "http": 404,
+        "ms": 2.2,
+        "estado": 404
+      }
+    },
+    {
+      "id": "CP-SAAD-022",
+      "nombre": "GET /api/v1/pronosticos",
+      "entorno": "LOCAL",
+      "estado": "APROBADO",
+      "detalle": "HTTP 200 en 10.2 ms",
+      "evidencia": {
+        "http": 200,
+        "ms": 10.2,
+        "estado": 200,
+        "n": 408
+      }
+    },
+    {
+      "id": "CP-SAAD-023",
+      "nombre": "GET /api/v1/resumen-comunal",
+      "entorno": "LOCAL",
+      "estado": "APROBADO",
+      "detalle": "HTTP 200 en 18.3 ms",
+      "evidencia": {
+        "http": 200,
+        "ms": 18.3,
+        "estado": 200,
+        "n": 52
+      }
+    },
+    {
+      "id": "CP-SAAD-024",
+      "nombre": "GET /api/v1/geo/comunas",
+      "entorno": "LOCAL",
+      "estado": "APROBADO",
+      "detalle": "HTTP 200 en 12.4 ms",
+      "evidencia": {
+        "http": 200,
+        "ms": 12.4,
+        "estado": 200,
+        "tipo": "FeatureCollection",
+        "n_features": 52
+      }
+    },
+    {
+      "id": "CP-SAAD-025",
+      "nombre": "GET /api/v1/camas-psiquiatria/RM",
+      "entorno": "LOCAL",
+      "estado": "FALLIDO",
+      "detalle": "HTTP 404 (se esperaba 200); detalle de la API: Falta la dotacion de camas: ejecute el stage `build_dim_camas_psiquiatria_hospital_rm` del pipeline.",
+      "evidencia": {
+        "http": 404,
+        "ms": 2.4,
+        "estado": 404
+      }
+    },
+    {
+      "id": "CP-SAAD-026",
+      "nombre": "GET /api/v1/calendario-eventos?desde=2025-11-01&hasta=2026-12-31",
+      "entorno": "LOCAL",
+      "estado": "APROBADO",
+      "detalle": "HTTP 200 en 3.1 ms",
+      "evidencia": {
+        "http": 200,
+        "ms": 3.1,
+        "estado": 200,
+        "n": 16
+      }
+    },
+    {
+      "id": "CP-SAAD-037",
+      "nombre": "GET /api/v1/establecimientos",
+      "entorno": "LOCAL",
+      "estado": "FALLIDO",
+      "detalle": "HTTP 503 (se esperaba 200); detalle de la API: data/processed/marts/mart_urgencias_establecimiento_weekly.parquet",
+      "evidencia": {
+        "http": 503,
+        "ms": 1.8,
+        "estado": 503
+      }
+    },
+    {
+      "id": "CP-SAAD-037",
+      "nombre": "GET /api/v1/establecimientos-meta",
+      "entorno": "LOCAL",
+      "estado": "FALLIDO",
+      "detalle": "HTTP 503 (se esperaba 200); detalle de la API: data/processed/marts/mart_urgencias_establecimiento_weekly.parquet",
+      "evidencia": {
+        "http": 503,
+        "ms": 1.8,
+        "estado": 503
+      }
+    },
+    {
+      "id": "CP-SAAD-047",
+      "nombre": "GET /api/v1/suicidios/RM",
+      "entorno": "LOCAL",
+      "estado": "FALLIDO",
+      "detalle": "HTTP 503 (se esperaba 200); detalle de la API: El pronóstico de suicidios está desactualizado (falta la entrada 'mart_suicidios_comuna_weekly' (data/processed/marts/mart_suicidios_comuna_weekly.parquet)): ejecute el stage `forecast_suicidios` del pipeline.",
+      "evidencia": {
+        "http": 503,
+        "ms": 2.5,
+        "estado": 503
+      }
+    }
+  ]
+}

@@ -15,22 +15,35 @@ correspondientes y se publiquen los outputs con `subir_datos.sh`.
 
 | ID | Título | Criticidad | Entorno | Detectado en | Responsable | Corrección | Retest | Estado |
 |---|---|---|---|---|---|---|---|---|
-| DEF-01 | `camas-psiquiatria` responde 404: falta `dim_camas_psiquiatria_hospital_rm` | Alta | LOCAL · AWS | Ciclo 1 (CP-025) | Felipe (pipeline) | Ejecutar stage `build_dim_camas_psiquiatria_hospital_rm` y publicar con `subir_datos.sh` | Pendiente | **Abierto** |
-| DEF-02 | Establecimientos responde 503: falta `mart_urgencias_establecimiento_weekly` y su pronóstico | Alta | LOCAL · AWS | Ciclo 1 (CP-037) | Felipe (pipeline) / Cristopher (API) | Ejecutar stage del mart semanal de establecimientos, publicar outputs y redesplegar la API | Pendiente | **Abierto** |
-| DEF-03 | Suicidios responde 503: falta `mart_suicidios_comuna_weekly` en el pronóstico persistido | Alta | LOCAL · AWS | Ciclo 1 (CP-047) | Felipe (pipeline) | Ejecutar stage `build_mart_suicidios_comuna_weekly` y publicar con `subir_datos.sh` | Pendiente | **Abierto** |
-| DEF-04 | Pronóstico de urgencias desactualizado: JSON de selección no versionado en S3 | Alta | LOCAL · AWS | Ciclo 1 (meta `motivo_desactualizacion`) | Felipe (pipeline) / Cristopher (API) | Mitigado con la variable `SAAD_USAR_PRONOSTICO_DESACTUALIZADO` (commit `90965fc`); corrección definitiva: versionar y subir el JSON de selección con `subir_datos.sh` | Ciclo 2: mitigación activa, pronóstico visible | **Abierto (mitigado)** |
+| DEF-01 | `camas-psiquiatria` responde 404: falta `dim_camas_psiquiatria_hospital_rm` | Alta | LOCAL · AWS | Ciclo 1 (CP-025) | Felipe (pipeline) | Pipeline ejecutado con `--sin-evaluacion` (stage `build_dim_camas_psiquiatria_hospital_rm`); publicado con `subir_datos.sh`; API local y ECS reiniciados para tomar los datos | Ciclo 4: CP-025 APROBADO en LOCAL y AWS | **Cerrado** |
+| DEF-02 | Establecimientos responde 503: falta `mart_urgencias_establecimiento_weekly` y su pronóstico | Alta | LOCAL · AWS | Ciclo 1 (CP-037) | Felipe (pipeline) / Cristopher (API) | Pipeline ejecutado con `--sin-evaluacion` (stage `build_urgencias_establecimiento_weekly_mart` y `forecast_establecimientos_sm`); publicado con `subir_datos.sh`; API redesplegada | Ciclo 4: CP-037 APROBADO en LOCAL y AWS | **Cerrado** |
+| DEF-03 | Suicidios responde 503: falta `mart_suicidios_comuna_weekly` en el pronóstico persistido | Alta | LOCAL · AWS | Ciclo 1 (CP-047) | Felipe (pipeline) | Pipeline ejecutado con `--sin-evaluacion` (stage `build_mart_suicidios_comuna_weekly` y `forecast_suicidios`); publicado con `subir_datos.sh`; API local y ECS reiniciados | Ciclo 4: CP-047 APROBADO en LOCAL y AWS | **Cerrado** |
+| DEF-04 | Pronóstico de urgencias desactualizado: JSON de selección no versionado en S3 | Alta | LOCAL · AWS | Ciclo 1 (meta `motivo_desactualizacion`) | Felipe (pipeline) / Cristopher (API) | Pipeline completo corrido el 2026-11-12 regenera los tres pronósticos con datos frescos; flag `SAAD_USAR_PRONOSTICO_DESACTUALIZADO` desactivado en el redespliegue (`95d00f8`). Causa raíz (JSON de selección no versionado en S3) sigue sin corregirse: si el pipeline no corre a tiempo, el pronóstico volverá a quedar desactualizado | Ciclo 4: pronóstico vigente, sin advertencia de desactualización | **Abierto (causa raíz pendiente; síntoma resuelto)** |
 
-### Casos bloqueados por DEF-01 a DEF-03
+### Hallazgo del retest: reinicio manual requerido tras publicar datos nuevos
 
-| Defecto | Casos BLOCKED |
+Al reintentar el ciclo 3 inmediatamente después de `subir_datos.sh`, los tres casos seguían
+fallando pese a que los archivos ya estaban en S3 y en el disco local. Causa: tanto el contenedor
+`api` local (Docker Compose) como la tarea ECS mantienen en memoria el estado leído al arrancar;
+un archivo nuevo en disco o en S3 no se recarga solo. Fue necesario:
+- Local: `docker compose restart api`.
+- AWS: `aws ecs update-service --force-new-deployment` (ya lo hace `subir_datos.sh`, pero esa
+  primera vez el task aún no había terminado de estabilizarse cuando se corrió el ciclo 3).
+
+Con eso, el ciclo 4 confirmó los tres defectos cerrados. Se registra como nota operativa, no como
+defecto nuevo: `subir_datos.sh` ya fuerza el redespliegue; falta solo esperar a que termine antes
+de volver a probar.
+
+### Casos antes bloqueados por DEF-01 a DEF-03 (ya aprobados desde el ciclo 4)
+
+| Defecto | Casos que estaban BLOCKED |
 |---|---|
 | DEF-01 (camas) | CP-SAAD-042, CP-SAAD-043, CP-SAAD-044, CP-SAAD-045, CP-SAAD-059 |
 | DEF-02 (establecimientos) | CP-SAAD-038, CP-SAAD-039, CP-SAAD-040, CP-SAAD-041 |
 | DEF-03 (suicidios) | CP-SAAD-048, CP-SAAD-050, CP-SAAD-052 |
 
-**Contingencia:** los casos BLOCKED se marcan como tal en la matriz; no se contabilizan como
-aprobados ni fallidos. Cada fila indica el defecto que lo bloquea. El ciclo continúa con los
-casos que sí tienen datos disponibles.
+**Contingencia (histórica, ciclos 1-3):** los casos BLOCKED se marcaban como tal en la matriz; no
+se contabilizaban como aprobados ni fallidos. Desde el ciclo 4 corren con datos reales.
 
 ---
 
@@ -75,9 +88,11 @@ carpeta de ciclo.
 
 | Estado | Defectos |
 |---|---|
-| Abierto | DEF-01, DEF-02, DEF-03, DEF-04, DEF-11 |
-| Abierto (mitigado) | DEF-04 |
-| Cerrado | DEF-05, DEF-06, DEF-07, DEF-08, DEF-09, DEF-10 |
+| Abierto | DEF-11 |
+| Abierto (causa raíz pendiente) | DEF-04 |
+| Cerrado | DEF-01, DEF-02, DEF-03, DEF-05, DEF-06, DEF-07, DEF-08, DEF-09, DEF-10 |
 
-Los defectos DEF-01 a DEF-03 bloquean 12 casos del catálogo. Se resolverán cuando el equipo
-ejecute el pipeline completo y publique los outputs pendientes.
+DEF-01, DEF-02 y DEF-03 se cerraron en el ciclo 4 (2026-11-12) tras ejecutar el pipeline con
+`--sin-evaluacion`, publicar los outputs con `subir_datos.sh` y reiniciar la API en ambos
+entornos. DEF-04 queda con el síntoma resuelto (pronóstico vigente) pero la causa raíz (JSON de
+selección sin versionar en S3) sigue pendiente. DEF-11 sigue abierto.
