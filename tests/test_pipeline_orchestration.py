@@ -391,3 +391,57 @@ def test_suicidios_stages_are_registered():
     assert "clean_defunciones" in rp.STAGES["build_mart_suicidios_comuna_weekly"]["depends_on"]
     assert rp.STAGES["forecast_suicidios"]["depends_on"] == ["benchmark_suicidios"]
     assert rp.STAGES["evaluate_holdout_suicidios"]["depends_on"] == ["benchmark_suicidios"]
+
+
+def _correr_main(monkeypatch, argv, ejecutadas=frozenset()):
+    """Ejecuta main() sin subprocesos y devuelve las llamadas a run_stage."""
+    calls = []
+    monkeypatch.setattr(sys, "argv", ["run_pipeline.py", *argv])
+    monkeypatch.setattr(
+        rp, "run_stage", lambda stage, **kwargs: calls.append((stage, kwargs)) or stage in ejecutadas
+    )
+    rp.main()
+    return calls
+
+
+def test_clasifica_las_etapas_de_evaluacion():
+    for etapa in ("benchmark_demanda_sm", "evaluate_holdout_demanda_sm",
+                  "benchmark_establecimientos_sm", "evaluate_holdout_suicidios"):
+        assert rp.es_etapa_evaluacion(etapa)
+    for etapa in ("clean_urgencias", "build_urgencias_comuna_marts", "eda_series_demanda_sm",
+                  "forecast_demanda_sm", "forecast_establecimientos_sm", "forecast_suicidios"):
+        assert not rp.es_etapa_evaluacion(etapa)
+
+
+def test_sin_evaluacion_corre_todo_lo_demas_en_orden(monkeypatch):
+    llamadas = [stage for stage, _ in _correr_main(monkeypatch, ["--sin-evaluacion"])]
+    esperadas = [s for s in rp.PIPELINE_ORDER if not rp.es_etapa_evaluacion(s)]
+    assert llamadas == esperadas
+    assert "forecast_demanda_sm" in llamadas
+
+
+def test_sin_la_bandera_la_evaluacion_sigue_corriendo(monkeypatch):
+    llamadas = [stage for stage, _ in _correr_main(monkeypatch, [])]
+    assert "benchmark_demanda_sm" in llamadas
+    assert "evaluate_holdout_demanda_sm" in llamadas
+
+
+def test_sin_evaluacion_conserva_la_cascada_de_datos(monkeypatch):
+    calls = _correr_main(
+        monkeypatch,
+        ["--stage", "build_urgencias_comuna_marts", "--sin-evaluacion"],
+        ejecutadas={"build_urgencias_comuna_marts"},
+    )
+    por_etapa = dict(calls)
+    assert "benchmark_demanda_sm" not in por_etapa
+    # El pronostico depende del mart: se regenera aunque su benchmark se omita.
+    assert por_etapa["forecast_demanda_sm"]["upstream_changed"] is True
+    assert not any(rp.es_etapa_evaluacion(stage) for stage in por_etapa)
+
+
+def test_sin_evaluacion_rechaza_combinaciones_invalidas(monkeypatch):
+    for argv in (["--sin-evaluacion", "--refresh-current-urgencias"],
+                 ["--sin-evaluacion", "--stage", "benchmark_demanda_sm"]):
+        with pytest.raises(SystemExit) as error:
+            _correr_main(monkeypatch, argv)
+        assert error.value.code == 2

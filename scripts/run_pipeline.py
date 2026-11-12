@@ -547,6 +547,16 @@ PIPELINE_ORDER = [
 
 SUPPORTED_URGENCIAS_YEARS = tuple(range(2020, current_year_chile() + 1))
 
+# Etapas de evaluacion de modelos: backtesting, holdout y diagnosticos. Son las
+# mas costosas y no producen nada que sirva la API: los pronosticos usan la
+# seleccion congelada que ya publicaron. `--sin-evaluacion` las omite.
+PREFIJOS_EVALUACION = ("benchmark_", "evaluate_holdout_", "diagnostico_", "calibracion_")
+
+
+def es_etapa_evaluacion(stage_name: str) -> bool:
+    """Si la etapa evalua modelos en vez de producir datos o pronosticos."""
+    return stage_name.startswith(PREFIJOS_EVALUACION)
+
 
 def check_outputs_exist(outputs: list[str]) -> bool:
     """Comprueba existencia, legibilidad y esquema mínimo de outputs conocidos."""
@@ -717,10 +727,19 @@ def main():
     )
     parser.add_argument("--refresh-current-urgencias", action="store_true",
                         help="Consulta el ZIP mutable del año Chile y actualiza la rama afectada.")
+    parser.add_argument(
+        "--sin-evaluacion", action="store_true",
+        help="Actualiza datos y pronósticos sin correr benchmarks, holdouts ni diagnósticos.",
+    )
     args = parser.parse_args()
 
     if args.refresh_current_urgencias and (args.stage != "all" or args.year is not None):
         parser.error("--refresh-current-urgencias se usa sin --stage ni --year.")
+    if args.sin_evaluacion and args.refresh_current_urgencias:
+        parser.error("--sin-evaluacion no se combina con --refresh-current-urgencias, "
+                     "que ya no ejecuta etapas de evaluación.")
+    if args.sin_evaluacion and es_etapa_evaluacion(args.stage):
+        parser.error(f"--sin-evaluacion omitiría la etapa solicitada: {args.stage}.")
 
     if args.year is not None:
         if args.stage != "clean_urgencias":
@@ -751,6 +770,15 @@ def main():
                         target_stages.add(stage)
                         added = True
                         
+    if args.sin_evaluacion:
+        # La cascada se mantiene entre las etapas de datos y pronósticos: si un
+        # insumo cambió, lo que depende de él se regenera. Solo se cortan las ramas
+        # de evaluación, que quedan pendientes hasta una corrida sin la bandera.
+        omitidas = [s for s in PIPELINE_ORDER if s in target_stages and es_etapa_evaluacion(s)]
+        target_stages -= set(omitidas)
+        if omitidas:
+            logger.info("[SIN EVALUACIÓN] Etapas omitidas: %s", ", ".join(omitidas))
+
     executed_stages = set()
     for stage in PIPELINE_ORDER:
         if stage in target_stages:

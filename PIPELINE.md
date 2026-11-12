@@ -54,7 +54,7 @@ python scripts/run_pipeline.py
 
 ## 3. Ejecución desde una Etapa
 
-`--stage` (por defecto `all`) selecciona el stage y todos sus descendientes transitivos en `PIPELINE_ORDER`; no ejecuta ni reconstruye sus upstream. Para bootstrap desde cero se usa la ejecución completa, que evalúa los stages en el orden de la sección 5. Una ejecución parcial exige que los demás inputs ya estén disponibles. `--help` muestra las opciones implementadas: `--stage`, `--force`, `--year` y `--refresh-current-urgencias`. El refresh no se combina con un stage específico ni con `--year`.
+`--stage` (por defecto `all`) selecciona el stage y todos sus descendientes transitivos en `PIPELINE_ORDER`; no ejecuta ni reconstruye sus upstream. Para bootstrap desde cero se usa la ejecución completa, que evalúa los stages en el orden de la sección 5. Una ejecución parcial exige que los demás inputs ya estén disponibles. `--help` muestra las opciones implementadas: `--stage`, `--force`, `--year`, `--refresh-current-urgencias` y `--sin-evaluacion`. El refresh no se combina con un stage específico ni con `--year`.
 
 Ejemplo:
 
@@ -63,6 +63,14 @@ python scripts/run_pipeline.py --stage clean_urgencias
 ```
 
 Si los outputs pasan `check_outputs_exist` y ningún upstream se ejecutó en esta invocación, las etapas correspondientes realizan `SKIP`. Esto acredita reutilización de outputs, no ejecución de sus productores ni vigencia general frente a cambios anteriores de código o inputs.
+
+**Datos y pronósticos sin evaluación.** Para dejar el producto al día sin esperar los benchmarks:
+
+```bash
+python scripts/run_pipeline.py --sin-evaluacion
+```
+
+Omite las etapas de evaluación de modelos (`benchmark_*`, `evaluate_holdout_*`, `diagnostico_*` y `calibracion_*`; `es_etapa_evaluacion` en `scripts/run_pipeline.py`). El resto se comporta igual que una corrida normal: hace `SKIP` de lo que ya es válido y propaga la cascada entre las etapas de datos y pronósticos. Los pronósticos se calculan con la selección congelada que ya publicó cada benchmark, de modo que no necesitan que este se vuelva a correr. Se combina con `--stage` (la etapa y sus descendientes, salvo los de evaluación) y con `--force`; no se combina con `--refresh-current-urgencias` ni acepta una etapa de evaluación como `--stage`. No reemplaza la corrida completa: si cambian los datos de entrenamiento, los benchmarks y holdouts quedan desactualizados hasta correr el pipeline sin la bandera.
 
 Para actualizar manualmente Urgencias del año calendario actual de Chile:
 
