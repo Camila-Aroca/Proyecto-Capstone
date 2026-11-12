@@ -1,0 +1,33 @@
+# CodeBuild saad-desplegar: construye el frontend y despliega la pila Saad en CloudFormation
+# con `cdk deploy`. Conserva la imagen, el tamaño y la configuración de la API en servicio:
+# este pipeline cambia infraestructura y sitio, no la versión del código de la API.
+version: 0.2
+
+env:
+  variables:
+    AWS_DEFAULT_REGION: us-east-1
+  # SAAD_ORIGIN_SECRET y SAAD_ALARM_EMAIL llegan desde Parameter Store (ver ci_stack.py).
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+      nodejs: 20
+    commands:
+      - pip install -q -r infra/aws/cdk/requirements.txt
+  pre_build:
+    commands:
+      - export CDK_DEFAULT_ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
+      - export CONTEXTO="$(bash infra/aws/scripts/contexto_en_servicio.sh)"
+      - echo "Configuración en servicio que se conserva:$CONTEXTO"
+      - export PREFIX_LIST=$(aws ec2 describe-managed-prefix-lists
+          --filters Name=prefix-list-name,Values=com.amazonaws.global.cloudfront.origin-facing
+          --query 'PrefixLists[0].PrefixListId' --output text)
+  build:
+    commands:
+      - (cd frontend && npm ci && npm run build)
+      - cd infra/aws/cdk
+      - npx --yes aws-cdk@2 deploy Saad --require-approval never $CONTEXTO
+          -c cloudfront_prefix_list="$PREFIX_LIST"
+          -c origin_secret="$SAAD_ORIGIN_SECRET"
+          -c alarm_email="$SAAD_ALARM_EMAIL"

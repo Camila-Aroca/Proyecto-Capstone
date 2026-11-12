@@ -1,0 +1,33 @@
+# CodeBuild saad-verificar: tests de Python, síntesis de las plantillas con CDK y cfn-lint.
+# Lo usan los pipelines saad-pr (cada pull request) y saad-despliegue (antes de desplegar).
+version: 0.2
+
+env:
+  variables:
+    PIP_DISABLE_PIP_VERSION_CHECK: "1"
+    # Síntesis sin cuenta: la plantilla queda independiente del entorno y no necesita
+    # consultar la cuenta (zonas de disponibilidad), así que este build no requiere permisos de AWS.
+    SAAD_SINTESIS_SIN_CUENTA: "1"
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+      nodejs: 20
+    commands:
+      - pip install -q -r requirements.txt
+      - pip install -q -r infra/aws/cdk/requirements.txt cfn-lint
+  build:
+    commands:
+      - python -m pytest tests/ -q --junitxml=reportes/pytest.xml
+      - cd infra/aws/cdk
+      - npx --yes aws-cdk@2 synth -q -o cdk.out
+          -c api_tag=ci -c cloudfront_prefix_list=pl-00000000 -c origin_secret=ci
+      # Falla solo con errores. Las advertencias W3005 vienen de recursos internos de CDK.
+      - cfn-lint --non-zero-exit-code error cdk.out/*.template.json
+
+reports:
+  pytest:
+    files:
+      - reportes/pytest.xml
+    file-format: JUNITXML

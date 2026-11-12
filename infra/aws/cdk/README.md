@@ -81,3 +81,37 @@ Ver el estado de las alarmas:
 ```bash
 aws cloudwatch describe-alarms --alarm-name-prefix saad- --query "MetricAlarms[].[AlarmName,StateValue]" --output table
 ```
+
+## CI/CD con CodePipeline y CodeBuild (pila `SaadCi`)
+
+[`ci_stack.py`](ci_stack.py) crea dos pipelines que leen el repositorio de GitHub mediante una conexión de CodeConnections:
+
+| Pipeline | Se activa con | Etapas |
+|---|---|---|
+| `saad-pr` | Cada pull request hacia `main` (abierto o actualizado) | Fuente → **Verificar** |
+| `saad-despliegue` | Push a `main` que cambie `infra/aws/**` o `frontend/**` | Fuente → **Verificar** → **Desplegar** |
+
+- **Verificar** (CodeBuild `saad-verificar`, [`../buildspecs/verificar.yml`](../buildspecs/verificar.yml)): ejecuta `pytest` (publica el resultado como informe de pruebas de CodeBuild), sintetiza las plantillas con CDK y les aplica `cfn-lint`. Falla con errores de lint; las advertencias W3005 vienen de recursos internos de CDK.
+- **Desplegar** (CodeBuild `saad-desplegar`, [`../buildspecs/desplegar.yml`](../buildspecs/desplegar.yml)): construye el frontend y ejecuta `cdk deploy Saad`, que aplica la plantilla en CloudFormation. Conserva la imagen, el tamaño y la configuración de la API en servicio ([`../scripts/contexto_en_servicio.sh`](../scripts/contexto_en_servicio.sh)): una versión nueva de la API se sigue publicando con `publicar_imagen.sh` y `desplegar.sh`.
+
+### Puesta en marcha (una vez)
+
+1. Guardar los datos sensibles en Parameter Store (desde `infra/aws/.env`):
+
+   ```bash
+   source <(grep -E '^(SAAD_ORIGIN_SECRET|SAAD_ALARM_EMAIL)=' infra/aws/.env)
+   aws ssm put-parameter --region us-east-1 --name /saad/origin-secret --type SecureString --value "$SAAD_ORIGIN_SECRET"
+   aws ssm put-parameter --region us-east-1 --name /saad/alarm-email --type String --value "$SAAD_ALARM_EMAIL"
+   ```
+
+2. Crear la pila de CI:
+
+   ```bash
+   cd infra/aws/cdk && source .venv/bin/activate
+   export CDK_DEFAULT_ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
+   npx --yes aws-cdk@2 deploy SaadCi
+   ```
+
+3. Activar la conexión con GitHub: en la consola de AWS, *Developer Tools → Settings → Connections → saad-github → Update pending connection*, e instalar la app **AWS Connector for GitHub** en la cuenta dueña del repositorio (`Camila-Aroca`), dándole acceso a `Proyecto-Capstone`. Instalar la app requiere permisos de administración sobre el repositorio.
+
+Costo aproximado: CodePipeline V2 cobra US$0,002 por minuto de acción y CodeBuild `general1.small` US$0,005 por minuto, con 100 minutos gratis al mes. Una verificación tarda unos minutos.
