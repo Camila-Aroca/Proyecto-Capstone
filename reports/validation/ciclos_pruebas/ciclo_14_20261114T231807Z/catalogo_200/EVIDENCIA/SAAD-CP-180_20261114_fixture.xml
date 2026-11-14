@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="3" time="1.441" timestamp="2026-11-14T20:18:37.035988-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_geo_capas" name="test_unir_atributos_rechaza_joins_invalidos[atributos0-duplicado]" time="0.115"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_geo_capas" name="test_unir_atributos_rechaza_joins_invalidos[atributos1-fuera de la capa]" time="0.042"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_geo_capas" name="test_unir_atributos_rechaza_joins_invalidos[atributos2-repiten columnas]" time="0.034"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

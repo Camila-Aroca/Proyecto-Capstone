@@ -1,0 +1,303 @@
+{
+ "run_id": "ciclo_10_20261114T225227Z/catalogo_200",
+ "ciclo": 10,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Felipe Rivera",
+ "alcance": "6 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-14T22:36:16+00:00",
+ "fin_utc": "2026-11-14T22:51:25+00:00",
+ "commit": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+ "arbol_versionado_limpio": true,
+ "archivos_versionados_modificados": 0,
+ "archivos_sin_rastrear": [
+  "reports/modeling/factibilidad_pronosticos_hospitalizaciones_defunciones.md",
+  "reports/validation/ciclos_pruebas/ciclo_05_20261114T202918Z/",
+  "reports/validation/ciclos_pruebas/ciclo_06_20261114T205836Z/",
+  "reports/validation/ciclos_pruebas/ciclo_07_20261114T211303Z/",
+  "reports/validation/ciclos_pruebas/ciclo_08_20261114T220553Z/",
+  "reports/validation/ciclos_pruebas/ciclo_09_20261114T220556Z/",
+  "scripts/qa_campana_200.py",
+  "tests/test_qa_campana_200.py"
+ ],
+ "entorno": "AWS (URL desplegada; host redactado)",
+ "modo": "manual",
+ "nota": "Revisión visual manual de Felipe Rivera sobre el sitio desplegado (capturas propias) más mediciones automatizadas de 071 y 072 con Chrome headless (host redactado). En las capturas manuales no figuran la URL ni otras ventanas. Los scripts de ejecución quedaron fuera del repositorio; su hash figura en hash_input.",
+ "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+ "python": "3.12.6",
+ "so": "Windows 11",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 4,
+  "fallidos": 2,
+  "no_ejecutados": 0
+ },
+ "advertencias": [
+  "Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-041",
+   "run_id": "ciclo_10_20261114T225227Z/catalogo_200",
+   "titulo": "Contexto de suicidios independiente",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "Interfaz AWS: encabezado «Datos hasta la semana 39 de 2026 (desde el 27 de septiembre de 2026)»; API de suicidios: fecha_corte_datos=2026-11-07, última semana observada 2026-S43",
+   "defecto": "Sin defecto registrado (hallazgo descrito en observaciones)",
+   "estado": "APROBADO",
+   "resultado_real": "Revisión visual manual: el bloque dice «Defunciones por lesiones autoinfligidas (CIE-10 X60–X84)» y su unidad es suicidios por semana; la línea de suicidios termina en la semana 43 y la de atenciones en la 39; en ninguna parte de la interfaz aparece la fecha de corte de suicidios.",
+   "observaciones": "Estado según el criterio literal (se distingue de las atenciones y cada serie conserva su propio fin, S43 frente a S39). Hallazgo: la fecha de corte de defunciones no se muestra como texto en la interfaz; si se exigiera que fuera visible, el caso sería FALLIDO. Es un juicio de la persona que ejecuta.",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T22:36:16+00:00",
+    "fin": "2026-11-14T22:36:16+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-041_20261114_aws_manual.json",
+   "evidencia_sha256": "2ff62234739caf6a07df3526ed0c3eaad9e269424f056f7b63dc090ab07ecdcc",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-041_20261114_aws_manual.json",
+     "sha256": "2ff62234739caf6a07df3526ed0c3eaad9e269424f056f7b63dc090ab07ecdcc"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-041_20261114_aws_manual_01_bloque_suicidios.png",
+     "sha256": "e561799e2f3f4cf4d8bb9e4c2da1ed2ee1a8f3750396f39abc9ea5a63d35d946"
+    }
+   ],
+   "hash_input": {
+    "modalidad": "revisión visual manual; el input son las capturas anexas (SHA256 en cada anexo)"
+   }
+  },
+  {
+   "id": "SAAD-CP-042",
+   "run_id": "ciclo_10_20261114T225227Z/catalogo_200",
+   "titulo": "Alternar marcas de contexto",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "Interfaz AWS: encabezado «Datos hasta la semana 39 de 2026 (desde el 27 de septiembre de 2026)»; API de suicidios: fecha_corte_datos=2026-11-07, última semana observada 2026-S43",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Revisión visual manual: al desmarcar Festividades y Estaciones desaparecen las marcas y se mantienen la serie observada, el pronóstico, el intervalo y la tabla de datos.",
+   "observaciones": "Coincide con la medición automatizada del ciclo 07 (marcas 33 → 13 → 0 → 33 con la serie idéntica).",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T22:37:22+00:00",
+    "fin": "2026-11-14T22:37:28+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-042_20261114_aws_manual.json",
+   "evidencia_sha256": "24e1d95147e001521d1523362ff0ba278d63b75acfb4a8dc93fcad19ba581ec3",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-042_20261114_aws_manual.json",
+     "sha256": "24e1d95147e001521d1523362ff0ba278d63b75acfb4a8dc93fcad19ba581ec3"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-042_20261114_aws_manual_01_con_marcas.png",
+     "sha256": "d9439d556fc2ae6fe56b7e34516e434d8efb848cc5f07d1a384b7a9b2b98adf8"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-042_20261114_aws_manual_02_sin_marcas.png",
+     "sha256": "bc7e22fc9bf159ace3c8971cb0555412af1fcd19dde6aa78b40e73bb772898bd"
+    }
+   ],
+   "hash_input": {
+    "modalidad": "revisión visual manual; el input son las capturas anexas (SHA256 en cada anexo)"
+   }
+  },
+  {
+   "id": "SAAD-CP-073",
+   "run_id": "ciclo_10_20261114T225227Z/catalogo_200",
+   "titulo": "Contraste de texto y ayudas",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "Interfaz AWS: encabezado «Datos hasta la semana 39 de 2026 (desde el 27 de septiembre de 2026)»; API de suicidios: fecha_corte_datos=2026-11-07, última semana observada 2026-S43",
+   "defecto": "Incidencia de contraste (tema claro) pendiente de registrar como DEF en registro_defectos.md (esta corrida no modifica ese registro)",
+   "estado": "FALLIDO",
+   "resultado_real": "Revisión visual manual: no se objetó la legibilidad de los avisos ni de las etiquetas en tema claro ni oscuro. Las mediciones numéricas de los ciclos 07 y de la verificación cruzada dan 4,09:1 («· 4 advertencias») y 4,26:1 («en desarrollo») en tema claro, bajo el mínimo de 4,5:1; en tema oscuro cumplen (7,31:1 y 6,41:1).",
+   "observaciones": "Prevalece la medición porque el criterio es numérico (texto normal 4,5:1). La impresión visual de legibilidad no desmiente la medición.",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T22:40:06+00:00",
+    "fin": "2026-11-14T22:40:31+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-073_20261114_aws_manual.json",
+   "evidencia_sha256": "954fe600c15d5537f48a8cae7f54515911292eaa60157e393188634cd7d9fedd",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws_manual.json",
+     "sha256": "954fe600c15d5537f48a8cae7f54515911292eaa60157e393188634cd7d9fedd"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws_manual_01_claro_avisos.png",
+     "sha256": "ca8f5ff921529ad5dd0954985103c6f5a40eb5c0f1a5a3590f8fbf40d1613b6e"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws_manual_02_claro_alcance.png",
+     "sha256": "59a4aa185d2632fbbaa57eb20c8b7d1684b4ad04f60e176a15a0cfe41518b362"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws_manual_03_oscuro_alcance.png",
+     "sha256": "75706420d991612d4cee2c7646c7c7e930074c484dde9ad5d1b009dae0ea8692"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws_manual_04_oscuro_avisos.png",
+     "sha256": "251255a601fc648b9e4aa72371c669a0248b72410f344c39f3810706e8d305b2"
+    }
+   ],
+   "hash_input": {
+    "modalidad": "revisión visual manual; el input son las capturas anexas (SHA256 en cada anexo)"
+   }
+  },
+  {
+   "id": "SAAD-CP-010",
+   "run_id": "ciclo_10_20261114T225227Z/catalogo_200",
+   "titulo": "Preferencia de color del sistema",
+   "modulo": "Navegación",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "Interfaz AWS: encabezado «Datos hasta la semana 39 de 2026 (desde el 27 de septiembre de 2026)»; API de suicidios: fecha_corte_datos=2026-11-07, última semana observada 2026-S43",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Revisión visual manual: en tablero y en detalle de establecimiento, el fondo, los textos, la serie, los ejes y la leyenda cambian entre tema claro y oscuro; los valores y la selección (Región Metropolitana; Hospital Clínico San Borja Arriarán) se mantienen.",
+   "observaciones": "Coincide con la medición automatizada del ciclo 08 y con la verificación cruzada.",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T22:42:14+00:00",
+    "fin": "2026-11-14T22:43:28+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-010_20261114_aws_manual.json",
+   "evidencia_sha256": "150f6a3df0340bd2066ce15e8d2b0735361cfb784443c6e3348128d36ca34870",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-010_20261114_aws_manual.json",
+     "sha256": "150f6a3df0340bd2066ce15e8d2b0735361cfb784443c6e3348128d36ca34870"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-010_20261114_aws_manual_01_tablero_claro.png",
+     "sha256": "b6b9ff9f75243ab0f44fdc17348f132ac2273bb6bff1d442275f68973e1c2bd9"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-010_20261114_aws_manual_02_tablero_oscuro.png",
+     "sha256": "bebe192bac26a6568b7c498cec80a05c6af3c6f8506039bd3d13ad1717bdac25"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-010_20261114_aws_manual_03_detalle_oscuro.png",
+     "sha256": "8b5872c6240ff125c1e2d1cec7421f07e0301ca47fd5a36f248889e1f2ba3a20"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-010_20261114_aws_manual_04_detalle_claro.png",
+     "sha256": "8f715a22b7e62506ff766fb757cb0cbc3297762a34efeb5db8a2fb81b1a5ed93"
+    }
+   ],
+   "hash_input": {
+    "modalidad": "revisión visual manual; el input son las capturas anexas (SHA256 en cada anexo)"
+   }
+  },
+  {
+   "id": "SAAD-CP-071",
+   "run_id": "ciclo_10_20261114T225227Z/catalogo_200",
+   "titulo": "Viewport móvil estrecho",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "{\"urgencias\":{\"ultima_semana_observada\":{\"ano\":2026,\"semana\":39,\"fecha_inicio\":\"2026-09-27\",\"atenciones\":2295},\"pronostico_calculado_en\":\"2026-11-12T14:53:07.182869Z\",\"origen_pronostico\":\"persistido\"},\"establecimientos\":{\"ultima_semana_observada\":{\"ano\":2026,\"semana\":39},\"pronostico_generado_en\":\"2026-11-12T14:56:13.938884Z\"}}",
+   "defecto": "Incidencia de maquetación móvil del tablero en AWS, pendiente de registrar como DEF en registro_defectos.md (esta corrida no modifica ese registro)",
+   "estado": "FALLIDO",
+   "resultado_real": "entrada: documento 360px en ventana de 360px (desborde 0px); 0 elementos cortados; 0 de 7 controles inaccesibles | tablero: documento 533px en ventana de 360px (desborde 173px); 0 elementos cortados; 0 de 133 controles inaccesibles | establecimientos: documento 360px en ventana de 360px (desborde 0px); 0 elementos cortados; 0 de 345 controles inaccesibles | detalle_hospital: documento 360px en ventana de 360px (desborde 0px); 0 elementos cortados; 0 de 345 controles inaccesibles | En emulación móvil: entrada → ancho de layout 360px; tablero → ancho de layout 533px; establecimientos → ancho de layout 360px; detalle_hospital → ancho de layout 360px",
+   "observaciones": "Medición contra 360 px fijos (ventana de escritorio), contrastada con emulación de dispositivo móvil. En el tablero el documento mide 533 px en una ventana de 360 px (desborde de 173 px): la tabla de comunas no queda contenida en su contenedor desplazable. En modo dispositivo móvil el navegador amplía el ancho del layout a 533 px y encoge la página, por lo que no se ve barra de desplazamiento y la revisión visual manual del ejecutor lo ve bien («yo lo veo bien»); aun así el contenido no cabe en 360 px. Las otras tres vistas caben. En el entorno local el tablero sí cabe (ciclo 08). Estado según la medición del ancho del documento que pide el procedimiento; es un juicio sobre el criterio «tablas pueden desplazarse en su contenedor».",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T22:50:22+00:00",
+    "fin": "2026-11-14T22:51:11+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-071_20261114_aws.json",
+   "evidencia_sha256": "d1789ec7fd44f27b6b5e45cae9ca24a200916af3e81de371160ad011fc878a1a",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-071_20261114_aws.json",
+     "sha256": "d1789ec7fd44f27b6b5e45cae9ca24a200916af3e81de371160ad011fc878a1a"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-071_20261114_aws_entrada.png",
+     "sha256": "94932b920b61bf3787be937cdae326514f7e4c07bfa8606604ea919e7a9ec18a"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-071_20261114_aws_tablero.png",
+     "sha256": "8875e5ecb5112373fab888c87577978d0acfb4fdf019917b62ff733ef3232083"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-071_20261114_aws_establecimientos.png",
+     "sha256": "84ea77bbd78467abb00e142fea60e45a739a60cac36957154f251f44572408e5"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-071_20261114_aws_detalle_hospital.png",
+     "sha256": "d0d2699b7af23c45418dfae4b834769c2a1e64106d808cc3f273aea7193877f0"
+    }
+   ],
+   "hash_input": {
+    "script_de_ejecucion_sha256": "4d2083d5ebb82f8800abe6a5a911eb363b429200cb59f06c66e85e9c994bd8a9",
+    "script_versionado": false,
+    "herramientas": "puppeteer-core 23.11.1; Chrome headless"
+   }
+  },
+  {
+   "id": "SAAD-CP-072",
+   "run_id": "ciclo_10_20261114T225227Z/catalogo_200",
+   "titulo": "Zoom al doscientos por ciento",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "{\"urgencias\":{\"ultima_semana_observada\":{\"ano\":2026,\"semana\":39,\"fecha_inicio\":\"2026-09-27\",\"atenciones\":2295},\"pronostico_calculado_en\":\"2026-11-12T14:53:07.182869Z\",\"origen_pronostico\":\"persistido\"},\"establecimientos\":{\"ultima_semana_observada\":{\"ano\":2026,\"semana\":39},\"pronostico_generado_en\":\"2026-11-12T14:56:13.938884Z\"}}",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "tablero_selectores_y_avisos: 0 de 133 controles inaccesibles; 0 elementos cortados; desborde horizontal 44px | detalle_hospital_propuesta: 0 de 35 controles inaccesibles; 0 elementos cortados; desborde horizontal 0px",
+   "observaciones": "Ningún control queda tapado ni cortado y el recorrido se completa. Observación: a 640 px de ancho (zoom 200 % sobre 1280 px) el tablero de AWS tiene 44 px de desborde horizontal de la página; el detalle del hospital cabe. Verificación geométrica automática que no sustituye una revisión visual.",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T22:51:11+00:00",
+    "fin": "2026-11-14T22:51:25+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-072_20261114_aws.json",
+   "evidencia_sha256": "f073715391e48aca5792fc6007c32b39c19ac3bc852368bb190b542fbc1b9af8",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-072_20261114_aws.json",
+     "sha256": "f073715391e48aca5792fc6007c32b39c19ac3bc852368bb190b542fbc1b9af8"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-072_20261114_aws_tablero_selectores_y_avisos.png",
+     "sha256": "b976eea8e47ce78bee723c062579e2c9fb8753d06199d7da09f85cbaf28ad7c3"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-072_20261114_aws_detalle_hospital_propuesta.png",
+     "sha256": "8eb83f3ae2dccff560970aa18a4b9c04e7ebaf6f494537af2b21d909c28dea28"
+    }
+   ],
+   "hash_input": {
+    "script_de_ejecucion_sha256": "4d2083d5ebb82f8800abe6a5a911eb363b429200cb59f06c66e85e9c994bd8a9",
+    "script_versionado": false,
+    "herramientas": "puppeteer-core 23.11.1; Chrome headless"
+   }
+  }
+ ]
+}

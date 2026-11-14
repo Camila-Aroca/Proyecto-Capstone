@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="1.844" timestamp="2026-11-14T17:44:52.217667-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_build_mart_mvp_territorial_comuna" name="test_oferta_reconciles_with_dimension_total" time="0.444"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

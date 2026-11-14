@@ -1,0 +1,208 @@
+{
+ "run_id": "ciclo_07_20261114T211303Z/catalogo_200",
+ "ciclo": 7,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Felipe Rivera",
+ "alcance": "4 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-14T21:08:51+00:00",
+ "fin_utc": "2026-11-14T21:09:40+00:00",
+ "commit": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+ "arbol_versionado_limpio": true,
+ "archivos_versionados_modificados": 0,
+ "archivos_sin_rastrear": [
+  "reports/modeling/factibilidad_pronosticos_hospitalizaciones_defunciones.md",
+  "reports/validation/ciclos_pruebas/ciclo_05_20261114T202918Z/",
+  "reports/validation/ciclos_pruebas/ciclo_06_20261114T205836Z/",
+  "scripts/qa_campana_200.py",
+  "tests/test_qa_campana_200.py"
+ ],
+ "entorno": "AWS (URL desplegada; host redactado)",
+ "modo": "manual",
+ "nota": "Sitio desplegado consultado en solo lectura con Chrome headless (host redactado). Los scripts de ejecución quedaron fuera del repositorio; su hash figura en hash_input.",
+ "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+ "python": "3.12.6",
+ "so": "Windows 11",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 2,
+  "fallidos": 1,
+  "no_ejecutados": 1
+ },
+ "advertencias": [
+  "Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-041",
+   "run_id": "ciclo_07_20261114T211303Z/catalogo_200",
+   "titulo": "Contexto de suicidios independiente",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "{\"urgencias\":{\"ultima_semana_observada\":{\"ano\":2026,\"semana\":39,\"fecha_inicio\":\"2026-09-27\",\"atenciones\":2295},\"pronostico_calculado_en\":\"2026-11-12T14:53:07.182869Z\",\"origen_pronostico\":\"persistido\"},\"suicidios\":{\"fecha_corte_datos\":\"2026-11-07\",\"ultima_semana_observada\":{\"ano\":2026,\"semana\":43},\"semanas_registro_incompleto\":[\"2026-S44\"],\"modelo\":\"poisson_estacional_eb_vm52\"}}",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Bloque \"Suicidios semanales\" con descripción de defunciones (CIE-10 X60–X84), unidad \"suicidios\" y sin mención de atenciones; la API conserva fecha_corte_datos=2026-11-07 y última semana observada 2026-S43 frente a la de Urgencias 2026-S39.",
+   "observaciones": "Según el criterio literal se cumple a nivel de datos y de series. Hallazgo: la interfaz no muestra la fecha de corte de defunciones como texto (no aparece en el bloque) y no muestra sus advertencias propias (p. ej. \"la última semana publicada se excluye mientras su inscripción esté incompleta\"). El encabezado \"Datos hasta la semana 39 de 2026 (desde el 27 de septiembre de 2026)\" corresponde a atenciones. Juicio visual: requiere confirmación humana.",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T21:08:51+00:00",
+    "fin": "2026-11-14T21:08:58+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-041_20261114_aws.json",
+   "evidencia_sha256": "99a5cb099e049a18707aa436df3f58dce32cb082d3af67176150214c0f1212ae",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-041_20261114_aws.json",
+     "sha256": "99a5cb099e049a18707aa436df3f58dce32cb082d3af67176150214c0f1212ae"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-041_20261114_aws_01_bloque_suicidios.png",
+     "sha256": "8b7cb93ba160c4f02f1edfe4ec727df38c8a7ff5a8fdf38831a5619dfda60837"
+    }
+   ],
+   "hash_input": {
+    "script_de_ejecucion_sha256": "4ff8f42c2d64ce4540c45e71d0d29871e52c1efc16a402315c5455e6ecd25438",
+    "script_versionado": false,
+    "herramientas": "puppeteer-core 23.11.1; axe-core 4.10.2; Chrome headless (viewport 1440x1000)"
+   }
+  },
+  {
+   "id": "SAAD-CP-042",
+   "run_id": "ciclo_07_20261114T211303Z/catalogo_200",
+   "titulo": "Alternar marcas de contexto",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "{\"urgencias\":{\"ultima_semana_observada\":{\"ano\":2026,\"semana\":39,\"fecha_inicio\":\"2026-09-27\",\"atenciones\":2295},\"pronostico_calculado_en\":\"2026-11-12T14:53:07.182869Z\",\"origen_pronostico\":\"persistido\"},\"suicidios\":{\"fecha_corte_datos\":\"2026-11-07\",\"ultima_semana_observada\":{\"ano\":2026,\"semana\":43},\"semanas_registro_incompleto\":[\"2026-S44\"],\"modelo\":\"poisson_estacional_eb_vm52\"}}",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Marcas (líneas+bandas) por paso: 33 → 13 → 0 → 20 → 33; trazos de la serie y tabla idénticos en los 5 pasos (hash 76174096/1492612282); 0 llamadas a la API durante la alternancia.",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T21:08:58+00:00",
+    "fin": "2026-11-14T21:09:10+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-042_20261114_aws.json",
+   "evidencia_sha256": "2c2e017143a7f9771bd41a5c3b0238743886bf3b05040cc0fcc78793597aa9ba",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-042_20261114_aws.json",
+     "sha256": "2c2e017143a7f9771bd41a5c3b0238743886bf3b05040cc0fcc78793597aa9ba"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-042_20261114_aws_01_con_marcas.png",
+     "sha256": "8b7cb93ba160c4f02f1edfe4ec727df38c8a7ff5a8fdf38831a5619dfda60837"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-042_20261114_aws_02_sin_marcas.png",
+     "sha256": "69ef08113dcbf0bf357fda1e2bcffd2d9f4eb60564359142da6906f9451e14c0"
+    }
+   ],
+   "hash_input": {
+    "script_de_ejecucion_sha256": "4ff8f42c2d64ce4540c45e71d0d29871e52c1efc16a402315c5455e6ecd25438",
+    "script_versionado": false,
+    "herramientas": "puppeteer-core 23.11.1; axe-core 4.10.2; Chrome headless (viewport 1440x1000)"
+   }
+  },
+  {
+   "id": "SAAD-CP-046",
+   "run_id": "ciclo_07_20261114T211303Z/catalogo_200",
+   "titulo": "Interpretar bandas y festividades",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No registrado",
+   "defecto": "Sin defecto registrado",
+   "estado": "NO EJECUTADO",
+   "resultado_real": "No ejecutado",
+   "observaciones": "Prueba de aceptación: requiere a la persona piloto interpretando una banda y una marca temporal y explicando sus límites; no es automatizable.",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": null,
+   "evidencia": null,
+   "evidencia_sha256": null,
+   "hash_input": null,
+   "anexos": []
+  },
+  {
+   "id": "SAAD-CP-073",
+   "run_id": "ciclo_07_20261114T211303Z/catalogo_200",
+   "titulo": "Contraste de texto y ayudas",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "{\"urgencias\":{\"ultima_semana_observada\":{\"ano\":2026,\"semana\":39,\"fecha_inicio\":\"2026-09-27\",\"atenciones\":2295},\"pronostico_calculado_en\":\"2026-11-12T14:53:07.182869Z\",\"origen_pronostico\":\"persistido\"},\"suicidios\":{\"fecha_corte_datos\":\"2026-11-07\",\"ultima_semana_observada\":{\"ano\":2026,\"semana\":43},\"semanas_registro_incompleto\":[\"2026-S44\"],\"modelo\":\"poisson_estacional_eb_vm52\"}}",
+   "defecto": "Incidencias de contraste detectadas en tema claro; pendientes de registrar como DEF en registro_defectos.md (esta corrida no modifica ese registro)",
+   "estado": "FALLIDO",
+   "resultado_real": "light/pagina: 2 violaciones, 389 no determinables, 400 cumplen; light/avisos: 2 violaciones, 389 no determinables, 408 cumplen; light/tabla: 2 violaciones, 409 no determinables, 570 cumplen; light/tooltip: 2 violaciones, 412 no determinables, 568 cumplen; dark/pagina: 0 violaciones, 389 no determinables, 402 cumplen; dark/avisos: 0 violaciones, 389 no determinables, 410 cumplen; dark/tabla: 0 violaciones, 409 no determinables, 572 cumplen; dark/tooltip: 0 violaciones, 412 no determinables, 570 cumplen.",
+   "observaciones": "Incidencias por elemento (tema claro; presentes en los 4 contextos por estar siempre en pantalla): (1) texto '· 4 advertencias' del aviso 'Cómo leer estas cifras': 4,09:1 (#946f34 sobre #fcf1dc, 13 px normal; mínimo 4,5:1). (2) etiqueta 'en desarrollo' de 'Accesibilidad a la red' en 'Alcance de esta herramienta': 4,26:1 (#5e7685 sobre #eef3f6, 11 px; mínimo 4,5:1). Tema oscuro: 0 violaciones. Tooltip visible y sin violaciones propias en ambos temas. Medición con axe-core, solo regla color-contrast, en 8 contextos (claro/oscuro × página, avisos abiertos, tabla abierta, tooltip visible). 3198 elementos quedaron \"no determinables\" por axe (fondos con transparencia o gráficos), que no se cuentan como cumplidos ni como fallidos. No se declara conformidad global de accesibilidad. Incidencias por elemento en el JSON.",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T21:09:10+00:00",
+    "fin": "2026-11-14T21:09:40+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-073_20261114_aws.json",
+   "evidencia_sha256": "4d7b983e33152539eec6957b22f8a235b440695deb4a8cc68ae10120f421782b",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws.json",
+     "sha256": "4d7b983e33152539eec6957b22f8a235b440695deb4a8cc68ae10120f421782b"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws_light_pagina.png",
+     "sha256": "8f5c057db756fee7e8acf9574c67a51bb6d9472d8047d124c814047d808fd0f5"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws_light_avisos.png",
+     "sha256": "34a873276b91c9bafef91109e1888a8c2bbf4c547e3919dbbc9762b82e7d88c9"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws_light_tabla.png",
+     "sha256": "76f33d47b8e862f91258ab795f6d5db30b37e0f0a937be3b267b2978f948af36"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws_light_tooltip.png",
+     "sha256": "197b02b52a78280aacf9b020a7c7f5e587a32c886bd3da63c9b5a6f1042f1980"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws_dark_pagina.png",
+     "sha256": "666cb64818b39d60473a3a93e3406c20ab8fad351348a04e4f2fbcdf19be5510"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws_dark_avisos.png",
+     "sha256": "ec4ca33af338bed35401be63770aa98251a5aeb73df5d0bf6959e524a4c17ebf"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws_dark_tabla.png",
+     "sha256": "4a2c2a08eb3690b05b5b25c8cdba9b9d84ee37292b73222d7984bddc177e04a4"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073_20261114_aws_dark_tooltip.png",
+     "sha256": "7030e9f6303cca64aae4b3e990ebe75d05aa7cce39503feff89ddcb38abaa9a8"
+    }
+   ],
+   "hash_input": {
+    "script_de_ejecucion_sha256": "4ff8f42c2d64ce4540c45e71d0d29871e52c1efc16a402315c5455e6ecd25438",
+    "script_versionado": false,
+    "herramientas": "puppeteer-core 23.11.1; axe-core 4.10.2; Chrome headless (viewport 1440x1000)"
+   }
+  }
+ ]
+}

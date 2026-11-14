@@ -1,0 +1,36 @@
+{
+ "caso": "SAAD-CP-055",
+ "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+ "snapshot": "/meta: última semana observada 2026-11-01; pronóstico calculado 2026-11-12T14:53:07.182869Z (persistido)",
+ "estado_inicial": {
+  "hora_utc": "2026-11-14T20:58:36+00:00",
+  "meta": {
+   "codigo": 200,
+   "cabeceras": {
+    "content-type": "application/json"
+   },
+   "cuerpo": "{\"modelo\":\"hibrido_glm_region_lgbm_comuna_conformal\",\"horizontes\":[1,2,3,4,5,6,7,8],\"umbral_cambio_pct\":7.0,\"semana_en_curso\":{\"ano\":2026,\"semana\":45,\"dias_observados\":6,\"dias_esperados\":7,\"atenciones\":1665.0},\"nivel_intervalo\":0.8,\"ultima_semana_observada\":{\"ano\":2026,\"semana\":44,\"fecha_inicio\":\"2026-11-01\",\"atenciones\":2428.0},\"pronostico_calculado_en\":\"2026-11-12T14:53:07.182869Z\",\"origen_pronostico\":\"persistido\",\"comunas_con_pronostico\":50,\"metricas_backtest\":{\"mase_region\":0.6107,\"mase_comuna\":0.6694,\"cobertura_region\":0.875,\"cobertura_comuna\":0.8079},\"cobertura_holdout\":[{\"nivel\":\"region\",\"cobertura_observada\":0.6968,\"evaluaciones\":155,\"dentro_de_tolerancia\":false},{\"nivel\":\"comuna\",\"cobertura_observada\":0.7684,\"evaluaciones\":7750,\"dentro_de_tolerancia\":false}],\"advertencias\":[\"Las cifras son atenciones de urgencia (eventos), no personas únicas ni prevalencia.\",\"Intervalo 80%: fuera de muestra cubrió 70% en el nivel regional. Interpretar los límites como orientativos.\",\"Intervalo 80%: fuera de muestra cubrió 77% en el nivel comunal. Interpretar los límites como orientativos.\",\"2 comuna(s) sin pronóstico por falta de datos; se muestran como 'sin pronóstico', nunca como cero.\",\"Vista temporal: se muestra un pronóstico guardado que no está vigente porque cambió 'seleccion_benchmark' respecto del snapshot con que se generó. Sus cifras pueden no corresponder al modelo seleccionado.\"]}",
+   "cuerpo_truncado": false,
+   "inicio": "2026-11-14T20:58:36+00:00",
+   "fin": "2026-11-14T20:58:36+00:00"
+  }
+ },
+ "esperado": "HTTP 404 informa que la comuna no pertenece a RM",
+ "peticiones": [
+  {
+   "ruta": "/caracterizacion/urgencias/comuna/05101?semanas=2025-1",
+   "esperado": 404,
+   "respuesta": {
+    "url": "http://127.0.0.1:8000/api/v1/caracterizacion/urgencias/comuna/05101?semanas=2025-1",
+    "codigo": 404,
+    "cabeceras": {
+     "content-type": "application/json"
+    },
+    "cuerpo": "{\"detail\":\"La comuna no pertenece a la Región Metropolitana.\"}",
+    "cuerpo_truncado": false,
+    "inicio": "2026-11-14T20:58:37+00:00",
+    "fin": "2026-11-14T20:58:37+00:00"
+   }
+  }
+ ]
+}

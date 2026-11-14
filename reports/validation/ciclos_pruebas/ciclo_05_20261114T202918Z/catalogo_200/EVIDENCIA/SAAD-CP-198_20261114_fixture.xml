@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.910" timestamp="2026-11-14T17:48:22.355978-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_build_mart_ocupacion_psiquiatria_hospital_rm" name="test_meses_no_publicados_no_generan_filas_ni_ceros" time="0.110"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

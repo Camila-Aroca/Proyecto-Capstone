@@ -1,0 +1,1682 @@
+{
+ "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+ "ciclo": 5,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Felipe Rivera",
+ "alcance": "61 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-14T20:43:39+00:00",
+ "fin_utc": "2026-11-14T20:48:32+00:00",
+ "commit": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+ "arbol_versionado_limpio": true,
+ "archivos_versionados_modificados": 0,
+ "archivos_sin_rastrear": [
+  "reports/modeling/factibilidad_pronosticos_hospitalizaciones_defunciones.md",
+  "scripts/qa_campana_200.py",
+  "tests/test_qa_campana_200.py"
+ ],
+ "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+ "python": "3.12.6",
+ "so": "Windows 11",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 52,
+  "fallidos": 0,
+  "no_ejecutados": 9
+ },
+ "advertencias": [
+  "Los tests unitarios verifican el código con fixtures; no acreditan los datos reales del snapshot vigente.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-041",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Contexto de suicidios independiente",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "NO EJECUTADO",
+   "fecha_hora_utc": null,
+   "resultado_real": "No ejecutado",
+   "evidencia": null,
+   "evidencia_sha256": null,
+   "hash_input": null,
+   "observaciones": "Sin selector de pytest en el catálogo: requiere interfaz, API con datos reales o AWS."
+  },
+  {
+   "id": "SAAD-CP-042",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Alternar marcas de contexto",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "NO EJECUTADO",
+   "fecha_hora_utc": null,
+   "resultado_real": "No ejecutado",
+   "evidencia": null,
+   "evidencia_sha256": null,
+   "hash_input": null,
+   "observaciones": "Sin selector de pytest en el catálogo: requiere interfaz, API con datos reales o AWS."
+  },
+  {
+   "id": "SAAD-CP-043",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Calendario con intervalo invertido",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "NO EJECUTADO",
+   "fecha_hora_utc": null,
+   "resultado_real": "No ejecutado",
+   "evidencia": null,
+   "evidencia_sha256": null,
+   "hash_input": null,
+   "observaciones": "Sin selector de pytest en el catálogo: requiere interfaz, API con datos reales o AWS."
+  },
+  {
+   "id": "SAAD-CP-044",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Límite exacto del calendario",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "NO EJECUTADO",
+   "fecha_hora_utc": null,
+   "resultado_real": "No ejecutado",
+   "evidencia": null,
+   "evidencia_sha256": null,
+   "hash_input": null,
+   "observaciones": "Sin selector de pytest en el catálogo: requiere interfaz, API con datos reales o AWS."
+  },
+  {
+   "id": "SAAD-CP-046",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Interpretar bandas y festividades",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "NO EJECUTADO",
+   "fecha_hora_utc": null,
+   "resultado_real": "No ejecutado",
+   "evidencia": null,
+   "evidencia_sha256": null,
+   "hash_input": null,
+   "observaciones": "Sin selector de pytest en el catálogo: requiere interfaz, API con datos reales o AWS."
+  },
+  {
+   "id": "SAAD-CP-053",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Semana DEIS fuera de dominio",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "NO EJECUTADO",
+   "fecha_hora_utc": null,
+   "resultado_real": "No ejecutado",
+   "evidencia": null,
+   "evidencia_sha256": null,
+   "hash_input": null,
+   "observaciones": "Sin selector de pytest en el catálogo: requiere interfaz, API con datos reales o AWS."
+  },
+  {
+   "id": "SAAD-CP-054",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Defunciones no identifica establecimiento",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "NO EJECUTADO",
+   "fecha_hora_utc": null,
+   "resultado_real": "No ejecutado",
+   "evidencia": null,
+   "evidencia_sha256": null,
+   "hash_input": null,
+   "observaciones": "Sin selector de pytest en el catálogo: requiere interfaz, API con datos reales o AWS."
+  },
+  {
+   "id": "SAAD-CP-055",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Comuna ajena a RM",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "NO EJECUTADO",
+   "fecha_hora_utc": null,
+   "resultado_real": "No ejecutado",
+   "evidencia": null,
+   "evidencia_sha256": null,
+   "hash_input": null,
+   "observaciones": "Sin selector de pytest en el catálogo: requiere interfaz, API con datos reales o AWS."
+  },
+  {
+   "id": "SAAD-CP-073",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Contraste de texto y ayudas",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "NO EJECUTADO",
+   "fecha_hora_utc": null,
+   "resultado_real": "No ejecutado",
+   "evidencia": null,
+   "evidencia_sha256": null,
+   "hash_input": null,
+   "observaciones": "Sin selector de pytest en el catálogo: requiere interfaz, API con datos reales o AWS."
+  },
+  {
+   "id": "SAAD-CP-081",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Grano semanal y jerarquía causal",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:43:39+00:00",
+    "fin": "2026-11-14T20:43:47+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_urgencias_comuna_marts.py::test_weekly_grain_hierarchy_ratios_and_reporters -q --junitxml=EVIDENCIA/SAAD-CP-081_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_urgencias_comuna_marts::test_weekly_grain_hierarchy_ratios_and_reporters"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-081_20261114_fixture.xml",
+   "evidencia_sha256": "2ddd4e9536284b9a8fbf48335fb4d978771bf513b21c9a6f94ad643ee4a5d36a",
+   "hash_input": {
+    "archivo": "tests/test_build_urgencias_comuna_marts.py",
+    "git_blob": "9e1f5c470d4cbfe1cb2191c31c234fc530fd444c"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-082",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Conciliación mensual contra semanal",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:43:47+00:00",
+    "fin": "2026-11-14T20:43:54+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_urgencias_comuna_marts.py::test_monthly_reconciles_exactly_with_weekly_counts -q --junitxml=EVIDENCIA/SAAD-CP-082_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_urgencias_comuna_marts::test_monthly_reconciles_exactly_with_weekly_counts"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-082_20261114_fixture.xml",
+   "evidencia_sha256": "5873e1af4a45b2e5454754b60c8a6bc15055dcd56ac1a45cfe05650f82a1411c",
+   "hash_input": {
+    "archivo": "tests/test_build_urgencias_comuna_marts.py",
+    "git_blob": "9e1f5c470d4cbfe1cb2191c31c234fc530fd444c"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-083",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Denominador anual constante entre meses",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:43:54+00:00",
+    "fin": "2026-11-14T20:43:58+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_urgencias_comuna_marts.py::test_monthly_reuses_same_annual_population_across_months -q --junitxml=EVIDENCIA/SAAD-CP-083_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_urgencias_comuna_marts::test_monthly_reuses_same_annual_population_across_months"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-083_20261114_fixture.xml",
+   "evidencia_sha256": "efc79ec714a55622a11da84613414579ed797c96f27cb35f486f1c5ce414b2e1",
+   "hash_input": {
+    "archivo": "tests/test_build_urgencias_comuna_marts.py",
+    "git_blob": "9e1f5c470d4cbfe1cb2191c31c234fc530fd444c"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-084",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Rechazo de jerarquía ID36 inconsistente",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:43:58+00:00",
+    "fin": "2026-11-14T20:44:03+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_urgencias_comuna_marts.py::test_validation_rejects_broken_id36_hierarchy -q --junitxml=EVIDENCIA/SAAD-CP-084_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_urgencias_comuna_marts::test_validation_rejects_broken_id36_hierarchy"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-084_20261114_fixture.xml",
+   "evidencia_sha256": "d750f5d38ef28841812fadfbcf91d589d91c3809027304797386111bc7161850",
+   "hash_input": {
+    "archivo": "tests/test_build_urgencias_comuna_marts.py",
+    "git_blob": "9e1f5c470d4cbfe1cb2191c31c234fc530fd444c"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-085",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Causa ausente sin imputación silenciosa",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:44:03+00:00",
+    "fin": "2026-11-14T20:44:07+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_urgencias_comuna_marts.py::test_absent_cause_is_not_silently_imputed_as_zero -q --junitxml=EVIDENCIA/SAAD-CP-085_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_urgencias_comuna_marts::test_absent_cause_is_not_silently_imputed_as_zero"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-085_20261114_fixture.xml",
+   "evidencia_sha256": "c8196353d2a6bffcad3218f44cdea4102a93faedc844a408a8b5bde588ac8652",
+   "hash_input": {
+    "archivo": "tests/test_build_urgencias_comuna_marts.py",
+    "git_blob": "9e1f5c470d4cbfe1cb2191c31c234fc530fd444c"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-086",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Grano etario comunal mensual",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:44:07+00:00",
+    "fin": "2026-11-14T20:44:11+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_urgencias_comuna_etario_mart.py::test_grain_is_comuna_by_month_by_age_group -q --junitxml=EVIDENCIA/SAAD-CP-086_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_urgencias_comuna_etario_mart::test_grain_is_comuna_by_month_by_age_group"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-086_20261114_fixture.xml",
+   "evidencia_sha256": "34e11572fabfef2d7b298f40f7c432df26d47328687a095bb1f4b284aa2baecc",
+   "hash_input": {
+    "archivo": "tests/test_build_urgencias_comuna_etario_mart.py",
+    "git_blob": "7b269a45785fb5a226f3c375222169b6da0eacf1"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-087",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Ausencia de sexo y doble conteo etario",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:44:12+00:00",
+    "fin": "2026-11-14T20:44:16+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_urgencias_comuna_etario_mart.py::test_mart_does_not_include_total_sexo_or_reporter_columns -q --junitxml=EVIDENCIA/SAAD-CP-087_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_urgencias_comuna_etario_mart::test_mart_does_not_include_total_sexo_or_reporter_columns"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-087_20261114_fixture.xml",
+   "evidencia_sha256": "96db00e5297ce471ba07e0ff476df358decca38dd0e40c15ac1a6f38043dcb53",
+   "hash_input": {
+    "archivo": "tests/test_build_urgencias_comuna_etario_mart.py",
+    "git_blob": "7b269a45785fb5a226f3c375222169b6da0eacf1"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-088",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Dominio de grupos de edad DEIS",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:44:16+00:00",
+    "fin": "2026-11-14T20:44:20+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_urgencias_comuna_etario_mart.py::test_validation_rejects_unexpected_age_group_value -q --junitxml=EVIDENCIA/SAAD-CP-088_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_urgencias_comuna_etario_mart::test_validation_rejects_unexpected_age_group_value"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-088_20261114_fixture.xml",
+   "evidencia_sha256": "341c2937160f3b1745cd1daa811768ef0705ec877ecd4b3798879eb2493fb65c",
+   "hash_input": {
+    "archivo": "tests/test_build_urgencias_comuna_etario_mart.py",
+    "git_blob": "7b269a45785fb5a226f3c375222169b6da0eacf1"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-089",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Duplicado de clave etaria",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:44:20+00:00",
+    "fin": "2026-11-14T20:44:25+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_urgencias_comuna_etario_mart.py::test_validation_rejects_duplicated_grain -q --junitxml=EVIDENCIA/SAAD-CP-089_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_urgencias_comuna_etario_mart::test_validation_rejects_duplicated_grain"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-089_20261114_fixture.xml",
+   "evidencia_sha256": "010519df410f89989a89b6516c7ee412a4221ab476fab8bc2707797509d2add9",
+   "hash_input": {
+    "archivo": "tests/test_build_urgencias_comuna_etario_mart.py",
+    "git_blob": "7b269a45785fb5a226f3c375222169b6da0eacf1"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-090",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Reconciliación de cinco grupos etarios",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:44:25+00:00",
+    "fin": "2026-11-14T20:44:29+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_urgencias_comuna_etario_mart.py::test_age_groups_reconcile_with_comuna_monthly_totals -q --junitxml=EVIDENCIA/SAAD-CP-090_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_urgencias_comuna_etario_mart::test_age_groups_reconcile_with_comuna_monthly_totals"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-090_20261114_fixture.xml",
+   "evidencia_sha256": "a6310cf7e02f67acb6f1b4c82ee79575a61a407dee560fa411f4484e6a3f7f1d",
+   "hash_input": {
+    "archivo": "tests/test_build_urgencias_comuna_etario_mart.py",
+    "git_blob": "7b269a45785fb5a226f3c375222169b6da0eacf1"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-091",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Comuna sin reporte conserva nulos",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:44:29+00:00",
+    "fin": "2026-11-14T20:44:34+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_mart_mvp_territorial_comuna.py::test_no_report_comuna_keeps_null_not_zero -q --junitxml=EVIDENCIA/SAAD-CP-091_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_mart_mvp_territorial_comuna::test_no_report_comuna_keeps_null_not_zero"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-091_20261114_fixture.xml",
+   "evidencia_sha256": "e49c8e2849c3ea65613025e3cdba271439cc0fc229b26b3dec6214389ed7dcb4",
+   "hash_input": {
+    "archivo": "tests/test_build_mart_mvp_territorial_comuna.py",
+    "git_blob": "59fda11c89d97be1dd7f775da7b9303defca067f"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-092",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Reportantes anuales únicos",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:44:34+00:00",
+    "fin": "2026-11-14T20:44:38+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_mart_mvp_territorial_comuna.py::test_annual_reportantes_are_not_summed_from_monthly -q --junitxml=EVIDENCIA/SAAD-CP-092_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_mart_mvp_territorial_comuna::test_annual_reportantes_are_not_summed_from_monthly"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-092_20261114_fixture.xml",
+   "evidencia_sha256": "e884990996a76fec959b6d3179aadf735648cdb740b616888806ef966fef5e73",
+   "hash_input": {
+    "archivo": "tests/test_build_mart_mvp_territorial_comuna.py",
+    "git_blob": "59fda11c89d97be1dd7f775da7b9303defca067f"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-093",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Tasa anual desde conteo y población",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:44:38+00:00",
+    "fin": "2026-11-14T20:44:43+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_mart_mvp_territorial_comuna.py::test_rate_is_recomputed_from_annual_counts_not_averaged -q --junitxml=EVIDENCIA/SAAD-CP-093_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_mart_mvp_territorial_comuna::test_rate_is_recomputed_from_annual_counts_not_averaged"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-093_20261114_fixture.xml",
+   "evidencia_sha256": "601d2783281c6b32ec385f8791702e8879630d31707792638ceec01e5897c722",
+   "hash_input": {
+    "archivo": "tests/test_build_mart_mvp_territorial_comuna.py",
+    "git_blob": "59fda11c89d97be1dd7f775da7b9303defca067f"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-094",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Año de vulnerabilidad preservado",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:44:43+00:00",
+    "fin": "2026-11-14T20:44:48+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_mart_mvp_territorial_comuna.py::test_vulnerabilidad_is_not_relabeled_as_2025 -q --junitxml=EVIDENCIA/SAAD-CP-094_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_mart_mvp_territorial_comuna::test_vulnerabilidad_is_not_relabeled_as_2025"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-094_20261114_fixture.xml",
+   "evidencia_sha256": "808d0e0e61a740cfa85e4ab82c3a3dfa3eec2b24828c50341f241acf7df412d5",
+   "hash_input": {
+    "archivo": "tests/test_build_mart_mvp_territorial_comuna.py",
+    "git_blob": "59fda11c89d97be1dd7f775da7b9303defca067f"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-095",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Total territorial de oferta reconciliado",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:44:48+00:00",
+    "fin": "2026-11-14T20:44:54+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_mart_mvp_territorial_comuna.py::test_oferta_reconciles_with_dimension_total -q --junitxml=EVIDENCIA/SAAD-CP-095_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_mart_mvp_territorial_comuna::test_oferta_reconciles_with_dimension_total"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-095_20261114_fixture.xml",
+   "evidencia_sha256": "c704b178de283b52346b5af7382ea7636404e0cd31dceef590ccf2b5feb81160",
+   "hash_input": {
+    "archivo": "tests/test_build_mart_mvp_territorial_comuna.py",
+    "git_blob": "59fda11c89d97be1dd7f775da7b9303defca067f"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-096",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Universo comunal incompleto rechazado",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:44:54+00:00",
+    "fin": "2026-11-14T20:44:59+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_mart_mvp_territorial_comuna.py::test_universo_rejects_incomplete_cut_set -q --junitxml=EVIDENCIA/SAAD-CP-096_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_mart_mvp_territorial_comuna::test_universo_rejects_incomplete_cut_set"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-096_20261114_fixture.xml",
+   "evidencia_sha256": "4bbf3441877e5a40688c35b5e460562e03f7972d15c84e5c7de9701837c6fedd",
+   "hash_input": {
+    "archivo": "tests/test_build_mart_mvp_territorial_comuna.py",
+    "git_blob": "59fda11c89d97be1dd7f775da7b9303defca067f"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-108",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Cuatro fuentes contextuales preservadas",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:44:59+00:00",
+    "fin": "2026-11-14T20:45:04+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_contexto_genero_mart.py::test_build_mart_reconciles_all_processed_sources_and_preserves_contract -q --junitxml=EVIDENCIA/SAAD-CP-108_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_contexto_genero_mart::test_build_mart_reconciles_all_processed_sources_and_preserves_contract"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-108_20261114_fixture.xml",
+   "evidencia_sha256": "ee6b2914192dedd33117127eed17525b21d72caac26686cd24142a56c2388b4a",
+   "hash_input": {
+    "archivo": "tests/test_build_contexto_genero_mart.py",
+    "git_blob": "0908e6ad63f2766e3efbc34d8167064855a8fbc3"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-109",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Publicación contextual atómica e idempotente",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:45:04+00:00",
+    "fin": "2026-11-14T20:45:10+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_contexto_genero_mart.py::test_publish_is_atomic_valid_and_idempotent -q --junitxml=EVIDENCIA/SAAD-CP-109_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_contexto_genero_mart::test_publish_is_atomic_valid_and_idempotent"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-109_20261114_fixture.xml",
+   "evidencia_sha256": "b77944b50932089442d996da0ab2fef0fc6feb39075393c7b88b7f16854cf0b6",
+   "hash_input": {
+    "archivo": "tests/test_build_contexto_genero_mart.py",
+    "git_blob": "0908e6ad63f2766e3efbc34d8167064855a8fbc3"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-110",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Dependencias de contexto en DAG",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:45:10+00:00",
+    "fin": "2026-11-14T20:45:15+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_contexto_genero_mart.py::test_contexto_genero_mart_stages_are_registered_in_dag -q --junitxml=EVIDENCIA/SAAD-CP-110_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_contexto_genero_mart::test_contexto_genero_mart_stages_are_registered_in_dag"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-110_20261114_fixture.xml",
+   "evidencia_sha256": "1de9465ff73d5e2f1342ecad107d0f49ea0a6289006113faf4062bac9f866824",
+   "hash_input": {
+    "archivo": "tests/test_build_contexto_genero_mart.py",
+    "git_blob": "0908e6ad63f2766e3efbc34d8167064855a8fbc3"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-135",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Cuantiles discretos y cobertura nominal",
+   "modulo": "Modelos predictivos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:45:15+00:00",
+    "fin": "2026-11-14T20:45:26+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_models_suicidios.py::test_cuantiles_conteo_cubren_al_menos_el_nivel -q --junitxml=EVIDENCIA/SAAD-CP-135_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_models_suicidios::test_cuantiles_conteo_cubren_al_menos_el_nivel"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-135_20261114_fixture.xml",
+   "evidencia_sha256": "7ceb0f5b51b23d2b782ac3cbd058b64a871047ece1e7496afc406f4174124303",
+   "hash_input": {
+    "archivo": "tests/test_models_suicidios.py",
+    "git_blob": "e1def3f12efc2bebabaab7c077f84e0c91a90e7f"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-136",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Selección exige calibración",
+   "modulo": "Modelos predictivos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:45:26+00:00",
+    "fin": "2026-11-14T20:45:34+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_models_suicidios.py::test_seleccion_ignora_referencias_y_exige_calibracion -q --junitxml=EVIDENCIA/SAAD-CP-136_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_models_suicidios::test_seleccion_ignora_referencias_y_exige_calibracion"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-136_20261114_fixture.xml",
+   "evidencia_sha256": "78a387eec6c6ada7a1774de9d6eb8b2144ae9ed2a4789b8dc43959e6a974f438",
+   "hash_input": {
+    "archivo": "tests/test_models_suicidios.py",
+    "git_blob": "e1def3f12efc2bebabaab7c077f84e0c91a90e7f"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-137",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Exposición proporcional a semana corta",
+   "modulo": "Modelos predictivos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:45:34+00:00",
+    "fin": "2026-11-14T20:45:42+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_models_suicidios.py::test_exposicion_escala_semanas_cortas -q --junitxml=EVIDENCIA/SAAD-CP-137_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_models_suicidios::test_exposicion_escala_semanas_cortas"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-137_20261114_fixture.xml",
+   "evidencia_sha256": "373dd57ad9da6eb217cfe91a6b1b84eee6f578329cb3165524880d3755cb5172",
+   "hash_input": {
+    "archivo": "tests/test_models_suicidios.py",
+    "git_blob": "e1def3f12efc2bebabaab7c077f84e0c91a90e7f"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-155",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Caracterización por semanas y causa",
+   "modulo": "API con fixtures",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:45:42+00:00",
+    "fin": "2026-11-14T20:45:53+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_api_caracterizacion.py::test_urgencias_filtra_semanas_territorio_y_causa -q --junitxml=EVIDENCIA/SAAD-CP-155_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_api_caracterizacion::test_urgencias_filtra_semanas_territorio_y_causa"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-155_20261114_fixture.xml",
+   "evidencia_sha256": "75471a7e6e95d8c1c55a00a9961237cf8e3739b1208a0b0f23ff3635fdb38412",
+   "hash_input": {
+    "archivo": "tests/test_api_caracterizacion.py",
+    "git_blob": "fd853eb1c462294dc6d7400a555e24846c23293e"
+   },
+   "observaciones": "pytest informa una advertencia de deprecación de Starlette/httpx (TestClient); no afecta el resultado."
+  },
+  {
+   "id": "SAAD-CP-156",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Escenario contextual sin información futura",
+   "modulo": "API con fixtures",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:45:53+00:00",
+    "fin": "2026-11-14T20:46:03+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_api_caracterizacion.py::test_escenario_conserva_total_y_no_usa_anios_futuros -q --junitxml=EVIDENCIA/SAAD-CP-156_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_api_caracterizacion::test_escenario_conserva_total_y_no_usa_anios_futuros"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-156_20261114_fixture.xml",
+   "evidencia_sha256": "07ee3ac7aa0c62bbe147d7e5a66b24cdfddbaee2580d376418a9341b079cfdb3",
+   "hash_input": {
+    "archivo": "tests/test_api_caracterizacion.py",
+    "git_blob": "fd853eb1c462294dc6d7400a555e24846c23293e"
+   },
+   "observaciones": "pytest informa una advertencia de deprecación de Starlette/httpx (TestClient); no afecta el resultado."
+  },
+  {
+   "id": "SAAD-CP-157",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Restos mayores conservan el total",
+   "modulo": "API con fixtures",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:46:03+00:00",
+    "fin": "2026-11-14T20:46:13+00:00"
+   },
+   "resultado_real": "5 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_api_caracterizacion.py::test_redondeo_escenario_no_pierde_eventos -q --junitxml=EVIDENCIA/SAAD-CP-157_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_api_caracterizacion::test_redondeo_escenario_no_pierde_eventos[0]",
+    "tests.test_api_caracterizacion::test_redondeo_escenario_no_pierde_eventos[100001]",
+    "tests.test_api_caracterizacion::test_redondeo_escenario_no_pierde_eventos[1]",
+    "tests.test_api_caracterizacion::test_redondeo_escenario_no_pierde_eventos[2]",
+    "tests.test_api_caracterizacion::test_redondeo_escenario_no_pierde_eventos[7]"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-157_20261114_fixture.xml",
+   "evidencia_sha256": "22c68e0b54aef7c8c49cc55df63d694f4ab071a08d119deb4010f534bcabac96",
+   "hash_input": {
+    "archivo": "tests/test_api_caracterizacion.py",
+    "git_blob": "fd853eb1c462294dc6d7400a555e24846c23293e"
+   },
+   "observaciones": "pytest informa una advertencia de deprecación de Starlette/httpx (TestClient); no afecta el resultado."
+  },
+  {
+   "id": "SAAD-CP-158",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Suicidios vencido mantiene abstención",
+   "modulo": "API con fixtures",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:46:13+00:00",
+    "fin": "2026-11-14T20:46:24+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_api_suicidios.py::test_pronostico_vencido_responde_503_con_el_stage -q --junitxml=EVIDENCIA/SAAD-CP-158_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_api_suicidios::test_pronostico_vencido_responde_503_con_el_stage"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-158_20261114_fixture.xml",
+   "evidencia_sha256": "f251ccac27c2752dc2c5b2e4d38386b3a2d93d5f41e835cc0c99a6fc19e4b1ec",
+   "hash_input": {
+    "archivo": "tests/test_api_suicidios.py",
+    "git_blob": "1951cacbe6f9ac82e3aa64b19c765c5feade5394"
+   },
+   "observaciones": "pytest informa una advertencia de deprecación de Starlette/httpx (TestClient); no afecta el resultado."
+  },
+  {
+   "id": "SAAD-CP-159",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Carga de suicidios solicita reintento",
+   "modulo": "API con fixtures",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:46:24+00:00",
+    "fin": "2026-11-14T20:46:34+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_api_suicidios.py::test_mientras_carga_pide_reintentar -q --junitxml=EVIDENCIA/SAAD-CP-159_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_api_suicidios::test_mientras_carga_pide_reintentar"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-159_20261114_fixture.xml",
+   "evidencia_sha256": "aab73f8dc2dff4a48114e189b8a6da2e038646fd12019280847642aabfc7eb99",
+   "hash_input": {
+    "archivo": "tests/test_api_suicidios.py",
+    "git_blob": "1951cacbe6f9ac82e3aa64b19c765c5feade5394"
+   },
+   "observaciones": "pytest informa una advertencia de deprecación de Starlette/httpx (TestClient); no afecta el resultado."
+  },
+  {
+   "id": "SAAD-CP-160",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Tasa reciente conserva bordes de año",
+   "modulo": "API con fixtures",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:46:34+00:00",
+    "fin": "2026-11-14T20:46:43+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_api_suicidios.py::test_tasa_reciente_incluye_fragmentos_de_borde_de_ano -q --junitxml=EVIDENCIA/SAAD-CP-160_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_api_suicidios::test_tasa_reciente_incluye_fragmentos_de_borde_de_ano"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-160_20261114_fixture.xml",
+   "evidencia_sha256": "acbc5a5d4e4d23600ab17ec1533ff79950d1d764eea1680f02be0b2356cc7474",
+   "hash_input": {
+    "archivo": "tests/test_api_suicidios.py",
+    "git_blob": "1951cacbe6f9ac82e3aa64b19c765c5feade5394"
+   },
+   "observaciones": "pytest informa una advertencia de deprecación de Starlette/httpx (TestClient); no afecta el resultado."
+  },
+  {
+   "id": "SAAD-CP-161",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Refresh limitado a rama afectada",
+   "modulo": "Pipeline y arranque",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:46:43+00:00",
+    "fin": "2026-11-14T20:46:47+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_pipeline_orchestration.py::test_refresh_current_urgencias_only_runs_affected_branch -q --junitxml=EVIDENCIA/SAAD-CP-161_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_pipeline_orchestration::test_refresh_current_urgencias_only_runs_affected_branch"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-161_20261114_fixture.xml",
+   "evidencia_sha256": "09c535ad3ddc54c201560af7a0e80f36cdd8f70d35013fa7d90b1b7a704aac2c",
+   "hash_input": {
+    "archivo": "tests/test_pipeline_orchestration.py",
+    "git_blob": "d439c0b1ec50c17c45030cf0194fee571115dade"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-162",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Refresh idéntico no fuerza downstream",
+   "modulo": "Pipeline y arranque",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:46:47+00:00",
+    "fin": "2026-11-14T20:46:52+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_pipeline_orchestration.py::test_force_refresh_with_identical_snapshot_does_not_force_downstream -q --junitxml=EVIDENCIA/SAAD-CP-162_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_pipeline_orchestration::test_force_refresh_with_identical_snapshot_does_not_force_downstream"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-162_20261114_fixture.xml",
+   "evidencia_sha256": "2a0cd58be0ae916a96559c04391868f928ddadf9ac1237e0f2b15de9c13ef2a3",
+   "hash_input": {
+    "archivo": "tests/test_pipeline_orchestration.py",
+    "git_blob": "d439c0b1ec50c17c45030cf0194fee571115dade"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-163",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Processed desalineado obliga reconstrucción",
+   "modulo": "Pipeline y arranque",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:46:52+00:00",
+    "fin": "2026-11-14T20:46:56+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_pipeline_orchestration.py::test_refresh_identical_raw_but_processed_from_previous_raw_forces_rebuild -q --junitxml=EVIDENCIA/SAAD-CP-163_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_pipeline_orchestration::test_refresh_identical_raw_but_processed_from_previous_raw_forces_rebuild"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-163_20261114_fixture.xml",
+   "evidencia_sha256": "513a40c7205d26ceccc790d5e7e4d917e99a56717536e8f95f77d746c9dbbe32",
+   "hash_input": {
+    "archivo": "tests/test_pipeline_orchestration.py",
+    "git_blob": "d439c0b1ec50c17c45030cf0194fee571115dade"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-164",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Recuperación tras limpieza fallida",
+   "modulo": "Pipeline y arranque",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:46:56+00:00",
+    "fin": "2026-11-14T20:47:01+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_pipeline_orchestration.py::test_failed_clean_then_identical_refresh_recovers_end_to_end -q --junitxml=EVIDENCIA/SAAD-CP-164_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_pipeline_orchestration::test_failed_clean_then_identical_refresh_recovers_end_to_end"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-164_20261114_fixture.xml",
+   "evidencia_sha256": "bb1072b11321649f168fd0efcad03ca8dd996800f59e11273093f2a51b957e32",
+   "hash_input": {
+    "archivo": "tests/test_pipeline_orchestration.py",
+    "git_blob": "d439c0b1ec50c17c45030cf0194fee571115dade"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-165",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Exit cero sin outputs no es éxito",
+   "modulo": "Pipeline y arranque",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:01+00:00",
+    "fin": "2026-11-14T20:47:05+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_pipeline_orchestration.py::test_stage_with_exit_zero_but_missing_outputs_is_not_success -q --junitxml=EVIDENCIA/SAAD-CP-165_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_pipeline_orchestration::test_stage_with_exit_zero_but_missing_outputs_is_not_success"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-165_20261114_fixture.xml",
+   "evidencia_sha256": "afc8fe551fdd3bbb1b225168378fc5b6cc7a7aad2ad093107c024d7e88bca273",
+   "hash_input": {
+    "archivo": "tests/test_pipeline_orchestration.py",
+    "git_blob": "d439c0b1ec50c17c45030cf0194fee571115dade"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-166",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Parquet corrupto invalida SKIP",
+   "modulo": "Pipeline y arranque",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:05+00:00",
+    "fin": "2026-11-14T20:47:09+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_pipeline_orchestration.py::TestPipelineIdempotency::test_parquet_corrupto -q --junitxml=EVIDENCIA/SAAD-CP-166_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_pipeline_orchestration.TestPipelineIdempotency::test_parquet_corrupto"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-166_20261114_fixture.xml",
+   "evidencia_sha256": "32c516be5e56465d19103e896793a6e05e8c1f586af4793d8ee7d8a21a6f280a",
+   "hash_input": {
+    "archivo": "tests/test_pipeline_orchestration.py",
+    "git_blob": "d439c0b1ec50c17c45030cf0194fee571115dade"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-167",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Limpieza limitada a un año",
+   "modulo": "Pipeline y arranque",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:09+00:00",
+    "fin": "2026-11-14T20:47:14+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_pipeline_orchestration.py::TestPipelineIdempotency::test_clean_urgencias_year_targets_one_output_and_forwards_year -q --junitxml=EVIDENCIA/SAAD-CP-167_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_pipeline_orchestration.TestPipelineIdempotency::test_clean_urgencias_year_targets_one_output_and_forwards_year"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-167_20261114_fixture.xml",
+   "evidencia_sha256": "779fa7b7fd47c7ef11e4f993084986df7fd091e73ed9e55a469e6b70f30cfccc",
+   "hash_input": {
+    "archivo": "tests/test_pipeline_orchestration.py",
+    "git_blob": "d439c0b1ec50c17c45030cf0194fee571115dade"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-168",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Modo sin evaluación respeta orden del DAG",
+   "modulo": "Pipeline y arranque",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:14+00:00",
+    "fin": "2026-11-14T20:47:18+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_pipeline_orchestration.py::test_sin_evaluacion_corre_todo_lo_demas_en_orden -q --junitxml=EVIDENCIA/SAAD-CP-168_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_pipeline_orchestration::test_sin_evaluacion_corre_todo_lo_demas_en_orden"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-168_20261114_fixture.xml",
+   "evidencia_sha256": "71a9ebbb294acc53ec2c21b920b19050a8fbb9f9b3db99f7231983632b7be321",
+   "hash_input": {
+    "archivo": "tests/test_pipeline_orchestration.py",
+    "git_blob": "d439c0b1ec50c17c45030cf0194fee571115dade"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-169",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Cascada preservada sin benchmarks",
+   "modulo": "Pipeline y arranque",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:18+00:00",
+    "fin": "2026-11-14T20:47:22+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_pipeline_orchestration.py::test_sin_evaluacion_conserva_la_cascada_de_datos -q --junitxml=EVIDENCIA/SAAD-CP-169_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_pipeline_orchestration::test_sin_evaluacion_conserva_la_cascada_de_datos"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-169_20261114_fixture.xml",
+   "evidencia_sha256": "fe886fc2da5bd36dc1d24684e38e793af075d2a83f18ad19e4e3f8750f4c486a",
+   "hash_input": {
+    "archivo": "tests/test_pipeline_orchestration.py",
+    "git_blob": "d439c0b1ec50c17c45030cf0194fee571115dade"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-186",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Identidades de habilitación y ampliación",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:22+00:00",
+    "fin": "2026-11-14T20:47:27+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_propuesta_camas.py::test_identidades_y_habilitar_antes_de_ampliar -q --junitxml=EVIDENCIA/SAAD-CP-186_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_propuesta_camas::test_identidades_y_habilitar_antes_de_ampliar"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-186_20261114_fixture.xml",
+   "evidencia_sha256": "debd7c8d2dc391928e1e890e28b2f0c4f85c8782fe68f1e7fad509457093722d",
+   "hash_input": {
+    "archivo": "tests/test_propuesta_camas.py",
+    "git_blob": "259a795f4f1f85bdd148631bbf6cf14ef6b6230d"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-187",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Dotación suficiente evita ampliación",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:27+00:00",
+    "fin": "2026-11-14T20:47:31+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_propuesta_camas.py::test_dotacion_suficiente_no_propone_ampliacion -q --junitxml=EVIDENCIA/SAAD-CP-187_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_propuesta_camas::test_dotacion_suficiente_no_propone_ampliacion"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-187_20261114_fixture.xml",
+   "evidencia_sha256": "e0adb47ae31e603ae3ae84d78177c09d8a0c82c77d269b229ad70473f3fcdac0",
+   "hash_input": {
+    "archivo": "tests/test_propuesta_camas.py",
+    "git_blob": "259a795f4f1f85bdd148631bbf6cf14ef6b6230d"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-188",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Umbral exacto sin cama espuria",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:31+00:00",
+    "fin": "2026-11-14T20:47:35+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_propuesta_camas.py::test_umbral_exacto_no_agrega_cama_por_error_flotante -q --junitxml=EVIDENCIA/SAAD-CP-188_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_propuesta_camas::test_umbral_exacto_no_agrega_cama_por_error_flotante"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-188_20261114_fixture.xml",
+   "evidencia_sha256": "ef7081fbb790b8f9e0b5a0ca7ca94650dd35669112e4d1788fedb42537b43ebe",
+   "hash_input": {
+    "archivo": "tests/test_propuesta_camas.py",
+    "git_blob": "259a795f4f1f85bdd148631bbf6cf14ef6b6230d"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-189",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Abstención por ventana área o duplicados",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:35+00:00",
+    "fin": "2026-11-14T20:47:39+00:00"
+   },
+   "resultado_real": "3 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_propuesta_camas.py::test_abstencion -q --junitxml=EVIDENCIA/SAAD-CP-189_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_propuesta_camas::test_abstencion[frame0-418-12 meses]",
+    "tests.test_propuesta_camas::test_abstencion[frame1-418-duplicados]",
+    "tests.test_propuesta_camas::test_abstencion[frame2-427-psiquiatr\\xeda]"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-189_20261114_fixture.xml",
+   "evidencia_sha256": "8610d5cf5f052eb9386bc600dd7bb4ed0dff1f72b65fb71c8db19d5c946a9b13",
+   "hash_input": {
+    "archivo": "tests/test_propuesta_camas.py",
+    "git_blob": "259a795f4f1f85bdd148631bbf6cf14ef6b6230d"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-190",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Nulos cierres y antigüedad sin ceros ficticios",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:39+00:00",
+    "fin": "2026-11-14T20:47:44+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_propuesta_camas.py::test_nulos_cierres_y_dato_antiguo_no_son_ceros -q --junitxml=EVIDENCIA/SAAD-CP-190_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_propuesta_camas::test_nulos_cierres_y_dato_antiguo_no_son_ceros"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-190_20261114_fixture.xml",
+   "evidencia_sha256": "3ebcc7eea8e9fb24767f172314e70f120ee47602a0fe42d935e4dead8cb91273",
+   "hash_input": {
+    "archivo": "tests/test_propuesta_camas.py",
+    "git_blob": "259a795f4f1f85bdd148631bbf6cf14ef6b6230d"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-191",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Pico mensual gobierna escenario",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:44+00:00",
+    "fin": "2026-11-14T20:47:48+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_propuesta_camas.py::test_pico_mensual_no_promedio_que_oculta_estacionalidad -q --junitxml=EVIDENCIA/SAAD-CP-191_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_propuesta_camas::test_pico_mensual_no_promedio_que_oculta_estacionalidad"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-191_20261114_fixture.xml",
+   "evidencia_sha256": "e7d477896f1f5e56053a6c9129bf18b3db00c818b3a7c44c435d6dfd6512d24f",
+   "hash_input": {
+    "archivo": "tests/test_propuesta_camas.py",
+    "git_blob": "259a795f4f1f85bdd148631bbf6cf14ef6b6230d"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-192",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Escenario independiente para cada área",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:48+00:00",
+    "fin": "2026-11-14T20:47:52+00:00"
+   },
+   "resultado_real": "11 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_propuesta_camas.py::test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos -q --junitxml=EVIDENCIA/SAAD-CP-192_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_propuesta_camas::test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[418]",
+    "tests.test_propuesta_camas::test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[419]",
+    "tests.test_propuesta_camas::test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[420]",
+    "tests.test_propuesta_camas::test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[421]",
+    "tests.test_propuesta_camas::test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[422]",
+    "tests.test_propuesta_camas::test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[423]",
+    "tests.test_propuesta_camas::test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[424]",
+    "tests.test_propuesta_camas::test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[425]",
+    "tests.test_propuesta_camas::test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[426]",
+    "tests.test_propuesta_camas::test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[428]",
+    "tests.test_propuesta_camas::test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[429]"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-192_20261114_fixture.xml",
+   "evidencia_sha256": "81ef6b155f075fbae18455394117f4734e77dd7f4f612a5ac562c925d5d9bba3",
+   "hash_input": {
+    "archivo": "tests/test_propuesta_camas.py",
+    "git_blob": "259a795f4f1f85bdd148631bbf6cf14ef6b6230d"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-193",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Retrospectiva sin acceso al futuro",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:52+00:00",
+    "fin": "2026-11-14T20:47:56+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_propuesta_camas.py::test_qa_retrospectivo_usa_solo_historia_y_no_silencia_incumplimiento -q --junitxml=EVIDENCIA/SAAD-CP-193_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_propuesta_camas::test_qa_retrospectivo_usa_solo_historia_y_no_silencia_incumplimiento"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-193_20261114_fixture.xml",
+   "evidencia_sha256": "abb559f92b1c59401e0cdce117069287b8b74a0eeb2ec6cb4d698d62135ff011",
+   "hash_input": {
+    "archivo": "tests/test_propuesta_camas.py",
+    "git_blob": "259a795f4f1f85bdd148631bbf6cf14ef6b6230d"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-194",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Ventana gráfica no modifica escenario anual",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:47:56+00:00",
+    "fin": "2026-11-14T20:48:06+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_propuesta_camas.py::test_api_ventana_grafica_no_recorta_calculo_anual -q --junitxml=EVIDENCIA/SAAD-CP-194_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_propuesta_camas::test_api_ventana_grafica_no_recorta_calculo_anual"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-194_20261114_fixture.xml",
+   "evidencia_sha256": "5a1340c95aa0ecbd57e543414447a4d8d121eff83a1e26a529f9ee5a4e111ddc",
+   "hash_input": {
+    "archivo": "tests/test_propuesta_camas.py",
+    "git_blob": "259a795f4f1f85bdd148631bbf6cf14ef6b6230d"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-195",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Grano de ocupación por área y mes",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:48:06+00:00",
+    "fin": "2026-11-14T20:48:10+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_mart_ocupacion_psiquiatria_hospital_rm.py::test_grano_area_mes_solo_areas_de_psiquiatria -q --junitxml=EVIDENCIA/SAAD-CP-195_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_mart_ocupacion_psiquiatria_hospital_rm::test_grano_area_mes_solo_areas_de_psiquiatria"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-195_20261114_fixture.xml",
+   "evidencia_sha256": "0910a6c3c1ccf49b4dfb5e2e4946b7c7df30790cf64347275569f749184bd2ed",
+   "hash_input": {
+    "archivo": "tests/test_build_mart_ocupacion_psiquiatria_hospital_rm.py",
+    "git_blob": "68a00450e10a1422931b65fa12ce2388bcfc8b4c"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-196",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Promedio diario desde días cama",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:48:10+00:00",
+    "fin": "2026-11-14T20:48:15+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_mart_ocupacion_psiquiatria_hospital_rm.py::test_promedio_diario_es_dias_cama_sobre_dias_del_mes -q --junitxml=EVIDENCIA/SAAD-CP-196_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_mart_ocupacion_psiquiatria_hospital_rm::test_promedio_diario_es_dias_cama_sobre_dias_del_mes"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-196_20261114_fixture.xml",
+   "evidencia_sha256": "068ae456fc044fd3c3baca940a6927e2276b9cb67c7d609e422d428ffb947e0d",
+   "hash_input": {
+    "archivo": "tests/test_build_mart_ocupacion_psiquiatria_hospital_rm.py",
+    "git_blob": "68a00450e10a1422931b65fa12ce2388bcfc8b4c"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-197",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Total hospitalario sin sumar índices",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:48:15+00:00",
+    "fin": "2026-11-14T20:48:19+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_mart_ocupacion_psiquiatria_hospital_rm.py::test_total_del_hospital_suma_dias_cama_no_indices -q --junitxml=EVIDENCIA/SAAD-CP-197_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_mart_ocupacion_psiquiatria_hospital_rm::test_total_del_hospital_suma_dias_cama_no_indices"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-197_20261114_fixture.xml",
+   "evidencia_sha256": "baa994e8598ecb8424ab99414f1ad9e45e16afb7a17be240a63785f167a784ba",
+   "hash_input": {
+    "archivo": "tests/test_build_mart_ocupacion_psiquiatria_hospital_rm.py",
+    "git_blob": "68a00450e10a1422931b65fa12ce2388bcfc8b4c"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-198",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Mes ausente permanece ausente",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:48:19+00:00",
+    "fin": "2026-11-14T20:48:23+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_mart_ocupacion_psiquiatria_hospital_rm.py::test_meses_no_publicados_no_generan_filas_ni_ceros -q --junitxml=EVIDENCIA/SAAD-CP-198_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_mart_ocupacion_psiquiatria_hospital_rm::test_meses_no_publicados_no_generan_filas_ni_ceros"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-198_20261114_fixture.xml",
+   "evidencia_sha256": "05e889ab687cffda32ca10dc79b2c21b689bc4a3d28b143d7dcd8a618e18c532",
+   "hash_input": {
+    "archivo": "tests/test_build_mart_ocupacion_psiquiatria_hospital_rm.py",
+    "git_blob": "68a00450e10a1422931b65fa12ce2388bcfc8b4c"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-199",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Identidad con promedio oficial obligatoria",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:48:23+00:00",
+    "fin": "2026-11-14T20:48:28+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_mart_ocupacion_psiquiatria_hospital_rm.py::test_identidad_con_el_promedio_publicado_es_obligatoria -q --junitxml=EVIDENCIA/SAAD-CP-199_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_mart_ocupacion_psiquiatria_hospital_rm::test_identidad_con_el_promedio_publicado_es_obligatoria"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-199_20261114_fixture.xml",
+   "evidencia_sha256": "f8d3b0dd106c02d33499386623b4f4dc07a3cff3dda58f1402e8fc0e1dd31c06",
+   "hash_input": {
+    "archivo": "tests/test_build_mart_ocupacion_psiquiatria_hospital_rm.py",
+    "git_blob": "68a00450e10a1422931b65fa12ce2388bcfc8b4c"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-200",
+   "run_id": "ciclo_05_20261114T202918Z/catalogo_200",
+   "titulo": "Clasificación en límites de ocupación",
+   "modulo": "Ocupación y camas",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:48:28+00:00",
+    "fin": "2026-11-14T20:48:32+00:00"
+   },
+   "resultado_real": "6 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_mart_ocupacion_psiquiatria_hospital_rm.py::test_clasificacion_de_colapso_en_los_umbrales -q --junitxml=EVIDENCIA/SAAD-CP-200_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_mart_ocupacion_psiquiatria_hospital_rm::test_clasificacion_de_colapso_en_los_umbrales[60.0-1-sobre_capacidad]",
+    "tests.test_build_mart_ocupacion_psiquiatria_hospital_rm::test_clasificacion_de_colapso_en_los_umbrales[84.99-0-holgura]",
+    "tests.test_build_mart_ocupacion_psiquiatria_hospital_rm::test_clasificacion_de_colapso_en_los_umbrales[85.0-0-presion]",
+    "tests.test_build_mart_ocupacion_psiquiatria_hospital_rm::test_clasificacion_de_colapso_en_los_umbrales[89.99-0-presion]",
+    "tests.test_build_mart_ocupacion_psiquiatria_hospital_rm::test_clasificacion_de_colapso_en_los_umbrales[90.0-0-saturacion]",
+    "tests.test_build_mart_ocupacion_psiquiatria_hospital_rm::test_clasificacion_de_colapso_en_los_umbrales[None-0-None]"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-200_20261114_fixture.xml",
+   "evidencia_sha256": "63763a9b5b4492d513044f642e77a69715f181ee257c3c50df2330b96b186a5d",
+   "hash_input": {
+    "archivo": "tests/test_build_mart_ocupacion_psiquiatria_hospital_rm.py",
+    "git_blob": "68a00450e10a1422931b65fa12ce2388bcfc8b4c"
+   },
+   "observaciones": "—"
+  }
+ ]
+}

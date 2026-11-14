@@ -1,0 +1,74 @@
+{
+ "caso": "SAAD-CP-031",
+ "herramienta": "playwright-cli 0.1.24 (skill playwright-cli) con Chrome; dependencias en carpeta temporal fuera del repo",
+ "entorno": "LOCAL (API local con Uvicorn y frontend con Vite en 127.0.0.1)",
+ "inicio": "2026-11-14T23:03:18+00:00",
+ "fin": "2026-11-14T23:03:26+00:00",
+ "snapshot": "API local: Urgencias, última semana observada 2026-S44; pronóstico de demanda calculado 2026-11-12T14:53:07Z; pronóstico por establecimiento generado 2026-11-12T14:56:13Z",
+ "comprobaciones": {
+  "hay_un_area_elegible_y_otra_sin_12_meses": true,
+  "total_se_identifica_como_parcial": true,
+  "indica_cuantas_areas_cuenta": true,
+  "enumera_la_exclusion_con_su_motivo": true,
+  "el_subtotal_no_las_cuenta_como_cero": true,
+  "sin_compensar_con_holgura": true
+ },
+ "observado": {
+  "api_resumen": {
+   "areas": 6,
+   "con_propuesta": 5,
+   "sin_propuesta": [
+    {
+     "nombre": "Área Psiquiatría Adulto Larga estadía",
+     "meses": 6,
+     "motivo": "Serie incompleta o con cierres: no se dimensiona sin revisar el área."
+    }
+   ],
+   "suma_de_aumentos": 16,
+   "neto_si_se_compensara_con_holgura": 10
+  },
+  "ui_total": {
+   "dt": "Aumento de dotación propuesto, 2027",
+   "dd": [
+    "+16 camas",
+    "5 de 6 áreas de psiquiatría; subtotal parcial"
+   ]
+  },
+  "ui_desglose": "Desglose de la propuesta de camas de psiquiatría del hospital Se suman los aumentos de cada área de psiquiatría, sin compensarlos con camas libres de otras áreas. El subtotal excluye las áreas sin cálculo respaldado; no se consideran cero. Seleccione un área en la tabla para ver su capacidad y cálculo. Psiquiatría Forense Adulto evaluación e inicio tto.: +7 camas. Psiquiatría Forense Adulto tratamiento: +8 camas. Psiquiatría Adulto Larga estadía: Serie incompleta o con cierres: no se dimensiona sin revisar el área.. Psiquiatría Forense Infanto Adolescente tratamiento: +1 camas. Psiquiatría Adulto Corta estadía: +0 camas. Hospitalización de Cuidados Intensivos en Psiquiatría Adulto: +0 camas.",
+  "ui_area_sin_respaldo": {
+   "boton": "Psiquiatría Adulto Larga estadía",
+   "pares": [
+    {
+     "dt": "Ocupación, septiembre de 2026",
+     "dd": [
+      "sin camas",
+      "el área no tuvo camas habilitadas ese mes"
+     ]
+    },
+    {
+     "dt": "Meses sin holgura",
+     "dd": [
+      "6 de 6",
+      "meses con camas habilitadas en el período"
+     ]
+    },
+    {
+     "dt": "Camas de psiquiatría del área",
+     "dd": [
+      "29",
+      "Dotación declarada (2025)"
+     ]
+    },
+    {
+     "dt": "Aumento de dotación propuesto, 2027",
+     "dd": [
+      "—",
+      "∅ Sin cálculo respaldado",
+      "Serie incompleta o con cierres: no se dimensiona sin revisar el área."
+     ]
+    }
+   ],
+   "texto": "Camas de psiquiatría: ocupación mensual Pacientes en cama por día, en promedio de cada mes, frente a las camas disponibles · REM-20, hasta septiembre de 2026 Ocupadas (promedio diario) Disponibles Dotación declarada Total del hospital Psiquiatría Adulto Larga estadía ✕ , volver al total del hospital ⓘ Ocupación, septiembre de 2026 sin camas el área no tuvo camas habilitadas ese mes Meses sin holgura 6 de 6 meses con camas habilitadas en el período Camas de psiquiatría del área 29 Dotación declarada (2025) Aumento de dotación propuesto, 2027 — ∅ Sin cálculo respaldado Serie incompleta o con cierres: no se dimensiona sin revisar el área. Propuesta de capacidad para 2027 · Psiquiatría Adulto La"
+  }
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "caso": "SAAD-CP-041",
+ "esperado": "Defunciones se distinguen de atenciones y conservan su propia fecha de corte",
+ "inicio": "2026-11-14T21:08:51+00:00",
+ "fin": "2026-11-14T21:08:58+00:00",
+ "entorno": {
+  "urgencias": {
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 39,
+    "fecha_inicio": "2026-09-27",
+    "atenciones": 2295
+   },
+   "pronostico_calculado_en": "2026-11-12T14:53:07.182869Z",
+   "origen_pronostico": "persistido"
+  },
+  "suicidios": {
+   "fecha_corte_datos": "2026-11-07",
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 43
+   },
+   "semanas_registro_incompleto": [
+    "2026-S44"
+   ],
+   "modelo": "poisson_estacional_eb_vm52"
+  }
+ },
+ "observado": {
+  "territorio": "RM / Región Metropolitana",
+  "titulo": "Suicidios semanales",
+  "descripcion": "Suicidios semanales Defunciones por lesiones autoinfligidas (CIE-10 X60–X84) de residentes de la región",
+  "unidades": [
+   "6,5 por 100.000 hab. al año",
+   "suicidios por semana"
+  ],
+  "mencionaAtenciones": false,
+  "textoCorteEnBloque": [],
+  "encabezadoUrgencias": "Red de urgencia en salud mental · Región Metropolitana Por comuna Por establecimiento Datos hasta la semana 39 de 2026 (desde el 27 de septiembre de 2026) Pronóstico al día",
+  "tablaUltimaObservada": "2026-S43 25 oct 11 — Observado",
+  "tablaPrimerPronostico": "2026-S44 1 nov 12,9 8 – 18 Pronóstico (h+1)",
+  "apiSuicidiosAdvertencias": [
+   "Son defunciones registradas por lesiones autoinfligidas intencionalmente (CIE-10 X60-X84), DEIS.",
+   "La comuna es la de residencia de la persona fallecida, no el lugar del hecho ni un establecimiento: no se compara uno a uno con las atenciones de urgencia, que se cuentan donde se atendieron.",
+   "En una comuna el pronóstico es la tasa esperada de la semana (a menudo bajo 1), no una predicción de casos.",
+   "La última semana publicada se excluye mientras su inscripción esté incompleta."
+  ]
+ },
+ "comprobaciones": {
+  "defunciones_se_distinguen_de_atenciones": true,
+  "fecha_de_corte_propia_en_la_api": true,
+  "ultima_semana_distinta_de_urgencias": true,
+  "fecha_de_corte_visible_como_texto_en_el_bloque": false
+ }
+}

@@ -1,0 +1,137 @@
+{
+ "run_id": "ciclo_12_20261114T230641Z/catalogo_200",
+ "ciclo": 12,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Felipe Rivera",
+ "alcance": "3 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-14T23:06:41+00:00",
+ "fin_utc": "2026-11-14T23:06:56+00:00",
+ "commit": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+ "arbol_versionado_limpio": true,
+ "archivos_versionados_modificados": 0,
+ "archivos_sin_rastrear": [
+  "reports/modeling/factibilidad_pronosticos_hospitalizaciones_defunciones.md",
+  "reports/validation/ciclos_pruebas/ciclo_05_20261114T202918Z/",
+  "reports/validation/ciclos_pruebas/ciclo_06_20261114T205836Z/",
+  "reports/validation/ciclos_pruebas/ciclo_07_20261114T211303Z/",
+  "reports/validation/ciclos_pruebas/ciclo_08_20261114T220553Z/",
+  "reports/validation/ciclos_pruebas/ciclo_09_20261114T220556Z/",
+  "reports/validation/ciclos_pruebas/ciclo_10_20261114T225227Z/",
+  "reports/validation/ciclos_pruebas/ciclo_11_20261114T225642Z/",
+  "scripts/qa_campana_200.py",
+  "tests/test_qa_campana_200.py"
+ ],
+ "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+ "modo": "pytest",
+ "nota": "",
+ "version_desplegada": null,
+ "python": "3.12.6",
+ "so": "Windows 11",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 3,
+  "fallidos": 0,
+  "no_ejecutados": 0
+ },
+ "advertencias": [
+  "Los tests unitarios verifican el código con fixtures; no acreditan los datos reales del snapshot vigente.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-100",
+   "run_id": "ciclo_12_20261114T230641Z/catalogo_200",
+   "titulo": "Reglas explícitas de armonización",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T23:06:42+00:00",
+    "fin": "2026-11-14T23:06:47+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_egresos_f00_f99.py::TestArmonizacion::test_cada_valor_documentado_tiene_regla -q --junitxml=EVIDENCIA/SAAD-CP-100_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_egresos_f00_f99.TestArmonizacion::test_cada_valor_documentado_tiene_regla"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-100_20261114_fixture.xml",
+   "evidencia_sha256": "d1b25465a51e7dab42c34583c0e683796ffdf4a95567173e9a14b5993f9c7fa4",
+   "hash_input": {
+    "archivo": "tests/test_build_egresos_f00_f99.py",
+    "git_blob": "32d1d5e8b28158d57f2abe9aea787927dafc2e08"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-101",
+   "run_id": "ciclo_12_20261114T230641Z/catalogo_200",
+   "titulo": "Tramo abierto de edad sin asignación ambigua",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T23:06:47+00:00",
+    "fin": "2026-11-14T23:06:51+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_egresos_f00_f99.py::TestArmonizacion::test_quinquenales_de_2021_suman_a_su_decena_y_el_tramo_abierto_se_une -q --junitxml=EVIDENCIA/SAAD-CP-101_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_egresos_f00_f99.TestArmonizacion::test_quinquenales_de_2021_suman_a_su_decena_y_el_tramo_abierto_se_une"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-101_20261114_fixture.xml",
+   "evidencia_sha256": "43bccc09a8bedaf760cce25405d6d8fb9cf8610ec646c49acefb24d2cb43983f",
+   "hash_input": {
+    "archivo": "tests/test_build_egresos_f00_f99.py",
+    "git_blob": "32d1d5e8b28158d57f2abe9aea787927dafc2e08"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-102",
+   "run_id": "ciclo_12_20261114T230641Z/catalogo_200",
+   "titulo": "Categoría nueva sin regla detiene salida",
+   "modulo": "Datos canónicos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T23:06:51+00:00",
+    "fin": "2026-11-14T23:06:56+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_build_egresos_f00_f99.py::TestArmonizacion::test_un_valor_sin_regla_hace_fallar -q --junitxml=EVIDENCIA/SAAD-CP-102_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_build_egresos_f00_f99.TestArmonizacion::test_un_valor_sin_regla_hace_fallar"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-102_20261114_fixture.xml",
+   "evidencia_sha256": "78d14e6131ca52d940bdade9db634f25deb287b24abd935706993d5100ed5ac6",
+   "hash_input": {
+    "archivo": "tests/test_build_egresos_f00_f99.py",
+    "git_blob": "32d1d5e8b28158d57f2abe9aea787927dafc2e08"
+   },
+   "observaciones": "—"
+  }
+ ]
+}

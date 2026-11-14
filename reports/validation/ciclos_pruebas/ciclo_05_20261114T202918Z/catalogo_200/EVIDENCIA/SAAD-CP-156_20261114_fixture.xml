@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="6.288" timestamp="2026-11-14T17:45:56.205108-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_api_caracterizacion" name="test_escenario_conserva_total_y_no_usa_anios_futuros" time="0.049"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

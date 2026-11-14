@@ -1,0 +1,64 @@
+{
+ "caso": "SAAD-CP-072",
+ "esperado": "Texto y controles siguen disponibles sin solapamientos que impidan completar el recorrido",
+ "metodo": "Chrome headless; zoom 200% sobre 1280x800 emulado como viewport 640x400 con densidad 2; se recorren selectores, avisos y propuesta y se comprueba que ningún control quede tapado o fuera de pantalla",
+ "inicio": "2026-11-14T22:04:57+00:00",
+ "fin": "2026-11-14T22:05:10+00:00",
+ "entorno": {
+  "urgencias": {
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 44,
+    "fecha_inicio": "2026-11-01",
+    "atenciones": 2428
+   },
+   "pronostico_calculado_en": "2026-11-12T14:53:07.182869Z",
+   "origen_pronostico": "persistido"
+  },
+  "establecimientos": {
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 44
+   },
+   "pronostico_generado_en": "2026-11-12T14:56:13.938884Z"
+  }
+ },
+ "pasos": [
+  {
+   "paso": "tablero_selectores_y_avisos",
+   "hash": "#/tablero",
+   "acciones": [
+    "selector de territorio disponible: 51 opciones",
+    "aviso 'Cómo leer estas cifras' abierto"
+   ],
+   "despues": {
+    "ancho_ventana": 640,
+    "ancho_documento": 640,
+    "desborde_horizontal_px": 0,
+    "elementos_cortados": [],
+    "n_cortados": 0,
+    "controles_revisados": 128,
+    "controles_inaccesibles": [],
+    "n_inaccesibles": 0
+   }
+  },
+  {
+   "paso": "detalle_hospital_propuesta",
+   "hash": "#/establecimientos?comuna=13101&id=111100&objetivo=hospitalizaciones_sm",
+   "acciones": [
+    "aviso abierto",
+    "panel de ocupación: 5 indicadores; propuesta: presente"
+   ],
+   "despues": {
+    "ancho_ventana": 640,
+    "ancho_documento": 640,
+    "desborde_horizontal_px": 0,
+    "elementos_cortados": [],
+    "n_cortados": 0,
+    "controles_revisados": 35,
+    "controles_inaccesibles": [],
+    "n_inaccesibles": 0
+   }
+  }
+ ]
+}

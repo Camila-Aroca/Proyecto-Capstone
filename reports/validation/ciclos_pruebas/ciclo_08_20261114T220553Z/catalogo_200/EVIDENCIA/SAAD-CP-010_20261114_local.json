@@ -1,0 +1,222 @@
+{
+ "caso": "SAAD-CP-010",
+ "esperado": "Los tokens de gráficos y texto siguen la preferencia del sistema; los datos y la selección se conservan",
+ "metodo": "Chrome headless; prefers-color-scheme emulado en la misma página, sin recarga",
+ "inicio": "2026-11-14T22:03:50+00:00",
+ "fin": "2026-11-14T22:04:11+00:00",
+ "entorno": {
+  "urgencias": {
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 44,
+    "fecha_inicio": "2026-11-01",
+    "atenciones": 2428
+   },
+   "pronostico_calculado_en": "2026-11-12T14:53:07.182869Z",
+   "origen_pronostico": "persistido"
+  },
+  "establecimientos": {
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 44
+   },
+   "pronostico_generado_en": "2026-11-12T14:56:13.938884Z"
+  }
+ },
+ "vistas": [
+  {
+   "vista": "tablero",
+   "hash": "#/tablero",
+   "tokens_que_cambian": [
+    "fondo_pagina",
+    "texto_pagina",
+    "texto_principal",
+    "fondo_encabezado",
+    "grafico_trazo_serie",
+    "grafico_relleno_intervalo",
+    "grafico_marcas_eje",
+    "grafico_cuadricula"
+   ],
+   "cambia_texto_o_fondo": true,
+   "cambia_grafico": true,
+   "valores_conservados": true,
+   "seleccion_conservada": true,
+   "sin_recarga": true,
+   "claro": {
+    "tokens": {
+     "fondo_pagina": "rgb(246, 249, 250)",
+     "texto_pagina": "rgb(15, 42, 56)",
+     "texto_principal": "rgb(15, 42, 56)",
+     "fondo_encabezado": "rgb(255, 255, 255)",
+     "grafico_trazo_serie": "rgb(15, 90, 120)",
+     "grafico_relleno_intervalo": "rgba(74, 159, 207, 0.22)",
+     "grafico_marcas_eje": "rgb(94, 118, 133)",
+     "grafico_cuadricula": "rgb(227, 234, 238)",
+     "leyenda": null
+    },
+    "valores": [
+     "2.346",
+     "promedio de las últimas 4 semanas",
+     "2.372",
+     "+1,1% frente al nivel reciente",
+     "– Sin cambio claro",
+     "variación menor a 7%",
+     "70%",
+     "cubrió fuera de muestra (declarado 80%)",
+     "645",
+     "dotación declarada en 12 hospitales, no ocupación"
+    ],
+    "titulos": [
+     "Red de urgencia en salud mental · Región Metropolitana",
+     "Región Metropolitana",
+     "Suicidios semanales",
+     "Mapa comunal",
+     "Resumen por comuna",
+     "Alcance de esta herramienta",
+     "Incluye en el MVP",
+     "Fuera del MVP"
+    ],
+    "seleccion": {
+     "hash": "#/tablero",
+     "territorio": "RM"
+    },
+    "marcador_sigue": true
+   },
+   "oscuro": {
+    "tokens": {
+     "fondo_pagina": "rgb(10, 20, 26)",
+     "texto_pagina": "rgb(232, 241, 245)",
+     "texto_principal": "rgb(232, 241, 245)",
+     "fondo_encabezado": "rgb(14, 27, 34)",
+     "grafico_trazo_serie": "rgb(74, 159, 207)",
+     "grafico_relleno_intervalo": "rgba(74, 159, 207, 0.24)",
+     "grafico_marcas_eje": "rgb(147, 170, 182)",
+     "grafico_cuadricula": "rgb(27, 45, 55)",
+     "leyenda": null
+    },
+    "valores": [
+     "2.346",
+     "promedio de las últimas 4 semanas",
+     "2.372",
+     "+1,1% frente al nivel reciente",
+     "– Sin cambio claro",
+     "variación menor a 7%",
+     "70%",
+     "cubrió fuera de muestra (declarado 80%)",
+     "645",
+     "dotación declarada en 12 hospitales, no ocupación"
+    ],
+    "titulos": [
+     "Red de urgencia en salud mental · Región Metropolitana",
+     "Región Metropolitana",
+     "Suicidios semanales",
+     "Mapa comunal",
+     "Resumen por comuna",
+     "Alcance de esta herramienta",
+     "Incluye en el MVP",
+     "Fuera del MVP"
+    ],
+    "seleccion": {
+     "hash": "#/tablero",
+     "territorio": "RM"
+    },
+    "marcador_sigue": true
+   }
+  },
+  {
+   "vista": "detalle_hospital",
+   "hash": "#/establecimientos?comuna=13101&id=111100",
+   "tokens_que_cambian": [
+    "fondo_pagina",
+    "texto_pagina",
+    "texto_principal",
+    "fondo_encabezado",
+    "grafico_trazo_serie",
+    "grafico_relleno_intervalo",
+    "grafico_marcas_eje",
+    "grafico_cuadricula"
+   ],
+   "cambia_texto_o_fondo": true,
+   "cambia_grafico": true,
+   "valores_conservados": true,
+   "seleccion_conservada": true,
+   "sin_recarga": true,
+   "claro": {
+    "tokens": {
+     "fondo_pagina": "rgb(246, 249, 250)",
+     "texto_pagina": "rgb(15, 42, 56)",
+     "texto_principal": "rgb(15, 42, 56)",
+     "fondo_encabezado": "rgb(255, 255, 255)",
+     "grafico_trazo_serie": "rgb(15, 90, 120)",
+     "grafico_relleno_intervalo": "rgba(74, 159, 207, 0.22)",
+     "grafico_marcas_eje": "rgb(94, 118, 133)",
+     "grafico_cuadricula": "rgb(227, 234, 238)",
+     "leyenda": null
+    },
+    "valores": [
+     "16",
+     "promedio de las últimas 4 semanas",
+     "8,4",
+     "-47,0% frente al nivel reciente",
+     "▼ Baja",
+     "se distingue de la fluctuación semanal",
+     "79%",
+     "cubrió fuera de muestra (declarado 80%)",
+     "17",
+     "dotación declarada, no ocupación"
+    ],
+    "titulos": [
+     "Red de urgencia en salud mental · Región Metropolitana",
+     "Hospital Clínico San Borja Arriarán",
+     "Establecimientos de Santiago",
+     "Alcance de esta herramienta",
+     "Incluye en el MVP",
+     "Fuera del MVP"
+    ],
+    "seleccion": {
+     "hash": "#/establecimientos?comuna=13101&id=111100",
+     "territorio": null
+    },
+    "marcador_sigue": true
+   },
+   "oscuro": {
+    "tokens": {
+     "fondo_pagina": "rgb(10, 20, 26)",
+     "texto_pagina": "rgb(232, 241, 245)",
+     "texto_principal": "rgb(232, 241, 245)",
+     "fondo_encabezado": "rgb(14, 27, 34)",
+     "grafico_trazo_serie": "rgb(74, 159, 207)",
+     "grafico_relleno_intervalo": "rgba(74, 159, 207, 0.24)",
+     "grafico_marcas_eje": "rgb(147, 170, 182)",
+     "grafico_cuadricula": "rgb(27, 45, 55)",
+     "leyenda": null
+    },
+    "valores": [
+     "16",
+     "promedio de las últimas 4 semanas",
+     "8,4",
+     "-47,0% frente al nivel reciente",
+     "▼ Baja",
+     "se distingue de la fluctuación semanal",
+     "79%",
+     "cubrió fuera de muestra (declarado 80%)",
+     "17",
+     "dotación declarada, no ocupación"
+    ],
+    "titulos": [
+     "Red de urgencia en salud mental · Región Metropolitana",
+     "Hospital Clínico San Borja Arriarán",
+     "Establecimientos de Santiago",
+     "Alcance de esta herramienta",
+     "Incluye en el MVP",
+     "Fuera del MVP"
+    ],
+    "seleccion": {
+     "hash": "#/establecimientos?comuna=13101&id=111100",
+     "territorio": null
+    },
+    "marcador_sigue": true
+   }
+  }
+ ]
+}

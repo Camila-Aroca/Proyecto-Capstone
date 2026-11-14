@@ -1,0 +1,225 @@
+{
+ "run_id": "ciclo_14_20261114T231807Z/catalogo_200",
+ "ciclo": 14,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Felipe Rivera",
+ "alcance": "6 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-14T23:18:07+00:00",
+ "fin_utc": "2026-11-14T23:18:44+00:00",
+ "commit": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+ "arbol_versionado_limpio": true,
+ "archivos_versionados_modificados": 0,
+ "archivos_sin_rastrear": [
+  "reports/modeling/factibilidad_pronosticos_hospitalizaciones_defunciones.md",
+  "reports/validation/ciclos_pruebas/ciclo_05_20261114T202918Z/",
+  "reports/validation/ciclos_pruebas/ciclo_06_20261114T205836Z/",
+  "reports/validation/ciclos_pruebas/ciclo_07_20261114T211303Z/",
+  "reports/validation/ciclos_pruebas/ciclo_08_20261114T220553Z/",
+  "reports/validation/ciclos_pruebas/ciclo_09_20261114T220556Z/",
+  "reports/validation/ciclos_pruebas/ciclo_10_20261114T225227Z/",
+  "reports/validation/ciclos_pruebas/ciclo_11_20261114T225642Z/",
+  "reports/validation/ciclos_pruebas/ciclo_12_20261114T230641Z/",
+  "reports/validation/ciclos_pruebas/ciclo_13_20261114T230805Z/",
+  "scripts/qa_campana_200.py",
+  "tests/test_qa_campana_200.py"
+ ],
+ "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+ "modo": "pytest",
+ "nota": "",
+ "version_desplegada": null,
+ "python": "3.12.6",
+ "so": "Windows 11",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 6,
+  "fallidos": 0,
+  "no_ejecutados": 0
+ },
+ "advertencias": [
+  "Los tests unitarios verifican el código con fixtures; no acreditan los datos reales del snapshot vigente.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-176",
+   "run_id": "ciclo_14_20261114T231807Z/catalogo_200",
+   "titulo": "CRS distinto rechazado",
+   "modulo": "Geoespacial reproducible",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T23:18:07+00:00",
+    "fin": "2026-11-14T23:18:15+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_geo_capas.py::test_cargar_comunas_rechaza_otro_crs -q --junitxml=EVIDENCIA/SAAD-CP-176_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_geo_capas::test_cargar_comunas_rechaza_otro_crs"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-176_20261114_fixture.xml",
+   "evidencia_sha256": "302e95194f2ee24275d4e6274e91527bf74689c59ff715343525d6f1e542b96c",
+   "hash_input": {
+    "archivo": "tests/test_geo_capas.py",
+    "git_blob": "9b88c1053b955a0db05967b3a422b5bfc8db7fad"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-177",
+   "run_id": "ciclo_14_20261114T231807Z/catalogo_200",
+   "titulo": "Geometría inválida sin reparación silenciosa",
+   "modulo": "Geoespacial reproducible",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T23:18:15+00:00",
+    "fin": "2026-11-14T23:18:20+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_geo_capas.py::test_cargar_comunas_no_repara_geometrias_invalidas -q --junitxml=EVIDENCIA/SAAD-CP-177_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_geo_capas::test_cargar_comunas_no_repara_geometrias_invalidas"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-177_20261114_fixture.xml",
+   "evidencia_sha256": "c7f4475d9642de2b49b823a9520e96805cdbe8d5cecf3967bbe0db1a980234b1",
+   "hash_input": {
+    "archivo": "tests/test_geo_capas.py",
+    "git_blob": "9b88c1053b955a0db05967b3a422b5bfc8db7fad"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-178",
+   "run_id": "ciclo_14_20261114T231807Z/catalogo_200",
+   "titulo": "Coordenada incompleta rechazada",
+   "modulo": "Geoespacial reproducible",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T23:18:20+00:00",
+    "fin": "2026-11-14T23:18:28+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_geo_capas.py::test_puntos_rechaza_coordenada_a_medias -q --junitxml=EVIDENCIA/SAAD-CP-178_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_geo_capas::test_puntos_rechaza_coordenada_a_medias"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-178_20261114_fixture.xml",
+   "evidencia_sha256": "3f8bf7a76a7b5762593e56efb423497cd88a909539c7998776fe1fe4eea78df7",
+   "hash_input": {
+    "archivo": "tests/test_geo_capas.py",
+    "git_blob": "9b88c1053b955a0db05967b3a422b5bfc8db7fad"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-179",
+   "run_id": "ciclo_14_20261114T231807Z/catalogo_200",
+   "titulo": "Discrepancia de comuna marcada",
+   "modulo": "Geoespacial reproducible",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T23:18:28+00:00",
+    "fin": "2026-11-14T23:18:33+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_geo_capas.py::test_capa_oferta_marca_comuna_distinta_sin_corregirla -q --junitxml=EVIDENCIA/SAAD-CP-179_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_geo_capas::test_capa_oferta_marca_comuna_distinta_sin_corregirla"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-179_20261114_fixture.xml",
+   "evidencia_sha256": "1f4b77660ee964efd3179ecd78d66fd69c4a1f9cf34748aee0695c3387ddf1bd",
+   "hash_input": {
+    "archivo": "tests/test_geo_capas.py",
+    "git_blob": "9b88c1053b955a0db05967b3a422b5bfc8db7fad"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-180",
+   "run_id": "ciclo_14_20261114T231807Z/catalogo_200",
+   "titulo": "Join territorial no unívoco rechazado",
+   "modulo": "Geoespacial reproducible",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T23:18:33+00:00",
+    "fin": "2026-11-14T23:18:39+00:00"
+   },
+   "resultado_real": "3 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_geo_capas.py::test_unir_atributos_rechaza_joins_invalidos -q --junitxml=EVIDENCIA/SAAD-CP-180_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_geo_capas::test_unir_atributos_rechaza_joins_invalidos[atributos0-duplicado]",
+    "tests.test_geo_capas::test_unir_atributos_rechaza_joins_invalidos[atributos1-fuera de la capa]",
+    "tests.test_geo_capas::test_unir_atributos_rechaza_joins_invalidos[atributos2-repiten columnas]"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-180_20261114_fixture.xml",
+   "evidencia_sha256": "0a4557e2cabfbc5be8b8fbeafd48d64533aa6793586072e48876899d81094a93",
+   "hash_input": {
+    "archivo": "tests/test_geo_capas.py",
+    "git_blob": "9b88c1053b955a0db05967b3a422b5bfc8db7fad"
+   },
+   "observaciones": "—"
+  },
+  {
+   "id": "SAAD-CP-185",
+   "run_id": "ciclo_14_20261114T231807Z/catalogo_200",
+   "titulo": "Resolución sin imputar coordenadas",
+   "modulo": "Geoespacial reproducible",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "FIXTURE (pytest con tmp_path/monkeypatch, aislado de RAW y AWS)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "No aplica: datos sintéticos de fixtures del repositorio",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T23:18:39+00:00",
+    "fin": "2026-11-14T23:18:44+00:00"
+   },
+   "resultado_real": "1 instancias, 0 fallidas, 0 omitidas; exit code 0",
+   "comando": "python -m pytest tests/test_geo_resolver_coordenadas.py::test_no_modifica_ni_imputa_coordenadas -q --junitxml=EVIDENCIA/SAAD-CP-185_20261114_fixture.xml",
+   "nodeids": [
+    "tests.test_geo_resolver_coordenadas::test_no_modifica_ni_imputa_coordenadas"
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-185_20261114_fixture.xml",
+   "evidencia_sha256": "5524732acfd3375ea0f323f14380cfc38ca342cd1391e14474fae0f5668ff58a",
+   "hash_input": {
+    "archivo": "tests/test_geo_resolver_coordenadas.py",
+    "git_blob": "6f95bee8d272ea62caad7e825a77d8069c0b5758"
+   },
+   "observaciones": "—"
+  }
+ ]
+}

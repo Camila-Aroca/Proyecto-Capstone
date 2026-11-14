@@ -1,0 +1,106 @@
+{
+ "caso": "SAAD-CP-023",
+ "esperado": "Todas las filas pertenecen al CUT seleccionado, sin sumar otras comunas",
+ "inicio": "2026-11-14T22:04:11+00:00",
+ "fin": "2026-11-14T22:04:18+00:00",
+ "entorno": {
+  "urgencias": {
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 44,
+    "fecha_inicio": "2026-11-01",
+    "atenciones": 2428
+   },
+   "pronostico_calculado_en": "2026-11-12T14:53:07.182869Z",
+   "origen_pronostico": "persistido"
+  },
+  "establecimientos": {
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 44
+   },
+   "pronostico_generado_en": "2026-11-12T14:56:13.938884Z"
+  }
+ },
+ "observado": {
+  "hash": "#/establecimientos?comuna=13101&id=111195",
+  "encabezados": [
+   "Hospital de Urgencia Asistencia Pública Dr. Alejandro del Río",
+   "Establecimientos de Santiago",
+   "Alcance de esta herramienta",
+   "Incluye en el MVP"
+  ],
+  "hayChipToda": true,
+  "filas": [
+   {
+    "nombre": "Hospital Clínico San Borja Arriarán",
+    "comuna": "Santiago"
+   },
+   {
+    "nombre": "Hospital San Juan de Dios (Santiago)",
+    "comuna": "Santiago"
+   },
+   {
+    "nombre": "Hospital de Urgencia Asistencia Pública Dr. Alejandro del Río",
+    "comuna": "Santiago"
+   },
+   {
+    "nombre": "Instituto Traumatológico Dr. Teodoro Gebauer",
+    "comuna": "Santiago"
+   },
+   {
+    "nombre": "SAPU Consultorio Nº1",
+    "comuna": "Santiago"
+   },
+   {
+    "nombre": "SAPU Ignacio Domeyko",
+    "comuna": "Santiago"
+   }
+  ],
+  "api_comuna_13101": [
+   {
+    "codigo": 111100,
+    "nombre": "Hospital Clínico San Borja Arriarán",
+    "comuna": "Santiago",
+    "comuna_codigo": "13101"
+   },
+   {
+    "codigo": 110100,
+    "nombre": "Hospital San Juan de Dios (Santiago)",
+    "comuna": "Santiago",
+    "comuna_codigo": "13101"
+   },
+   {
+    "codigo": 111195,
+    "nombre": "Hospital de Urgencia Asistencia Pública Dr. Alejandro del Río",
+    "comuna": "Santiago",
+    "comuna_codigo": "13101"
+   },
+   {
+    "codigo": 110110,
+    "nombre": "Instituto Traumatológico Dr. Teodoro Gebauer",
+    "comuna": "Santiago",
+    "comuna_codigo": "13101"
+   },
+   {
+    "codigo": 111800,
+    "nombre": "SAPU Consultorio Nº1",
+    "comuna": "Santiago",
+    "comuna_codigo": "13101"
+   },
+   {
+    "codigo": 200933,
+    "nombre": "SAPU Ignacio Domeyko",
+    "comuna": "Santiago",
+    "comuna_codigo": "13101"
+   }
+  ],
+  "api_total": 161
+ },
+ "comprobaciones": {
+  "filas_en_la_tabla": 6,
+  "todas_las_filas_son_de_la_comuna_del_cut": true,
+  "todas_las_filas_estan_en_la_lista_de_la_api_para_13101": true,
+  "filas_igual_a_lista_api": true
+ }
+}

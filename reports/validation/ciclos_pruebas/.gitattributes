@@ -1,0 +1,7 @@
+# Evidencia de la campaña SAAD-CP v2.1 (ciclos 05 en adelante).
+# Se versiona y se extrae siempre con saltos de línea LF para que el SHA256 registrado en cada
+# resultados.json coincida en Windows, Mac y Linux. No afecta a los ciclos 02 a 04.
+ciclo_0[5-9]_*/** text eol=lf
+ciclo_1[0-9]_*/** text eol=lf
+ciclo_0[5-9]_*/**/*.png binary
+ciclo_1[0-9]_*/**/*.png binary

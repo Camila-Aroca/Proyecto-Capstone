@@ -1,0 +1,57 @@
+{
+ "caso": "SAAD-CP-029",
+ "herramienta": "playwright-cli 0.1.24 (skill playwright-cli) con Chrome; dependencias en carpeta temporal fuera del repo",
+ "entorno": "LOCAL (API local con Uvicorn y frontend con Vite en 127.0.0.1)",
+ "inicio": "2026-11-14T23:03:01+00:00",
+ "fin": "2026-11-14T23:03:08+00:00",
+ "snapshot": "API local: Urgencias, última semana observada 2026-S44; pronóstico de demanda calculado 2026-11-12T14:53:07Z; pronóstico por establecimiento generado 2026-11-12T14:56:13Z",
+ "comprobaciones": {
+  "pronostico_es_flujo_semanal": true,
+  "ocupacion_es_promedio_mensual": true,
+  "son_dos_graficos_separados": true,
+  "sin_unidad_comun": true
+ },
+ "observado": {
+  "pronostico": {
+   "texto_inicio": "Pronosticar Atenciones Hospitalizaciones solo hospitales Historia 26 semanas 52 semanas 104 semanas Pronóstico desactualizado Se generó antes de la última actualización de los datos de Urgencias. Se muestran solo las semanas que todavía no se observan; las cifras pueden diferir de un pronóstico recalculado. Detalle: cambió 'seleccion_benchmark' respecto del snapshot con que se generó. Ejecute el stage `forecast_establecimientos_sm` del pipeline. Cómo leer estas cifras · 5 advertencias Región Metropolitana › Recolet",
+   "menciona_hospitalizaciones": true,
+   "menciona_semanal": true,
+   "graficos": 1
+  },
+  "ocupacion": {
+   "titulo": "Camas de psiquiatría: ocupación mensual",
+   "subtitulo": "Camas de psiquiatría: ocupación mensual Pacientes en cama por día, en promedio de cada mes, frente a las camas disponibles · REM-20, hasta septiembre de 2026",
+   "menciona_promedio_mensual": true,
+   "menciona_camas": true,
+   "graficos": 1,
+   "leyenda_texto": "Ocupadas (promedio diario) Disponibles Dotación declarada Propuesta de dotación, 2027 Total del hospital Elija un área en la tabla para ver su ocu",
+   "menciona_tiempo_real_no": true
+  },
+  "api": {
+   "serie_hospitalizaciones_id42": {
+    "n": 52,
+    "dias_entre_puntos_min": 7,
+    "dias_entre_puntos_max": 14
+   },
+   "descripcion_objetivo": "Hospitalizaciones derivadas desde la urgencia por F00-F99 (ID42)",
+   "ocupacion_mensual": {
+    "n": 11,
+    "dias_entre_puntos_min": 28,
+    "dias_entre_puntos_max": 31
+   }
+  },
+  "una_sola_leyenda_mezclada": false
+ },
+ "verificacion_cruzada_en_aws": {
+  "entorno": "AWS (URL desplegada; host redactado)",
+  "inicio": "2026-11-14T23:07:13+00:00",
+  "fin": "2026-11-14T23:07:20+00:00",
+  "ok": true,
+  "comprobaciones": {
+   "pronostico_es_flujo_semanal": true,
+   "ocupacion_es_promedio_mensual": true,
+   "son_dos_graficos_separados": true,
+   "sin_unidad_comun": true
+  }
+ }
+}

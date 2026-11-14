@@ -1,0 +1,32 @@
+{
+ "caso": "SAAD-CP-073",
+ "modalidad": "Revisión visual manual por la persona que ejecuta, con capturas propias",
+ "entorno": "AWS (URL desplegada; host redactado)",
+ "hora_utc_de_las_capturas": {
+  "primera": "2026-11-14T22:40:06+00:00",
+  "ultima": "2026-11-14T22:40:31+00:00"
+ },
+ "nota_horas": "Tomadas del nombre de cada captura (hora de Chile) y convertidas a UTC.",
+ "snapshot": "Interfaz AWS: encabezado «Datos hasta la semana 39 de 2026 (desde el 27 de septiembre de 2026)»; API de suicidios: fecha_corte_datos=2026-11-07, última semana observada 2026-S43",
+ "observaciones_del_ejecutor": [
+  "Lo veo bien."
+ ],
+ "capturas": [
+  {
+   "archivo": "SAAD-CP-073_20261114_aws_manual_01_claro_avisos.png",
+   "descripcion": "Tema claro: aviso «Cómo leer estas cifras · 4 advertencias»"
+  },
+  {
+   "archivo": "SAAD-CP-073_20261114_aws_manual_02_claro_alcance.png",
+   "descripcion": "Tema claro: «Alcance de esta herramienta» con la etiqueta «en desarrollo»"
+  },
+  {
+   "archivo": "SAAD-CP-073_20261114_aws_manual_03_oscuro_alcance.png",
+   "descripcion": "Tema oscuro: «Alcance de esta herramienta»"
+  },
+  {
+   "archivo": "SAAD-CP-073_20261114_aws_manual_04_oscuro_avisos.png",
+   "descripcion": "Tema oscuro: aviso «Cómo leer estas cifras»"
+  }
+ ]
+}

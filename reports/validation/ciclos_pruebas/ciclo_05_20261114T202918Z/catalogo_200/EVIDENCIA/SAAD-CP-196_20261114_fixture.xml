@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.933" timestamp="2026-11-14T17:48:13.771218-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_build_mart_ocupacion_psiquiatria_hospital_rm" name="test_promedio_diario_es_dias_cama_sobre_dias_del_mes" time="0.114"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

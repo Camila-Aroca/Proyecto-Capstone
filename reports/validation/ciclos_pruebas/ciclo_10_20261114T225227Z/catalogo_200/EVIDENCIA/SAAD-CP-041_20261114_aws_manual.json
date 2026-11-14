@@ -1,0 +1,23 @@
+{
+ "caso": "SAAD-CP-041",
+ "modalidad": "Revisión visual manual por la persona que ejecuta, con capturas propias",
+ "entorno": "AWS (URL desplegada; host redactado)",
+ "hora_utc_de_las_capturas": {
+  "primera": "2026-11-14T22:36:16+00:00",
+  "ultima": "2026-11-14T22:36:16+00:00"
+ },
+ "nota_horas": "Tomadas del nombre de cada captura (hora de Chile) y convertidas a UTC.",
+ "snapshot": "Interfaz AWS: encabezado «Datos hasta la semana 39 de 2026 (desde el 27 de septiembre de 2026)»; API de suicidios: fecha_corte_datos=2026-11-07, última semana observada 2026-S43",
+ "observaciones_del_ejecutor": [
+  "Dice «Defunciones por lesiones autoinfligidas (CIE-10 X60–X84)».",
+  "Es suicidios por semana.",
+  "La línea de suicidios termina en la semana 43 y la de atenciones en la 39.",
+  "En ninguna parte aparece la fecha de corte de suicidios."
+ ],
+ "capturas": [
+  {
+   "archivo": "SAAD-CP-041_20261114_aws_manual_01_bloque_suicidios.png",
+   "descripcion": "Sección «Suicidios semanales» completa"
+  }
+ ]
+}

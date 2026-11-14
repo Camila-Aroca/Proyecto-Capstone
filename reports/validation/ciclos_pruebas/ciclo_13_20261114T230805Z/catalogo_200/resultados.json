@@ -1,0 +1,171 @@
+{
+ "run_id": "ciclo_13_20261114T230805Z/catalogo_200",
+ "ciclo": 13,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Felipe Rivera",
+ "alcance": "3 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-14T23:03:01+00:00",
+ "fin_utc": "2026-11-14T23:03:26+00:00",
+ "commit": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+ "arbol_versionado_limpio": true,
+ "archivos_versionados_modificados": 0,
+ "archivos_sin_rastrear": [
+  "reports/modeling/factibilidad_pronosticos_hospitalizaciones_defunciones.md",
+  "reports/validation/ciclos_pruebas/ciclo_05_20261114T202918Z/",
+  "reports/validation/ciclos_pruebas/ciclo_06_20261114T205836Z/",
+  "reports/validation/ciclos_pruebas/ciclo_07_20261114T211303Z/",
+  "reports/validation/ciclos_pruebas/ciclo_08_20261114T220553Z/",
+  "reports/validation/ciclos_pruebas/ciclo_09_20261114T220556Z/",
+  "reports/validation/ciclos_pruebas/ciclo_10_20261114T225227Z/",
+  "reports/validation/ciclos_pruebas/ciclo_11_20261114T225642Z/",
+  "reports/validation/ciclos_pruebas/ciclo_12_20261114T230641Z/",
+  "scripts/qa_campana_200.py",
+  "tests/test_qa_campana_200.py"
+ ],
+ "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+ "modo": "manual",
+ "nota": "API local iniciada con SAAD_USAR_PRONOSTICO_DESACTUALIZADO=1 (sirve el pronóstico persistido como vista temporal; el hash de la selección difiere por saltos de línea CRLF de Windows) y frontend con el servidor de desarrollo de Vite (proxy de /api a 127.0.0.1:8000). Por eso la interfaz muestra el aviso 'Pronóstico desactualizado'. Ejecutado con playwright-cli. Los scripts de ejecución quedaron fuera del repositorio; su hash figura en hash_input.",
+ "version_desplegada": null,
+ "python": "3.12.6",
+ "so": "Windows 11",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 3,
+  "fallidos": 0,
+  "no_ejecutados": 0
+ },
+ "advertencias": [
+  "Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-029",
+   "run_id": "ciclo_13_20261114T230805Z/catalogo_200",
+   "titulo": "Separar flujo semanal y stock mensual",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "API local: Urgencias, última semana observada 2026-S44; pronóstico de demanda calculado 2026-11-12T14:53:07Z; pronóstico por establecimiento generado 2026-11-12T14:56:13Z",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Hospital 109102 con objetivo hospitalizaciones: el pronóstico de ID42 es una serie semanal (52 puntos, paso mínimo de 7 días) y la ocupación es un promedio mensual (11 puntos, 28 a 31 días entre ellos); la interfaz los presenta en dos gráficos separados con leyendas distintas (Observado/Pronóstico/Intervalo frente a Ocupadas/Disponibles/Dotación/Propuesta) y el panel de ocupación describe 'pacientes en cama por día, en promedio de cada mes'.",
+   "observaciones": "En la serie semanal hay un paso de 14 días: una semana sin reporte, que el diseño no imputa. En el entorno local la interfaz muestra el aviso «Pronóstico desactualizado». Verificación cruzada en AWS con la misma prueba: coincide. Los criterios se fijaron a partir del resultado esperado del catálogo; en la primera ejecución dos comprobaciones estaban mal formuladas (año de la dotación frente al año de la propuesta, y una semana sin reporte en la serie semanal) y se corrigieron antes de registrar.",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T23:03:01+00:00",
+    "fin": "2026-11-14T23:03:08+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-029_20261114_local.json",
+   "evidencia_sha256": "95c3174d5d5562b941d4822ed3badf3a33ed238190895474bfaded8393032294",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-029_20261114_local.json",
+     "sha256": "95c3174d5d5562b941d4822ed3badf3a33ed238190895474bfaded8393032294"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-029_20261114_local_01_pronostico_semanal.png",
+     "sha256": "0a412bf1678eb8f21bc016970c38287dce8724e9efba4b70286d0b3f9b5f921e"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-029_20261114_local_02_ocupacion_mensual.png",
+     "sha256": "9460b5649ad8909f89abbfdb58e217c978016c5384f0f520fb39e4a58d7c17f1"
+    }
+   ],
+   "hash_input": {
+    "script_de_ejecucion_sha256": "a3828b3d74710de10f9fa21f58aa98f90e030c2efad7640acc8fbcf96abdb35d",
+    "script_versionado": false,
+    "herramientas": "playwright-cli 0.1.24 (skill playwright-cli) con Chrome; dependencias en carpeta temporal fuera del repo"
+   }
+  },
+  {
+   "id": "SAAD-CP-030",
+   "run_id": "ciclo_13_20261114T230805Z/catalogo_200",
+   "titulo": "Propuesta anual desde respuesta",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "API local: Urgencias, última semana observada 2026-S44; pronóstico de demanda calculado 2026-11-12T14:53:07Z; pronóstico por establecimiento generado 2026-11-12T14:56:13Z",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Hospital 111100, áreas 421 (base 6 + aumento 1 = objetivo 7) y 418 (base 11 + aumento 2 = objetivo 13): la interfaz muestra dotación, aumento, objetivo y el año de la propuesta (2027) iguales a base_capacidad, aumento_dotacion, camas_objetivo y ano_objetivo de la API; los supuestos se ven en «Cálculo, evidencia y condiciones de implementación» (escenario de continuidad y margen de planificación 0,85); el total del hospital (+3) es la suma por área.",
+   "observaciones": "El 2025 que aparece junto a la dotación es el año de la dotación declarada, distinto del año de la propuesta (2027). Verificación cruzada en AWS con la misma prueba: coincide. Los criterios se fijaron a partir del resultado esperado del catálogo; en la primera ejecución dos comprobaciones estaban mal formuladas (año de la dotación frente al año de la propuesta, y una semana sin reporte en la serie semanal) y se corrigieron antes de registrar.",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T23:03:08+00:00",
+    "fin": "2026-11-14T23:03:18+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-030_20261114_local.json",
+   "evidencia_sha256": "8c2d2cdae91c0bd44231a7f954bbbf207b3694e0f5c8a3cf275e350356d0b8ae",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-030_20261114_local.json",
+     "sha256": "8c2d2cdae91c0bd44231a7f954bbbf207b3694e0f5c8a3cf275e350356d0b8ae"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-030_20261114_local_01_area_421.png",
+     "sha256": "9b2d010f3b91216d739b381a69b63134e2b9cffca0884b87ed1bd78d7459ec3e"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-030_20261114_local_02_area_418.png",
+     "sha256": "5d04317c77aeee29ac9a5f59cd4ae223f541fa731564f3d33c01eb3f094b8778"
+    }
+   ],
+   "hash_input": {
+    "script_de_ejecucion_sha256": "a3828b3d74710de10f9fa21f58aa98f90e030c2efad7640acc8fbcf96abdb35d",
+    "script_versionado": false,
+    "herramientas": "playwright-cli 0.1.24 (skill playwright-cli) con Chrome; dependencias en carpeta temporal fuera del repo"
+   }
+  },
+  {
+   "id": "SAAD-CP-031",
+   "run_id": "ciclo_13_20261114T230805Z/catalogo_200",
+   "titulo": "Subtotal parcial por área sin soporte",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "API local: Urgencias, última semana observada 2026-S44; pronóstico de demanda calculado 2026-11-12T14:53:07Z; pronóstico por establecimiento generado 2026-11-12T14:56:13Z",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Instituto Psiquiátrico Horwitz (109102): el total se identifica como «+16 camas, 5 de 6 áreas de psiquiatría; subtotal parcial»; el desglose enumera el área excluida (Psiquiatría Adulto Larga estadía, solo 6 meses) con su motivo «Serie incompleta o con cierres: no se dimensiona sin revisar el área», aclara que no se consideran cero y que se suman los aumentos sin compensarlos con camas libres de otras áreas; el subtotal +16 es la suma de aumentos de la API (con compensación por holgura habría sido +10).",
+   "observaciones": "Entorno local, como fija el catálogo. La interfaz muestra el aviso «Pronóstico desactualizado» por el estado del pronóstico local.",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T23:03:18+00:00",
+    "fin": "2026-11-14T23:03:26+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-031_20261114_local.json",
+   "evidencia_sha256": "5f385be928bce305d5787cf3e4efefb4cf80a5da569162c3faa08a0648164c26",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-031_20261114_local.json",
+     "sha256": "5f385be928bce305d5787cf3e4efefb4cf80a5da569162c3faa08a0648164c26"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-031_20261114_local_01_total_parcial_y_desglose.png",
+     "sha256": "7c665af54fc944a1a8a8095181d3357775178089067a696970ecd9de3b16d9f2"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-031_20261114_local_02_area_sin_respaldo.png",
+     "sha256": "6fbbc4de5a826bc813318231e6d23361d4898243e102532c5f29067030288634"
+    }
+   ],
+   "hash_input": {
+    "script_de_ejecucion_sha256": "a3828b3d74710de10f9fa21f58aa98f90e030c2efad7640acc8fbcf96abdb35d",
+    "script_versionado": false,
+    "herramientas": "playwright-cli 0.1.24 (skill playwright-cli) con Chrome; dependencias en carpeta temporal fuera del repo"
+   }
+  }
+ ]
+}

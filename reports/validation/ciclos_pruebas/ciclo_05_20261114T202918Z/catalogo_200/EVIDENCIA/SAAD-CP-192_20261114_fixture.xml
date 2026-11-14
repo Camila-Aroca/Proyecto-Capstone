@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="11" time="0.949" timestamp="2026-11-14T17:47:51.342932-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_propuesta_camas" name="test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[418]" time="0.018"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_propuesta_camas" name="test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[419]" time="0.011"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_propuesta_camas" name="test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[420]" time="0.010"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_propuesta_camas" name="test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[421]" time="0.010"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_propuesta_camas" name="test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[422]" time="0.012"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_propuesta_camas" name="test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[423]" time="0.010"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_propuesta_camas" name="test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[424]" time="0.011"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_propuesta_camas" name="test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[425]" time="0.010"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_propuesta_camas" name="test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[426]" time="0.010"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_propuesta_camas" name="test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[428]" time="0.010"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_propuesta_camas" name="test_cada_area_psiquiatrica_tiene_escenario_con_sus_propios_datos[429]" time="0.010"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

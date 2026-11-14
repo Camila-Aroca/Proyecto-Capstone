@@ -1,0 +1,32 @@
+{
+ "caso": "SAAD-CP-010",
+ "modalidad": "Revisión visual manual por la persona que ejecuta, con capturas propias",
+ "entorno": "AWS (URL desplegada; host redactado)",
+ "hora_utc_de_las_capturas": {
+  "primera": "2026-11-14T22:42:14+00:00",
+  "ultima": "2026-11-14T22:43:28+00:00"
+ },
+ "nota_horas": "Tomadas del nombre de cada captura (hora de Chile) y convertidas a UTC.",
+ "snapshot": "Interfaz AWS: encabezado «Datos hasta la semana 39 de 2026 (desde el 27 de septiembre de 2026)»; API de suicidios: fecha_corte_datos=2026-11-07, última semana observada 2026-S43",
+ "observaciones_del_ejecutor": [
+  "Lo veo bien."
+ ],
+ "capturas": [
+  {
+   "archivo": "SAAD-CP-010_20261114_aws_manual_01_tablero_claro.png",
+   "descripcion": "Tablero RM, tema claro"
+  },
+  {
+   "archivo": "SAAD-CP-010_20261114_aws_manual_02_tablero_oscuro.png",
+   "descripcion": "Tablero RM, tema oscuro"
+  },
+  {
+   "archivo": "SAAD-CP-010_20261114_aws_manual_03_detalle_oscuro.png",
+   "descripcion": "Detalle San Borja Arriarán, tema oscuro"
+  },
+  {
+   "archivo": "SAAD-CP-010_20261114_aws_manual_04_detalle_claro.png",
+   "descripcion": "Detalle San Borja Arriarán, tema claro"
+  }
+ ]
+}

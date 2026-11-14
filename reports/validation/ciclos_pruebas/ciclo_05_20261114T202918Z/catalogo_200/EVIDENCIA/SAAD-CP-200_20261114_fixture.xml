@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="6" time="0.828" timestamp="2026-11-14T17:48:31.057544-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_build_mart_ocupacion_psiquiatria_hospital_rm" name="test_clasificacion_de_colapso_en_los_umbrales[84.99-0-holgura]" time="0.003"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_build_mart_ocupacion_psiquiatria_hospital_rm" name="test_clasificacion_de_colapso_en_los_umbrales[85.0-0-presion]" time="0.001"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_build_mart_ocupacion_psiquiatria_hospital_rm" name="test_clasificacion_de_colapso_en_los_umbrales[89.99-0-presion]" time="0.001"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_build_mart_ocupacion_psiquiatria_hospital_rm" name="test_clasificacion_de_colapso_en_los_umbrales[90.0-0-saturacion]" time="0.001"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_build_mart_ocupacion_psiquiatria_hospital_rm" name="test_clasificacion_de_colapso_en_los_umbrales[60.0-1-sobre_capacidad]" time="0.001"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_build_mart_ocupacion_psiquiatria_hospital_rm" name="test_clasificacion_de_colapso_en_los_umbrales[None-0-None]" time="0.001"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

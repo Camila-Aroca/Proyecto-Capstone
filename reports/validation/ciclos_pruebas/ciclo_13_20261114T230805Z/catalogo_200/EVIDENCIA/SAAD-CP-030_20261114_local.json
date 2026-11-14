@@ -1,0 +1,120 @@
+{
+ "caso": "SAAD-CP-030",
+ "herramienta": "playwright-cli 0.1.24 (skill playwright-cli) con Chrome; dependencias en carpeta temporal fuera del repo",
+ "entorno": "LOCAL (API local con Uvicorn y frontend con Vite en 127.0.0.1)",
+ "inicio": "2026-11-14T23:03:08+00:00",
+ "fin": "2026-11-14T23:03:18+00:00",
+ "snapshot": "API local: Urgencias, última semana observada 2026-S44; pronóstico de demanda calculado 2026-11-12T14:53:07Z; pronóstico por establecimiento generado 2026-11-12T14:56:13Z",
+ "comprobaciones": {
+  "hay_area_con_aumento_positivo": true,
+  "base_ui_igual_a_base_capacidad_api": true,
+  "aumento_ui_igual_al_de_la_api": true,
+  "referencia_es_base_mas_aumento": true,
+  "anio_de_la_propuesta_visible_y_correcto": true,
+  "anio_de_la_dotacion_declarada_visible": true,
+  "supuestos_visibles": true,
+  "total_del_hospital_es_la_suma_por_area": true
+ },
+ "observado": {
+  "total_inicial": [
+   {
+    "dt": "Ocupación, septiembre de 2026",
+    "dd": [
+     "67,8%",
+     "10 de 15 camas por día"
+    ]
+   },
+   {
+    "dt": "Camas libres por día",
+    "dd": [
+     "4,9",
+     "en promedio del mes, todas las áreas"
+    ]
+   },
+   {
+    "dt": "Áreas sin holgura",
+    "dd": [
+     "1 de 2",
+     "con camas habilitadas: menos de una libre por día, último mes"
+    ]
+   },
+   {
+    "dt": "Camas de psiquiatría del hospital",
+    "dd": [
+     "17",
+     "Dotación declarada (2025)"
+    ]
+   },
+   {
+    "dt": "Aumento de dotación propuesto, 2027",
+    "dd": [
+     "+3 camas",
+     "2 de 2 áreas de psiquiatría; suma por área"
+    ]
+   }
+  ],
+  "suma_aumentos_api": 3,
+  "areas": [
+   {
+    "boton": "Psiquiatría Infanto-adolescente corta estadía",
+    "area_api": {
+     "nombre": "Área Psiquiatría Infanto-adolescente corta estadía",
+     "codigo": 421,
+     "base": 6,
+     "aumento": 1,
+     "objetivo": 7,
+     "ano": 2027,
+     "pico": 5.67741935483871
+    },
+    "ui": {
+     "camas_area": 6,
+     "aumento_titulo": "+1 camas",
+     "objetivo": 7,
+     "aumento_detalle": 1,
+     "base_detalle": 6,
+     "ano_detalle": 2025,
+     "ano_titulo_propuesta": 2027,
+     "supuestos_visibles": "Cálculo, evidencia y condiciones de implementación Escenario de continuidad: se repite la carga de 2025-10 a 2026-09, sin crecimiento supuesto. 1. Carga del mes de mayor demanda 176 31 176 dividido por 31 Días cama ocupados (una cama durante un día) ÷ días del mes 2. Margen de planificación Carga 0,85 La carga del paso 1 dividida por 0,85 Objetivo de ocupación del 85% 3. Capacidad objetivo 7 camas Se redondea hacia arriba solo al final Con ocupación objetivo del 90%: 7 camas Brecha frente al último mes: 2,7 camas/día Referencia y condiciones de uso"
+    }
+   },
+   {
+    "boton": "Psiquiatría Adulto Corta estadía",
+    "area_api": {
+     "nombre": "Área Psiquiatría Adulto Corta estadía",
+     "codigo": 418,
+     "base": 11,
+     "aumento": 2,
+     "objetivo": 13,
+     "ano": 2027,
+     "pico": 10.387096774193548
+    },
+    "ui": {
+     "camas_area": 11,
+     "aumento_titulo": "+2 camas",
+     "objetivo": 13,
+     "aumento_detalle": 2,
+     "base_detalle": 11,
+     "ano_detalle": 2025,
+     "ano_titulo_propuesta": 2027,
+     "supuestos_visibles": "Cálculo, evidencia y condiciones de implementación Escenario de continuidad: se repite la carga de 2025-10 a 2026-09, sin crecimiento supuesto. 1. Carga del mes de mayor demanda 322 31 322 dividido por 31 Días cama ocupados (una cama durante un día) ÷ días del mes 2. Margen de planificación Carga 0,85 La carga del paso 1 dividida por 0,85 Objetivo de ocupación del 85% 3. Capacidad objetivo 13 camas Se redondea hacia arriba solo al final Con ocupación objetivo del 90%: 12 camas Brecha frente al último mes: 2,2 camas/día Referencia y condiciones de uso"
+    }
+   }
+  ]
+ },
+ "verificacion_cruzada_en_aws": {
+  "entorno": "AWS (URL desplegada; host redactado)",
+  "inicio": "2026-11-14T23:07:20+00:00",
+  "fin": "2026-11-14T23:07:30+00:00",
+  "ok": true,
+  "comprobaciones": {
+   "hay_area_con_aumento_positivo": true,
+   "base_ui_igual_a_base_capacidad_api": true,
+   "aumento_ui_igual_al_de_la_api": true,
+   "referencia_es_base_mas_aumento": true,
+   "anio_de_la_propuesta_visible_y_correcto": true,
+   "anio_de_la_dotacion_declarada_visible": true,
+   "supuestos_visibles": true,
+   "total_del_hospital_es_la_suma_por_area": true
+  }
+ }
+}

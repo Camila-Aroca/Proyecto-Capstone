@@ -1,0 +1,167 @@
+{
+ "caso": "SAAD-CP-028",
+ "esperado": "Cada área usa sus propios meses y dotación; no redistribuye camas entre áreas",
+ "hospital": {
+  "codigo": 111100,
+  "nombre": "Hospital Clínico San Borja Arriarán",
+  "camas_psiquiatria_api": 17,
+  "suma_dotaciones_areas_api": 17
+ },
+ "areas_api": [
+  {
+   "codigo": 421,
+   "nombre": "421 - Área Psiquiatría Infanto-adolescente corta estadía",
+   "dotacion": 6,
+   "meses": 11,
+   "meses_sin_holgura": 11,
+   "indice_ultimo": 100
+  },
+  {
+   "codigo": 418,
+   "nombre": "418 - Área Psiquiatría Adulto Corta estadía",
+   "dotacion": 11,
+   "meses": 11,
+   "meses_sin_holgura": 2,
+   "indice_ultimo": 54.9
+  }
+ ],
+ "total_inicial_ui": {
+  "pares": [
+   {
+    "dt": "Ocupación, septiembre de 2026",
+    "dd": [
+     "67,8%",
+     "10 de 15 camas por día"
+    ]
+   },
+   {
+    "dt": "Camas libres por día",
+    "dd": [
+     "4,9",
+     "en promedio del mes, todas las áreas"
+    ]
+   },
+   {
+    "dt": "Áreas sin holgura",
+    "dd": [
+     "1 de 2",
+     "con camas habilitadas: menos de una libre por día, último mes"
+    ]
+   },
+   {
+    "dt": "Camas de psiquiatría del hospital",
+    "dd": [
+     "17",
+     "Dotación declarada (2025)"
+    ]
+   },
+   {
+    "dt": "Aumento de dotación propuesto, 2027",
+    "dd": [
+     "+3 camas",
+     "2 de 2 áreas de psiquiatría; suma por área"
+    ]
+   }
+  ],
+  "camas": 17,
+  "etiquetaCamas": "Camas de psiquiatría del hospital",
+  "mesesSinHolgura": null,
+  "ocupacion": "67,8%",
+  "graficos": 1
+ },
+ "areas_ui": [
+  {
+   "boton": "Psiquiatría Infanto-adolescente corta estadía",
+   "area_api": "421 - Área Psiquiatría Infanto-adolescente corta estadía",
+   "camas_ui": 6,
+   "etiqueta": "Camas de psiquiatría del área",
+   "meses_sin_holgura_ui": "11 de 11",
+   "ocupacion_ui": "100,0%",
+   "dotacion_api": 6,
+   "meses_sin_holgura_api": 11,
+   "indice_ultimo_api": 100
+  },
+  {
+   "boton": "Psiquiatría Adulto Corta estadía",
+   "area_api": "418 - Área Psiquiatría Adulto Corta estadía",
+   "camas_ui": 11,
+   "etiqueta": "Camas de psiquiatría del área",
+   "meses_sin_holgura_ui": "2 de 11",
+   "ocupacion_ui": "54,9%",
+   "dotacion_api": 11,
+   "meses_sin_holgura_api": 2,
+   "indice_ultimo_api": 54.9
+  }
+ ],
+ "total_final_ui": {
+  "pares": [
+   {
+    "dt": "Ocupación, septiembre de 2026",
+    "dd": [
+     "67,8%",
+     "10 de 15 camas por día"
+    ]
+   },
+   {
+    "dt": "Camas libres por día",
+    "dd": [
+     "4,9",
+     "en promedio del mes, todas las áreas"
+    ]
+   },
+   {
+    "dt": "Áreas sin holgura",
+    "dd": [
+     "1 de 2",
+     "con camas habilitadas: menos de una libre por día, último mes"
+    ]
+   },
+   {
+    "dt": "Camas de psiquiatría del hospital",
+    "dd": [
+     "17",
+     "Dotación declarada (2025)"
+    ]
+   },
+   {
+    "dt": "Aumento de dotación propuesto, 2027",
+    "dd": [
+     "+3 camas",
+     "2 de 2 áreas de psiquiatría; suma por área"
+    ]
+   }
+  ],
+  "camas": 17,
+  "etiquetaCamas": "Camas de psiquiatría del hospital",
+  "mesesSinHolgura": null,
+  "ocupacion": "67,8%",
+  "graficos": 1
+ },
+ "comprobaciones": {
+  "cada_area_muestra_su_propia_dotacion": true,
+  "las_areas_muestran_dotaciones_distintas": true,
+  "meses_sin_holgura_propios": true,
+  "total_del_hospital_igual_a_la_suma_y_estable": true
+ },
+ "inicio": "2026-11-14T22:04:18+00:00",
+ "fin": "2026-11-14T22:04:28+00:00",
+ "entorno": {
+  "urgencias": {
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 44,
+    "fecha_inicio": "2026-11-01",
+    "atenciones": 2428
+   },
+   "pronostico_calculado_en": "2026-11-12T14:53:07.182869Z",
+   "origen_pronostico": "persistido"
+  },
+  "establecimientos": {
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 44
+   },
+   "pronostico_generado_en": "2026-11-12T14:56:13.938884Z"
+  }
+ }
+}

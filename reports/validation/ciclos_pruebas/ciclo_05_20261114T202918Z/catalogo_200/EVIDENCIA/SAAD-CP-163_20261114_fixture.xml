@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.985" timestamp="2026-11-14T17:46:55.322935-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_pipeline_orchestration" name="test_refresh_identical_raw_but_processed_from_previous_raw_forces_rebuild" time="0.127"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

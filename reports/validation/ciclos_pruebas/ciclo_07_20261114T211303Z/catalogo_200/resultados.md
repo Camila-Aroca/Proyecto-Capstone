@@ -1,0 +1,25 @@
+# Ciclo 7 · Catálogo SAAD-CP v2.1 (200 casos): Felipe Rivera
+
+- **Ejecutor real:** Felipe Rivera · **Alcance:** 4 casos · **Estado:** FORMAL
+- **Commit:** `7a43e659aab2e27d54dbe34ca7ae68dd63f87cba` · árbol versionado limpio: sí
+- **Archivos sin rastrear al ejecutar:** `reports/modeling/factibilidad_pronosticos_hospitalizaciones_defunciones.md`, `reports/validation/ciclos_pruebas/ciclo_05_20261114T202918Z/`, `reports/validation/ciclos_pruebas/ciclo_06_20261114T205836Z/`, `scripts/qa_campana_200.py`, `tests/test_qa_campana_200.py`
+- **Versión desplegada:** No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).
+- **Nota:** Sitio desplegado consultado en solo lectura con Chrome headless (host redactado). Los scripts de ejecución quedaron fuera del repositorio; su hash figura en hash_input.
+- **Entorno:** AWS (URL desplegada; host redactado) · Python 3.12.6 · pytest 9.1.1
+- **Inicio / fin (UTC):** 2026-11-14T21:08:51+00:00 / 2026-11-14T21:09:40+00:00
+- **Resultado:** 2 aprobados · 1 fallidos · 1 no ejecutados
+
+Evidencia por caso en `EVIDENCIA/` (JUnit en los casos de pytest; petición y respuesta en los HTTP), con su SHA256 y el hash del input (en `resultados.json`). Defectos: se registran en `../../registro_defectos.md`; el resumen del ciclo lo consolida quien lo coordina.
+
+| ID | Prueba | Fecha/hora (UTC) | Estado | Resultado real | Evidencia | Defecto | Observaciones |
+|---|---|---|---|---|---|---|---|
+| SAAD-CP-041 | Contexto de suicidios independiente | 2026-11-14T21:08:51+00:00 | APROBADO | Bloque "Suicidios semanales" con descripción de defunciones (CIE-10 X60–X84), unidad "suicidios" y sin mención de atenciones; la API conserva fecha_corte_datos=2026-11-07 y última semana observada 2026-S43 frente a la de Urgencias 2026-S39. | [`EVIDENCIA/SAAD-CP-041_20261114_aws.json`](EVIDENCIA/SAAD-CP-041_20261114_aws.json) (+1 anexos en `EVIDENCIA/`) | Sin defecto registrado | Según el criterio literal se cumple a nivel de datos y de series. Hallazgo: la interfaz no muestra la fecha de corte de defunciones como texto (no aparece en el bloque) y no muestra sus advertencias propias (p. ej. "la última semana publicada se excluye mientras su inscripción esté incompleta"). El encabezado "Datos hasta la semana 39 de 2026 (desde el 27 de septiembre de 2026)" corresponde a atenciones. Juicio visual: requiere confirmación humana. |
+| SAAD-CP-042 | Alternar marcas de contexto | 2026-11-14T21:08:58+00:00 | APROBADO | Marcas (líneas+bandas) por paso: 33 → 13 → 0 → 20 → 33; trazos de la serie y tabla idénticos en los 5 pasos (hash 76174096/1492612282); 0 llamadas a la API durante la alternancia. | [`EVIDENCIA/SAAD-CP-042_20261114_aws.json`](EVIDENCIA/SAAD-CP-042_20261114_aws.json) (+2 anexos en `EVIDENCIA/`) | Sin defecto registrado | — |
+| SAAD-CP-046 | Interpretar bandas y festividades | — | NO EJECUTADO | No ejecutado | — | Sin defecto registrado | Prueba de aceptación: requiere a la persona piloto interpretando una banda y una marca temporal y explicando sus límites; no es automatizable. |
+| SAAD-CP-073 | Contraste de texto y ayudas | 2026-11-14T21:09:10+00:00 | FALLIDO | light/pagina: 2 violaciones, 389 no determinables, 400 cumplen; light/avisos: 2 violaciones, 389 no determinables, 408 cumplen; light/tabla: 2 violaciones, 409 no determinables, 570 cumplen; light/tooltip: 2 violaciones, 412 no determinables, 568 cumplen; dark/pagina: 0 violaciones, 389 no determinables, 402 cumplen; dark/avisos: 0 violaciones, 389 no determinables, 410 cumplen; dark/tabla: 0 violaciones, 409 no determinables, 572 cumplen; dark/tooltip: 0 violaciones, 412 no determinables, 570 cumplen. | [`EVIDENCIA/SAAD-CP-073_20261114_aws.json`](EVIDENCIA/SAAD-CP-073_20261114_aws.json) (+8 anexos en `EVIDENCIA/`) | Incidencias de contraste detectadas en tema claro; pendientes de registrar como DEF en registro_defectos.md (esta corrida no modifica ese registro) | Incidencias por elemento (tema claro; presentes en los 4 contextos por estar siempre en pantalla): (1) texto '· 4 advertencias' del aviso 'Cómo leer estas cifras': 4,09:1 (#946f34 sobre #fcf1dc, 13 px normal; mínimo 4,5:1). (2) etiqueta 'en desarrollo' de 'Accesibilidad a la red' en 'Alcance de esta herramienta': 4,26:1 (#5e7685 sobre #eef3f6, 11 px; mínimo 4,5:1). Tema oscuro: 0 violaciones. Tooltip visible y sin violaciones propias en ambos temas. Medición con axe-core, solo regla color-contrast, en 8 contextos (claro/oscuro × página, avisos abiertos, tabla abierta, tooltip visible). 3198 elementos quedaron "no determinables" por axe (fondos con transparencia o gráficos), que no se cuentan como cumplidos ni como fallidos. No se declara conformidad global de accesibilidad. Incidencias por elemento en el JSON. |
+
+## Límites
+
+- Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.
+- Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.
+- Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml.

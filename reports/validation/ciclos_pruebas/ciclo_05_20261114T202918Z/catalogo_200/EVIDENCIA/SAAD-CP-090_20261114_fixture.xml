@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.978" timestamp="2026-11-14T17:44:28.213977-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_build_urgencias_comuna_etario_mart" name="test_age_groups_reconcile_with_comuna_monthly_totals" time="0.093"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

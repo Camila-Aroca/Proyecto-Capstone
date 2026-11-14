@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="5.918" timestamp="2026-11-14T17:46:27.372769-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_api_suicidios" name="test_mientras_carga_pide_reintentar" time="0.039"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

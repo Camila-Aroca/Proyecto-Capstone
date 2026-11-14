@@ -1,0 +1,106 @@
+{
+ "caso": "SAAD-CP-042",
+ "esperado": "Solo cambian las marcas; los valores observados y pronosticados no cambian",
+ "inicio": "2026-11-14T21:08:58+00:00",
+ "fin": "2026-11-14T21:09:10+00:00",
+ "entorno": {
+  "urgencias": {
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 39,
+    "fecha_inicio": "2026-09-27",
+    "atenciones": 2295
+   },
+   "pronostico_calculado_en": "2026-11-12T14:53:07.182869Z",
+   "origen_pronostico": "persistido"
+  },
+  "suicidios": {
+   "fecha_corte_datos": "2026-11-07",
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 43
+   },
+   "semanas_registro_incompleto": [
+    "2026-S44"
+   ],
+   "modelo": "poisson_estacional_eb_vm52"
+  }
+ },
+ "pasos": [
+  {
+   "paso": "0 inicial (ambas marcadas)",
+   "casillas": {
+    "Festividades": true,
+    "Estaciones": true
+   },
+   "lineasDeMarca": 22,
+   "bandasDeMarca": 11,
+   "seriesTrazos": 4,
+   "seriesHash": 76174096,
+   "tablaHash": 1492612282,
+   "tablaFilas": 17
+  },
+  {
+   "paso": "1 oculta Festividades",
+   "casillas": {
+    "Festividades": false,
+    "Estaciones": true
+   },
+   "lineasDeMarca": 8,
+   "bandasDeMarca": 5,
+   "seriesTrazos": 4,
+   "seriesHash": 76174096,
+   "tablaHash": 1492612282,
+   "tablaFilas": 17
+  },
+  {
+   "paso": "2 oculta Estaciones (ninguna)",
+   "casillas": {
+    "Festividades": false,
+    "Estaciones": false
+   },
+   "lineasDeMarca": 0,
+   "bandasDeMarca": 0,
+   "seriesTrazos": 4,
+   "seriesHash": 76174096,
+   "tablaHash": 1492612282,
+   "tablaFilas": 17
+  },
+  {
+   "paso": "3 muestra Festividades",
+   "casillas": {
+    "Festividades": true,
+    "Estaciones": false
+   },
+   "lineasDeMarca": 14,
+   "bandasDeMarca": 6,
+   "seriesTrazos": 4,
+   "seriesHash": 76174096,
+   "tablaHash": 1492612282,
+   "tablaFilas": 17
+  },
+  {
+   "paso": "4 muestra Estaciones (ambas)",
+   "casillas": {
+    "Festividades": true,
+    "Estaciones": true
+   },
+   "lineasDeMarca": 22,
+   "bandasDeMarca": 11,
+   "seriesTrazos": 4,
+   "seriesHash": 76174096,
+   "tablaHash": 1492612282,
+   "tablaFilas": 17
+  }
+ ],
+ "llamadas_api_durante_la_alternancia": [],
+ "comprobaciones": {
+  "hay_marcas_al_inicio": true,
+  "sin_marcas_cuando_ambas_ocultas": true,
+  "ocultar_festividades_reduce_marcas": true,
+  "volver_a_mostrar_restaura_marcas": true,
+  "valores_observados_y_pronosticados_sin_cambio": true,
+  "tabla_sin_cambio": true,
+  "sin_llamadas_a_la_api_al_alternar": true
+ }
+}

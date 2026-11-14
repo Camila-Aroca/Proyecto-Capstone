@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.852" timestamp="2026-11-14T17:47:42.951043-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_propuesta_camas" name="test_nulos_cierres_y_dato_antiguo_no_son_ceros" time="0.032"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

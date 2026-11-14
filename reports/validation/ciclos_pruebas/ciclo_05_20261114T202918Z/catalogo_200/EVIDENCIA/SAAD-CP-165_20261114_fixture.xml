@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.872" timestamp="2026-11-14T17:47:04.201210-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_pipeline_orchestration" name="test_stage_with_exit_zero_but_missing_outputs_is_not_success" time="0.003"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.850" timestamp="2026-11-14T17:47:17.316079-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_pipeline_orchestration" name="test_sin_evaluacion_corre_todo_lo_demas_en_orden" time="0.004"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

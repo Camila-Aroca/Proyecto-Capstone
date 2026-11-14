@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="1.131" timestamp="2026-11-14T17:45:13.542334-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_build_contexto_genero_mart" name="test_contexto_genero_mart_stages_are_registered_in_dag" time="0.003"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

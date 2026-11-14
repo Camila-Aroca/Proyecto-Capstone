@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="8.179" timestamp="2026-11-14T19:57:01.399287-03:00" hostname="LOQ-Felipe"><testcase classname="tests.test_api.TestCamasPsiquiatria" name="test_sin_cifra_el_total_es_nulo_y_no_cero" time="0.043"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

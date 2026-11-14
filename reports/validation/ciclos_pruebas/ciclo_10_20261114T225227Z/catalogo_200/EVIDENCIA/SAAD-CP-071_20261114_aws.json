@@ -1,0 +1,96 @@
+{
+ "caso": "SAAD-CP-071",
+ "esperado": "No hay contenido crítico cortado ni controles inaccesibles; las tablas pueden desplazarse en su contenedor",
+ "metodo": "Chrome headless, ventana de escritorio de 360x800 fijos (DPR 2), contrastada con emulación de dispositivo móvil; se mide el ancho del documento, los elementos fuera de pantalla fuera de contenedores desplazables y los controles tapados o fuera de pantalla",
+ "inicio": "2026-11-14T22:50:22+00:00",
+ "fin": "2026-11-14T22:51:11+00:00",
+ "entorno": {
+  "urgencias": {
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 39,
+    "fecha_inicio": "2026-09-27",
+    "atenciones": 2295
+   },
+   "pronostico_calculado_en": "2026-11-12T14:53:07.182869Z",
+   "origen_pronostico": "persistido"
+  },
+  "establecimientos": {
+   "ultima_semana_observada": {
+    "ano": 2026,
+    "semana": 39
+   },
+   "pronostico_generado_en": "2026-11-12T14:56:13.938884Z"
+  }
+ },
+ "vistas": [
+  {
+   "vista": "entrada",
+   "hash": "#/",
+   "ancho_ventana": 360,
+   "ancho_documento": 360,
+   "desborde_horizontal_px": 0,
+   "elementos_cortados": [],
+   "n_cortados": 0,
+   "controles_revisados": 7,
+   "controles_inaccesibles": [],
+   "n_inaccesibles": 0,
+   "modo_dispositivo_movil": {
+    "innerWidth_en_movil": 360,
+    "documento_en_movil": 360,
+    "el_navegador_amplia_el_layout": false
+   }
+  },
+  {
+   "vista": "tablero",
+   "hash": "#/tablero",
+   "ancho_ventana": 360,
+   "ancho_documento": 533,
+   "desborde_horizontal_px": 173,
+   "elementos_cortados": [],
+   "n_cortados": 0,
+   "controles_revisados": 133,
+   "controles_inaccesibles": [],
+   "n_inaccesibles": 0,
+   "modo_dispositivo_movil": {
+    "innerWidth_en_movil": 533,
+    "documento_en_movil": 533,
+    "el_navegador_amplia_el_layout": true
+   }
+  },
+  {
+   "vista": "establecimientos",
+   "hash": "#/establecimientos",
+   "ancho_ventana": 360,
+   "ancho_documento": 360,
+   "desborde_horizontal_px": 0,
+   "elementos_cortados": [],
+   "n_cortados": 0,
+   "controles_revisados": 345,
+   "controles_inaccesibles": [],
+   "n_inaccesibles": 0,
+   "modo_dispositivo_movil": {
+    "innerWidth_en_movil": 360,
+    "documento_en_movil": 360,
+    "el_navegador_amplia_el_layout": false
+   }
+  },
+  {
+   "vista": "detalle_hospital",
+   "hash": "#/establecimientos?id=111100",
+   "ancho_ventana": 360,
+   "ancho_documento": 360,
+   "desborde_horizontal_px": 0,
+   "elementos_cortados": [],
+   "n_cortados": 0,
+   "controles_revisados": 345,
+   "controles_inaccesibles": [],
+   "n_inaccesibles": 0,
+   "modo_dispositivo_movil": {
+    "innerWidth_en_movil": 360,
+    "documento_en_movil": 360,
+    "el_navegador_amplia_el_layout": false
+   }
+  }
+ ]
+}

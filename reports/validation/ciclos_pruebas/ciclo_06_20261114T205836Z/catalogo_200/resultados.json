@@ -1,0 +1,201 @@
+{
+ "run_id": "ciclo_06_20261114T205836Z/catalogo_200",
+ "ciclo": 6,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Felipe Rivera",
+ "alcance": "5 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-14T20:58:36+00:00",
+ "fin_utc": "2026-11-14T20:58:37+00:00",
+ "commit": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+ "arbol_versionado_limpio": true,
+ "archivos_versionados_modificados": 0,
+ "archivos_sin_rastrear": [
+  "reports/modeling/factibilidad_pronosticos_hospitalizaciones_defunciones.md",
+  "reports/validation/ciclos_pruebas/ciclo_05_20261114T202918Z/",
+  "scripts/qa_campana_200.py",
+  "tests/test_qa_campana_200.py"
+ ],
+ "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+ "modo": "http",
+ "nota": "API local iniciada con SAAD_USAR_PRONOSTICO_DESACTUALIZADO=1: sirve el pronóstico persistido como vista temporal (la selección del benchmark no coincide en hash por saltos de línea CRLF de Windows). Datos de Urgencias locales: corte del 14-11-2026.",
+ "python": "3.12.6",
+ "so": "Windows 11",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 5,
+  "fallidos": 0,
+  "no_ejecutados": 0
+ },
+ "advertencias": [
+  "Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-043",
+   "run_id": "ciclo_06_20261114T205836Z/catalogo_200",
+   "titulo": "Calendario con intervalo invertido",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "/meta: última semana observada 2026-11-01; pronóstico calculado 2026-11-12T14:53:07.182869Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:58:36+00:00",
+    "fin": "2026-11-14T20:58:36+00:00"
+   },
+   "resultado_real": "GET /calendario-eventos?desde=2026-12-31&hasta=2026-01-01 → HTTP 422 (esperado 422)",
+   "peticiones": [
+    {
+     "ruta": "/calendario-eventos?desde=2026-12-31&hasta=2026-01-01",
+     "esperado": 422,
+     "obtenido": 422
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-043_20261114_local.json",
+   "evidencia_sha256": "0b5ddc9913cf6b1bbe49c1664a3e1f794f853fb8b686a6ec62bfcdf917747ebf",
+   "hash_input": {
+    "peticiones_sha256": "71042e053118ee85e8ee1360d69c5c84e144ecf889838cda7f6a232bb60be21d"
+   },
+   "observaciones": "API local iniciada con SAAD_USAR_PRONOSTICO_DESACTUALIZADO=1: sirve el pronóstico persistido como vista temporal (la selección del benchmark no coincide en hash por saltos de línea CRLF de Windows). Datos de Urgencias locales: corte del 14-11-2026."
+  },
+  {
+   "id": "SAAD-CP-044",
+   "run_id": "ciclo_06_20261114T205836Z/catalogo_200",
+   "titulo": "Límite exacto del calendario",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "/meta: última semana observada 2026-11-01; pronóstico calculado 2026-11-12T14:53:07.182869Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:58:36+00:00",
+    "fin": "2026-11-14T20:58:36+00:00"
+   },
+   "resultado_real": "GET /calendario-eventos?desde=2020-01-01&hasta=2032-01-10 → HTTP 200 (esperado 200); GET /calendario-eventos?desde=2020-01-01&hasta=2032-01-11 → HTTP 422 (esperado 422)",
+   "peticiones": [
+    {
+     "ruta": "/calendario-eventos?desde=2020-01-01&hasta=2032-01-10",
+     "esperado": 200,
+     "obtenido": 200
+    },
+    {
+     "ruta": "/calendario-eventos?desde=2020-01-01&hasta=2032-01-11",
+     "esperado": 422,
+     "obtenido": 422
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-044_20261114_local.json",
+   "evidencia_sha256": "0266db2a0cafdda8beefee07ca7a0ad8c529ecde47e6bf2195d9505fcd355690",
+   "hash_input": {
+    "peticiones_sha256": "ed6b708b5fbd71adc245ddbf370bed8d1d767f542947a541ff3e45b72fb557fb"
+   },
+   "observaciones": "API local iniciada con SAAD_USAR_PRONOSTICO_DESACTUALIZADO=1: sirve el pronóstico persistido como vista temporal (la selección del benchmark no coincide en hash por saltos de línea CRLF de Windows). Datos de Urgencias locales: corte del 14-11-2026."
+  },
+  {
+   "id": "SAAD-CP-053",
+   "run_id": "ciclo_06_20261114T205836Z/catalogo_200",
+   "titulo": "Semana DEIS fuera de dominio",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "/meta: última semana observada 2026-11-01; pronóstico calculado 2026-11-12T14:53:07.182869Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:58:36+00:00",
+    "fin": "2026-11-14T20:58:37+00:00"
+   },
+   "resultado_real": "GET /caracterizacion/urgencias/region/RM?semanas=2026-54 → HTTP 422 (esperado 422)",
+   "peticiones": [
+    {
+     "ruta": "/caracterizacion/urgencias/region/RM?semanas=2026-54",
+     "esperado": 422,
+     "obtenido": 422
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-053_20261114_local.json",
+   "evidencia_sha256": "7b873ebacb2ccdfcbfe8a4579df4127abe6680f1d1379006cec708ea79eade92",
+   "hash_input": {
+    "peticiones_sha256": "dbdc36e07250169eb5ddd0185294f5ed6800435491631d8e36e4a37e6c1c39d2"
+   },
+   "observaciones": "API local iniciada con SAAD_USAR_PRONOSTICO_DESACTUALIZADO=1: sirve el pronóstico persistido como vista temporal (la selección del benchmark no coincide en hash por saltos de línea CRLF de Windows). Datos de Urgencias locales: corte del 14-11-2026."
+  },
+  {
+   "id": "SAAD-CP-054",
+   "run_id": "ciclo_06_20261114T205836Z/catalogo_200",
+   "titulo": "Defunciones no identifica establecimiento",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "/meta: última semana observada 2026-11-01; pronóstico calculado 2026-11-12T14:53:07.182869Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:58:37+00:00",
+    "fin": "2026-11-14T20:58:37+00:00"
+   },
+   "resultado_real": "GET /caracterizacion/suicidios/establecimiento/109102?semanas=2025-1 → HTTP 422 (esperado 422)",
+   "peticiones": [
+    {
+     "ruta": "/caracterizacion/suicidios/establecimiento/109102?semanas=2025-1",
+     "esperado": 422,
+     "obtenido": 422
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-054_20261114_local.json",
+   "evidencia_sha256": "2337802f92a577eefe2d639fb1e240492520f4f25b198594e2718a15429c44ee",
+   "hash_input": {
+    "peticiones_sha256": "a6feee50172ac373dfb0b45fc1cc6d96935c2ac28f8d77e86aeda1c6996933f9"
+   },
+   "observaciones": "API local iniciada con SAAD_USAR_PRONOSTICO_DESACTUALIZADO=1: sirve el pronóstico persistido como vista temporal (la selección del benchmark no coincide en hash por saltos de línea CRLF de Windows). Datos de Urgencias locales: corte del 14-11-2026."
+  },
+  {
+   "id": "SAAD-CP-055",
+   "run_id": "ciclo_06_20261114T205836Z/catalogo_200",
+   "titulo": "Comuna ajena a RM",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Felipe Rivera",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "7a43e659aab2e27d54dbe34ca7ae68dd63f87cba",
+   "snapshot": "/meta: última semana observada 2026-11-01; pronóstico calculado 2026-11-12T14:53:07.182869Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-14T20:58:37+00:00",
+    "fin": "2026-11-14T20:58:37+00:00"
+   },
+   "resultado_real": "GET /caracterizacion/urgencias/comuna/05101?semanas=2025-1 → HTTP 404 (esperado 404)",
+   "peticiones": [
+    {
+     "ruta": "/caracterizacion/urgencias/comuna/05101?semanas=2025-1",
+     "esperado": 404,
+     "obtenido": 404
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-055_20261114_local.json",
+   "evidencia_sha256": "5e508b6b0eb6a6c1453392f7af08b20fb7745d4840baad8cd478a26179f47e69",
+   "hash_input": {
+    "peticiones_sha256": "a6d004e403443ca00b43ab27e8996b38de7f823b8e107db967c1c7a921c799d5"
+   },
+   "observaciones": "API local iniciada con SAAD_USAR_PRONOSTICO_DESACTUALIZADO=1: sirve el pronóstico persistido como vista temporal (la selección del benchmark no coincide en hash por saltos de línea CRLF de Windows). Datos de Urgencias locales: corte del 14-11-2026."
+  }
+ ]
+}
