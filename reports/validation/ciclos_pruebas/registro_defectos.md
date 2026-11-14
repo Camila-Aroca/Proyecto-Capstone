@@ -2,6 +2,9 @@
 
 Registra los defectos reales encontrados durante los ciclos de prueba del catálogo CP-SAAD-2026.
 Solo se registran defectos reales: hallazgos observables en la plataforma, no suposiciones.
+Desde el 2026-11-14 también registra los defectos del catálogo SAAD-CP v2.1 de 200 casos
+(sección «Defectos de interfaz»), cuyos IDs son `SAAD-CP-NNN`, distintos de los `CP-SAAD-NNN` del
+catálogo de 70 casos.
 
 Columnas: **ID** · **Título** · **Criticidad** · **Entorno** · **Detectado en** · **Responsable** · **Corrección** · **Retest** · **Estado**
 
@@ -74,6 +77,38 @@ se contabilizaban como aprobados ni fallidos. Desde el ciclo 4 corren con datos 
 
 ---
 
+## Defectos de interfaz (abiertos) — campaña SAAD-CP v2.1
+
+Hallados con el catálogo de 200 casos y registrados con su evidencia (cada archivo anexo lleva su
+SHA256 en el `resultados.json` de su ciclo). La versión desplegada en AWS **no está confirmada**
+(`/meta` no expone el SHA ni el digest de la imagen). La criticidad y el responsable son
+propuestas hasta el triage; el responsable es un rol, no una asignación.
+
+| ID | Título | Criticidad | Entorno | Detectado en | Responsable | Corrección propuesta | Retest | Estado |
+|---|---|---|---|---|---|---|---|---|
+| DEF-12 | El aviso «Pronóstico no disponible: el establecimiento no existe» persiste tras cargar el establecimiento alternativo (OBS-AWS-01 del plan de pruebas) | Media | AWS | [Ciclo 9](ciclo_09_20261114T220556Z/catalogo_200/resultados.md) (SAAD-CP-004) | Frontend (propuesto) | Limpiar el estado de error general cuando llega el detalle 200 del establecimiento alternativo (`frontend/src/components/VistaEstablecimientos.tsx`) | Repetir SAAD-CP-004 en un contexto de navegador nuevo | **Abierto** |
+| DEF-13 | Contraste insuficiente en tema claro: «· 4 advertencias» (4,09:1) y la etiqueta «en desarrollo» (4,26:1); el mínimo para texto normal es 4,5:1 | Media (accesibilidad) | AWS | [Ciclo 7](ciclo_07_20261114T211303Z/catalogo_200/resultados.md) y [ciclo 10](ciclo_10_20261114T225227Z/catalogo_200/resultados.md) (SAAD-CP-073) | Frontend (propuesto) | Oscurecer el color de ambos textos hasta llegar a 4,5:1 en el tema claro (el tema oscuro cumple: 7,31:1 y 6,41:1) | Repetir SAAD-CP-073 con axe-core en tema claro y oscuro | **Abierto** |
+| DEF-14 | El tablero desborda en horizontal en AWS: el documento mide 533 px en una ventana de 360 px (desborde de 173 px) y 44 px a 640 px; la tabla de comunas no queda contenida en su contenedor desplazable | Media | AWS (no ocurre con el código local) | [Ciclo 10](ciclo_10_20261114T225227Z/catalogo_200/resultados.md) (SAAD-CP-071; observación en SAAD-CP-072) | Frontend (propuesto) | Contener la tabla de comunas en su contenedor desplazable para que no ensanche la página, y confirmar si el sitio desplegado corresponde al código actual | Repetir SAAD-CP-071 (360×800) y SAAD-CP-072 (zoom 200 %) en AWS | **Abierto** |
+
+| Defecto | Casos fallidos | Evidencia principal |
+|---|---|---|
+| DEF-12 | SAAD-CP-004 | `ciclo_09_20261114T220556Z/catalogo_200/EVIDENCIA/SAAD-CP-004_20261114_aws.json` y capturas antes y después de recargar |
+| DEF-13 | SAAD-CP-073 | `ciclo_07_20261114T211303Z/catalogo_200/EVIDENCIA/SAAD-CP-073_20261114_aws.json` (detalle por elemento) y las capturas manuales del ciclo 10 |
+| DEF-14 | SAAD-CP-071 | `ciclo_10_20261114T225227Z/catalogo_200/EVIDENCIA/SAAD-CP-071_20261114_aws.json` y capturas de cada vista |
+
+**Nota sobre DEF-14 y SAAD-CP-071.** En modo dispositivo móvil, Chrome amplía el ancho del layout a
+533 px y encoge la página, por lo que no aparece barra de desplazamiento y la pantalla «se ve bien»;
+el contenido sigue sin caber en 360 px. En el entorno local el mismo caso aprueba
+([ciclo 8](ciclo_08_20261114T220553Z/catalogo_200/resultados.md)). El estado del caso depende de
+cómo se lea el criterio «las tablas pueden desplazarse en su contenedor»; se registró según el ancho
+del documento, que es lo que pide el procedimiento.
+
+**Hallazgo sin caso fallido.** SAAD-CP-041 quedó aprobado con una observación: la interfaz no muestra
+la fecha de corte de defunciones (solo la entrega la API). Si el equipo decide que debe ser visible,
+el caso pasa a fallido y se abre un defecto.
+
+---
+
 ## Bloqueo de CI en CodePipeline
 
 El pipeline `saad-pr` y `saad-despliegue` están **BLOCKED** porque la conexión de CodeConnections
@@ -94,10 +129,11 @@ carpeta de ciclo.
 
 | Estado | Defectos |
 |---|---|
-| Abierto | DEF-11 |
+| Abierto | DEF-11, DEF-12, DEF-13, DEF-14 |
 | Cerrado | DEF-01, DEF-02, DEF-03, DEF-04, DEF-05, DEF-06, DEF-07, DEF-08, DEF-09, DEF-10 |
 
 DEF-01 a DEF-04 se cerraron en el ciclo 4 (2026-11-12) tras ejecutar el pipeline con
 `--sin-evaluacion`, publicar los outputs con `subir_datos.sh` y reiniciar la API en ambos
 entornos (local con `docker compose restart api`, AWS con el redespliegue `95d00f8` y un nuevo
-`force-new-deployment`). Solo DEF-11 sigue abierto.
+`force-new-deployment`). De ese grupo solo DEF-11 sigue abierto. DEF-12 a DEF-14 se abrieron el
+2026-11-14 con la campaña SAAD-CP v2.1.
