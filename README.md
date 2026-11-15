@@ -26,20 +26,22 @@ Estado del repositorio al 15 de noviembre de 2026. «Implementado» significa qu
 
 | Componente | Estado | Detalle y límites |
 |---|---|---|
-| **Pronóstico semanal de demanda (urgencias ID36)** | Implementado | Proyecciones de 4 a 8 semanas con intervalos, por RM y por comuna. Los horizontes 1 a 3 son operativos y no reemplazan el compromiso de 4 a 8. Modelo seleccionado: `hibrido_glm_region_lgbm_comuna_conformal`. Ver [`reports/modeling/`](reports/modeling/) |
-| **Pronóstico por establecimiento** | Implementado | Atenciones de salud mental (ID36) y hospitalizaciones derivadas desde urgencia (ID42, solo hospitales), con la misma regla de selección del modelo comunal |
-| **Suicidios semanales por comuna de residencia** | Implementado | Mart, benchmark y pronóstico. Las semanas finales pueden tener registro incompleto por rezago de inscripción y se marcan; la marca no certifica completitud |
+| **Pronóstico semanal de demanda (urgencias ID36)** | Implementado | Proyecciones de 4 a 8 semanas con intervalos, por RM y por comuna. Los horizontes 1 a 3 son operativos y no reemplazan el compromiso de 4 a 8. ID36 incluye ideación suicida y no equivale estrictamente a F00–F99. Modelo seleccionado: `hibrido_glm_region_lgbm_comuna_conformal`. Ver [`reports/modeling/`](reports/modeling/) |
+| **Pronóstico por establecimiento** | Implementado | Atenciones de salud mental (ID36) y hospitalizaciones derivadas desde Urgencias (ID42, solo hospitales). ID42 cuenta dónde ocurrió la urgencia; no identifica el hospital de destino ni mide ocupación. Un pronóstico ausente no implica demanda cero |
+| **Suicidios semanales por comuna de residencia** | Implementado | Observaciones y pronóstico X60–X84 para la región y comunas. Las semanas finales pueden tener registro incompleto por rezago de inscripción; la alerta no certifica completitud. Su relación con Urgencias es territorial, sin enlace individual |
 | **Hospitalización psiquiátrica (Egresos F00–F99)** | Parcial | Existen análisis descriptivos de duración de estadía y un perfil anual por comuna de residencia (tasa, mediana y percentil 90 de estadía, sexo, edad, diagnóstico, previsión y proporción SNSS), además de dotación y ocupación de camas. **Sigue pendiente estudiar diferencias de duración de estadía según sexo, previsión y pertenencia SNSS**, más allá de los desgloses descriptivos existentes. Ver [EDA nacional](reports/hospitalization/eda_egresos_f00_f99.md) y [EDA territorial](reports/eda/eda_mart_egresos_f00_f99_rm.md) |
+| **Ocupación y escenario anual de camas** | Implementado como escenario | REM-20 muestra ocupación promedio mensual por hospital y área; dotación es capacidad anual declarada. La propuesta usa el pico de 12 meses con supuestos de ocupación, prioriza habilitar camas existentes y señala subtotales parciales. No es ocupación en tiempo real, pronóstico anual validado ni factibilidad de inversión. Ver [`PIPELINE.md`](PIPELINE.md) y [EDA de ocupación](reports/eda/eda_mart_ocupacion_psiquiatria_hospital_rm.md) |
 | **Cobertura territorial** | Parcial | Cobertura simple por comuna: distancia en línea recta de la población censal 2024 a la oferta de urgencia. Mide proximidad, **no accesibilidad**: no usa red vial, transporte público ni tiempos de viaje |
 | **Isócronas OSM/GTFS** | **No implementadas** | La [evaluación territorial](reports/geo/evaluacion_osm_gtfs_isocronas.md) propuso OSM para automóvil y excluyó GTFS. La adenda de alcance C-02 sigue abierta; no se presenta la propuesta como decisión contractual cerrada |
-| **Pronóstico de hospitalizaciones por F00–F99 y de defunciones generales** | **No implementado** | No hay modelo ni endpoint |
+| **Pronóstico de todos los egresos F00–F99 y de defunciones por todas las causas** | **No implementado** | Los pronósticos existentes cubren solo hospitalizaciones derivadas desde Urgencias (ID42) y suicidios (X60–X84), no esos universos completos. Ver [factibilidad](reports/modeling/factibilidad_pronosticos_hospitalizaciones_defunciones.md) |
+| **Caracterización de series** | Implementada | Edad observada de Urgencias y sexo/edad observados de suicidios según lo publicado. Urgencias no registra sexo: el reparto opcional usa egresos nacionales por intento suicida como escenario hipotético no validado, no como conteo observado |
 | **Calendario de contexto (festividades y estaciones)** | Implementado | Contexto visual. No son variables del modelo ni explicaciones causales |
 | **Autenticación de usuarios** | **No implementada** | No hay referencias a autenticación en `src/api/` |
 | **API de consulta** | Implementada | FastAPI de solo lectura en `src/api/`. Contrato en [`docs/06-requisitos/contrato_api/`](docs/06-requisitos/contrato_api/README.md) |
 | **Interfaz web** | Implementada | React en `frontend/`, con el branding del proyecto aplicado según el issue #100. Hay defectos de interfaz abiertos en AWS (DEF-12 a DEF-14) |
 | **Pipeline y datos** | Revalidación parcial ejecutada | Corrida forzada local del 15-11 con evaluaciones omitidas; ver «Evidencia técnica» |
 
-El **alcance contractual** (ERF y ERNF) y los cambios decididos se registran en el control de cambios del issue C-02, aún abierto. No se debe leer este README como una adenda de alcance.
+El control de cambios del **alcance contractual** (ERF y ERNF) está pendiente en el issue C-02. No se debe leer este README como una adenda aprobada.
 
 **Fuera de alcance:** gestión de pacientes, cupos/camas en tiempo real, integración clínica en tiempo real, diagnóstico, triage, predicción de riesgo individual y decisiones sobre pacientes concretos. El trabajo se centra en la Región Metropolitana y en fuentes agregadas o disociadas. Urgencias y Egresos no se enlazan por paciente: toda relación entre ellas es territorial.
 
@@ -111,7 +113,7 @@ docker compose --profile pipeline run --rm pipeline python -m src.cloud.pipeline
 
 - Puertos configurables con `SAAD_WEB_PORT` y `SAAD_API_PORT`.
 - La API **lee sus datos solo al arrancar**: tras regenerar outputs hay que reiniciarla (`docker compose restart api`).
-- Si el pronóstico guardado no está vigente, la API lo recalcula al arrancar y mientras tanto responde `503` con `Retry-After`. Con `SAAD_USAR_PRONOSTICO_DESACTUALIZADO=1` sirve el guardado con una advertencia visible; sus cifras pueden no corresponder al modelo seleccionado.
+- El pronóstico comunal de demanda se recalcula si el guardado falta o no está vigente; durante el cálculo responde `503` con `Retry-After`. Con `SAAD_USAR_PRONOSTICO_DESACTUALIZADO=1` puede servir el guardado con advertencia. Los pronósticos de establecimientos y suicidios se sirven desde archivos persistidos y tienen reglas de vigencia distintas: consultar el [manual](docs/10-manual-implementacion/README.md) y `PIPELINE.md`.
 - `docker-compose.yml` incluye el servicio `pipeline` para ejecución local. `src/cloud/pipeline_task.py` también admite trabajar contra S3 con `SAAD_S3_BUCKET`, pero **esa modalidad no está desplegada**: el pipeline no corre en Fargate.
 
 ## Usuarios y validaciones
