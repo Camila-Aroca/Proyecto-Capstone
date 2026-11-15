@@ -1,4 +1,11 @@
-%%{init: {"theme": "neutral"}}%%
+---
+config:
+  layout: elk
+  theme: neutral
+  elk:
+    mergeEdges: false
+    nodePlacementStrategy: NETWORK_SIMPLEX
+---
 %% Modelo fisico OBJETIVO PostgreSQL/PostGIS - Item 15 (Modelo de base de datos)
 %% Stack objetivo segun README.md raiz: "Base de Datos: PostgreSQL con extension PostGIS".
 %% PostgreSQL/PostGIS es la arquitectura de persistencia OBJETIVO; el despliegue en AWS/RDS
@@ -9,8 +16,10 @@
 %% con trazabilidad a sus datasets de origen; no abarcan todos los archivos processed.
 %% Defunciones (registro nacional) figura solo en el modelo logico y se almacena en Parquet;
 %% su agregado semanal de suicidios por comuna si se persiste (marts.suicidios_comuna_weekly).
+%% Disposicion: motor ELK, izquierda a derecha, aristas ortogonales sin fusionar (ver README seccion 6).
 
 erDiagram
+    direction LR
 
     censo_cartografia_comunal {
         char_5 comuna_codigo PK "renombrado desde CUT (INTEGER en el Parquet fuente); cast+zero-pad en carga"
@@ -89,11 +98,26 @@ erDiagram
         char_5 comuna_codigo PK, FK
         bigint poblacion_censada_2024
         bigint poblacion_unidades_censales
+        numeric proporcion_poblacion_representada
+        bigint n_unidades_censales_pobladas
         bigint n_oferta_urgencia_en_comuna
+        numeric habitantes_por_establecimiento "NULLABLE: sin oferta en la comuna"
+        numeric distancia_media_km
         numeric distancia_mediana_km
         numeric distancia_p90_km
+        numeric proporcion_poblacion_a_2km
         numeric proporcion_poblacion_a_5km
-        numeric distancia_mediana_id36_km
+        numeric proporcion_poblacion_a_10km
+        numeric distancia_mediana_id36_km "solo oferta que reporto ID36"
+        numeric proporcion_poblacion_a_5km_id36
+    }
+
+    geo_capa_oferta_urgencia_rm {
+        bigint establecimiento_codigo PK, FK "geo_dim_oferta_urgencia_rm (1 a 1)"
+        char_5 comuna_codigo "copia de la comuna de la oferta; sin FK propia"
+        char_5 comuna_codigo_espacial FK "comuna que contiene el punto; NULL sin coordenadas"
+        text resultado_join_comuna "CHECK IN (coincide, difiere, fuera_de_rm, limite_ambiguo, sin_coordenadas)"
+        geometry_point_4674 geom "renombrado desde geometry; NULL si sin_coordenadas"
     }
 
     urgencias_mart_comuna_weekly {
@@ -118,7 +142,7 @@ erDiagram
         bigint establecimiento_codigo PK "SIN FK fisica a geo_dim_oferta_urgencia_rm: 3/152 codigos historicos ausentes del snapshot actual"
         smallint ano PK
         smallint mes PK
-        char_5 comuna_codigo "denormalizado, sin FK (ver README seccion 8)"
+        char_5 comuna_codigo FK
         integer atenciones_id36
     }
 
@@ -165,6 +189,21 @@ erDiagram
         text modelo "configuracion de la seleccion congelada"
     }
 
+    modeling_pronostico_establecimientos_sm {
+        text objetivo PK "CHECK IN (atenciones_sm, hospitalizaciones_sm)"
+        text series_id PK "establecimiento_codigo como texto; sin FK: el output se regenera con el snapshot"
+        smallint horizonte PK "CHECK BETWEEN 1 AND 8"
+        text establecimiento_glosa
+        char_5 comuna_codigo "copia de la comuna del establecimiento; sin FK propia"
+        text tipo_establecimiento_urgencia "CHECK: hospitalizaciones_sm solo en Hospital"
+        date fecha_inicio_semana
+        double_precision y_pred "eventos esperados, no personas unicas"
+        double_precision y_inferior "CHECK 0 <= y_inferior <= y_pred <= y_superior"
+        double_precision y_superior
+        text modelo
+        boolean fuera_de_rango "y_pred > 2 x maximo de las ultimas 52 semanas"
+    }
+
     contexto_genero_indicador_por_sexo {
         bigint indicador_contexto_genero_id PK "surrogate tecnico de persistencia del mart; no existe en la fuente"
         text source_id "uno de los cuatro inputs processed; contrato de origen"
@@ -192,6 +231,39 @@ erDiagram
         text pertenencia_establecimiento_salud
         integer dias_estada
         boolean residente_rm
+    }
+
+    marts_egresos_f00_f99_rm_anual {
+        text series_id PK "comuna de residencia o RM; sin FK: la fila regional no es una comuna"
+        smallint ano PK
+        text nivel "CHECK IN (region, comuna) coherente con series_id"
+        text nombre
+        bigint egresos "CHECK >= 0; registros publicados, no pacientes unicos"
+        bigint poblacion "NULLABLE: NULL en 2020"
+        numeric tasa_por_10000 "NULLABLE: NULL sin poblacion"
+        numeric dias_estada_mediana
+        numeric dias_estada_p90 "CHECK >= mediana"
+        numeric proporcion_snss "CHECK 0-1"
+        numeric proporcion_estadia_mayor_a_un_ano "CHECK 0-1"
+    }
+
+    marts_egresos_f00_f99_rm_desglose {
+        text series_id PK, FK "marts_egresos_f00_f99_rm_anual"
+        smallint ano PK, FK
+        text dimension PK "CHECK IN (sexo, grupo_edad, grupo_diagnostico, prevision)"
+        text categoria PK
+        smallint orden "CHECK >= 0"
+        bigint egresos "CHECK >= 0"
+    }
+
+    marts_contraste_camas_psiquiatria_rm {
+        smallint ano PK
+        bigint egresos_residentes_rm
+        numeric camas_equivalentes_egresos
+        numeric camas_equivalentes_egresos_snss
+        numeric camas_ocupadas_rem20
+        numeric camas_ocupadas_rem20_sin_forense
+        numeric razon_egresos_snss_rem20_sin_forense "CHECK todos >= 0"
     }
 
     camas_dotacion_snss {
@@ -327,21 +399,31 @@ erDiagram
     censo_cartografia_comunal ||--o{ urgencias_mart_comuna_weekly : "1 a N (si reporta)"
     censo_cartografia_comunal ||--o{ urgencias_mart_comuna_monthly : "1 a N (si reporta)"
     censo_cartografia_comunal ||--o{ urgencias_mart_comuna_etario_monthly : "1 a N (si reporta)"
+    censo_cartografia_comunal ||--o{ urgencias_mart_establecimiento_monthly : "1 a N (si reporta)"
+    censo_cartografia_comunal ||--o{ urgencias_mart_establecimiento_weekly : "1 a N (si reporta)"
     censo_cartografia_comunal ||--o| marts_mvp_territorial_comuna : "1 a 1"
     censo_cartografia_comunal ||--o| geo_cobertura_urgencia_comuna : "1 a 1"
+    censo_cartografia_comunal ||--o{ geo_capa_oferta_urgencia_rm : "1 a N (join espacial)"
+    geo_dim_oferta_urgencia_rm ||--|| geo_capa_oferta_urgencia_rm : "1 a 1"
 
-    urgencias_mart_comuna_weekly |o..o{ modeling_pronostico_demanda_sm : "panel de entrada, NO enforced por FK fisica"
+    urgencias_mart_comuna_weekly |o..o{ modeling_pronostico_demanda_sm : "panel de entrada, sin FK fisica"
+    urgencias_mart_establecimiento_weekly |o..o{ modeling_pronostico_establecimientos_sm : "panel de entrada, sin FK fisica"
 
-    geo_dim_oferta_urgencia_rm |o..o{ urgencias_mart_establecimiento_monthly : "relacion documentada, NO enforced por FK fisica"
-    geo_dim_oferta_urgencia_rm |o..o{ urgencias_mart_establecimiento_weekly : "relacion documentada, NO enforced por FK fisica"
+    urgencias_mart_establecimiento_monthly }o..o| geo_dim_oferta_urgencia_rm : "vinculo logico, sin FK fisica"
+    urgencias_mart_establecimiento_weekly }o..o| geo_dim_oferta_urgencia_rm : "vinculo logico, sin FK fisica"
 
-    geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_snss : "relacion documentada, NO enforced por FK fisica"
-    geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_no_snss : "relacion documentada, NO enforced por FK fisica"
+    geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_snss : "vinculo logico, sin FK fisica"
+    geo_dim_oferta_urgencia_rm |o..o{ camas_dotacion_no_snss : "vinculo logico, sin FK fisica"
     geo_dim_oferta_urgencia_rm ||--o| camas_dim_psiquiatria_hospital_rm : "1 a 1 (hospitales de la oferta)"
-    geo_dim_oferta_urgencia_rm |o..o{ camas_indicadores_hospitalarios_snss : "relacion documentada, NO enforced por FK fisica"
-    camas_indicadores_hospitalarios_snss |o..o{ camas_categorizacion_riesgo_dependencia : "cruce por nombre documentado, NO enforced por FK fisica"
+    geo_dim_oferta_urgencia_rm |o..o{ camas_indicadores_hospitalarios_snss : "vinculo logico, sin FK fisica"
+    camas_indicadores_hospitalarios_snss |o..o{ camas_categorizacion_riesgo_dependencia : "cruce por nombre, sin FK fisica"
     geo_dim_oferta_urgencia_rm ||--o{ marts_ocupacion_psiquiatria_hospital_rm : "1 a N (area-mes de psiquiatria)"
 
     censo_cartografia_comunal ||--o{ marts_suicidios_comuna_weekly : "1 a N (semanas, comuna de residencia)"
-    marts_suicidios_comuna_weekly |o..o{ modeling_pronostico_suicidios : "panel de entrada, NO enforced por FK fisica"
+    censo_cartografia_comunal |o..o{ marts_egresos_f00_f99_rm_anual : "vinculo logico (fila RM), sin FK fisica"
+    marts_egresos_f00_f99_rm_anual ||--o{ marts_egresos_f00_f99_rm_desglose : "1 a N (categorias)"
+    marts_egresos_f00_f99_rm_anual }o..o| egresos_f00_f99_nacional : "derivacion, sin FK fisica"
+    marts_contraste_camas_psiquiatria_rm }o..o| egresos_f00_f99_nacional : "derivacion, sin FK fisica"
+    marts_contraste_camas_psiquiatria_rm }o..o| marts_ocupacion_psiquiatria_hospital_rm : "derivacion, sin FK fisica"
+    marts_suicidios_comuna_weekly |o..o{ modeling_pronostico_suicidios : "panel de entrada, sin FK fisica"
 

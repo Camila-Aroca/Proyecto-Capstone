@@ -1,12 +1,22 @@
-%%{init: {"theme": "neutral"}}%%
+---
+config:
+  layout: elk
+  theme: neutral
+  elk:
+    mergeEdges: false
+    nodePlacementStrategy: NETWORK_SIMPLEX
+---
 %% Modelo logico - Item 15 (Modelo de base de datos)
 %% Describe los datos TAL COMO EXISTEN HOY en data/processed/ (archivos Parquet/CSV).
 %% Estos archivos NO tienen constraints SQL activos; las PK/FK aqui mostradas son
 %% llaves logicas inferidas y verificadas sobre los datos (ver README seccion 5 y 7),
 %% no restricciones fisicas ya implementadas.
-%% - Egresos NO tiene relacion de llave con Urgencias ni con establecimientos (invariante).
+%% - Egresos NO tiene relacion de llave con Urgencias ni con establecimientos (invariante): solo
+%%   tiene derivaciones agregadas por comuna de residencia (marts de egresos y contraste de camas).
+%% Disposicion: motor ELK, izquierda a derecha, aristas ortogonales sin fusionar (ver README seccion 5).
 
 erDiagram
+    direction LR
 
     %% Una fila por registro publicado; clave logica dentro del snapshot identificado en el footer.
     %% Nacional, todas las causas; sin relacion por paciente ni FK territorial inferida.
@@ -157,7 +167,7 @@ erDiagram
         bigint establecimiento_codigo PK "vinculo logico a dim_oferta_urgencia_rm NO garantizado al 100%: 3/152 no estan en el snapshot actual"
         int ano PK
         int mes PK
-        string comuna_codigo "denormalizado desde el maestro de establecimientos"
+        string comuna_codigo FK "comuna del establecimiento segun el maestro"
         int atenciones_id36
     }
 
@@ -166,7 +176,7 @@ erDiagram
         bigint establecimiento_codigo PK "vinculo logico a dim_oferta_urgencia_rm NO garantizado al 100%: snapshot actual vs historico"
         int ano PK
         int semana PK "semana DEIS; la 53 es un fragmento"
-        string comuna_codigo "denormalizado desde Urgencias"
+        string comuna_codigo FK "comuna del establecimiento segun Urgencias"
         int atenciones_id36
         int atenciones_id42 "hospitalizaciones derivadas desde urgencia F00-F99; no es componente de ID36"
     }
@@ -222,7 +232,7 @@ erDiagram
 
     %% grain: 1 fila = 1 registro de egreso hospitalario publicado DEIS (218794 filas, nacional, no pacientes unicos)
     %% SIN clave natural (disociado: sin id de paciente ni de establecimiento).
-    %% SIN relacion de llave con ninguna otra entidad de este modelo (invariante AGENTS.md).
+    %% SIN relacion de llave con ninguna otra entidad de este modelo (invariante AGENTS.md); solo derivaciones agregadas.
     egresos_f00_f99_nacional_2020_2025 {
         int ano_egreso "sin clave natural: grano = 1 registro publicado, no deduplicado"
         string sexo "esquema incompatible en 2021 vs resto (no homologado)"
@@ -233,6 +243,55 @@ erDiagram
         string pertenencia_establecimiento_salud "pertenencia SNSS del establecimiento; no identifica cual establecimiento"
         int dias_estada
         bool residente_rm "derivada de region_residencia; NULL si region_residencia es nula en origen"
+    }
+
+    %% grain: 1 fila = 1 territorio de residencia (52 comunas RM + la region, series_id 'RM') x 1 ano (318 filas = 53 x 6, 2020-2025)
+    %% derivado de egresos_f00_f99_nacional_2020_2025 (solo residentes RM) y dim_poblacion_comuna_anual; comuna = residencia del PACIENTE, sin enlace por paciente ni establecimiento
+    mart_egresos_f00_f99_rm_anual {
+        string series_id PK "comuna_codigo de residencia o 'RM' (region); la fila regional no es una comuna"
+        int ano PK "2020-2025"
+        string nivel "region o comuna"
+        string nombre
+        bigint egresos "registros publicados, no pacientes unicos; 0 = cero registrado"
+        bigint poblacion "NULL en 2020: la proyeccion INE parte en 2021"
+        double tasa_por_10000 "NULL en 2020, sin denominador"
+        double dias_estada_mediana "NULL sin egresos"
+        double dias_estada_p90
+        double proporcion_snss "egresos en establecimientos SNSS; no identifica cual"
+        double proporcion_estadia_mayor_a_un_ano
+    }
+
+    %% grain: 1 fila = 1 territorio x 1 ano x 1 dimension x 1 categoria (7399 filas; sexo, grupo_edad, grupo_diagnostico y prevision armonizados entre anos)
+    %% cada dimension suma el total del territorio y ano (1272 combinaciones verificadas)
+    mart_egresos_f00_f99_rm_desglose {
+        string series_id PK "FK logica a mart_egresos_f00_f99_rm_anual"
+        int ano PK "FK logica a mart_egresos_f00_f99_rm_anual"
+        string dimension PK "sexo, grupo_edad, grupo_diagnostico o prevision"
+        string categoria PK "categoria armonizada entre anos (columnas armonizadas de Egresos)"
+        int orden "posicion de presentacion dentro de la dimension"
+        bigint egresos
+    }
+
+    %% grain: 1 fila = 1 ano de la RM (6 filas, 2020-2025); no es territorial
+    %% contrasta camas ocupadas segun Egresos (cota superior, estada acotada al ano) y segun REM-20; no deben coincidir exactamente
+    contraste_camas_psiquiatria_rm {
+        int ano PK
+        bigint egresos_residentes_rm "egresos F00-F99 de residentes RM"
+        double camas_equivalentes_egresos "dias de estada acotados / dias del ano"
+        double camas_equivalentes_egresos_snss "solo egresos en establecimientos SNSS"
+        double camas_ocupadas_rem20 "dias cama ocupados de las areas de psiquiatria / dias del ano"
+        double camas_ocupadas_rem20_sin_forense
+        double razon_egresos_snss_rem20_sin_forense
+    }
+
+    %% grain: 1 fila = 1 establecimiento de dim_oferta_urgencia_rm (174 filas), como punto georreferenciado (GeoParquet, EPSG 4674)
+    %% el join punto-en-comuna marca (no corrige) las discrepancias con la comuna declarada
+    capa_oferta_urgencia_rm {
+        bigint establecimiento_codigo PK "FK logica a dim_oferta_urgencia_rm (1 a 1)"
+        string comuna_codigo "comuna declarada en la oferta"
+        string comuna_codigo_espacial FK "comuna que contiene el punto; NULL sin coordenadas"
+        string resultado_join_comuna "coincide, difiere, fuera_de_rm, limite_ambiguo o sin_coordenadas"
+        binary geometry "punto WKB, EPSG 4674; NULL sin coordenadas"
     }
 
     %% grain: 1 fila = 1 serie x horizonte pronosticado desde la ultima semana observada.
@@ -252,6 +311,24 @@ erDiagram
         double y_superior "limite superior del intervalo del modelo"
         double poblacion_anual "proyeccion INE del anio objetivo; no es poblacion atendida"
         string modelo "configuracion de la seleccion congelada que lo genero"
+    }
+
+    %% grain: 1 fila = 1 establecimiento x objetivo x horizonte pronosticado (1096 filas: 125 establecimientos en atenciones_sm, 12 hospitales en hospitalizaciones_sm; 8 horizontes)
+    %% Output del modelo, no dato observado: se regenera cuando cambia el mart o el snapshot del anio en curso.
+    %% No hay serie regional: la cifra regional es la del pronostico comunal.
+    pronostico_establecimientos_sm {
+        string objetivo PK "atenciones_sm (ID36) u hospitalizaciones_sm (ID42, solo hospitales)"
+        string series_id PK "establecimiento_codigo como texto; vinculo logico a dim_oferta_urgencia_rm"
+        int horizonte PK "1-8 semanas despues de la ultima semana observada"
+        string establecimiento_glosa
+        string comuna_codigo "comuna del establecimiento; no es residencia de pacientes"
+        string tipo_establecimiento_urgencia "Hospital, SAPU, SAR o SUR"
+        date fecha_inicio_semana "inicio de la semana pronosticada"
+        double y_pred "eventos esperados (atenciones u hospitalizaciones), no personas unicas"
+        double y_inferior "limite inferior del intervalo del modelo"
+        double y_superior "limite superior del intervalo del modelo"
+        string modelo "configuracion de la seleccion congelada del objetivo"
+        bool fuera_de_rango "y_pred > 2 x maximo de las ultimas 52 semanas; no se publica"
     }
 
     %% grain: 1 fila = 1 area funcional de 1 hospital del SNSS, o su fila Total (1694 filas, 196 hospitales; una columna camas_AAAA por ano 2010-2025)
@@ -283,7 +360,7 @@ erDiagram
     dim_camas_psiquiatria_hospital_rm {
         bigint establecimiento_codigo PK "FK logica a dim_oferta_urgencia_rm; misma llave que dotacion_camas_snss (34/45 hospitales estan en la dotacion)"
         string establecimiento_nombre
-        string comuna_codigo FK "comuna del establecimiento segun la oferta"
+        string comuna_codigo "copia de la comuna de la oferta; sin FK propia"
         boolean en_dotacion_snss "false = hospital sin dotacion SNSS (p. ej. privado): camas NULL"
         boolean reporto_id36_periodo "alimenta el modelo: ID36 > 0 alguna vez en 2021-2025"
         int ano_camas "ultimo ano con columna camas_AAAA, detectado dinamicamente"
@@ -359,7 +436,7 @@ erDiagram
         double indice_ocupacional "NULL sin camas disponibles"
     }
 
-    %% grain: 1 fila = 1 comuna de residencia RM x 1 semana DEIS (18616 filas, 52 comunas, 2020-2026), grilla completa
+    %% grain: 1 fila = 1 comuna de residencia RM x 1 semana DEIS (18720 filas, 52 comunas, 2020-2026), grilla completa
     %% derivada de defunciones_nacional (causa externa X60-X84); comuna = residencia, sin enlace con Urgencias por persona
     mart_suicidios_comuna_weekly {
         string comuna_codigo PK "FK logica a cartografia_comunal; comuna de residencia"
@@ -387,10 +464,10 @@ erDiagram
         string modelo
     }
 
-    cartografia_comunal ||--o{ cartografia_distrital : "1 comuna tiene N distritos"
-    cartografia_distrital ||--o{ cartografia_zonal : "1 distrito tiene N zonas urbanas (parcial: 51/52 comunas)"
-    cartografia_distrital ||--o{ cartografia_entidades : "1 distrito tiene N entidades rurales (parcial: 26/52 comunas)"
-    cartografia_distrital ||--o{ cartografia_manzanas : "1 distrito tiene N manzanas (52/52 comunas)"
+    cartografia_comunal ||--o{ cartografia_distrital : "1 comuna, N distritos"
+    cartografia_distrital ||--o{ cartografia_zonal : "1 distrito, N zonas urbanas (51/52 comunas)"
+    cartografia_distrital ||--o{ cartografia_entidades : "1 distrito, N entidades rurales (26/52 comunas)"
+    cartografia_distrital ||--o{ cartografia_manzanas : "1 distrito, N manzanas (52/52 comunas)"
 
     cartografia_comunal ||--o| dim_poblacion_comuna_censo2024 : "1 comuna, 1 poblacion censada 2024"
     cartografia_comunal ||--o{ dim_poblacion_comuna_anual : "1 comuna, N anos de proyeccion"
@@ -400,24 +477,34 @@ erDiagram
     cartografia_comunal ||--o{ mart_urgencias_comuna_weekly : "1 comuna, N semanas (si reporta)"
     cartografia_comunal ||--o{ mart_urgencias_comuna_monthly : "1 comuna, N meses (si reporta)"
     cartografia_comunal ||--o{ mart_urgencias_comuna_etario_monthly : "1 comuna, N meses x grupo etario (si reporta)"
+    cartografia_comunal ||--o{ mart_urgencias_establecimiento_monthly : "1 comuna, N filas mensuales (si reporta)"
+    cartografia_comunal ||--o{ mart_urgencias_establecimiento_weekly : "1 comuna, N filas semanales (si reporta)"
     cartografia_comunal ||--o| mart_mvp_territorial_comuna : "1 comuna, 1 fila MVP (52/52, incl. sin reporte)"
     cartografia_comunal ||--o| cobertura_urgencia_comuna : "1 comuna, 1 fila de cobertura (52/52)"
-    mart_urgencias_comuna_weekly ||--o{ pronostico_demanda_sm : "panel semanal -> N horizontes por serie (+1 serie regional sin comuna)"
+    mart_urgencias_comuna_weekly ||--o{ pronostico_demanda_sm : "panel semanal, N horizontes por serie"
+    mart_urgencias_establecimiento_weekly ||--o{ pronostico_establecimientos_sm : "panel semanal, N horizontes por establecimiento y objetivo"
 
-    dim_oferta_urgencia_rm |o..o{ mart_urgencias_establecimiento_monthly : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (snapshot actual vs historico 2021-2025)"
-    dim_oferta_urgencia_rm |o..o{ mart_urgencias_establecimiento_weekly : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (snapshot actual vs historico 2021-2025)"
+    mart_urgencias_establecimiento_monthly }o..o| dim_oferta_urgencia_rm : "vinculo logico (snapshot actual vs historico)"
+    mart_urgencias_establecimiento_weekly }o..o| dim_oferta_urgencia_rm : "vinculo logico (snapshot actual vs historico)"
 
-    dim_oferta_urgencia_rm |o..o{ dotacion_camas_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 34/196 hospitales estan en la oferta)"
-    dim_oferta_urgencia_rm |o..o{ dotacion_camas_no_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 10/144 establecimientos estan en la oferta)"
-    dim_oferta_urgencia_rm ||--o| dim_camas_psiquiatria_hospital_rm : "1 hospital de la oferta, 1 fila de camas (solo tipo Hospital)"
-    dotacion_camas_snss |o..o{ dim_camas_psiquiatria_hospital_rm : "derivacion: suma de areas de psiquiatria del ultimo ano, vinculo logico por establecimiento_codigo"
-    dim_oferta_urgencia_rm |o..o{ indicadores_hospitalarios_snss : "vinculo logico por establecimiento_codigo, NO integridad referencial garantizada (parcial: 35/208 establecimientos estan en la oferta)"
-    dotacion_camas_snss |o..o{ indicadores_hospitalarios_snss : "vinculo logico por establecimiento_codigo y area funcional = nivel de cuidado (196/208 establecimientos en la dotacion)"
-    indicadores_hospitalarios_snss |o..o{ categorizacion_riesgo_dependencia : "vinculo logico por ano, servicio de salud y nombre del establecimiento (sin codigo en la fuente)"
-    dim_oferta_urgencia_rm ||--o{ mart_ocupacion_psiquiatria_hospital_rm : "1 hospital de la oferta, N area-mes de psiquiatria (14/45 hospitales)"
-    indicadores_hospitalarios_snss |o..o{ mart_ocupacion_psiquiatria_hospital_rm : "derivacion: areas de psiquiatria del detalle, vinculo logico por establecimiento_codigo y nivel de cuidado"
+    dim_oferta_urgencia_rm |o..o{ dotacion_camas_snss : "vinculo logico (parcial: 34/196 en la oferta)"
+    dim_oferta_urgencia_rm |o..o{ dotacion_camas_no_snss : "vinculo logico (parcial: 10/144 en la oferta)"
+    dim_oferta_urgencia_rm ||--o| dim_camas_psiquiatria_hospital_rm : "1 hospital, 1 fila de camas"
+    dotacion_camas_snss |o..o{ dim_camas_psiquiatria_hospital_rm : "derivacion: camas de psiquiatria del ultimo ano"
+    dim_oferta_urgencia_rm |o..o{ indicadores_hospitalarios_snss : "vinculo logico (parcial: 35/208 en la oferta)"
+    dotacion_camas_snss |o..o{ indicadores_hospitalarios_snss : "vinculo logico (196/208 en la dotacion)"
+    indicadores_hospitalarios_snss |o..o{ categorizacion_riesgo_dependencia : "vinculo logico por nombre (sin codigo en la fuente)"
+    dim_oferta_urgencia_rm ||--o{ mart_ocupacion_psiquiatria_hospital_rm : "1 hospital, N area-mes (14/45 hospitales)"
+    indicadores_hospitalarios_snss |o..o{ mart_ocupacion_psiquiatria_hospital_rm : "derivacion: areas de psiquiatria del detalle"
 
-    cartografia_comunal ||--o{ mart_suicidios_comuna_weekly : "1 comuna de residencia, N semanas (52/52, ceros registrados)"
-    defunciones_nacional |o..o{ mart_suicidios_comuna_weekly : "derivacion: residentes RM con causa externa X60-X84 por comuna y semana; sin enlace por persona"
-    mart_suicidios_comuna_weekly ||--o{ pronostico_suicidios : "panel semanal -> N horizontes por serie (+1 serie regional sin comuna)"
+    cartografia_comunal ||--o{ mart_suicidios_comuna_weekly : "1 comuna de residencia, N semanas (52/52)"
+    cartografia_comunal ||--o{ mart_egresos_f00_f99_rm_anual : "1 comuna de residencia, N anos (52/52; la fila regional RM no es comuna)"
+    cartografia_comunal ||--o{ capa_oferta_urgencia_rm : "1 comuna, N puntos por join espacial"
+    mart_suicidios_comuna_weekly }o..o| defunciones_nacional : "derivacion: X60-X84 de residentes RM, sin enlace por persona"
+    egresos_f00_f99_nacional_2020_2025 |o..o{ mart_egresos_f00_f99_rm_anual : "derivacion: residentes RM por comuna y ano, sin enlace por persona"
+    mart_egresos_f00_f99_rm_anual ||--o{ mart_egresos_f00_f99_rm_desglose : "1 territorio-ano, N categorias"
+    egresos_f00_f99_nacional_2020_2025 |o..o{ contraste_camas_psiquiatria_rm : "derivacion: dias de estada de residentes RM"
+    mart_ocupacion_psiquiatria_hospital_rm |o..o{ contraste_camas_psiquiatria_rm : "derivacion: dias cama ocupados REM-20"
+    dim_oferta_urgencia_rm ||--|| capa_oferta_urgencia_rm : "1 establecimiento, 1 punto (174/174)"
+    mart_suicidios_comuna_weekly ||--o{ pronostico_suicidios : "panel semanal, N horizontes por serie"
 

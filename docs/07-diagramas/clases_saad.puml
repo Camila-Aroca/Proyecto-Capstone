@@ -8,18 +8,25 @@
 '            (docs/07-diagramas/15-modelo-base-datos/).
 '
 ' El diagrama es conceptual: sintetiza clases del dominio y sus
-' operaciones minimas; no reproduce todas las columnas del ERD.
-' Render   : java -jar plantuml.jar -charset UTF-8 -Playout=smetana
+' operaciones minimas; no reproduce todas las columnas del ERD, la lista de
+' resolucion de coordenadas ni las capas de cartografia subcomunal
+' (Distrital, Zonal, Entidades, Manzanas), que Comuna resume con su geometria.
+' Render   : PLANTUML_LIMIT_SIZE=8192 java -jar plantuml.jar -charset UTF-8 -tsvg clases_saad.puml
+'            PLANTUML_LIMIT_SIZE=8192 java -jar plantuml.jar -charset UTF-8 -tpng clases_saad.puml
+'            (el motor ELK se activa con el pragma siguiente y no requiere Graphviz;
+'             PLANTUML_LIMIT_SIZE evita que PlantUML recorte el PNG por sobre 4096 px)
 '=====================================================================
+!pragma layout elk
 
 title Sistema SAAD — Diagrama de Clases (modelo conceptual)
 
 left to right direction
 skinparam backgroundColor #FFFFFF
+skinparam dpi 120
 skinparam shadowing false
 skinparam linetype ortho
-skinparam nodesep 25
-skinparam ranksep 40
+skinparam nodesep 40
+skinparam ranksep 60
 skinparam defaultFontName "Segoe UI"
 skinparam defaultFontSize 10
 skinparam titleFontSize 18
@@ -38,6 +45,8 @@ skinparam class {
   BorderColor<<mart>> #4E8C3F
   BackgroundColor<<registro publicado>> #FFF4E5
   BorderColor<<registro publicado>> #C08B2F
+  BackgroundColor<<salida de modelo>> #EEF1FA
+  BorderColor<<salida de modelo>> #5B64A8
 }
 skinparam package {
   BackgroundColor #FCFCFD
@@ -89,6 +98,24 @@ package "Territorio y dimensiones" {
     --
     +interpretarIndicador(): String
   }
+
+  class CoberturaUrgenciaComuna <<mart>> {
+    +comunaCodigo: String [5]
+    +poblacionUnidadesCensales: Long
+    +nOfertaUrgenciaEnComuna: Long
+    +distanciaMedianaKm: Decimal
+    +distanciaP90Km: Decimal
+    +proporcionPoblacionA5Km: Decimal
+    +distanciaMedianaId36Km: Decimal
+    --
+    +obtenerDistanciaMediana(): Decimal
+  }
+
+  note as N_Cobertura
+    CoberturaUrgenciaComuna: proximidad en linea recta de la
+    poblacion censal a la oferta de urgencia; no es
+    accesibilidad (sin red vial ni GTFS).
+  end note
 }
 
 '---------------------------------------------------------------------
@@ -104,6 +131,16 @@ package "Urgencias (DEIS)" {
     +longitud: Decimal
     --
     +reportaId36EnPeriodo(): Boolean
+  }
+
+  class CapaOfertaUrgencia <<dimension>> {
+    +establecimientoCodigo: Long
+    +comunaCodigo: String [5]
+    +comunaCodigoEspacial: String [5] [0..1]
+    +resultadoJoinComuna: String
+    +geometria: Point (EPSG:4674) [0..1]
+    --
+    +coincideComunaDeclarada(): Boolean
   }
 
   class UrgenciasComunaWeekly <<mart>> {
@@ -160,6 +197,19 @@ package "Urgencias (DEIS)" {
     --
     +calcularProporcionEtaria(): Decimal
   }
+
+  note as N_Id36
+    ID36 es un agregado DEIS de salud mental e incluye
+    ID37 (ideacion suicida, R45.8); no equivale
+    estrictamente a diagnosticos CIE-10 F00-F99.
+  end note
+
+  note as N_VinculoLogico
+    Vinculo logico por establecimientoCodigo.
+    No es FK garantizada: el mart historico
+    (2021-2025) y la oferta vigente son
+    temporalidades distintas.
+  end note
 }
 
 '---------------------------------------------------------------------
@@ -193,12 +243,199 @@ package "Marts e informacion hospitalaria" {
     +esResidenteRM(): Boolean
     +obtenerDuracionEstadia(): Integer
   }
+
+  class PerfilEgresosResidentesRM <<mart>> {
+    +seriesId: String
+    +nivel: String [region|comuna]
+    +nombre: String
+    +ano: Integer
+    +egresos: Long
+    +poblacion: Long [0..1]
+    +tasaPor10000: Decimal [0..1]
+    +diasEstadaMediana: Decimal
+    +diasEstadaP90: Decimal
+    +proporcionSnss: Decimal
+    +proporcionEstadiaMayorAUnAno: Decimal
+    --
+    +calcularTasa(poblacion: Long): Decimal
+    +esFilaRegional(): Boolean
+  }
+
+  class DesgloseEgresosResidentesRM <<mart>> {
+    +seriesId: String
+    +ano: Integer
+    +dimension: String [sexo|grupo_edad|grupo_diagnostico|prevision]
+    +categoria: String
+    +orden: Integer
+    +egresos: Long
+    --
+    +sumarPorDimension(): Long
+  }
+
+  note as N_Egreso
+    EgresoF00F99: registro publicado disociado, no paciente
+    unico. No tiene identificador de establecimiento ni
+    asociacion con Urgencias. regionResidencia y
+    comunaResidencia son residencia del paciente, no
+    ubicacion del hospital. Se relaciona con el territorio
+    solo de forma agregada (PerfilEgresosResidentesRM).
+  end note
+}
+
+'---------------------------------------------------------------------
+' Camas de psiquiatria y ocupacion (DEIS: dotacion y REM-20)
+'---------------------------------------------------------------------
+package "Camas y ocupacion hospitalaria" {
+  class DotacionCamasSNSS <<registro publicado>> {
+    +servicioSalud: String
+    +establecimientoCodigo: Long
+    +areaFuncionalCodigo: Integer
+    +ano: Integer
+    +camas: Integer [0..1]
+    --
+    +esTotalHospital(): Boolean
+  }
+
+  class DotacionCamasNoSNSS <<registro publicado>> {
+    +seremi: String
+    +ano: Integer
+    +establecimientoCodigo: Long
+    +areaFuncionalCodigo: Integer [0..1]
+    +camas: Integer [0..1]
+    --
+    +esTotalEstablecimiento(): Boolean
+  }
+
+  class CamasPsiquiatriaHospital <<dimension>> {
+    +establecimientoCodigo: Long
+    +comunaCodigo: String [5]
+    +enDotacionSnss: Boolean
+    +reportoId36EnPeriodo: Boolean
+    +anoCamas: Integer
+    +camasPsiquiatria: Decimal [0..1]
+    +nAreasPsiquiatria: Integer
+    --
+    +aportaTotalTerritorial(): Boolean
+  }
+
+  class IndicadorHospitalarioSNSS <<registro publicado>> {
+    +ano: Integer
+    +servicioSaludCodigo: Integer
+    +establecimientoCodigo: Long
+    +nivelCuidadoCodigo: Integer
+    +indicador: String
+    +acumulado: Decimal [0..1]
+    +mensual: Decimal [0..1] [12]
+    --
+    +esConteoAditivo(): Boolean
+  }
+
+  class CategorizacionRiesgoDependencia <<registro publicado>> {
+    +ano: Integer
+    +trimestre: Integer
+    +servicioSalud: String
+    +establecimientoNombre: String
+    +nivelCuidadoCodigo: Integer
+    +total: Long
+    +categorias: Long [12]
+    --
+    +sumarCategorias(): Long
+  }
+
+  class OcupacionPsiquiatriaHospital <<mart>> {
+    +establecimientoCodigo: Long
+    +nivelCuidadoCodigo: Integer
+    +ano: Integer
+    +mes: Integer
+    +diasCamaOcupados: Decimal
+    +diasCamaDisponibles: Decimal
+    +camasLibresPromedio: Decimal
+    +indiceOcupacional: Decimal [0..1]
+    --
+    +calcularCamasLibres(): Decimal
+    +estaSobreCapacidad(): Boolean
+  }
+
+  class ContrasteCamasPsiquiatria <<mart>> {
+    +ano: Integer
+    +egresosResidentesRm: Long
+    +camasEquivalentesEgresos: Decimal
+    +camasEquivalentesEgresosSnss: Decimal
+    +camasOcupadasRem20: Decimal
+    +camasOcupadasRem20SinForense: Decimal
+    +razonEgresosSnssRem20SinForense: Decimal
+    --
+    +calcularRazon(): Decimal
+  }
+
+  note as N_Camas
+    Dotacion anual declarada y estadistica mensual consolidada
+    (REM-20): no es gestion de cupos ni disponibilidad en
+    tiempo real. DotacionCamasSNSS, DotacionCamasNoSNSS e
+    IndicadorHospitalarioSNSS se vinculan con
+    EstablecimientoUrgencia solo por establecimientoCodigo
+    (vinculo logico parcial). Egresos no se relaciona con ellos.
+  end note
+}
+
+'---------------------------------------------------------------------
+' Defunciones y suicidios (residencia)
+'---------------------------------------------------------------------
+package "Suicidios (defunciones)" {
+  class DefuncionNacional <<registro publicado>> {
+    +fuenteId: String
+    +fuenteFila: Long
+    +anoDefuncion: Integer
+    +fechaDefuncion: Date [0..1]
+    +sexo: String
+    +comunaCodigo: String [5]
+    +diag1: String
+    +diag2: String
+    +excepciones: String [0..*]
+    --
+    +esSuicidioX60X84(): Boolean
+  }
+
+  class MartSuicidiosComunaWeekly <<mart>> {
+    +comunaCodigo: String [5]
+    +ano: Integer
+    +semanaDeis: Integer
+    +fechaInicioSemana: Date
+    +diasSemana: Integer
+    +suicidios: Integer
+    +defuncionesTotal: Integer
+    +poblacionAnual: Long
+    +registroCompleto: Boolean
+    --
+    +esSemanaCompleta(): Boolean
+  }
+
+  class PronosticoSuicidios <<salida de modelo>> {
+    +seriesId: String
+    +horizonte: Integer [1..8]
+    +nivel: String [region|comuna]
+    +fechaInicioSemana: Date
+    +pronostico: Decimal
+    +limiteInferior: Decimal
+    +limiteSuperior: Decimal
+    +coberturaEsperada: Decimal [0..1]
+    +modelo: String
+    --
+    +obtenerIntervalo(): Intervalo
+  }
+
+  note as N_Suicidios
+    MartSuicidiosComunaWeekly: la comuna es la de residencia;
+    la relacion con Urgencias es solo ecologica, sin enlace
+    por persona. Un cero es cero registrado, no ausencia
+    de reporte.
+  end note
 }
 
 '---------------------------------------------------------------------
 ' Salida del modelo de demanda
 '---------------------------------------------------------------------
-package "Pronostico de demanda" {
+package "Pronosticos de demanda" {
   class PronosticoDemandaSM <<salida de modelo>> {
     +seriesId: String
     +horizonte: Integer [1..8]
@@ -217,6 +454,40 @@ package "Pronostico de demanda" {
     +estaVigente(entradas): Boolean
     +obtenerIntervalo(): Intervalo
   }
+
+  class PronosticoEstablecimientoSM <<salida de modelo>> {
+    +objetivo: String [atenciones_sm|hospitalizaciones_sm]
+    +seriesId: String
+    +horizonte: Integer [1..8]
+    +establecimientoGlosa: String
+    +comunaCodigo: String [5]
+    +tipoEstablecimientoUrgencia: String
+    +fechaInicioSemana: Date
+    +pronostico: Decimal
+    +limiteInferior: Decimal
+    +limiteSuperior: Decimal
+    +modelo: String
+    +fueraDeRango: Boolean
+    --
+    +esPublicable(): Boolean
+    +obtenerIntervalo(): Intervalo
+  }
+
+  note as N_PronDemanda
+    PronosticoDemandaSM: salida del modelo, no dato observado;
+    atenciones esperadas (eventos), no personas unicas ni
+    prevalencia. La serie regional no es una comuna. No se
+    persisten modelos entrenados: la interfaz es fit_predict,
+    de modo que no hay estimador reutilizable.
+  end note
+
+  note as N_PronEstab
+    PronosticoEstablecimientoSM: salida del modelo, no dato
+    observado; eventos esperados (atenciones u
+    hospitalizaciones), no personas unicas. Sin serie regional.
+    fueraDeRango (mayor al doble del maximo de las ultimas
+    52 semanas) no se publica.
+  end note
 }
 
 '---------------------------------------------------------------------
@@ -238,6 +509,14 @@ package "Contexto oficial por sexo/genero" {
     --
     +obtenerValorPublicado(): String
   }
+
+  note as N_Contexto
+    MartContextoGeneroIndicadorSexo: mart de serving contextual,
+    no individual. sourceId preserva los cuatro inputs y sus
+    semanticas; period no se fuerza a ano. Sin asociacion ni join
+    automatico con Urgencias o Egresos aunque coincidan sexo,
+    ano o geografia.
+  end note
 }
 
 '---------------------------------------------------------------------
@@ -247,63 +526,48 @@ Comuna "1" -- "0..*" PoblacionComunaAnual : proyecta >
 Comuna "1" -- "0..1" PoblacionComunaCenso2024 : registra >
 Comuna "1" -- "0..1" VulnerabilidadComuna : caracteriza >
 Comuna "1" -- "0..*" EstablecimientoUrgencia : ubica >
+Comuna "1" -- "0..1" CoberturaUrgenciaComuna : mide proximidad >
+Comuna "1" -- "0..*" CapaOfertaUrgencia : contiene puntos >
+Comuna "1" -- "0..*" PerfilEgresosResidentesRM : residencia de pacientes >
 
 Comuna "1" -- "0..*" UrgenciasComunaWeekly : agrega >
 Comuna "1" -- "0..*" UrgenciasComunaMonthly : agrega >
 Comuna "1" -- "0..*" UrgenciasComunaEtarioMonthly : desagrega >
 Comuna "1" -- "0..1" MartMVPTerritorialComuna : resume >
+MartSuicidiosComunaWeekly "0..*" -- "1" Comuna : registra residencia <
 
 EstablecimientoUrgencia "0..1" .. "0..*" UrgenciasEstablecimientoMonthly : establecimientoCodigo
 EstablecimientoUrgencia "0..1" .. "0..*" UrgenciasEstablecimientoWeekly : establecimientoCodigo
 
 UrgenciasComunaWeekly "0..*" ..> "0..*" PronosticoDemandaSM : panel de entrada >
+UrgenciasEstablecimientoWeekly "0..*" ..> "0..*" PronosticoEstablecimientoSM : panel de entrada >
+
+DefuncionNacional "0..*" ..> "0..*" MartSuicidiosComunaWeekly : deriva >
+MartSuicidiosComunaWeekly "0..*" ..> "0..*" PronosticoSuicidios : panel de entrada >
 
 '---------------------------------------------------------------------
-' Restricciones semanticas que no se expresan como asociaciones
+' Relaciones de camas y ocupacion
 '---------------------------------------------------------------------
-note right of PronosticoDemandaSM
-  Salida del modelo, no dato observado:
-  atenciones esperadas (eventos), no personas
-  unicas ni prevalencia. La serie regional no
-  es una comuna. No se persisten modelos
-  entrenados: la interfaz es fit_predict, de
-  modo que no hay estimador reutilizable.
-end note
+EstablecimientoUrgencia "1" -- "0..1" CapaOfertaUrgencia : geolocaliza >
+EstablecimientoUrgencia "1" -- "0..1" CamasPsiquiatriaHospital : resume camas >
+EstablecimientoUrgencia "1" -- "0..*" OcupacionPsiquiatriaHospital : registra ocupacion >
 
-note right of UrgenciasEstablecimientoMonthly
-  Vinculo logico por establecimientoCodigo.
-  No es FK garantizada: el mart historico
-  (2021-2025) y la oferta vigente son
-  temporalidades distintas.
-end note
 
-note right of EgresoF00F99
-  Registro publicado disociado, no paciente unico.
-  No tiene identificador de establecimiento ni
-  asociacion con Urgencias. regionResidencia y
-  comunaResidencia son residencia del paciente,
-  no ubicacion del hospital.
-end note
-
-note right of MartContextoGeneroIndicadorSexo
-  Mart de serving contextual, no individual.
-  sourceId preserva los cuatro inputs y sus
-  semanticas; period no se fuerza a ano.
-  Sin asociacion ni join automatico con Urgencias
-  o Egresos aunque coincidan sexo, ano o geografia.
-end note
-
-note bottom of UrgenciasComunaMonthly
-  ID36 es un agregado DEIS de salud mental e incluye
-  ID37 (ideacion suicida, R45.8); no equivale
-  estrictamente a diagnosticos CIE-10 F00-F99.
-end note
+DotacionCamasSNSS "0..*" ..> "0..1" CamasPsiquiatriaHospital : deriva >
+EgresoF00F99 "0..*" ..> "0..*" PerfilEgresosResidentesRM : deriva >
+PerfilEgresosResidentesRM "1" -- "1..*" DesgloseEgresosResidentesRM : desglosa >
+EgresoF00F99 "0..*" ..> "0..*" ContrasteCamasPsiquiatria : deriva >
+OcupacionPsiquiatriaHospital "0..*" ..> "0..*" ContrasteCamasPsiquiatria : deriva >
+IndicadorHospitalarioSNSS "0..*" ..> "0..*" OcupacionPsiquiatriaHospital : deriva >
+DotacionCamasSNSS "0..*" .. "0..*" IndicadorHospitalarioSNSS : nivel de cuidado
+IndicadorHospitalarioSNSS "0..*" .. "0..*" CategorizacionRiesgoDependencia : nombre del establecimiento
 
 legend right
   |= Estereotipo |= Significado |
   |<#F3F8FC> <<dimension>> | Dimension territorial o de referencia |
   |<#EAF4E7> <<mart>> | Agregado analitico con grano declarado |
-  |<#FFF4E5> <<registro publicado>> | Egreso hospitalario disociado |
+  |<#FFF4E5> <<registro publicado>> | Registro publicado disociado (egreso, defuncion, dotacion, indicador) |
+  |<#EEF1FA> <<salida de modelo>> | Pronostico persistido, no dato observado |
   | .. | Dependencia o vinculo logico, no FK estricta |
 endlegend
 

@@ -339,6 +339,47 @@ COMMENT ON TABLE geo.cobertura_urgencia_comuna IS
     'poblacion oficial queda en proporcion_poblacion_representada.';
 
 -- =============================================================================
+-- geo.capa_oferta_urgencia_rm
+-- Grain: 1 fila = 1 establecimiento de geo.dim_oferta_urgencia_rm (174 filas) como
+-- punto georreferenciado (GeoParquet, EPSG 4674; stage build_capa_oferta_urgencia_rm).
+-- El join punto-en-comuna marca, no corrige, las discrepancias con la comuna declarada.
+-- =============================================================================
+CREATE TABLE geo.capa_oferta_urgencia_rm (
+    establecimiento_codigo   BIGINT      NOT NULL,
+    comuna_codigo            CHAR(5)     NOT NULL,
+    comuna_codigo_espacial   CHAR(5),
+    resultado_join_comuna    TEXT        NOT NULL,
+    geom                     geometry(Point, 4674),
+    CONSTRAINT pk_capa_oferta_urgencia_rm PRIMARY KEY (establecimiento_codigo),
+    CONSTRAINT fk_capa_oferta_urgencia_rm_oferta FOREIGN KEY (establecimiento_codigo)
+        REFERENCES geo.dim_oferta_urgencia_rm (establecimiento_codigo),
+    CONSTRAINT fk_capa_oferta_urgencia_rm_comuna_espacial FOREIGN KEY (comuna_codigo_espacial)
+        REFERENCES censo.cartografia_comunal (comuna_codigo),
+    CONSTRAINT ck_capa_oferta_urgencia_rm_resultado CHECK (
+        resultado_join_comuna IN ('coincide', 'difiere', 'fuera_de_rm', 'limite_ambiguo', 'sin_coordenadas')
+    ),
+    CONSTRAINT ck_capa_oferta_urgencia_rm_sin_coordenadas
+        CHECK ((geom IS NULL) = (resultado_join_comuna = 'sin_coordenadas')),
+    CONSTRAINT ck_capa_oferta_urgencia_rm_coincide
+        CHECK (resultado_join_comuna <> 'coincide' OR comuna_codigo = comuna_codigo_espacial)
+);
+
+COMMENT ON TABLE geo.capa_oferta_urgencia_rm IS
+    'Punto de cada establecimiento de la oferta de urgencia. No calcula distancias, '
+    'cobertura ni isocronas. resultado_join_comuna marca las discrepancias entre la '
+    'comuna declarada y la que contiene el punto; no las corrige.';
+COMMENT ON COLUMN geo.capa_oferta_urgencia_rm.comuna_codigo IS
+    'Copia de la comuna de geo.dim_oferta_urgencia_rm; sin FK propia para no duplicar la relacion.';
+COMMENT ON COLUMN geo.capa_oferta_urgencia_rm.comuna_codigo_espacial IS
+    'Comuna de censo.cartografia_comunal que contiene el punto (join punto-en-comuna); '
+    'NULL si el establecimiento no tiene coordenadas.';
+COMMENT ON COLUMN geo.capa_oferta_urgencia_rm.geom IS
+    'Renombrado desde geometry (WKB en el GeoParquet). NULL si no hay coordenadas: no se imputan.';
+
+CREATE INDEX ix_capa_oferta_urgencia_rm_comuna_espacial ON geo.capa_oferta_urgencia_rm (comuna_codigo_espacial);
+CREATE INDEX ix_capa_oferta_urgencia_rm_geom ON geo.capa_oferta_urgencia_rm USING GIST (geom);
+
+-- =============================================================================
 -- urgencias.mart_comuna_weekly
 -- Grain: 1 fila = comuna x ano x semana, calendario DEIS (no ISO). 13362
 -- filas; 51/52 comunas reportan (Vitacura sin reporte de Urgencias).
@@ -604,6 +645,109 @@ CREATE INDEX ix_egresos_f00_f99_nacional_ano ON egresos.egresos_f00_f99_nacional
 CREATE INDEX ix_egresos_f00_f99_nacional_comuna_residencia ON egresos.egresos_f00_f99_nacional (comuna_residencia);
 CREATE INDEX ix_egresos_f00_f99_nacional_diag1 ON egresos.egresos_f00_f99_nacional (diag1);
 
+-- =============================================================================
+-- marts.egresos_f00_f99_rm_anual
+-- Grain: 1 fila = 1 territorio de residencia (52 comunas RM + la region, series_id
+-- 'RM') x 1 ano. 318 filas = 53 x 6 (2020-2025). Derivado de
+-- egresos.egresos_f00_f99_nacional (solo residentes RM) y de la poblacion INE
+-- (stage build_mart_egresos_f00_f99_rm). La comuna es la de residencia del
+-- paciente: no hay enlace por paciente ni por establecimiento.
+-- =============================================================================
+CREATE TABLE marts.egresos_f00_f99_rm_anual (
+    series_id                          TEXT        NOT NULL,
+    ano                                SMALLINT    NOT NULL,
+    nivel                              TEXT        NOT NULL,
+    nombre                             TEXT        NOT NULL,
+    egresos                            BIGINT      NOT NULL,
+    poblacion                          BIGINT,
+    tasa_por_10000                     NUMERIC,
+    dias_estada_mediana                NUMERIC,
+    dias_estada_p90                    NUMERIC,
+    proporcion_snss                    NUMERIC,
+    proporcion_estadia_mayor_a_un_ano  NUMERIC,
+    CONSTRAINT pk_egresos_f00_f99_rm_anual PRIMARY KEY (series_id, ano),
+    CONSTRAINT ck_egresos_f00_f99_rm_anual_nivel CHECK (
+        (nivel = 'region' AND series_id = 'RM')
+        OR (nivel = 'comuna' AND series_id ~ '^[0-9]{5}$')
+    ),
+    CONSTRAINT ck_egresos_f00_f99_rm_anual_egresos CHECK (egresos >= 0),
+    CONSTRAINT ck_egresos_f00_f99_rm_anual_tasa_con_poblacion CHECK ((poblacion IS NULL) = (tasa_por_10000 IS NULL)),
+    CONSTRAINT ck_egresos_f00_f99_rm_anual_estada CHECK (dias_estada_p90 IS NULL OR dias_estada_p90 >= dias_estada_mediana),
+    CONSTRAINT ck_egresos_f00_f99_rm_anual_proporciones CHECK (
+        (proporcion_snss IS NULL OR proporcion_snss BETWEEN 0 AND 1)
+        AND (proporcion_estadia_mayor_a_un_ano IS NULL OR proporcion_estadia_mayor_a_un_ano BETWEEN 0 AND 1)
+    )
+);
+
+COMMENT ON TABLE marts.egresos_f00_f99_rm_anual IS
+    'Perfil anual de las hospitalizaciones F00-F99 de residentes de la RM. Egresos son registros '
+    'publicados, no pacientes unicos. Sin FK a censo.cartografia_comunal: series_id mezcla el '
+    'codigo de comuna con el agregado regional RM, que no es una comuna; las 52 comunas coinciden '
+    'con la cartografia (vinculo logico). Sin enlace por paciente con Urgencias ni por establecimiento.';
+COMMENT ON COLUMN marts.egresos_f00_f99_rm_anual.poblacion IS
+    'NULL en 2020: la proyeccion INE por comuna parte en 2021 (sin denominador, no cero).';
+COMMENT ON COLUMN marts.egresos_f00_f99_rm_anual.proporcion_snss IS
+    'Proporcion de egresos en establecimientos del SNSS; Egresos no identifica cual establecimiento.';
+
+CREATE INDEX ix_egresos_f00_f99_rm_anual_ano ON marts.egresos_f00_f99_rm_anual (ano);
+
+-- =============================================================================
+-- marts.egresos_f00_f99_rm_desglose
+-- Grain: 1 fila = 1 territorio x 1 ano x 1 dimension x 1 categoria. 7399 filas;
+-- dimensiones sexo, grupo_edad, grupo_diagnostico y prevision, con las columnas
+-- armonizadas entre anos. Cada dimension suma el egresos del territorio y ano.
+-- =============================================================================
+CREATE TABLE marts.egresos_f00_f99_rm_desglose (
+    series_id    TEXT       NOT NULL,
+    ano          SMALLINT   NOT NULL,
+    dimension    TEXT       NOT NULL,
+    categoria    TEXT       NOT NULL,
+    orden        SMALLINT   NOT NULL,
+    egresos      BIGINT     NOT NULL,
+    CONSTRAINT pk_egresos_f00_f99_rm_desglose PRIMARY KEY (series_id, ano, dimension, categoria),
+    CONSTRAINT fk_egresos_f00_f99_rm_desglose_anual FOREIGN KEY (series_id, ano)
+        REFERENCES marts.egresos_f00_f99_rm_anual (series_id, ano),
+    CONSTRAINT ck_egresos_f00_f99_rm_desglose_dimension
+        CHECK (dimension IN ('sexo', 'grupo_edad', 'grupo_diagnostico', 'prevision')),
+    CONSTRAINT ck_egresos_f00_f99_rm_desglose_orden CHECK (orden >= 0),
+    CONSTRAINT ck_egresos_f00_f99_rm_desglose_egresos CHECK (egresos >= 0)
+);
+
+COMMENT ON TABLE marts.egresos_f00_f99_rm_desglose IS
+    'Egresos F00-F99 de residentes RM por sexo, grupo de edad, bloque diagnostico y prevision. '
+    'La suma por dimension reconcilia con marts.egresos_f00_f99_rm_anual (verificado en el stage); '
+    'la base no lo impone porque exigiria una restriccion entre filas.';
+COMMENT ON COLUMN marts.egresos_f00_f99_rm_desglose.orden IS
+    'Posicion de presentacion de la categoria dentro de su dimension.';
+
+-- =============================================================================
+-- marts.contraste_camas_psiquiatria_rm
+-- Grain: 1 fila = 1 ano de la RM (6 filas, 2020-2025); no es territorial.
+-- Contrasta las camas de psiquiatria ocupadas segun Egresos (cota superior: la
+-- estada se acota al ano) y segun REM-20 (stage build_contraste_camas_psiquiatria_rm).
+-- =============================================================================
+CREATE TABLE marts.contraste_camas_psiquiatria_rm (
+    ano                                    SMALLINT   NOT NULL,
+    egresos_residentes_rm                  BIGINT     NOT NULL,
+    camas_equivalentes_egresos             NUMERIC    NOT NULL,
+    camas_equivalentes_egresos_snss        NUMERIC    NOT NULL,
+    camas_ocupadas_rem20                   NUMERIC    NOT NULL,
+    camas_ocupadas_rem20_sin_forense       NUMERIC    NOT NULL,
+    razon_egresos_snss_rem20_sin_forense   NUMERIC    NOT NULL,
+    CONSTRAINT pk_contraste_camas_psiquiatria_rm PRIMARY KEY (ano),
+    CONSTRAINT ck_contraste_camas_psiquiatria_rm_no_negativos CHECK (
+        egresos_residentes_rm >= 0 AND camas_equivalentes_egresos >= 0
+        AND camas_equivalentes_egresos_snss >= 0 AND camas_ocupadas_rem20 >= 0
+        AND camas_ocupadas_rem20_sin_forense >= 0 AND razon_egresos_snss_rem20_sin_forense >= 0
+    )
+);
+
+COMMENT ON TABLE marts.contraste_camas_psiquiatria_rm IS
+    'Contraste anual de camas ocupadas de psiquiatria desde dos fuentes independientes. No deben '
+    'coincidir exactamente: Egresos ubica al paciente por residencia y REM-20 por hospital, Egresos '
+    'incluye camas no psiquiatricas y REM-20 incluye areas forenses. Es estadistica consolidada, no '
+    'ocupacion ni disponibilidad en tiempo real.';
+
 
 -- =============================================================================
 -- modeling.pronostico_demanda_sm
@@ -646,6 +790,57 @@ COMMENT ON COLUMN modeling.pronostico_demanda_sm.poblacion_anual IS
 
 CREATE INDEX ix_pronostico_demanda_sm_nivel ON modeling.pronostico_demanda_sm (nivel);
 CREATE INDEX ix_pronostico_demanda_sm_periodo ON modeling.pronostico_demanda_sm (ano, semana);
+
+-- =============================================================================
+-- modeling.pronostico_establecimientos_sm
+-- Grain: 1 fila = 1 establecimiento x objetivo x horizonte pronosticado desde la
+-- ultima semana observada (1096 filas: 125 establecimientos en atenciones_sm y 12
+-- hospitales en hospitalizaciones_sm, 8 horizontes). Output del modelo, no dato
+-- observado: se reemplaza por completo cuando cambia el mart semanal por
+-- establecimiento, la seleccion congelada o el snapshot del anio en curso (stage
+-- forecast_establecimientos_sm). No hay serie regional ni se persisten t, nivel
+-- (constante 'establecimiento') ni el maximo observado reciente.
+-- =============================================================================
+CREATE TABLE modeling.pronostico_establecimientos_sm (
+    objetivo                       TEXT        NOT NULL,
+    series_id                      TEXT        NOT NULL,
+    horizonte                      SMALLINT    NOT NULL,
+    establecimiento_glosa          TEXT        NOT NULL,
+    comuna_codigo                  CHAR(5)     NOT NULL,
+    tipo_establecimiento_urgencia  TEXT        NOT NULL,
+    fecha_inicio_semana            DATE        NOT NULL,
+    y_pred                         DOUBLE PRECISION NOT NULL,
+    y_inferior                     DOUBLE PRECISION NOT NULL,
+    y_superior                     DOUBLE PRECISION NOT NULL,
+    modelo                         TEXT        NOT NULL,
+    fuera_de_rango                 BOOLEAN     NOT NULL,
+    CONSTRAINT pk_pronostico_establecimientos_sm PRIMARY KEY (objetivo, series_id, horizonte),
+    CONSTRAINT ck_pronostico_establecimientos_sm_objetivo
+        CHECK (objetivo IN ('atenciones_sm', 'hospitalizaciones_sm')),
+    CONSTRAINT ck_pronostico_establecimientos_sm_horizonte CHECK (horizonte BETWEEN 1 AND 8),
+    CONSTRAINT ck_pronostico_establecimientos_sm_intervalo
+        CHECK (0 <= y_inferior AND y_inferior <= y_pred AND y_pred <= y_superior),
+    CONSTRAINT ck_pronostico_establecimientos_sm_hospitalizaciones_solo_hospital
+        CHECK (objetivo <> 'hospitalizaciones_sm' OR tipo_establecimiento_urgencia = 'Hospital')
+);
+
+COMMENT ON TABLE modeling.pronostico_establecimientos_sm IS
+    'Pronostico vigente por establecimiento de atenciones de salud mental (ID36) y de '
+    'hospitalizaciones derivadas desde la urgencia (ID42, solo hospitales). Son eventos '
+    'esperados, no personas unicas; ID42 se registra donde ocurrio la urgencia, no donde '
+    'quedo hospitalizado el paciente. La procedencia (fecha, modelo, versiones, SHA256 de '
+    'las entradas y del snapshot del anio en curso) vive en el manifiesto del output.';
+COMMENT ON COLUMN modeling.pronostico_establecimientos_sm.series_id IS
+    'establecimiento_codigo como texto. Sin FK a geo.dim_oferta_urgencia_rm (tipo distinto '
+    'y output regenerable con el snapshot del anio en curso); vinculo logico por el codigo.';
+COMMENT ON COLUMN modeling.pronostico_establecimientos_sm.comuna_codigo IS
+    'Copia de la comuna del establecimiento segun Urgencias; sin FK propia. No es la comuna '
+    'de residencia de los pacientes.';
+COMMENT ON COLUMN modeling.pronostico_establecimientos_sm.fuera_de_rango IS
+    'True si y_pred supera el doble del maximo observado por el establecimiento en las '
+    'ultimas 52 semanas. No se recorta; el consumidor no debe publicarlo.';
+
+CREATE INDEX ix_pronostico_establecimientos_sm_serie ON modeling.pronostico_establecimientos_sm (series_id);
 
 -- =============================================================================
 -- camas.dotacion_snss
