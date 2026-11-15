@@ -1,0 +1,624 @@
+2026-11-15 13:10:34,381 [INFO] Iniciando ejecución del pipeline...
+2026-11-15 13:10:34,383 [INFO] [SIN EVALUACIÓN] Etapas omitidas: benchmark_demanda_sm, evaluate_holdout_demanda_sm, benchmark_establecimientos_sm, evaluate_holdout_establecimientos_sm, benchmark_suicidios, evaluate_holdout_suicidios
+2026-11-15 13:10:34,383 [INFO] --- Evaluando etapa: download_censo ---
+2026-11-15 13:10:34,383 [INFO] [EJECUTANDO] Etapa 'download_censo' -> Módulo: src.data.download_censo
+2026-11-15 13:11:49,327 [INFO] RAW Censo publicado: data/raw/censo/Cartografia_censo2024_Pais_Comunal.parquet
+2026-11-15 13:11:54,944 [INFO] RAW Censo publicado: data/raw/censo/Cartografia_censo2024_Pais_Distrital.parquet
+2026-11-15 13:11:57,663 [INFO] RAW Censo publicado: data/raw/censo/Cartografia_censo2024_Pais_Zonal.parquet
+2026-11-15 13:12:02,171 [INFO] RAW Censo publicado: data/raw/censo/Cartografia_censo2024_Pais_Entidades.parquet
+2026-11-15 13:12:08,377 [INFO] RAW Censo publicado: data/raw/censo/Cartografia_censo2024_Pais_Manzanas.parquet
+2026-11-15 13:12:10,550 [INFO] RAW Censo publicado: data/raw/censo/Diccionario_variables_geograficas_CPV24.xlsx
+2026-11-15 13:12:12,293 [INFO] [EXITO] Etapa 'download_censo' finalizada correctamente.
+
+2026-11-15 13:12:12,293 [INFO] --- Evaluando etapa: download_censo_poblacion ---
+2026-11-15 13:12:12,293 [INFO] [EJECUTANDO] Etapa 'download_censo_poblacion' -> Módulo: src.data.download_censo_poblacion
+2026-11-15 13:12:14,786 [INFO] RAW población comunal Censo publicado: data/raw/censo/D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx
+2026-11-15 13:12:14,915 [INFO] [EXITO] Etapa 'download_censo_poblacion' finalizada correctamente.
+
+2026-11-15 13:12:14,915 [INFO] --- Evaluando etapa: download_poblacion_proyecciones ---
+2026-11-15 13:12:14,915 [INFO] [EJECUTANDO] Etapa 'download_poblacion_proyecciones' -> Módulo: src.data.download_poblacion_proyecciones
+2026-11-15 13:12:19,103 [INFO] RAW de estimaciones/proyecciones de población comunal publicado: data/raw/poblacion/ine_estimaciones_proyecciones_2002_2035_comunas.xlsx
+2026-11-15 13:12:19,214 [INFO] [EXITO] Etapa 'download_poblacion_proyecciones' finalizada correctamente.
+
+2026-11-15 13:12:19,214 [INFO] --- Evaluando etapa: download_pobreza_comunal ---
+2026-11-15 13:12:19,214 [INFO] [EJECUTANDO] Etapa 'download_pobreza_comunal' -> Módulo: src.data.download_pobreza_comunal
+2026-11-15 13:12:21,308 [INFO] RAW de pobreza comunal publicado: data/raw/pobreza/mds_casen_2022_tasa_pobreza_ingresos_comunal.xlsx
+2026-11-15 13:12:21,451 [INFO] [EXITO] Etapa 'download_pobreza_comunal' finalizada correctamente.
+
+2026-11-15 13:12:21,451 [INFO] --- Evaluando etapa: download_dotacion_camas ---
+2026-11-15 13:12:21,452 [INFO] [EJECUTANDO] Etapa 'download_dotacion_camas' -> Módulo: src.data.download_dotacion_camas
+2026-11-15 13:12:23,424 [INFO] RAW de camas (snss) sin cambios respecto de la fuente.
+2026-11-15 13:12:23,966 [INFO] RAW de camas (no_snss) sin cambios respecto de la fuente.
+2026-11-15 13:12:24,775 [INFO] [EXITO] Etapa 'download_dotacion_camas' finalizada correctamente.
+
+2026-11-15 13:12:24,775 [INFO] --- Evaluando etapa: download_estadisticas_hospitalarias ---
+2026-11-15 13:12:24,775 [INFO] [EJECUTANDO] Etapa 'download_estadisticas_hospitalarias' -> Módulo: src.data.download_estadisticas_hospitalarias
+2026-11-15 13:12:50,180 [INFO] RAW REM-20 sin cambios respecto de la fuente: data/raw/estadisticas_hospitalarias/diccionario_rem20.xlsx
+2026-11-15 13:13:16,108 [INFO] RAW REM-20 sin cambios respecto de la fuente: data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2014_2023.xlsx
+2026-11-15 13:13:19,493 [INFO] RAW REM-20 sin cambios respecto de la fuente: data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2024.xlsx
+2026-11-15 13:13:22,307 [INFO] RAW REM-20 sin cambios respecto de la fuente: data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2025.xlsx
+2026-11-15 13:13:23,113 [INFO] RAW REM-20 sin cambios respecto de la fuente: data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t1.xlsx
+2026-11-15 13:13:23,478 [INFO] RAW REM-20 sin cambios respecto de la fuente: data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t2.xlsx
+2026-11-15 13:13:23,843 [INFO] RAW REM-20 sin cambios respecto de la fuente: data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t3.xlsx
+2026-11-15 13:13:24,207 [INFO] RAW REM-20 sin cambios respecto de la fuente: data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2024_t4.xlsx
+2026-11-15 13:13:24,618 [INFO] RAW REM-20 sin cambios respecto de la fuente: data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t1.xlsx
+2026-11-15 13:13:25,013 [INFO] RAW REM-20 sin cambios respecto de la fuente: data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t2.xlsx
+2026-11-15 13:13:25,351 [INFO] RAW REM-20 sin cambios respecto de la fuente: data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t3.xlsx
+2026-11-15 13:13:25,709 [INFO] RAW REM-20 sin cambios respecto de la fuente: data/raw/estadisticas_hospitalarias/categorizacion_riesgo_dependencia_2025_t4.xlsx
+2026-11-15 13:13:30,155 [INFO] RAW REM-20 sin cambios respecto de la fuente: data/raw/estadisticas_hospitalarias/indicadores_hospitalarios_2026.xlsx
+2026-11-15 13:14:03,929 [INFO] [EXITO] Etapa 'download_estadisticas_hospitalarias' finalizada correctamente.
+
+2026-11-15 13:14:03,945 [INFO] --- Evaluando etapa: download_defunciones ---
+2026-11-15 13:14:03,945 [INFO] [EJECUTANDO] Etapa 'download_defunciones' -> Módulo: src.data.download_defunciones
+2026-11-15 13:14:09,238 [INFO] [SKIP] 1990_2023: RAW válidos y registrados
+2026-11-15 13:14:09,238 [INFO] Descargando https://repositoriodeis.minsal.cl/DatosAbiertos/VITALES/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.zip
+2026-11-15 13:14:14,257 [INFO] 2024_2026_10112026: 361592 registros validados; CRC y diccionario legible
+2026-11-15 13:14:15,130 [INFO] 2024_2026_10112026: RAW y procedencia verificados; ZIP eliminado
+2026-11-15 13:14:16,874 [INFO] [EXITO] Etapa 'download_defunciones' finalizada correctamente.
+
+2026-11-15 13:14:16,874 [INFO] --- Evaluando etapa: eda_defunciones ---
+2026-11-15 13:14:16,874 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'eda_defunciones'.
+2026-11-15 13:14:16,874 [INFO] [EJECUTANDO] Etapa 'eda_defunciones' -> Módulo: scripts.eda_defunciones
+2026-11-15 13:14:18,408 [INFO] Perfilando data/raw/defunciones/1990_2023/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv por streaming
+2026-11-15 13:16:56,136 [INFO] Perfilando data/raw/defunciones/2024_2026_10112026/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.csv por streaming
+2026-11-15 13:17:16,284 [INFO] EDA publicado en reports\eda\eda_defunciones_raw.md
+2026-11-15 13:17:16,600 [INFO] [EXITO] Etapa 'eda_defunciones' finalizada correctamente.
+
+2026-11-15 13:17:16,600 [INFO] --- Evaluando etapa: clean_defunciones ---
+2026-11-15 13:17:16,600 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'clean_defunciones'.
+2026-11-15 13:17:16,600 [INFO] [EJECUTANDO] Etapa 'clean_defunciones' -> Módulo: src.data.clean_defunciones
+2026-11-15 13:20:16,059 [INFO] data/raw/defunciones/1990_2023/DEFUNCIONES_FUENTE_DEIS_1990_2023_CIFRAS_OFICIALES.csv: 3182446 filas leídas, 522988 incluidas
+2026-11-15 13:22:51,185 [INFO] data/raw/defunciones/2024_2026_10112026/DEFUNCIONES_FUENTE_DEIS_2024_2026_10112026.csv: 361592 filas leídas, 361592 incluidas
+2026-11-15 13:26:25,175 [INFO] Consolidación verificada: 884580 filas, data/processed/defunciones/defunciones_nacional.parquet
+2026-11-15 13:26:37,079 [INFO] [EXITO] Etapa 'clean_defunciones' finalizada correctamente.
+
+2026-11-15 13:26:37,089 [INFO] --- Evaluando etapa: download_deis ---
+2026-11-15 13:26:37,090 [INFO] [EJECUTANDO] Etapa 'download_deis' -> Módulo: src.data.download_deis_sources
+2026-11-15 13:41:29,030 [INFO] [EXITO] Etapa 'download_deis' finalizada correctamente.
+
+2026-11-15 13:41:29,030 [INFO] --- Evaluando etapa: download_establishments ---
+2026-11-15 13:41:29,030 [INFO] [EJECUTANDO] Etapa 'download_establishments' -> Módulo: src.data.download_establishments
+2026-11-15 13:41:32,278 [INFO] RAW establecimientos publicado: data/raw/deis/establecimientos_salud_actualizado.csv
+2026-11-15 13:41:32,337 [INFO] [EXITO] Etapa 'download_establishments' finalizada correctamente.
+
+2026-11-15 13:41:32,337 [INFO] --- Evaluando etapa: download_contexto_genero ---
+2026-11-15 13:41:32,337 [INFO] [EJECUTANDO] Etapa 'download_contexto_genero' -> Módulo: src.data.download_gender_statistics
+2026-11-15 13:41:36,077 [INFO] [EXITO] Etapa 'download_contexto_genero' finalizada correctamente.
+
+2026-11-15 13:41:36,077 [INFO] --- Evaluando etapa: normalize_contexto_genero ---
+2026-11-15 13:41:36,077 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'normalize_contexto_genero'.
+2026-11-15 13:41:36,077 [INFO] [EJECUTANDO] Etapa 'normalize_contexto_genero' -> Módulo: src.data.normalize_gender_statistics
+2026-11-15 13:41:40,067 [INFO] [EXITO] Etapa 'normalize_contexto_genero' finalizada correctamente.
+
+2026-11-15 13:41:40,067 [INFO] --- Evaluando etapa: build_mart_contexto_genero_indicador_sexo ---
+2026-11-15 13:41:40,067 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_mart_contexto_genero_indicador_sexo'.
+2026-11-15 13:41:40,067 [INFO] [EJECUTANDO] Etapa 'build_mart_contexto_genero_indicador_sexo' -> Módulo: src.data.build_contexto_genero_mart
+Mart contextual por sexo generado: 3,956 filas.
+2026-11-15 13:41:43,038 [INFO] [EXITO] Etapa 'build_mart_contexto_genero_indicador_sexo' finalizada correctamente.
+
+2026-11-15 13:41:43,038 [INFO] --- Evaluando etapa: clean_establishments ---
+2026-11-15 13:41:43,038 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'clean_establishments'.
+2026-11-15 13:41:43,038 [INFO] [EJECUTANDO] Etapa 'clean_establishments' -> Módulo: src.data.clean_establishments
+2026-11-15 13:41:44,840 [INFO] Formato validado -> Encoding: utf-8 | Delimitador: ';'
+2026-11-15 13:41:45,120 [INFO] Filtrados 1192 establecimientos de la Región Metropolitana (código 13)
+2026-11-15 13:41:45,216 [INFO] Guardado dataset nacional procesado: data\processed\establecimientos_salud_clean.parquet
+2026-11-15 13:41:45,247 [INFO] Guardado dataset RM procesado (Parquet): data\processed\establecimientos_rm_clean.parquet
+2026-11-15 13:41:45,289 [INFO] Guardado dataset RM procesado (CSV): data\processed\establecimientos_rm_clean.csv
+
+================================================================================
+REPORTE FINAL: PROCESAMIENTO ESTABLECIMIENTOS RM (DEIS)
+================================================================================
+Ruta CSV Generada:                 .\data\processed\establecimientos_rm_clean.csv
+Archivo existe fÃ­sicamente:        True
+Encoding utilizado en lectura:     utf-8
+Separador utilizado:               ';'
+Filas dataset crudo nacional:      5837
+Filas RegiÃ³n Metropolitana (RM):   1192
+Total Columnas procesadas:         33
+Duplicados cÃ³digo Ãºnico:           0
+Duplicados exactos de fila:        0
+Coordenadas vÃ¡lidas en RM:         1100 (92.3%)
+Coordenadas nulas en RM:           92 (7.7%)
+Coordenadas no numÃ©ricas:          0
+Coordenadas fuera de rango RM:     1 (ClÃ­nica Los Maitenes asignada en AraucanÃ­a en DEIS)
+Rango Latitud RM:                  [-39.2950602, -32.966229]
+Rango Longitud RM:                 [-72.2118258, -70.169449]
+
+ValidaciÃ³n de caracteres en texto:
+  - VerificaciÃ³n 'atencion': CORRECTO
+  - VerificaciÃ³n 'publico': CORRECTO
+  - VerificaciÃ³n 'clinica': CORRECTO
+  - VerificaciÃ³n 'conchali': CORRECTO
+  - VerificaciÃ³n 'region_glosa': CORRECTO
+
+Primeras 3 filas del CSV procesado (columnas clave):
+establecimiento_codigo                             establecimiento_glosa  comuna_glosa                  tipo_establecimiento_glosa tiene_servicio_urgencia    latitud   longitud
+                109011                    PRAIS (SS Metropolitano Norte) Independencia                                        Otro                      NO -33.429013 -70.655438
+                109012 ClÃ­nica Dental MÃ³vil Simple. Pat. PW4082 (TilTil)        Tiltil              Unidad de Procedimientos MÃ³vil                      NO -33.428960 -70.655492
+                109606                               COSAM Independencia Independencia Centro Comunitario de Salud Mental  (COSAM)                      NO -33.414664 -70.654255
+================================================================================
+
+2026-11-15 13:41:45,610 [INFO] [EXITO] Etapa 'clean_establishments' finalizada correctamente.
+
+2026-11-15 13:41:45,610 [INFO] --- Evaluando etapa: clean_censo ---
+2026-11-15 13:41:45,610 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'clean_censo'.
+2026-11-15 13:41:45,610 [INFO] [EJECUTANDO] Etapa 'clean_censo' -> Módulo: src.data.clean_censo_comunas
+--- Comunal ---
+Archivo generado: data/processed/censo/Cartografia_censo2024_RM_Comunal.parquet
+Filas: 52
+Comunas únicas: 52
+¿Están las 52 comunas?: Sí
+CRS: SIRGAS 2000 (EPSG:4674)
+Geometrías inválidas: 0
+Estado de validación: APROBADO
+--- Distrital ---
+Archivo generado: data/processed/censo/Cartografia_censo2024_RM_Distrital.parquet
+Filas: 451
+Comunas representadas: 52 (¿52/52?: Sí)
+CRS: SIRGAS 2000 (EPSG:4674)
+Geometrías inválidas: 0
+Estado de validación: APROBADO
+--- Zonal ---
+Archivo generado: data/processed/censo/Cartografia_censo2024_RM_Zonal.parquet
+Filas: 1865
+Comunas representadas: 51 (¿52/52?: No)
+CRS: SIRGAS 2000 (EPSG:4674)
+Geometrías inválidas: 0
+Estado de validación: APROBADO
+--- Entidades ---
+Archivo generado: data/processed/censo/Cartografia_censo2024_RM_Entidades.parquet
+Filas: 2072
+Comunas representadas: 26 (¿52/52?: No)
+CRS: SIRGAS 2000 (EPSG:4674)
+Geometrías inválidas: 0
+Estado de validación: APROBADO
+--- Manzanas ---
+Archivo generado: data/processed/censo/Cartografia_censo2024_RM_Manzanas.parquet
+Filas: 66873
+Comunas representadas: 52 (¿52/52?: Sí)
+CRS: SIRGAS 2000 (EPSG:4674)
+Geometrías inválidas: 6
+Estado de validación: RECHAZADO
+2026-11-15 13:41:55,726 [INFO] [EXITO] Etapa 'clean_censo' finalizada correctamente.
+
+2026-11-15 13:41:55,726 [INFO] --- Evaluando etapa: clean_censo_poblacion ---
+2026-11-15 13:41:55,726 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'clean_censo_poblacion'.
+2026-11-15 13:41:55,727 [INFO] [EJECUTANDO] Etapa 'clean_censo_poblacion' -> Módulo: src.data.clean_censo_poblacion
+2026-11-15 13:41:58,426 [INFO] Dimensión de población comunal generada: {'archivo_generado': 'data/processed/censo/dim_poblacion_comuna_censo2024.parquet', 'filas': 52, 'poblacion_total_rm': 7400741, 'comunas_unicas': 52}
+2026-11-15 13:41:58,677 [INFO] [EXITO] Etapa 'clean_censo_poblacion' finalizada correctamente.
+
+2026-11-15 13:41:58,677 [INFO] --- Evaluando etapa: clean_poblacion_proyecciones ---
+2026-11-15 13:41:58,677 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'clean_poblacion_proyecciones'.
+2026-11-15 13:41:58,677 [INFO] [EJECUTANDO] Etapa 'clean_poblacion_proyecciones' -> Módulo: src.data.clean_poblacion_proyecciones
+2026-11-15 13:42:18,798 [INFO] Dimensión anual de población comunal generada: {'archivo_generado': 'data/processed/censo/dim_poblacion_comuna_anual.parquet', 'filas': 260, 'anos': [2021, 2022, 2023, 2024, 2025], 'comunas_unicas': 52}
+2026-11-15 13:42:19,034 [INFO] [EXITO] Etapa 'clean_poblacion_proyecciones' finalizada correctamente.
+
+2026-11-15 13:42:19,034 [INFO] --- Evaluando etapa: clean_pobreza_comunal ---
+2026-11-15 13:42:19,034 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'clean_pobreza_comunal'.
+2026-11-15 13:42:19,034 [INFO] [EJECUTANDO] Etapa 'clean_pobreza_comunal' -> Módulo: src.data.clean_pobreza_comunal
+2026-11-15 13:42:35,551 [INFO] Dimensión de vulnerabilidad comunal generada: {'archivo_generado': 'data/processed/pobreza/dim_vulnerabilidad_comuna.parquet', 'filas': 52, 'ano_referencia': 2022, 'comunas_unicas': 52}
+2026-11-15 13:42:35,788 [INFO] [EXITO] Etapa 'clean_pobreza_comunal' finalizada correctamente.
+
+2026-11-15 13:42:35,788 [INFO] --- Evaluando etapa: clean_dotacion_camas ---
+2026-11-15 13:42:35,788 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'clean_dotacion_camas'.
+2026-11-15 13:42:35,788 [INFO] [EJECUTANDO] Etapa 'clean_dotacion_camas' -> Módulo: src.data.clean_dotacion_camas
+2026-11-15 13:42:38,813 [WARNING] Libro no SNSS: el hospital 200063 figura más de una vez en 2024 (Metropolitana, Metropolitano); se conservan todas las filas.
+2026-11-15 13:42:38,813 [WARNING] Libro no SNSS: el hospital 200063 figura más de una vez en 2025 (Metropolitana, Metropolitano); se conservan todas las filas.
+2026-11-15 13:42:40,076 [INFO] Dotación de camas generada: {'archivos_generados': ['data/processed/camas/dotacion_camas_snss.parquet', 'data/processed/camas/dotacion_camas_no_snss.parquet'], 'filas_snss': 1694, 'filas_no_snss': 4631, 'totales_que_no_coinciden': 0, 'establecimientos_repetidos': 2}
+2026-11-15 13:42:40,367 [INFO] [EXITO] Etapa 'clean_dotacion_camas' finalizada correctamente.
+
+2026-11-15 13:42:40,367 [INFO] --- Evaluando etapa: clean_estadisticas_hospitalarias ---
+2026-11-15 13:42:40,367 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'clean_estadisticas_hospitalarias'.
+2026-11-15 13:42:40,367 [INFO] [EJECUTANDO] Etapa 'clean_estadisticas_hospitalarias' -> Módulo: src.data.clean_estadisticas_hospitalarias
+2026-11-15 13:44:22,085 [INFO] Estadísticas hospitalarias generadas: {'archivos_generados': ['data/processed/estadisticas_hospitalarias/indicadores_hospitalarios_snss.parquet', 'data/processed/estadisticas_hospitalarias/categorizacion_riesgo_dependencia.parquet'], 'filas_indicadores': 160974, 'filas_agregadas_excluidas': 27185, 'filas_categorizacion': 8834, 'meses_por_ano': {2014: 12, 2015: 12, 2016: 12, 2017: 12, 2018: 12, 2019: 12, 2020: 12, 2021: 12, 2022: 12, 2023: 12, 2024: 12, 2025: 12, 2026: 9}, 'agregados_comparados': {'pais': 78, 'servicio': 2262, 'establecimiento': 15138}, 'discrepancias_agregados': 0, 'promedio_acumulado_no_aditivo': 415, 'acumulado_distinto_de_meses': 0, 'categorizacion_total_distinto': 0}
+2026-11-15 13:44:22,627 [INFO] [EXITO] Etapa 'clean_estadisticas_hospitalarias' finalizada correctamente.
+
+2026-11-15 13:44:22,627 [INFO] --- Evaluando etapa: eda_estadisticas_hospitalarias ---
+2026-11-15 13:44:22,627 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'eda_estadisticas_hospitalarias'.
+2026-11-15 13:44:22,627 [INFO] [EJECUTANDO] Etapa 'eda_estadisticas_hospitalarias' -> Módulo: scripts.eda_estadisticas_hospitalarias
+Generado: reports/eda/eda_estadisticas_hospitalarias.md y reports/eda/eda_estadisticas_hospitalarias_resumen.json
+2026-11-15 13:46:09,393 [INFO] [EXITO] Etapa 'eda_estadisticas_hospitalarias' finalizada correctamente.
+
+2026-11-15 13:46:09,393 [INFO] --- Evaluando etapa: build_catalogs ---
+2026-11-15 13:46:09,393 [INFO] [EJECUTANDO] Etapa 'build_catalogs' -> Módulo: src.data.build_catalogs
+Catálogo de Salud Mental guardado en data\processed\urgencias\catalogo_f00_f99.csv
+2026-11-15 13:46:12,102 [INFO] [EXITO] Etapa 'build_catalogs' finalizada correctamente.
+
+2026-11-15 13:46:12,102 [INFO] --- Evaluando etapa: clean_urgencias ---
+2026-11-15 13:46:12,102 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'clean_urgencias'.
+2026-11-15 13:46:12,102 [INFO] [EJECUTANDO] Etapa 'clean_urgencias' -> Módulo: src.data.clean_urgencias
+Normalizando Atenciones de Urgencia 2020...
+  Completado: RAW=6,446,646 -> PROCESSED RM=1,720,000
+Normalizando Atenciones de Urgencia 2021...
+  Completado: RAW=8,816,240 -> PROCESSED RM=2,130,680
+Normalizando Atenciones de Urgencia 2022...
+  Completado: RAW=8,926,307 -> PROCESSED RM=2,140,040
+Normalizando Atenciones de Urgencia 2023...
+  Completado: RAW=8,899,080 -> PROCESSED RM=2,148,520
+Normalizando Atenciones de Urgencia 2024...
+  Completado: RAW=8,973,229 -> PROCESSED RM=2,141,400
+Normalizando Atenciones de Urgencia 2025...
+  Completado: RAW=9,127,869 -> PROCESSED RM=2,177,404
+Normalizando Atenciones de Urgencia 2026...
+  Completado: RAW=8,179,008 -> PROCESSED RM=1,946,188
+
+Proceso de normalización finalizado exitosamente.
+Año 2020: RAW 6,446,646 -> PROCESSED RM 1,720,000 en data/processed/urgencias/urgencias_rm_2020.parquet
+Año 2021: RAW 8,816,240 -> PROCESSED RM 2,130,680 en data/processed/urgencias/urgencias_rm_2021.parquet
+Año 2022: RAW 8,926,307 -> PROCESSED RM 2,140,040 en data/processed/urgencias/urgencias_rm_2022.parquet
+Año 2023: RAW 8,899,080 -> PROCESSED RM 2,148,520 en data/processed/urgencias/urgencias_rm_2023.parquet
+Año 2024: RAW 8,973,229 -> PROCESSED RM 2,141,400 en data/processed/urgencias/urgencias_rm_2024.parquet
+Año 2025: RAW 9,127,869 -> PROCESSED RM 2,177,404 en data/processed/urgencias/urgencias_rm_2025.parquet
+Año 2026: RAW 8,179,008 -> PROCESSED RM 1,946,188 en data/processed/urgencias/urgencias_rm_2026.parquet
+2026-11-15 14:02:43,676 [INFO] [EXITO] Etapa 'clean_urgencias' finalizada correctamente.
+
+2026-11-15 14:02:43,684 [INFO] --- Evaluando etapa: clean_egresos ---
+2026-11-15 14:02:43,684 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'clean_egresos'.
+2026-11-15 14:02:43,685 [INFO] [EJECUTANDO] Etapa 'clean_egresos' -> Módulo: src.data.clean_egresos
+2026-11-15 14:02:46,461 [INFO] Iniciando normalización de Egresos Hospitalarios...
+2026-11-15 14:02:46,461 [INFO] Normalizando Egresos 2020...
+2026-11-15 14:03:22,577 [INFO]   Completado 2020: 1,330,477 filas.
+2026-11-15 14:03:22,577 [INFO] Normalizando Egresos 2021...
+2026-11-15 14:04:02,235 [INFO]   Completado 2021: 1,467,062 filas.
+2026-11-15 14:04:02,235 [INFO] Normalizando Egresos 2022...
+2026-11-15 14:04:58,546 [INFO]   Completado 2022: 1,597,118 filas.
+2026-11-15 14:04:58,546 [INFO] Normalizando Egresos 2023...
+2026-11-15 14:05:52,865 [INFO]   Completado 2023: 1,612,267 filas.
+2026-11-15 14:05:52,865 [INFO] Normalizando Egresos 2024...
+2026-11-15 14:06:52,445 [INFO]   Completado 2024: 1,667,349 filas.
+2026-11-15 14:06:52,445 [INFO] Normalizando Egresos 2025...
+2026-11-15 14:07:54,970 [INFO]   Completado 2025: 1,705,514 filas.
+2026-11-15 14:07:54,970 [INFO] Proceso finalizado exitosamente.
+2026-11-15 14:07:55,853 [INFO] [EXITO] Etapa 'clean_egresos' finalizada correctamente.
+
+2026-11-15 14:07:55,854 [INFO] --- Evaluando etapa: build_egresos_f00_f99 ---
+2026-11-15 14:07:55,854 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_egresos_f00_f99'.
+2026-11-15 14:07:55,854 [INFO] [EJECUTANDO] Etapa 'build_egresos_f00_f99' -> Módulo: src.data.build_egresos_f00_f99
+Dataset F00-F99 de Egresos generado: 218,794 filas nacionales 2020-2025; catálogo CIE-10 F00-F99: 407 subcategorías.
+2026-11-15 14:08:09,501 [INFO] [EXITO] Etapa 'build_egresos_f00_f99' finalizada correctamente.
+
+2026-11-15 14:08:09,501 [INFO] --- Evaluando etapa: eda_establishments ---
+2026-11-15 14:08:09,501 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'eda_establishments'.
+2026-11-15 14:08:09,501 [INFO] [EJECUTANDO] Etapa 'eda_establishments' -> Módulo: scripts.eda_establecimientos_rm
+EDA y diagnóstico de coordenadas ejecutado exitosamente.
+Total afectados: 92
+Ambas faltantes: 92
+Solo latitud:    0
+Solo longitud:   0
+CSV generado:    reports/eda/registros_sin_coordenadas.csv
+Informe:         reports/eda/eda_establecimientos_rm.md
+2026-11-15 14:08:12,306 [INFO] [EXITO] Etapa 'eda_establishments' finalizada correctamente.
+
+2026-11-15 14:08:12,309 [INFO] --- Evaluando etapa: eda_urgencias ---
+2026-11-15 14:08:12,309 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'eda_urgencias'.
+2026-11-15 14:08:12,309 [INFO] [EJECUTANDO] Etapa 'eda_urgencias' -> Módulo: scripts.eda_demanda_urgencias_rm
+Maestro de establecimientos RM cargado: 1192 centros.
+Total registros cargados RM: 14,404,232
+
+=== FASE 0: INVENTARIO Y ESTRUCTURA POR AÃ‘O ===
+ ano   filas  estabs_unicos  comunas_unicas  causas_unicas  fecha_min  fecha_max  semanas_min  semanas_max  total_atenciones_sum_todas_filas
+2020 1720000            142              51             40 01/01/2020 31/12/2020            1           53                          12044779
+2021 2130680            148              51             40 01/01/2021 31/12/2021            1           53                          15291413
+2022 2140040            147              51             40 01/01/2022 31/12/2022            1           52                          21724202
+2023 2148520            148              51             40 01/01/2023 31/12/2023            1           52                          21724369
+2024 2141400            149              51             40 01/01/2024 31/12/2024            1           52                          22115039
+2025 2177404            152              51             41 01/01/2025 31/12/2025            1           53                          21823335
+2026 1946188            160              52             41 01/01/2026 14/11/2026            1           53                          18350301
+
+=== FASE 1: VALIDACIÃ“N DEL MÃ‰TODO DE CONTEO ===
+ ano  id1_seccion1_total  id34_total_demanda  id36_total_salud_mental  suma_comp_sm_37_a_41  diff_sm
+2020             3818942             3033580                     1266                  1266        0
+2021             4476342             4766403                    81130                 81130        0
+2022             6120119             6739121                    95194                 95194        0
+2023             6037435             6559687                   104919                104919        0
+2024             6135659             6692790                   107648                107648        0
+2025             6070915             6595444                   112504                112504        0
+2026             5155100             5588845                    99032                 99032        0
+
+=== TABLA 1: DEMANDA ANUAL GENERAL RM (ID 1) ===
+ ano  atenciones_totales  establecimientos_unicos  comunas_unicas  semanas_observadas  dias_observados fecha_inicio fecha_termino  promedio_semanal  mediana_semanal  minimo_semanal  maximo_semanal  promedio_diario
+2020             3818942                      142              51                  53              366   01/01/2020    31/12/2020           72055.5          65512.0           41591          125159          10434.3
+2021             4476342                      148              51                  53              365   01/01/2021    31/12/2021           84459.3          82565.0           25548          109097          12264.0
+2022             6120119                      147              51                  52              365   01/01/2022    31/12/2022          117694.6         118651.0           86457          142230          16767.4
+2023             6037435                      148              51                  52              365   01/01/2023    31/12/2023          116104.5         117700.5           82553          143563          16540.9
+2024             6135659                      149              51                  52              366   01/01/2024    31/12/2024          117993.4         121640.0           88916          147806          16764.1
+2025             6070915                      152              51                  53              365   01/01/2025    31/12/2025          114545.6         119478.0           60250          136805          16632.6
+2026             5155100                      160              52                  46              318   01/01/2026    14/11/2026          112067.4         114569.5           46172          134368          16211.0
+
+=== TABLA 3: DEMANDA GENERAL POR COMUNA (2021-2026) ===
+ano  ranking comuna_codigo  ... pct_participacion_rm  establecimientos_reportantes
+0          1         13201  ...                 8.25                             9
+1          2         13110  ...                 5.18                            10
+2          3         13401  ...                 4.99                             8
+3          4         13101  ...                 4.50                             6
+4          5         13119  ...                 3.95                             5
+5          6         13131  ...                 3.87                             4
+6          7         13130  ...                 3.66                             3
+7          8         13103  ...                 3.53                             4
+8          9         13108  ...                 3.48                             4
+9         10         13122  ...                 3.28                             5
+
+[10 rows x 6 columns]
+
+=== TABLA 4 & 5: ESTABLECIMIENTOS Y TIPOLOGÃ�A ===
+Top 10 Establecimientos por Demanda:
+ano  ranking establecimiento_codigo  ... total_2021_2026 pct_participacion_rm
+0          1                 114101  ...          879247                 2.59
+1          2                 110120  ...          701659                 2.06
+2          3                 114103  ...          634676                 1.87
+3          4                 111101  ...          579234                 1.70
+4          5                 110860  ...          478416                 1.41
+5          6                 111195  ...          473802                 1.39
+6          7                 113130  ...          469652                 1.38
+7          8                 109101  ...          450560                 1.33
+8          9                 113100  ...          449441                 1.32
+9         10                 110867  ...          441941                 1.30
+
+[10 rows x 7 columns]
+
+Demanda por Tipo de Establecimiento:
+                        tipo_establecimiento_maestro  ...  promedio_por_establecimiento
+0   Servicio de AtenciÃ³n Primaria de Urgencia (SAPU)  ...                      186571.3
+1                                           Hospital  ...                      342398.8
+2  Servicio de AtenciÃ³n Primaria de Urgencia de A...  ...                      252416.7
+3                   Servicio de Urgencia Rural (SUR)  ...                       50036.9
+4                  Centro de Salud Familiar (CESFAM)  ...                       19080.0
+
+[5 rows x 5 columns]
+
+=== TABLA 6 & 7: DEMANDA SALUD MENTAL F00-F99 ANUAL Y PARTICIPACIÃ“N ===
+ ano  atenciones_totales_urgencia  atenciones_f00_f99  pct_f00_f99_sobre_total  promedio_semanal_sm  mediana_semanal_sm  minimo_semanal_sm  maximo_semanal_sm  establecimientos_con_sm  comunas_con_sm
+2020                      3818942                1266                     0.03                 23.9                 8.0                  0                345                       69              37
+2021                      4476342               81130                     1.81               1530.8              1616.0                236               2001                      142              51
+2022                      6120119               95194                     1.56               1830.7              1880.5               1401               2230                      144              51
+2023                      6037435              104919                     1.74               2017.7              2040.0               1643               2266                      144              51
+2024                      6135659              107648                     1.75               2070.2              2095.5               1647               2660                      146              51
+2025                      6070915              112504                     1.85               2122.7              2155.0               1220               2452                      147              51
+2026                      5155100               99032                     1.92               2152.9              2221.5                922               2561                      158              52
+
+=== TABLA 8: F00-F99 POR COMUNA (2021-2026) ===
+ano  ranking_volumen_sm  ... prop_sm_en_comuna_pct
+0                     1  ...                 16.65
+1                     2  ...                  1.25
+2                     3  ...                  2.16
+3                     4  ...                  1.55
+4                     5  ...                  1.71
+5                     6  ...                  1.30
+6                     7  ...                  1.63
+7                     8  ...                  1.22
+8                     9  ...                  2.21
+9                    10  ...                  1.43
+
+[10 rows x 6 columns]
+
+=== TABLA 9: F00-F99 POR ESTABLECIMIENTO ===
+Top 10 Establecimientos por Volumen de Salud Mental:
+ano  ranking_volumen_sm  ... prop_sm_en_estab_pct
+0                     1  ...                95.71
+1                     2  ...                 4.48
+2                     3  ...                 2.49
+3                     4  ...                 2.88
+4                     5  ...                 1.87
+5                     6  ...                 2.79
+6                     7  ...                 1.18
+7                     8  ...                 1.81
+8                     9  ...                 2.08
+9                    10  ...                 2.62
+
+[10 rows x 7 columns]
+
+=== TABLA 10: DESAGREGACIÃ“N DE CAUSAS DE SALUD MENTAL ===
+ id_causa                                                            glosa_estandar  total_2021_2026  pct_sobre_id36
+       35        Lesiones autoinfligidas intencionalmente (X60-X84) [Causa Externa]            16443            2.74
+       36           TOTAL CAUSAS DE TRASTORNOS MENTALES (F00-F99) [Macro-agregador]           600427          100.00
+       37                                IdeaciÃ³n Suicida (R45.8) [SÃ­ntoma / Signo]            33992            5.66
+       38            Trastornos debidos al uso de sustancias psicoactivas (F10-F19)            59110            9.84
+       39                                Trastornos del Humor (Afectivos) (F30-F39)            51154            8.52
+       40                    Trastornos neurÃ³ticos, estrÃ©s y somatomorfos (F40-F48)           325254           54.17
+       41          Otros trastornos mentales no contenidos en categorÃ­as anteriores           130917           21.80
+       42 Hospitalizaciones derivadas por trastornos mentales (F00-F99) [SecciÃ³n 2]            33336            5.55
+
+=== TABLA 12: CONTROLES DE CONSISTENCIA Y DOBLE CONTEO ===
+ ano  total_id1  suma_semanas_id1  diff_semanas  suma_comunas_id1  diff_comunas  suma_estabs_id1  diff_estabs  total_sm_id36  suma_comp_sm  diff_sm
+2021    4476342           4476342             0           4476342             0          4476342            0          81130         81130        0
+2022    6120119           6120119             0           6120119             0          6120119            0          95194         95194        0
+2023    6037435           6037435             0           6037435             0          6037435            0         104919        104919        0
+2024    6135659           6135659             0           6135659             0          6135659            0         107648        107648        0
+2025    6070915           6070915             0           6070915             0          6070915            0         112504        112504        0
+2026    5155100           5155100             0           5155100             0          5155100            0          99032         99032        0
+
+=== TABLA 11: COBERTURA DE ESTABLECIMIENTOS CONTRA MAESTRO ===
+ ano  estabs_reportantes  encontrados_maestro  no_encontrados  pct_cobertura  con_coordenadas  sin_coordenadas
+2020                 142                  142               0          100.0              140                2
+2021                 148                  148               0          100.0              146                2
+2022                 147                  147               0          100.0              145                2
+2023                 148                  148               0          100.0              146                2
+2024                 149                  149               0          100.0              147                2
+2025                 152                  152               0          100.0              150                2
+2026                 160                  160               0          100.0              158                2
+
+Â¡EjecuciÃ³n completada con Ã©xito!
+2026-11-15 14:12:56,652 [INFO] [EXITO] Etapa 'eda_urgencias' finalizada correctamente.
+
+2026-11-15 14:12:56,655 [INFO] --- Evaluando etapa: profile_urgencias_sm_coverage ---
+2026-11-15 14:12:56,655 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'profile_urgencias_sm_coverage'.
+2026-11-15 14:12:56,655 [INFO] [EJECUTANDO] Etapa 'profile_urgencias_sm_coverage' -> Módulo: src.data.profile_urgencias_sm_coverage
+Perfil ID 36 generado: 51 comunas, 262 semanas DEIS por comuna.
+2026-11-15 14:13:27,919 [INFO] [EXITO] Etapa 'profile_urgencias_sm_coverage' finalizada correctamente.
+
+2026-11-15 14:13:27,919 [INFO] --- Evaluando etapa: build_urgencias_comuna_marts ---
+2026-11-15 14:13:27,919 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_urgencias_comuna_marts'.
+2026-11-15 14:13:27,919 [INFO] [EJECUTANDO] Etapa 'build_urgencias_comuna_marts' -> Módulo: src.data.build_urgencias_comuna_marts
+Marts de Urgencias generados: weekly=13,362 filas, monthly=3,060 filas.
+2026-11-15 14:13:36,482 [INFO] [EXITO] Etapa 'build_urgencias_comuna_marts' finalizada correctamente.
+
+2026-11-15 14:13:36,482 [INFO] --- Evaluando etapa: build_urgencias_establecimiento_mart ---
+2026-11-15 14:13:36,485 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_urgencias_establecimiento_mart'.
+2026-11-15 14:13:36,485 [INFO] [EJECUTANDO] Etapa 'build_urgencias_establecimiento_mart' -> Módulo: src.data.build_urgencias_establecimiento_mart
+Mart de Urgencias por establecimiento generado: 8,857 filas.
+2026-11-15 14:13:44,386 [INFO] [EXITO] Etapa 'build_urgencias_establecimiento_mart' finalizada correctamente.
+
+2026-11-15 14:13:44,386 [INFO] --- Evaluando etapa: build_urgencias_establecimiento_weekly_mart ---
+2026-11-15 14:13:44,386 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_urgencias_establecimiento_weekly_mart'.
+2026-11-15 14:13:44,386 [INFO] [EJECUTANDO] Etapa 'build_urgencias_establecimiento_weekly_mart' -> Módulo: src.data.build_urgencias_establecimiento_weekly_mart
+Mart semanal por establecimiento generado: 38,641 filas, 152 establecimientos.
+2026-11-15 14:13:52,416 [INFO] [EXITO] Etapa 'build_urgencias_establecimiento_weekly_mart' finalizada correctamente.
+
+2026-11-15 14:13:52,416 [INFO] --- Evaluando etapa: eda_mart_urgencias_establecimiento_weekly ---
+2026-11-15 14:13:52,420 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'eda_mart_urgencias_establecimiento_weekly'.
+2026-11-15 14:13:52,420 [INFO] [EJECUTANDO] Etapa 'eda_mart_urgencias_establecimiento_weekly' -> Módulo: scripts.eda_mart_urgencias_establecimiento_weekly
+EDA escrito en reports/eda/eda_mart_urgencias_establecimiento_weekly.md
+2026-11-15 14:13:55,235 [INFO] [EXITO] Etapa 'eda_mart_urgencias_establecimiento_weekly' finalizada correctamente.
+
+2026-11-15 14:13:55,235 [INFO] --- Evaluando etapa: build_urgencias_comuna_etario_mart ---
+2026-11-15 14:13:55,235 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_urgencias_comuna_etario_mart'.
+2026-11-15 14:13:55,235 [INFO] [EJECUTANDO] Etapa 'build_urgencias_comuna_etario_mart' -> Módulo: src.data.build_urgencias_comuna_etario_mart
+Mart etario comunal de Urgencias generado: 15,300 filas.
+2026-11-15 14:14:09,259 [INFO] [EXITO] Etapa 'build_urgencias_comuna_etario_mart' finalizada correctamente.
+
+2026-11-15 14:14:09,259 [INFO] --- Evaluando etapa: build_dim_oferta_urgencia_rm ---
+2026-11-15 14:14:09,259 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_dim_oferta_urgencia_rm'.
+2026-11-15 14:14:09,259 [INFO] [EJECUTANDO] Etapa 'build_dim_oferta_urgencia_rm' -> Módulo: src.data.build_dim_oferta_urgencia_rm
+2026-11-15 14:14:15,991 [INFO] Dimensión de oferta de urgencia generada: 175 filas -> {'Servicio de Atención Primaria de Urgencia (SAPU)': 91, 'Hospital': 45, 'Servicio de Atención Primaria de Urgencia de Alta Resolutividad (SAR)': 26, 'Servicio de Urgencia Rural (SUR)': 12, 'Centro de Salud Familiar (CESFAM)': 1}. Excepción CEAR: 1. Sin coordenadas: 0.
+2026-11-15 14:14:16,376 [INFO] [EXITO] Etapa 'build_dim_oferta_urgencia_rm' finalizada correctamente.
+
+2026-11-15 14:14:16,376 [INFO] --- Evaluando etapa: build_dim_camas_psiquiatria_hospital_rm ---
+2026-11-15 14:14:16,378 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_dim_camas_psiquiatria_hospital_rm'.
+2026-11-15 14:14:16,378 [INFO] [EJECUTANDO] Etapa 'build_dim_camas_psiquiatria_hospital_rm' -> Módulo: src.data.build_dim_camas_psiquiatria_hospital_rm
+2026-11-15 14:14:18,735 [INFO] Publicado data/processed/camas/dim_camas_psiquiatria_hospital_rm.parquet: 45 hospitales, 34 en dotación SNSS, 13 con camas de psiquiatría (2025)
+2026-11-15 14:14:18,991 [INFO] [EXITO] Etapa 'build_dim_camas_psiquiatria_hospital_rm' finalizada correctamente.
+
+2026-11-15 14:14:18,995 [INFO] --- Evaluando etapa: build_mart_ocupacion_psiquiatria_hospital_rm ---
+2026-11-15 14:14:18,995 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_mart_ocupacion_psiquiatria_hospital_rm'.
+2026-11-15 14:14:18,995 [INFO] [EJECUTANDO] Etapa 'build_mart_ocupacion_psiquiatria_hospital_rm' -> Módulo: src.data.build_mart_ocupacion_psiquiatria_hospital_rm
+2026-11-15 14:14:24,761 [INFO] Mart de ocupación de psiquiatría generado: {'filas': 3444, 'hospitales': 14, 'areas': 28, 'desde': '2014', 'ultimo_mes': '2026-09'}
+2026-11-15 14:14:25,176 [INFO] [EXITO] Etapa 'build_mart_ocupacion_psiquiatria_hospital_rm' finalizada correctamente.
+
+2026-11-15 14:14:25,181 [INFO] --- Evaluando etapa: eda_mart_ocupacion_psiquiatria_hospital_rm ---
+2026-11-15 14:14:25,181 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'eda_mart_ocupacion_psiquiatria_hospital_rm'.
+2026-11-15 14:14:25,181 [INFO] [EJECUTANDO] Etapa 'eda_mart_ocupacion_psiquiatria_hospital_rm' -> Módulo: scripts.eda_mart_ocupacion_psiquiatria_hospital_rm
+Generado: reports/eda/eda_mart_ocupacion_psiquiatria_hospital_rm.md
+2026-11-15 14:14:35,891 [INFO] [EXITO] Etapa 'eda_mart_ocupacion_psiquiatria_hospital_rm' finalizada correctamente.
+
+2026-11-15 14:14:35,891 [INFO] --- Evaluando etapa: build_mart_egresos_f00_f99_rm ---
+2026-11-15 14:14:35,891 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_mart_egresos_f00_f99_rm'.
+2026-11-15 14:14:35,891 [INFO] [EJECUTANDO] Etapa 'build_mart_egresos_f00_f99_rm' -> Módulo: src.data.build_mart_egresos_f00_f99_rm
+2026-11-15 14:14:40,939 [INFO] Perfil de egresos RM: 318 filas anuales, 7399 de desglose. Egresos por año: {2020: 9416, 2021: 10446, 2022: 12193, 2023: 13122, 2024: 13822, 2025: 13923}
+2026-11-15 14:14:41,354 [INFO] [EXITO] Etapa 'build_mart_egresos_f00_f99_rm' finalizada correctamente.
+
+2026-11-15 14:14:41,354 [INFO] --- Evaluando etapa: build_contraste_camas_psiquiatria_rm ---
+2026-11-15 14:14:41,354 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_contraste_camas_psiquiatria_rm'.
+2026-11-15 14:14:41,354 [INFO] [EJECUTANDO] Etapa 'build_contraste_camas_psiquiatria_rm' -> Módulo: src.data.build_contraste_camas_psiquiatria_rm
+2026-11-15 14:14:44,659 [INFO] Contraste de camas publicado (6 años):
+ ano  egresos_residentes_rm  camas_equivalentes_egresos  camas_equivalentes_egresos_snss  camas_ocupadas_rem20  camas_ocupadas_rem20_sin_forense  razon_egresos_snss_rem20_sin_forense
+2020                   9416                       610.8                            413.7                 575.3                             494.2                                 0.837
+2021                  10446                       650.8                            434.3                 586.8                             505.9                                 0.858
+2022                  12193                       708.3                            464.2                 563.0                             482.9                                 0.961
+2023                  13122                       712.0                            475.9                 586.7                             501.3                                 0.949
+2024                  13822                       764.1                            514.7                 578.8                             492.4                                 1.045
+2025                  13923                       735.4                            504.7                 596.4                             508.5                                 0.992
+2026-11-15 14:14:45,041 [INFO] [EXITO] Etapa 'build_contraste_camas_psiquiatria_rm' finalizada correctamente.
+
+2026-11-15 14:14:45,044 [INFO] --- Evaluando etapa: eda_mart_egresos_f00_f99_rm ---
+2026-11-15 14:14:45,044 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'eda_mart_egresos_f00_f99_rm'.
+2026-11-15 14:14:45,044 [INFO] [EJECUTANDO] Etapa 'eda_mart_egresos_f00_f99_rm' -> Módulo: scripts.eda_mart_egresos_f00_f99_rm
+EDA generado: reports/eda/eda_mart_egresos_f00_f99_rm.md
+2026-11-15 14:14:47,665 [INFO] [EXITO] Etapa 'eda_mart_egresos_f00_f99_rm' finalizada correctamente.
+
+2026-11-15 14:14:47,665 [INFO] --- Evaluando etapa: build_capa_oferta_urgencia_rm ---
+2026-11-15 14:14:47,665 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_capa_oferta_urgencia_rm'.
+2026-11-15 14:14:47,665 [INFO] [EJECUTANDO] Etapa 'build_capa_oferta_urgencia_rm' -> Módulo: src.geo.build_capa_oferta_urgencia_rm
+2026-11-15 14:14:50,108 [INFO] Capa de oferta de urgencia publicada: 175 filas -> data/processed/geo/capa_oferta_urgencia_rm.parquet. Resultado del join comunal: {'coincide': 175}.
+2026-11-15 14:14:50,366 [INFO] [EXITO] Etapa 'build_capa_oferta_urgencia_rm' finalizada correctamente.
+
+2026-11-15 14:14:50,371 [INFO] --- Evaluando etapa: resolve_coordenadas_establecimientos ---
+2026-11-15 14:14:50,371 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'resolve_coordenadas_establecimientos'.
+2026-11-15 14:14:50,371 [INFO] [EJECUTANDO] Etapa 'resolve_coordenadas_establecimientos' -> Módulo: src.geo.resolver_coordenadas_establecimientos
+2026-11-15 14:14:52,783 [INFO] Lista de resolución de coordenadas: 101 filas -> data/processed/geo/establecimientos_coordenadas_resolucion.csv. Por resolución: {'excluir_no_vigente': 87, 'excluir_fuera_de_oferta': 14}. Por problema: {'sin_coordenadas': 92, 'difiere': 8, 'fuera_de_rm': 1}.
+2026-11-15 14:14:53,083 [INFO] [EXITO] Etapa 'resolve_coordenadas_establecimientos' finalizada correctamente.
+
+2026-11-15 14:14:53,083 [INFO] --- Evaluando etapa: build_cobertura_urgencia_comuna ---
+2026-11-15 14:14:53,085 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_cobertura_urgencia_comuna'.
+2026-11-15 14:14:53,086 [INFO] [EJECUTANDO] Etapa 'build_cobertura_urgencia_comuna' -> Módulo: src.geo.build_cobertura_urgencia_comuna
+2026-11-15 14:15:00,524 [INFO] Cobertura publicada: 52 comunas -> data/processed/geo/cobertura_urgencia_comuna.parquet; reporte -> reports/geo/cobertura_urgencia_comuna.md. Población a \u22645 km: 7049387 de 7291744.
+2026-11-15 14:15:01,126 [INFO] [EXITO] Etapa 'build_cobertura_urgencia_comuna' finalizada correctamente.
+
+2026-11-15 14:15:01,129 [INFO] --- Evaluando etapa: build_mart_mvp_territorial_comuna ---
+2026-11-15 14:15:01,129 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_mart_mvp_territorial_comuna'.
+2026-11-15 14:15:01,129 [INFO] [EJECUTANDO] Etapa 'build_mart_mvp_territorial_comuna' -> Módulo: src.data.build_mart_mvp_territorial_comuna
+2026-11-15 14:15:03,851 [INFO] Mart MVP territorial comunal generado: 52 filas. Sin reporte de Urgencias 2025: 1. Oferta total reconciliada: 175.
+2026-11-15 14:15:04,142 [INFO] [EXITO] Etapa 'build_mart_mvp_territorial_comuna' finalizada correctamente.
+
+2026-11-15 14:15:04,142 [INFO] --- Evaluando etapa: eda_contexto_genero ---
+2026-11-15 14:15:04,142 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'eda_contexto_genero'.
+2026-11-15 14:15:04,142 [INFO] [EJECUTANDO] Etapa 'eda_contexto_genero' -> Módulo: scripts.eda_contexto_genero
+reports/eda/eda_contexto_genero_estadisticas_genero.md
+2026-11-15 14:15:07,496 [INFO] [EXITO] Etapa 'eda_contexto_genero' finalizada correctamente.
+
+2026-11-15 14:15:07,496 [INFO] --- Evaluando etapa: eda_mart_contexto_genero_indicador_sexo ---
+2026-11-15 14:15:07,496 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'eda_mart_contexto_genero_indicador_sexo'.
+2026-11-15 14:15:07,496 [INFO] [EJECUTANDO] Etapa 'eda_mart_contexto_genero_indicador_sexo' -> Módulo: scripts.eda_mart_contexto_genero_indicador_sexo
+reports/eda/eda_mart_contexto_genero_indicador_sexo.md
+2026-11-15 14:15:10,769 [INFO] [EXITO] Etapa 'eda_mart_contexto_genero_indicador_sexo' finalizada correctamente.
+
+2026-11-15 14:15:10,769 [INFO] --- Evaluando etapa: eda_series_demanda_sm ---
+2026-11-15 14:15:10,769 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'eda_series_demanda_sm'.
+2026-11-15 14:15:10,769 [INFO] [EJECUTANDO] Etapa 'eda_series_demanda_sm' -> Módulo: scripts.eda_series_demanda_sm
+                         metrica    valor
+             periodos_modelables 260.0000
+                         comunas  51.0000
+ semanas_fragmentarias_excluidas   2.0000
+             share_semana_53_pct   0.2900
+       share_id37_sobre_id36_pct   5.6200
+                     adf_p_nivel   0.0014
+                    kpss_p_nivel   0.0100
+                    acf_rezago_1   0.7979
+                   acf_rezago_52   0.2640
+           stl_fuerza_estacional   0.2308
+            stl_fuerza_tendencia   0.6200
+      baseline_rm_mape_medio_pct   9.6800
+baseline_comuna_mape_mediano_pct  34.3400
+           comunas_80pct_demanda  24.0000
+
+Informe escrito en reports/eda/eda_series_demanda_sm.md
+Resumen escrito en reports/eda/eda_series_demanda_sm_resumen.csv
+2026-11-15 14:15:40,006 [INFO] [EXITO] Etapa 'eda_series_demanda_sm' finalizada correctamente.
+
+2026-11-15 14:15:40,008 [INFO] --- Evaluando etapa: forecast_demanda_sm ---
+2026-11-15 14:15:40,008 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'forecast_demanda_sm'.
+2026-11-15 14:15:40,008 [INFO] [EJECUTANDO] Etapa 'forecast_demanda_sm' -> Módulo: scripts.run_forecast_demanda_sm
+Modelo seleccionado (congelado): hibrido_glm_region_lgbm_comuna_conformal
+Pronostico persistido: 408 filas, 51 series (1 region + 50 comunas), horizontes [1, 2, 3, 4, 5, 6, 7, 8].
+Ultima semana observada: 2026-S45. Generado en 136.6s.
+  data/processed/modeling/pronostico_demanda_sm.parquet
+  data/processed/modeling/pronostico_demanda_sm_manifest.json
+2026-11-15 14:18:12,760 [INFO] [EXITO] Etapa 'forecast_demanda_sm' finalizada correctamente.
+
+2026-11-15 14:18:12,760 [INFO] --- Evaluando etapa: forecast_establecimientos_sm ---
+2026-11-15 14:18:12,760 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'forecast_establecimientos_sm'.
+2026-11-15 14:18:12,760 [INFO] [EJECUTANDO] Etapa 'forecast_establecimientos_sm' -> Módulo: scripts.run_forecast_establecimientos_sm
+atenciones_sm: poisson_glm_global_conformal, 120 establecimientos, horizontes 1-8, Ãºltima semana observada 2026-S45.
+hospitalizaciones_sm: lightgbm_global_conformal, 11 establecimientos, horizontes 1-8, Ãºltima semana observada 2026-S45.
+Generado en 46.9s:
+  data/processed/modeling/pronostico_establecimientos_sm.parquet
+  data/processed/modeling/pronostico_establecimientos_sm_manifest.json
+2026-11-15 14:19:08,954 [INFO] [EXITO] Etapa 'forecast_establecimientos_sm' finalizada correctamente.
+
+2026-11-15 14:19:08,954 [INFO] --- Evaluando etapa: build_mart_suicidios_comuna_weekly ---
+2026-11-15 14:19:08,954 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'build_mart_suicidios_comuna_weekly'.
+2026-11-15 14:19:08,954 [INFO] [EJECUTANDO] Etapa 'build_mart_suicidios_comuna_weekly' -> Módulo: src.data.build_mart_suicidios_comuna_weekly
+2026-11-15 14:19:32,710 [INFO] Mart de suicidios generado: {'filas': 18720, 'comunas': 52, 'suicidios': 3969, 'desde': '2020-01-01', 'fecha_corte': '2026-11-07', 'ultima_semana_publicada': '2026-11-07', 'semanas_registro_incompleto': ['2026-S44']}
+2026-11-15 14:19:32,960 [INFO] [EXITO] Etapa 'build_mart_suicidios_comuna_weekly' finalizada correctamente.
+
+2026-11-15 14:19:32,960 [INFO] --- Evaluando etapa: eda_mart_suicidios_comuna_weekly ---
+2026-11-15 14:19:32,960 [INFO] [FORZADO] Dependencias upstream fueron modificadas. Se ejecutará 'eda_mart_suicidios_comuna_weekly'.
+2026-11-15 14:19:32,960 [INFO] [EJECUTANDO] Etapa 'eda_mart_suicidios_comuna_weekly' -> Módulo: scripts.eda_mart_suicidios_comuna_weekly
+EDA generado: reports/eda/eda_mart_suicidios_comuna_weekly.md
+2026-11-15 14:19:42,827 [INFO] [EXITO] Etapa 'eda_mart_suicidios_comuna_weekly' finalizada correctamente.
+
+2026-11-15 14:19:42,827 [INFO] --- Evaluando etapa: forecast_suicidios ---
+2026-11-15 14:19:42,827 [INFO] [EJECUTANDO] Etapa 'forecast_suicidios' -> Módulo: scripts.run_forecast_suicidios
+PronÃ³stico de suicidios persistido: 424 filas, 53 series; Ãºltima semana observada 2026-S43; regiÃ³n h1-h8 media 13.42 por semana.
+2026-11-15 14:19:51,098 [INFO] [EXITO] Etapa 'forecast_suicidios' finalizada correctamente.
+
+2026-11-15 14:19:51,098 [INFO] Pipeline completado satisfactoriamente.

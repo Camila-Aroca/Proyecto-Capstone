@@ -2,7 +2,7 @@
 
 **Versión:** primera versión completa de Fase 2.2, redactada el 14 de noviembre de 2026 sobre el commit `11056a6`.
 **Alcance:** instalación local (Python y Docker Compose) y despliegue en AWS tal como está registrado en el repositorio.
-**Pendiente:** los anexos operacionales definitivos de AWS (seguridad, costos, observabilidad y operación) se completan en C-45. La corrida completa del pipeline posterior al corte de octubre se registra en C-08.
+**Pendiente:** los anexos operacionales definitivos de AWS (seguridad, costos, observabilidad y operación) se completan en C-45. La corrida parcial posterior al corte de octubre se registra en C-08; la evaluación de modelos sigue pendiente.
 
 Este manual no certifica nada por sí solo. Cada sección indica si el paso fue **ejecutado y registrado**, **documentado sin registro de ejecución**, **fallido**, **bloqueado** o **pendiente**, y enlaza la evidencia cuando existe.
 
@@ -14,8 +14,8 @@ Este manual no certifica nada por sí solo. Cada sección indica si el paso fue 
 | Reejecución local posterior a la publicación de outputs | **Ejecutado** el 12-11 (ciclo 4) | [`reports/validation/ciclos_pruebas/registro_defectos.md`](../../reports/validation/ciclos_pruebas/registro_defectos.md) |
 | Instalación Python local (Windows) | **Ejecutado** el 10-11 sobre `e7a55db` con cambios sin commit: `pip check` sin conflictos y 867 pruebas aprobadas | [`reports/validation/c08_revalidacion_20261110.md`](../../reports/validation/c08_revalidacion_20261110.md). No es una ejecución desde un clon limpio |
 | Instalación limpia en un segundo computador | **Confirmada por el equipo el 08-10; sin evidencia archivada** en el repositorio (comandos, versiones, logs) | Solo la menciona el `README.md` |
-| Pipeline completo posterior al corte de octubre | **Pendiente** (C-08). El 12-11 solo se ejecutó con `--sin-evaluacion`; benchmarks y holdouts no se rehicieron | `reports/modeling/holdout_demanda_sm.md` indica fecha máxima de datos 2026-10-02 |
-| API local en el árbol de trabajo del 14-11 (sin ejecutar el pipeline) | **Observado** arrancando la API con `TestClient`: `/api/v1/salud` pasó a `listo` en unos 65 s; `/meta`, `/pronosticos` y `/resumen-comunal` respondieron 200, con el pronóstico de demanda recalculado en memoria porque cambió `seleccion_benchmark` respecto del snapshot guardado; `/suicidios/RM` respondió 503 por pronóstico desactualizado | Comprobación manual de esta sesión, sin archivo de evidencia. Es coherente con la corrida completa pendiente (C-08) |
+| Pipeline posterior al corte de octubre | **Ejecutado parcialmente** el 15-11 con `--sin-evaluacion --force`; los benchmarks y holdouts no se rehicieron | [Evidencia C-08](../../reports/validation/c08_revalidacion_20261115T161029Z/informe.md) |
+| API local en el árbol de trabajo del 14-11 (sin ejecutar el pipeline) | **Observación histórica:** la API recalculó demanda en memoria y `/suicidios/RM` respondió 503 por un pronóstico desactualizado. Los pronósticos se regeneraron el 15-11; esta observación no verifica el estado posterior | Comprobación manual de la sesión del 14-11, sin archivo de evidencia |
 | Despliegue de la API y el frontend en AWS (CloudFront → ALB → ECS Fargate, `us-east-1`) | **Ejecutado y probado** el 12-11: 21 casos aprobados, 4 fallidos y 6 no ejecutados en la corrida E2E | [`reports/validation/e2e_local_aws/20261112T131720Z/informe.md`](../../reports/validation/e2e_local_aws/20261112T131720Z/informe.md). Los 4 fallidos fueron faltas de outputs, cerradas luego |
 | Pipeline en Fargate programado con EventBridge | **No implementado.** Cambio de alcance: el pipeline corre en el equipo y se publica con `subir_datos.sh` | [`docs/08-arquitectura/plan_despliegue_aws.md`](../08-arquitectura/plan_despliegue_aws.md), sección 2. C-42 sigue abierto |
 | CI/CD con CodePipeline y CodeBuild | **Bloqueado:** la conexión `saad-github` está en `PENDING` hasta que la dueña del repositorio la apruebe | Sección «Bloqueo de CI» de `registro_defectos.md`. La misma verificación se corre en el equipo |
@@ -181,5 +181,5 @@ Para desmontar el entorno entre demos: `aws cloudformation delete-stack --stack-
 
 - No incluye una reejecución desde un clon limpio realizada para este documento.
 - No describe políticas IAM concretas del equipo de despliegue ni el procedimiento operacional definitivo (C-45).
-- La corrida completa del pipeline con benchmarks y holdouts sobre los datos posteriores al 8 de octubre está pendiente (C-08). La certificación del 8 de octubre (`reports/validation/apt_certification_20261008T002147Z/`) corresponde a otra versión del código y los datos, y no certifica la versión vigente.
+- La corrida completa del pipeline con benchmarks y holdouts sobre los datos posteriores al 8 de octubre está pendiente. La corrida C-08 del 15-11 omitió esas evaluaciones. La certificación del 8 de octubre (`reports/validation/apt_certification_20261008T002147Z/`) corresponde a otra versión del código y los datos, y no certifica la versión vigente.
 - El despliegue en AWS tiene DEF-12 a DEF-14 abiertos (interfaz) y la CI/CD bloqueada.

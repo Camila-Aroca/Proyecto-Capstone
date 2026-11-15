@@ -1,7 +1,7 @@
 {
   "dataset": "pronostico_suicidios",
-  "generado_en_utc": "2026-11-12T14:56:22.838399Z",
-  "generado_en_chile": "2026-11-12T11:56:22.838412-03:00",
+  "generado_en_utc": "2026-11-15T17:19:50.554743Z",
+  "generado_en_chile": "2026-11-15T14:19:50.554743-03:00",
   "modelo": "poisson_estacional_eb_vm52",
   "nivel_intervalo": 0.8,
   "horizontes": [
@@ -37,11 +37,11 @@
     },
     "seleccion_benchmark": {
       "ruta": "reports/modeling/benchmark_suicidios_seleccion.json",
-      "sha256": "8195b1ff37e4f3d3790c19f314ff37893361cf42b1c07985d9522dfa7530705b"
+      "sha256": "05fd7c29908ce1d5b71c23439e03f5a4f7b40364518daa086737c88ae2d23887"
     }
   },
   "versiones": {
-    "python": "3.12.3",
+    "python": "3.12.6",
     "pandas": "3.0.5",
     "numpy": "2.5.2",
     "pyarrow": "25.0.1",

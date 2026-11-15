@@ -72,10 +72,10 @@ establecimiento_codigo,establecimiento_codigo_antiguo,establecimiento_glosa,tipo
 200439,11-909,Laboratorio Clínico Omega,Laboratorio Clínico,Establecimiento de Salud,13101,Santiago,,,Cerrado
 200469,12-931,Clínica Vida Estética,Clínica,Establecimiento de Salud,13123,Providencia,,,Cerrado
 200446,12-929,Clínica Paris SpA,Clínica,Establecimiento de Salud,13123,Providencia,,,Cerrado
+111214,11-214,Clínica Sierra Bella,Clínica,Establecimiento de Salud,13101,Santiago,,,Cerrado
 110515,10-515,Posta de Salud Rural Santa María,Posta de Salud Rural (PSR),Establecimiento de Salud,13502,Alhué,,,Cerrado
 109407,09-407,Posta de Salud Rural Juan Pablo II de Lampa,Posta de Salud Rural (PSR),Establecimiento de Salud,13302,Lampa,,,Cerrado
 112995,12-995,Centro de Salud Mutual CChC Providencia,Centro de Salud Privado,Establecimiento de Salud,13123,Providencia,,,Cerrado
-111214,11-214,Clínica Sierra Bella,Clínica,Establecimiento de Salud,13101,Santiago,,,Cerrado
 113242,13-242,Clínica Santa Rosa,Clínica,Establecimiento de Salud,13129,San Joaquín,,,Cerrado
 112529,12-529,Vacunatorio Darvax Salud,Vacunatorio,Establecimiento de Salud,13114,Las Condes,,,Cerrado
 201313,,GENOSUR (Providencia),Centro de Salud Privado,Establecimiento de Salud,13123,Providencia,,,Cerrado
@@ -86,12 +86,8 @@ establecimiento_codigo,establecimiento_codigo_antiguo,establecimiento_glosa,tipo
 201019,,Centro Logístico de Vacunación MINSAL,Vacunatorio,Unidad de Atención,13120,Ñuñoa,,,Cerrado
 201020,,Centro de Registro de Vacunas Covid,Otro,Unidad de Atención,13101,Santiago,,,Cerrado
 112979,12-979,Clínica Paris SpA,Clínica,Establecimiento de Salud,13114,Las Condes,,,Cerrado
-202293,,INTEGRAMEDICA SUCURSAL MALL VESPUCIO,Centro de Salud Privado,Establecimiento de Salud,13110,La Florida,,,Vigente en Operación Habitual
-202296,,SALA EXTERNA DE TOMA DE MUESTRAS_PRINCIPE DE GALES,Sala  Externa de Toma de Muestras (SETM),Unidad de Atención,13113,La Reina,,,Vigente en Operación Habitual
-202297,,CET ALAMEDA_SANTIAGO,Centro de Salud Privado,Establecimiento de Salud,13101,Santiago,,,Vigente en Operación Habitual
-202301,,SALA EXTERNA DE TOMA DE MUESTRAS_TALAGANTE,Sala  Externa de Toma de Muestras (SETM),Unidad de Atención,13601,Talagante,,,Vigente en Operación Habitual
-202306,,SUR Juan Pablo II,Servicio de Urgencia Rural (SUR),Establecimiento de Salud,13302,Lampa,,,Vigente en operación habitual
-202307,,CENTRO ODONTOLOGICO UNIVERSIDAD MAYOR,Clínica Dental,Establecimiento de Salud,13101,Santiago,,,Vigente en operación habitual
-202368,,UNO SALUD DENTAL SILVA CARVALLO,Clínica Dental,Establecimiento de Salud,13119,Maipú,,,Vigente en Operación Habitual
-202369,,UNO SALUD DENTAL SAN RAMON - LIDER SANTA ROSA,Clínica Dental,Establecimiento de Salud,13131,San Ramón,,,Vigente en Operación Habitual
-202370,,SALA EXTERNA DE TOMA DE MUESTRAS REDSALUD PEDRO FONTOVA,Sala  Externa de Toma de Muestras (SETM),Unidad de Atención,13107,Huechuraba,,,Vigente en Operación Habitual
+202488,,CENTRO DE SALUD INTEGRAL  CETEMEL SpA,Centro de Salud Privado,Establecimiento de Salud,13501,Melipilla,,,Vigente en Operación Habitual
+202489,,CENTRO DE CIRUGIA AMBULATORIA KENNEDY,Centro de Salud Privado,Establecimiento de Salud,13132,Vitacura,,,Vigente en Operación Habitual
+202490,,CLINICA ARCAYA S.A.,Centro de Salud Privado,Establecimiento de Salud,13114,Las Condes,,,Vigente en Operación Habitual
+202491,,LABORATORIO CLINICO CRUZ DEL SUR,Laboratorio Clínico,Establecimiento de Salud,13106,Estación Central,,,Vigente en Operación Habitual
+202492,,Centro de Atención de Salud Ciudad Empresarial de Seguridad CCHC,Centro de Salud Privado,Establecimiento de Salud,13107,Huechuraba,,,Vigente en Operación Habitual

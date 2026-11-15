@@ -63,6 +63,19 @@
           "size": 505437,
           "sha256": "1f3a9c97a1b3defa47a2fc3b8495688c4e08f164063cab704e7a18c41239e009"
         }
+      },
+      {
+        "source_url": "https://censo2024.ine.gob.cl/wp-content/uploads/2025/03/D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx",
+        "downloaded_at": "2026-11-15T16:12:14.776233+00:00",
+        "raw_path": "data/raw/censo/D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx",
+        "raw_filename": "D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx",
+        "raw_size": 505437,
+        "raw_sha256": "1f3a9c97a1b3defa47a2fc3b8495688c4e08f164063cab704e7a18c41239e009",
+        "transport": {
+          "filename": "D1_Poblacion-censada-por-sexo-y-edad-en-grupos-quinquenales.xlsx",
+          "size": 505437,
+          "sha256": "1f3a9c97a1b3defa47a2fc3b8495688c4e08f164063cab704e7a18c41239e009"
+        }
       }
     ],
     "dataset": "censo",
@@ -88,6 +101,19 @@
       {
         "source_url": "https://www.ine.gob.cl/docs/default-source/proyecciones-de-poblacion/cuadros-estadisticos/base-2017/estimaciones-y-proyecciones-2002-2035-comunas.xlsx",
         "downloaded_at": "2026-10-07T22:05:38.725517+00:00",
+        "raw_path": "data/raw/poblacion/ine_estimaciones_proyecciones_2002_2035_comunas.xlsx",
+        "raw_filename": "ine_estimaciones_proyecciones_2002_2035_comunas.xlsx",
+        "raw_size": 11057485,
+        "raw_sha256": "de4ed9522031fad091dd2a51b3215bba685ebb851a14fb7421078ba927aa7ec1",
+        "transport": {
+          "filename": "ine_estimaciones_proyecciones_2002_2035_comunas.xlsx",
+          "size": 11057485,
+          "sha256": "de4ed9522031fad091dd2a51b3215bba685ebb851a14fb7421078ba927aa7ec1"
+        }
+      },
+      {
+        "source_url": "https://www.ine.gob.cl/docs/default-source/proyecciones-de-poblacion/cuadros-estadisticos/base-2017/estimaciones-y-proyecciones-2002-2035-comunas.xlsx",
+        "downloaded_at": "2026-11-15T16:12:19.055542+00:00",
         "raw_path": "data/raw/poblacion/ine_estimaciones_proyecciones_2002_2035_comunas.xlsx",
         "raw_filename": "ine_estimaciones_proyecciones_2002_2035_comunas.xlsx",
         "raw_size": 11057485,
@@ -123,6 +149,19 @@
       {
         "source_url": "https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/pobreza-comunal/2022/Estimaciones_Tasa_Pobreza_Ingresos_Comunas_2022.xlsx",
         "downloaded_at": "2026-10-07T22:05:39.312142+00:00",
+        "raw_path": "data/raw/pobreza/mds_casen_2022_tasa_pobreza_ingresos_comunal.xlsx",
+        "raw_filename": "mds_casen_2022_tasa_pobreza_ingresos_comunal.xlsx",
+        "raw_size": 53824,
+        "raw_sha256": "d84f44accb14e73bdd785ccdd61290d298504a3d1afe3d2fea1431804409bcc9",
+        "transport": {
+          "filename": "mds_casen_2022_tasa_pobreza_ingresos_comunal.xlsx",
+          "size": 53824,
+          "sha256": "d84f44accb14e73bdd785ccdd61290d298504a3d1afe3d2fea1431804409bcc9"
+        }
+      },
+      {
+        "source_url": "https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/pobreza-comunal/2022/Estimaciones_Tasa_Pobreza_Ingresos_Comunas_2022.xlsx",
+        "downloaded_at": "2026-11-15T16:12:21.296213+00:00",
         "raw_path": "data/raw/pobreza/mds_casen_2022_tasa_pobreza_ingresos_comunal.xlsx",
         "raw_filename": "mds_casen_2022_tasa_pobreza_ingresos_comunal.xlsx",
         "raw_size": 53824,
@@ -170,6 +209,20 @@
           "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
           "archive_member": "Cartografia_censo2024_Pais_Distrital.parquet"
         }
+      },
+      {
+        "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
+        "downloaded_at": "2026-11-15T16:11:54.516966+00:00",
+        "raw_path": "data/raw/censo/Cartografia_censo2024_Pais_Distrital.parquet",
+        "raw_filename": "Cartografia_censo2024_Pais_Distrital.parquet",
+        "raw_size": 165576123,
+        "raw_sha256": "37ba9a338cdd2eb9cf336821b67019396c266039a57cb47341445f08a29ffd71",
+        "transport": {
+          "filename": "Cartografia_censo2024_Pais.zip",
+          "size": 794658978,
+          "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
+          "archive_member": "Cartografia_censo2024_Pais_Distrital.parquet"
+        }
       }
     ],
     "dataset": "censo",
@@ -195,6 +248,20 @@
       {
         "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
         "downloaded_at": "2026-10-07T22:05:30.601120+00:00",
+        "raw_path": "data/raw/censo/Cartografia_censo2024_Pais_Zonal.parquet",
+        "raw_filename": "Cartografia_censo2024_Pais_Zonal.parquet",
+        "raw_size": 24235286,
+        "raw_sha256": "0aa79acc6cf2fad6e37a167fd004df9b3a18b25e96bb4c06876bb043e05f124b",
+        "transport": {
+          "filename": "Cartografia_censo2024_Pais.zip",
+          "size": 794658978,
+          "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
+          "archive_member": "Cartografia_censo2024_Pais_Zonal.parquet"
+        }
+      },
+      {
+        "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
+        "downloaded_at": "2026-11-15T16:11:57.589775+00:00",
         "raw_path": "data/raw/censo/Cartografia_censo2024_Pais_Zonal.parquet",
         "raw_filename": "Cartografia_censo2024_Pais_Zonal.parquet",
         "raw_size": 24235286,
@@ -240,6 +307,20 @@
           "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
           "archive_member": "Cartografia_censo2024_Pais_Entidades.parquet"
         }
+      },
+      {
+        "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
+        "downloaded_at": "2026-11-15T16:12:01.856896+00:00",
+        "raw_path": "data/raw/censo/Cartografia_censo2024_Pais_Entidades.parquet",
+        "raw_filename": "Cartografia_censo2024_Pais_Entidades.parquet",
+        "raw_size": 110063816,
+        "raw_sha256": "c2dfcc2d2462246ec27a643ea921200d7671f24a12f5923248424090801acd8b",
+        "transport": {
+          "filename": "Cartografia_censo2024_Pais.zip",
+          "size": 794658978,
+          "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
+          "archive_member": "Cartografia_censo2024_Pais_Entidades.parquet"
+        }
       }
     ],
     "dataset": "censo",
@@ -275,6 +356,20 @@
           "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
           "archive_member": "Cartografia_censo2024_Pais_Manzanas.parquet"
         }
+      },
+      {
+        "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
+        "downloaded_at": "2026-11-15T16:12:07.857037+00:00",
+        "raw_path": "data/raw/censo/Cartografia_censo2024_Pais_Manzanas.parquet",
+        "raw_filename": "Cartografia_censo2024_Pais_Manzanas.parquet",
+        "raw_size": 203341665,
+        "raw_sha256": "81f51a582276ed19948c757c20b0d03291a564359c87e106a3802d87d6a5b081",
+        "transport": {
+          "filename": "Cartografia_censo2024_Pais.zip",
+          "size": 794658978,
+          "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
+          "archive_member": "Cartografia_censo2024_Pais_Manzanas.parquet"
+        }
       }
     ],
     "dataset": "censo",
@@ -300,6 +395,20 @@
       {
         "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
         "downloaded_at": "2026-10-07T22:05:36.409985+00:00",
+        "raw_path": "data/raw/censo/Diccionario_variables_geograficas_CPV24.xlsx",
+        "raw_filename": "Diccionario_variables_geograficas_CPV24.xlsx",
+        "raw_size": 23553,
+        "raw_sha256": "e09d706364a0436b56854bfd3e6e0f1b045f7ea411eeb4e7142b4f7f8b2d182d",
+        "transport": {
+          "filename": "Cartografia_censo2024_Pais.zip",
+          "size": 794658978,
+          "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
+          "archive_member": "Diccionario_variables_geograficas_CPV24.xlsx"
+        }
+      },
+      {
+        "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
+        "downloaded_at": "2026-11-15T16:12:10.540079+00:00",
         "raw_path": "data/raw/censo/Diccionario_variables_geograficas_CPV24.xlsx",
         "raw_filename": "Diccionario_variables_geograficas_CPV24.xlsx",
         "raw_size": 23553,
@@ -367,6 +476,18 @@
         "raw_filename": "AtencionesUrgencia2026.csv",
         "raw_size": 1726151513,
         "raw_sha256": "e58789a1ea3cbdd7d085f9d1b837933ccf6a22d0c63831b37cd2cc89e10ca5ab"
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/SistemaAtencionesUrgencia/AtencionesUrgencia2026.zip",
+        "downloaded_at": "2026-11-15T16:38:36.817120+00:00",
+        "zip_filename": "deis_urgencias_2026_AtencionesUrgencia2026.zip",
+        "zip_size": 48930899,
+        "zip_sha256": "306788162f7869f848c9c8ab08147b0f58c6c060c205b7422000699fa61428ac",
+        "archive_member": "AtencionesUrgencia2026.csv",
+        "raw_path": "data/raw/urgencias/AtencionesUrgencia2026.csv",
+        "raw_filename": "AtencionesUrgencia2026.csv",
+        "raw_size": 1749419188,
+        "raw_sha256": "7ee500a2999aa6d7a80f88bcb07db7d2fa25c4dd00f146a79c19381075a9d27c"
       }
     ]
   },
@@ -376,6 +497,20 @@
       {
         "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
         "downloaded_at": "2026-10-07T22:05:26.286699+00:00",
+        "raw_path": "data/raw/censo/Cartografia_censo2024_Pais_Comunal.parquet",
+        "raw_filename": "Cartografia_censo2024_Pais_Comunal.parquet",
+        "raw_size": 125790972,
+        "raw_sha256": "0d36178646e900d3e90cdb5bc7bbb5f50767da923c6331133a04488664fd6b16",
+        "transport": {
+          "filename": "Cartografia_censo2024_Pais.zip",
+          "size": 794658978,
+          "sha256": "cd0fffb38892c6deefd3fbaf515a0c0ac78cfe93b74b0f62156018364b85d181",
+          "archive_member": "Cartografia_censo2024_Pais_Comunal.parquet"
+        }
+      },
+      {
+        "source_url": "https://storage.googleapis.com/bktdescargascenso2024/Cartografia/GEOPARQUET/Cartografia_censo2024_Pais.zip",
+        "downloaded_at": "2026-11-15T16:11:48.994638+00:00",
         "raw_path": "data/raw/censo/Cartografia_censo2024_Pais_Comunal.parquet",
         "raw_filename": "Cartografia_censo2024_Pais_Comunal.parquet",
         "raw_size": 125790972,
@@ -440,6 +575,18 @@
         "zip_filename": "deis_urgencias_2025_AtencionesUrgencia2025.zip",
         "zip_size": 55181481,
         "zip_sha256": "108d69520c4a496282ec63d46815e61bf0a7d6f120b333be643e44e62fb35c1e",
+        "archive_member": "AtencionesUrgencia2025.csv",
+        "raw_path": "data/raw/urgencias/AtencionesUrgencia2025.csv",
+        "raw_filename": "AtencionesUrgencia2025.csv",
+        "raw_size": 1939175001,
+        "raw_sha256": "e37f91f02d55d18e5e141a354313bac42ef12361579c11eb31e1fe71f96134bb"
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/SistemaAtencionesUrgencia/AtencionesUrgencia2025.zip",
+        "downloaded_at": "2026-11-15T16:36:15.674043+00:00",
+        "zip_filename": "deis_urgencias_2025_AtencionesUrgencia2025.zip",
+        "zip_size": 55181481,
+        "zip_sha256": "69ab12013898dfb3ab4d2fb45c020f21bb3f0801fa89cb7aaaf3724ca0502dfc",
         "archive_member": "AtencionesUrgencia2025.csv",
         "raw_path": "data/raw/urgencias/AtencionesUrgencia2025.csv",
         "raw_filename": "AtencionesUrgencia2025.csv",
@@ -629,6 +776,18 @@
         "raw_filename": "establecimientos_salud_actualizado.csv",
         "raw_size": 2524897,
         "raw_sha256": "244426f9201ecfaa4f8dc964d3ee7479a65eef565c37b9ddf05d22cac31343a6",
+        "transport": {
+          "http_status": 200,
+          "content_type": "text/csv"
+        }
+      },
+      {
+        "source_url": "https://datos.gob.cl/dataset/3bf4cf7c-f638-4735-9a01-f65faae4beca/resource/2c44d782-3365-44e3-aefb-2c8b8363a1bc/download/establecimientos_20260825.csv",
+        "downloaded_at": "2026-11-15T16:41:32.258202+00:00",
+        "raw_path": "data/raw/deis/establecimientos_salud_actualizado.csv",
+        "raw_filename": "establecimientos_salud_actualizado.csv",
+        "raw_size": 2548427,
+        "raw_sha256": "febff55e3612fb60076df9279f1090240cd02a39e9c7b79b822119dfdef84c8d",
         "transport": {
           "http_status": 200,
           "content_type": "text/csv"
@@ -1478,5 +1637,41 @@
     "dataset": "defunciones",
     "periodo": "2024-2026",
     "estado_fuente": "cifras_preliminares"
+  },
+  {
+    "source_id": "egresos_intento_suicida_sexo_anio",
+    "source_url": "https://www.estadisticasdegenero.cl/wp-content/uploads/2023/11/Distribucion-y-razon-egresos-intento-suicida-3.xlsx",
+    "filename": "egresos_intento_suicida_sexo_anio.xlsx",
+    "raw_path": "data/raw/contexto_genero/egresos_intento_suicida_sexo_anio.xlsx",
+    "downloaded_at": "2026-11-15T16:41:34.054600+00:00",
+    "file_size": 23828,
+    "sha256": "8613c0b78d1172a1169dd00bd0b1c6fb2f9e84396a59cd4011899a35fa57808c"
+  },
+  {
+    "source_id": "suicidio_ratio_hm_tasas_nacional_regional",
+    "source_url": "https://www.estadisticasdegenero.cl/wp-content/uploads/2021/12/Ratio-hombre-mujer-y-tasas-de-defuncion-por-sucidio-Nacional-y-regional-4.xlsx",
+    "filename": "suicidio_ratio_hm_tasas_nacional_regional.xlsx",
+    "raw_path": "data/raw/contexto_genero/suicidio_ratio_hm_tasas_nacional_regional.xlsx",
+    "downloaded_at": "2026-11-15T16:41:34.598460+00:00",
+    "file_size": 76887,
+    "sha256": "be37c5a9082021b55f7e375e3fbfb216d83409b60fbd72abded27e8a61424f9a"
+  },
+  {
+    "source_id": "ansiedad_depresion_sintomas_18_mas_sexo",
+    "source_url": "https://www.estadisticasdegenero.cl/wp-content/uploads/2022/08/personas-de-18-anos-o-mas-que-presentan-sintomas-moderados-o-severos-de-ansiedad-yo-depresion-por-sexo.xlsx",
+    "filename": "ansiedad_depresion_sintomas_18_mas_sexo.xlsx",
+    "raw_path": "data/raw/contexto_genero/ansiedad_depresion_sintomas_18_mas_sexo.xlsx",
+    "downloaded_at": "2026-11-15T16:41:34.942605+00:00",
+    "file_size": 143526,
+    "sha256": "a29f4a74250f828760cfacfcd80641cbd676b8f83ee3baa504eca5c7f4442073"
+  },
+  {
+    "source_id": "prevalencia_sintomas_depresivos_sexo",
+    "source_url": "https://www.estadisticasdegenero.cl/wp-content/uploads/2021/11/Prevalencia-de-sintomas-depresivos-Nacional-1.xlsx",
+    "filename": "prevalencia_sintomas_depresivos_sexo.xlsx",
+    "raw_path": "data/raw/contexto_genero/prevalencia_sintomas_depresivos_sexo.xlsx",
+    "downloaded_at": "2026-11-15T16:41:35.348847+00:00",
+    "file_size": 18039,
+    "sha256": "864462a83e93d97cb9da4abb2b4611def6dd629784372377ab8556065b391cfa"
   }
 ]

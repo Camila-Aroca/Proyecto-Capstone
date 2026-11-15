@@ -1,0 +1,29 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: .
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collected 949 items / 920 deselected / 29 selected
+
+tests\test_build_dim_oferta_urgencia_rm.py .                             [  3%]
+tests\test_build_egresos_f00_f99.py ..                                   [ 10%]
+tests\test_build_mart_mvp_territorial_comuna.py .                        [ 13%]
+tests\test_clean_censo_comunas.py ......                                 [ 34%]
+tests\test_clean_censo_poblacion.py .                                    [ 37%]
+tests\test_clean_defunciones.py .                                        [ 41%]
+tests\test_clean_poblacion_proyecciones.py .                             [ 44%]
+tests\test_clean_pobreza_comunal.py .                                    [ 48%]
+tests\test_clean_urgencias.py ..                                         [ 55%]
+tests\test_dotacion_camas_integridad.py .....                            [ 72%]
+tests\test_download_dotacion_camas.py .                                  [ 75%]
+tests\test_download_poblacion_proyecciones.py .                          [ 79%]
+tests\test_download_pobreza_comunal.py .                                 [ 82%]
+tests\test_estadisticas_hospitalarias_integridad.py .....                [100%]
+
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  .\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+========== 29 passed, 920 deselected, 1 warning in 259.81s (0:04:19) ==========

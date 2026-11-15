@@ -1,6 +1,6 @@
 # EDA — `mart_contexto_genero_indicador_sexo`
 
-**Script reproducible:** `scripts/eda_mart_contexto_genero_indicador_sexo.py`
+**Script reproducible:** `scripts/eda_mart_contexto_genero_indicador_sexo.py`  
 **Archivo analizado:** `data/processed/marts/mart_contexto_genero_indicador_sexo.parquet`
 
 ## 1. Forma y grano

@@ -13,9 +13,9 @@
 
 El presente informe audita y valida la integridad de la transformación del dataset crudo nacional del DEIS (`establecimientos_salud_actualizado.csv`) hacia el dataset procesado de la Región Metropolitana (`establecimientos_rm_clean.csv`).
 
-- **Total registros RAW:** 5,717 filas y 33 columnas.
-- **Total registros RAW pertenecientes a RM:** 1,172 filas.
-- **Total registros en CLEAN:** 1,172 filas y 33 columnas.
+- **Total registros RAW:** 5,837 filas y 33 columnas.
+- **Total registros RAW pertenecientes a RM:** 1,192 filas.
+- **Total registros en CLEAN:** 1,192 filas y 33 columnas.
 - **Registros de RM perdidos:** **0** (100% de retención).
 - **Pureza territorial:** **100.0%** de los registros en CLEAN pertenecen unívocamente a la Región Metropolitana (`region_codigo = 13`).
 - **Integridad de Clave Primaria:** **0** duplicados en `establecimiento_codigo`.
@@ -26,9 +26,9 @@ El presente informe audita y valida la integridad de la transformación del data
 
 | Métrica | RAW Nacional | RAW Región Metropolitana | CLEAN Procesado | Diferencia (RAW-RM vs CLEAN) |
 |---|---|---|---|---|
-| **Número de filas** | 5,717 | 1,172 | 1,172 | 0 |
+| **Número de filas** | 5,837 | 1,192 | 1,192 | 0 |
 | **Número de columnas** | 33 | 33 | 33 | 0 (nombres normalizados a `snake_case`) |
-| **Claves únicas (`establecimiento_codigo`)** | 5,717 | 1,172 | 1,172 | 0 |
+| **Claves únicas (`establecimiento_codigo`)** | 5,837 | 1,192 | 1,192 | 0 |
 | **Registros RM omitidos** | - | - | **0** | - |
 | **Registros externos incorporados** | - | - | **0** | - |
 
@@ -51,47 +51,48 @@ El presente informe audita y valida la integridad de la transformación del data
 ### 4.1 Distribución Comunal (Top 10 Comunas)
 | Comuna | Cantidad Establecimientos | Porcentaje (%) |
 |---|---|---|
-| Providencia | 126 | 10.75% |
-| Santiago | 111 | 9.47% |
-| Las Condes | 63 | 5.38% |
-| Maipú | 53 | 4.52% |
-| Puente Alto | 51 | 4.35% |
-| La Florida | 46 | 3.92% |
-| San Bernardo | 44 | 3.75% |
-| Ñuñoa | 41 | 3.50% |
-| San Miguel | 33 | 2.82% |
-| Pudahuel | 30 | 2.56% |
+| Providencia | 125 | 10.49% |
+| Santiago | 111 | 9.31% |
+| Las Condes | 64 | 5.37% |
+| Maipú | 55 | 4.61% |
+| Puente Alto | 53 | 4.45% |
+| La Florida | 49 | 4.11% |
+| San Bernardo | 44 | 3.69% |
+| Ñuñoa | 42 | 3.52% |
+| San Miguel | 33 | 2.77% |
+| Pudahuel | 30 | 2.52% |
 
 ### 4.2 Tipo de Establecimiento
 | Tipo de Establecimiento | Frecuencia | Porcentaje (%) |
 |---|---|---|
-| Centro de Salud Privado | 262 | 22.35% |
-| Centro de Salud Familiar (CESFAM) | 174 | 14.85% |
-| Clínica | 108 | 9.22% |
-| Servicio de Atención Primaria de Urgencia (SAPU) | 105 | 8.96% |
-| Centro Comunitario de Salud Familiar (CECOSF) | 74 | 6.31% |
-| Clínica Dental | 66 | 5.63% |
-| Laboratorio Clínico | 64 | 5.46% |
-| Posta de Salud Rural (PSR) | 51 | 4.35% |
+| Centro de Salud Privado | 268 | 22.48% |
+| Centro de Salud Familiar (CESFAM) | 174 | 14.60% |
+| Servicio de Atención Primaria de Urgencia (SAPU) | 108 | 9.06% |
+| Clínica | 108 | 9.06% |
+| Centro Comunitario de Salud Familiar (CECOSF) | 75 | 6.29% |
+| Clínica Dental | 68 | 5.70% |
+| Laboratorio Clínico | 66 | 5.54% |
+| Posta de Salud Rural (PSR) | 51 | 4.28% |
 
 ### 4.3 Tipo de Sistema de Salud y Complejidad
 | Sistema de Salud | Frecuencia | Porcentaje (%) |
 |---|---|---|
-| Público | 567 | 48.38% |
-| Privado | 561 | 47.87% |
-| Fuerzas Armadas y de Orden | 25 | 2.13% |
-| nan | 19 | 1.62% |
+| Privado | 578 | 48.49% |
+| Público | 568 | 47.65% |
+| Fuerzas Armadas y de Orden (FFAA) | 22 | 1.85% |
+| nan | 21 | 1.76% |
+| Gendamería | 3 | 0.25% |
 
 | Nivel de Complejidad | Frecuencia | Porcentaje (%) |
 |---|---|---|
-| Baja Complejidad | 578 | 49.32% |
-| Mediana Complejidad | 364 | 31.06% |
-| Nulo / No informado | 173 | 14.76% |
-| Alta Complejidad | 57 | 4.86% |
+| Baja Complejidad | 579 | 48.57% |
+| Mediana Complejidad | 370 | 31.04% |
+| Nulo / No informado | 186 | 15.60% |
+| Alta Complejidad | 57 | 4.78% |
 
 ### 4.4 Servicios de Urgencia en RM
-- **Establecimientos con Servicio de Urgencia (`tiene_servicio_urgencia = 'SI'`):** 197 (16.8%)
-- **Establecimientos sin Urgencia (`tiene_servicio_urgencia = 'NO'`):** 943 (80.5%)
+- **Establecimientos con Servicio de Urgencia (`tiene_servicio_urgencia = 'SI'`):** 206 (17.3%)
+- **Establecimientos sin Urgencia (`tiene_servicio_urgencia = 'NO'`):** 944 (79.2%)
 
 ---
 
@@ -104,12 +105,12 @@ El presente informe audita y valida la integridad de la transformación del data
 | **Duplicados en `establecimiento_codigo`** | 0 | Correcto |
 | **Nulos en `establecimiento_codigo`** | 0 | Correcto |
 | **Inconsistencias `comuna_codigo` vs `comuna_glosa`** | 0 | Consistente (1 a 1) |
-| **Coordenadas válidas (`latitud`, `longitud`)** | 1076 (91.8%) | Cobertura geoespacial alta |
-| **Total registros con coordenadas faltantes** | **96** (8.2%) | Auditado detalladamente abajo |
+| **Coordenadas válidas (`latitud`, `longitud`)** | 1100 (92.3%) | Cobertura geoespacial alta |
+| **Total registros con coordenadas faltantes** | **92** (7.7%) | Auditado detalladamente abajo |
 
 ### 5.2 Desglose Específico de Coordenadas Faltantes
-- **Total de registros afectados:** **96**
-- **Registros con ambas coordenadas faltantes (`latitud` y `longitud` nulas):** **96**
+- **Total de registros afectados:** **92**
+- **Registros con ambas coordenadas faltantes (`latitud` y `longitud` nulas):** **92**
 - **Registros con solo `latitud` faltante:** **0**
 - **Registros con solo `longitud` faltante:** **0**
 - **Archivo exportado con el detalle completo:** [`registros_sin_coordenadas.csv`](eda/registros_sin_coordenadas.csv) (ruta relativa: `reports/eda/registros_sin_coordenadas.csv`)

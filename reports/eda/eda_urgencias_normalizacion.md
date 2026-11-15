@@ -19,8 +19,8 @@ Se procesaron 7 archivos CSV anuales de atenciones de urgencia a nivel nacional 
 - `data/raw/urgencias/AtencionesUrgencia2026.csv`
 
 Para la homologación territorial se utilizó el catálogo procesado de la RM:
-- `data/processed/establecimientos_rm_clean.csv` (1,187 códigos de establecimiento únicos)
-- `data/processed/establecimientos_salud_clean.parquet` (5,782 códigos de establecimiento únicos nacionales)
+- `data/processed/establecimientos_rm_clean.csv` (1,192 códigos de establecimiento únicos)
+- `data/processed/establecimientos_salud_clean.parquet` (5,837 códigos de establecimiento únicos nacionales)
 
 ---
 
@@ -37,7 +37,7 @@ Para la homologación territorial se utilizó el catálogo procesado de la RM:
 | 2023 | 01/01/2023 | 31/12/2023 | `3f11f21f4d07…` |
 | 2024 | 01/01/2024 | 31/12/2024 | `d6c93e7de79a…` |
 | 2025 | 01/01/2025 | 31/12/2025 | `e37f91f02d55…` |
-| 2026 | 01/01/2026 | 06/10/2026 | `c26ddb054460…` |
+| 2026 | 01/01/2026 | 14/11/2026 | `7ee500a2999a…` |
 
 ---
 
@@ -82,7 +82,7 @@ Para la homologación territorial se utilizó el catálogo procesado de la RM:
 
 ## 5. Homologación Territorial y Filtrado RM
 
-- **Registros con territorio determinado (RM o no RM):** 58,325,987 de 58,366,995 (99.9%).
+- **Registros con territorio determinado (RM o no RM):** 59,327,371 de 59,368,379 (99.9%).
 - **Registros sin territorio determinado:** 41,008.
 
 ---
@@ -97,8 +97,8 @@ Para la homologación territorial se utilizó el catálogo procesado de la RM:
 | 2023 | 8,899,080 | 2,148,520 | 6,750,560 | 0 | 2,148,520 | 100.0% |
 | 2024 | 8,973,229 | 2,141,400 | 6,831,829 | 0 | 2,141,400 | 100.0% |
 | 2025 | 9,127,869 | 2,177,404 | 6,950,465 | 0 | 2,177,404 | 100.0% |
-| 2026 | 7,177,624 | 1,704,042 | 5,473,582 | 0 | 1,704,042 | 100.0% |
-| **TOTAL** | **58,366,995** | **14,162,086** | **44,163,901** | **41,008** | **14,162,086** | **99.9%** |
+| 2026 | 8,179,008 | 1,946,188 | 6,232,820 | 0 | 1,946,188 | 100.0% |
+| **TOTAL** | **59,368,379** | **14,404,232** | **44,923,139** | **41,008** | **14,404,232** | **99.9%** |
 
 ---
 
@@ -119,12 +119,12 @@ Conteos calculados en esta ejecución. Esta etapa no verifica duplicados en el R
 ## 8. Registros No Procesables o Sin Correspondencia
 
 - **Registros sin territorio determinado:** 41,008.
-- **Trazabilidad:** la diferencia entre `Filas RAW` y `Filas PROCESSED` (44,204,909) corresponde a los registros no RM (44,163,901) y a los sin territorio determinado (41,008).
+- **Trazabilidad:** la diferencia entre `Filas RAW` y `Filas PROCESSED` (44,964,147) corresponde a los registros no RM (44,923,139) y a los sin territorio determinado (41,008).
 
 ---
 
 ## 9. Limitaciones
 
 1. **Resolución temporal:** la serie de atenciones está agrupada a nivel diario y semanal por causa y grupo etario, no a nivel de transacción de paciente individual (datos ecológicos).
-2. **Año en curso (2026):** el RAW es una fuente mutable; el último dato observado en este procesamiento es 06/10/2026 (ver sección 2). Su volumen no es comparable con el de años completos.
+2. **Año en curso (2026):** el RAW es una fuente mutable; el último dato observado en este procesamiento es 14/11/2026 (ver sección 2). Su volumen no es comparable con el de años completos.
 3. **Cambio de causas CIE:** las glosas y agrupaciones de causas del DEIS se auditarán y homologarán específicamente para salud mental (F00–F99) en la siguiente etapa analítica.

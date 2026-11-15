@@ -1,7 +1,7 @@
 {
   "dataset": "pronostico_establecimientos_sm",
-  "generado_en_utc": "2026-11-12T14:56:13.938884Z",
-  "generado_en_chile": "2026-11-12T11:56:13.938897-03:00",
+  "generado_en_utc": "2026-11-15T17:19:08.273379Z",
+  "generado_en_chile": "2026-11-15T14:19:08.273379-03:00",
   "objetivos": {
     "atenciones_sm": {
       "modelo": "poisson_glm_global_conformal",
@@ -17,23 +17,28 @@
       ],
       "nivel_intervalo": 0.8,
       "ultima_semana_observada": {
-        "t": 246,
+        "t": 252,
         "ano": 2026,
-        "semana": 39
+        "semana": 45
       },
-      "establecimientos": 125,
+      "establecimientos": 120,
       "fuera_de_rango": 0,
       "excluidos_por_cobertura_en_curso": [
         112820,
+        109101,
         200124,
         200142,
+        114821,
         109813,
         200135,
+        113826,
+        109104,
+        200131,
         200132,
         200041,
         109890
       ],
-      "filas": 1000
+      "filas": 960
     },
     "hospitalizaciones_sm": {
       "modelo": "lightgbm_global_conformal",
@@ -49,17 +54,19 @@
       ],
       "nivel_intervalo": 0.8,
       "ultima_semana_observada": {
-        "t": 246,
+        "t": 252,
         "ano": 2026,
-        "semana": 39
+        "semana": 45
       },
-      "establecimientos": 12,
+      "establecimientos": 11,
       "fuera_de_rango": 0,
-      "excluidos_por_cobertura_en_curso": [],
-      "filas": 96
+      "excluidos_por_cobertura_en_curso": [
+        109101
+      ],
+      "filas": 88
     }
   },
-  "filas": 1096,
+  "filas": 1048,
   "entradas": {
     "mart_urgencias_establecimiento_weekly": {
       "ruta": "data/processed/marts/mart_urgencias_establecimiento_weekly.parquet",
@@ -67,11 +74,11 @@
     },
     "seleccion_benchmark": {
       "ruta": "reports/modeling/benchmark_establecimientos_sm_seleccion.json",
-      "sha256": "f5fe27abf4cb32f6acebd044e8e70f71a4df9d95400aa839d0242430bb5ea774"
+      "sha256": "e64950ef1353416d7f4dc53b3aeb5a11503de99bae02002801b539c9359e4ca1"
     },
     "urgencias_2026": {
       "ruta": "data/processed/urgencias/urgencias_rm_2026.parquet",
-      "sha256": "c26ddb054460b2557b6075c145c941ceaa851d71e0f5c560f2244eb3ccc3f724",
+      "sha256": "7ee500a2999aa6d7a80f88bcb07db7d2fa25c4dd00f146a79c19381075a9d27c",
       "tipo": "raw_sha256"
     }
   }
