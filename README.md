@@ -1,6 +1,6 @@
 # SAAD: Sistema de Análisis y Anticipación de Demanda de Urgencia en Salud Mental para la Región Metropolitana
 
-> **Corte de estado: sábado 14 de noviembre de 2026**, a cinco días de la predefensa de Fase 2.2 (jueves 19 de noviembre). Este README distingue lo **implementado y con evidencia en el repositorio**, lo **parcial**, lo **no implementado** y lo **pendiente de validación**. Donde no hay evidencia se dice expresamente. El corte anterior (8 de octubre) quedó superado por el trabajo de octubre y noviembre.
+> **Corte de estado: domingo 15 de noviembre de 2026**, a cuatro días de la predefensa de Fase 2.2 (jueves 19 de noviembre). Este README distingue lo **implementado y con evidencia en el repositorio**, lo **parcial**, lo **no implementado** y lo **pendiente de validación**.
 
 ## Descripción y problema
 
@@ -9,6 +9,8 @@ SAAD es una plataforma analítica para apoyar la planificación de la red públi
 Los datos disponibles se encuentran distribuidos en distintas fuentes y requieren procesamiento y análisis para convertirse en indicadores útiles para la planificación. SAAD es una herramienta de apoyo analítico: no toma decisiones clínicas, diagnostica personas ni gestiona pacientes.
 
 ## Demostración de la plataforma
+
+**[Abrir la plataforma desplegada en AWS](https://d1zg565jvf1c8p.cloudfront.net/#/)**. El 15-11 la portada y la API respondieron; los datos visibles en AWS eran anteriores a la corrida local C-08. Ver «Despliegue en AWS».
 
 Video demostrativo del proyecto APT y su plataforma SAAD.
 
@@ -20,22 +22,22 @@ El video está disponible como archivo adjunto en la [Release de demostración d
 
 ## Componentes y alcance
 
-Estado al 14 de noviembre de 2026. «Implementado» significa que existe código y es accesible desde la API o la interfaz; no significa validado con usuarios.
+Estado del repositorio al 15 de noviembre de 2026. «Implementado» significa que existe código y es accesible desde la API o la interfaz local; no garantiza que el despliegue AWS tenga esa versión ni significa validado con usuarios.
 
 | Componente | Estado | Detalle y límites |
 |---|---|---|
 | **Pronóstico semanal de demanda (urgencias ID36)** | Implementado | Proyecciones de 4 a 8 semanas con intervalos, por RM y por comuna. Los horizontes 1 a 3 son operativos y no reemplazan el compromiso de 4 a 8. Modelo seleccionado: `hibrido_glm_region_lgbm_comuna_conformal`. Ver [`reports/modeling/`](reports/modeling/) |
 | **Pronóstico por establecimiento** | Implementado | Atenciones de salud mental (ID36) y hospitalizaciones derivadas desde urgencia (ID42, solo hospitales), con la misma regla de selección del modelo comunal |
 | **Suicidios semanales por comuna de residencia** | Implementado | Mart, benchmark y pronóstico. Las semanas finales pueden tener registro incompleto por rezago de inscripción y se marcan; la marca no certifica completitud |
-| **Hospitalización psiquiátrica (Egresos F00–F99)** | Parcial | Perfil por comuna de residencia (tasa, estadía, sexo, edad, diagnóstico, previsión), dotación y ocupación de camas de psiquiatría. **El análisis de duración de estadía y de factores asociados más allá del perfilado descriptivo sigue pendiente** según [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md) |
+| **Hospitalización psiquiátrica (Egresos F00–F99)** | Parcial | Existen análisis descriptivos de duración de estadía y un perfil anual por comuna de residencia (tasa, mediana y percentil 90 de estadía, sexo, edad, diagnóstico, previsión y proporción SNSS), además de dotación y ocupación de camas. **Sigue pendiente estudiar diferencias de duración de estadía según sexo, previsión y pertenencia SNSS**, más allá de los desgloses descriptivos existentes. Ver [EDA nacional](reports/hospitalization/eda_egresos_f00_f99.md) y [EDA territorial](reports/eda/eda_mart_egresos_f00_f99_rm.md) |
 | **Cobertura territorial** | Parcial | Cobertura simple por comuna: distancia en línea recta de la población censal 2024 a la oferta de urgencia. Mide proximidad, **no accesibilidad**: no usa red vial, transporte público ni tiempos de viaje |
-| **Isócronas OSM/GTFS** | **No implementadas** | El equipo decidió no implementarlas en esta entrega. Justificación en [`reports/geo/evaluacion_osm_gtfs_isocronas.md`](reports/geo/evaluacion_osm_gtfs_isocronas.md) |
+| **Isócronas OSM/GTFS** | **No implementadas** | La [evaluación territorial](reports/geo/evaluacion_osm_gtfs_isocronas.md) propuso OSM para automóvil y excluyó GTFS. La adenda de alcance C-02 sigue abierta; no se presenta la propuesta como decisión contractual cerrada |
 | **Pronóstico de hospitalizaciones por F00–F99 y de defunciones generales** | **No implementado** | No hay modelo ni endpoint |
 | **Calendario de contexto (festividades y estaciones)** | Implementado | Contexto visual. No son variables del modelo ni explicaciones causales |
 | **Autenticación de usuarios** | **No implementada** | No hay referencias a autenticación en `src/api/` |
 | **API de consulta** | Implementada | FastAPI de solo lectura en `src/api/`. Contrato en [`docs/06-requisitos/contrato_api/`](docs/06-requisitos/contrato_api/README.md) |
 | **Interfaz web** | Implementada | React en `frontend/`, con el branding del proyecto aplicado según el issue #100. Hay defectos de interfaz abiertos en AWS (DEF-12 a DEF-14) |
-| **Pipeline y datos** | Implementado, con revalidación pendiente | Ver «Evidencia técnica» |
+| **Pipeline y datos** | Revalidación parcial ejecutada | Corrida forzada local del 15-11 con evaluaciones omitidas; ver «Evidencia técnica» |
 
 El **alcance contractual** (ERF y ERNF) y los cambios decididos se registran en el control de cambios del issue C-02, aún abierto. No se debe leer este README como una adenda de alcance.
 
@@ -43,14 +45,14 @@ El **alcance contractual** (ERF y ERNF) y los cambios decididos se registran en 
 
 ## Despliegue en AWS
 
-| Elemento | Estado al 12–14 de noviembre | Evidencia |
+| Elemento | Estado y fecha de comprobación | Evidencia |
 |---|---|---|
 | **Plataforma desplegada** | **Sí.** CloudFront → ALB → ECS Fargate (API) y S3 privado (frontend y datos), región `us-east-1`, definida con AWS CDK en [`infra/aws/`](infra/aws/) | [Informe E2E del 12-11](reports/validation/e2e_local_aws/20261112T131720Z/informe.md) |
-| **URL funcional** | **Existe**, pero no se publica en este repositorio; el equipo la tiene registrada | Informe E2E |
+| **URL funcional** | [Plataforma SAAD](https://d1zg565jvf1c8p.cloudfront.net/#/): el HTML y `/api/v1/salud` respondieron HTTP 200 el 15-11; salud informó datos y pronóstico listos | Comprobación HTTP de solo lectura; no reemplaza una prueba integral de la interfaz |
 | **Resultado de la prueba E2E** | 21 casos aprobados, 4 fallidos, 6 no ejecutados. Los 4 fallidos eran outputs de datos que faltaban y se cerraron después (DEF-01 a DEF-03) | [Registro de defectos](reports/validation/ciclos_pruebas/registro_defectos.md) |
 | **Actualización de datos** | El pipeline **se ejecuta en el equipo** y sus outputs se publican con `infra/aws/scripts/subir_datos.sh`. No se ejecuta en Fargate ni está programado con EventBridge (cambio de alcance, issue C-42 abierto) | [Plan de despliegue](docs/08-arquitectura/plan_despliegue_aws.md) |
 | **CI/CD (CodePipeline y CodeBuild)** | **Bloqueada:** la conexión con GitHub está pendiente de aprobación | Registro de defectos |
-| **Versión desplegada** | La versión en AWS **no se puede confirmar desde la API**: `/api/v1/meta` no expone el SHA ni el digest de la imagen | Registro de defectos |
+| **Versión y datos desplegados** | El 15-11, `/api/v1/meta` informó última semana observada **2026-S39** y pronóstico generado el 12-11; el pronóstico local de C-08 usa **2026-S45**. AWS no refleja ese corte local. La API no expone el SHA ni el digest de la imagen | Consulta HTTP de `/api/v1/meta`; [evidencia C-08](reports/validation/c08_revalidacion_20261115T161029Z/informe.md) |
 | **Seguridad, costos, observabilidad y manual operacional** | Parcialmente documentados; la consolidación (C-45) está pendiente | [Costos](docs/08-arquitectura/costos_aws_verificacion.md) |
 
 AWS **no sustituye** la contingencia local: si el despliegue no estuviera disponible en una presentación, la plataforma se demuestra con Docker Compose.
@@ -61,6 +63,7 @@ AWS **no sustituye** la contingencia local: si el despliegue no estuviera dispon
 - **Holdout de demanda 2026** (snapshot con fecha máxima 2 de octubre): MASE regional **0,5096** y comunal **0,6587**; cobertura de intervalos regional **69,68 %** y comunal **76,84 %** frente a **80 % nominal**, sin calibración en ninguno de los dos niveles. El informe concluye que la selección **se sostiene solo parcialmente**. Estas cifras corresponden a ese snapshot: **los datos se actualizaron después y el holdout no se ha vuelto a ejecutar**. Los intervalos deben leerse como orientativos.
 - **Certificación del pipeline del 8 de octubre** ([`reports/validation/apt_certification_20261008T002147Z/`](reports/validation/apt_certification_20261008T002147Z/)): código de salida 0 y 77/77 outputs válidos **en esa versión**. Parte de las etapas reutilizó outputs existentes y no es una reconstrucción limpia. **No certifica la versión vigente.**
 - **Revalidación posterior al corte de octubre** ([evidencia C-08](reports/validation/c08_revalidacion_20261115T161029Z/informe.md)): el 15-11 terminó con código 0 una corrida forzada con `--sin-evaluacion`, que regeneró datos y pronósticos. Los tres benchmarks y los tres holdouts se omitieron; la evaluación con el snapshot actualizado sigue pendiente. El [informe del 10-11](reports/validation/c08_revalidacion_20261110.md) documenta el rezago de Defunciones y una ejecución anterior.
+- **Suite automatizada U-39:** 920 pruebas ordinarias y 29 de integración aprobadas por separado sobre el commit base `5c341c5`, con cambios locales; salidas y entorno en la [evidencia C-08](reports/validation/c08_revalidacion_20261115T161029Z/informe.md). No acredita instalación desde un clon limpio.
 - **Pruebas de la plataforma:** línea base local ([`baseline_local`](reports/validation/baseline_local/20261112T135538Z/informe.md)), prueba E2E local contra AWS, ciclos de prueba y registro de defectos en [`reports/validation/`](reports/validation/). Abiertos al 14-11: DEF-11 (`subir_datos.sh` no valida outputs completos) y DEF-12 a DEF-14 (interfaz).
 - **Instalación limpia en un segundo computador:** el equipo la confirmó el 8 de octubre, pero **no hay evidencia archivada** en el repositorio (comandos, versiones, logs). El [manual de implementación](docs/10-manual-implementacion/README.md) registra qué instalaciones tienen evidencia y cuáles no.
 
@@ -72,7 +75,7 @@ La existencia de código, la certificación de outputs, la instalación limpia, 
 |---|---|---|
 | Modelo de demanda | Implementado; holdout con datos de octubre | Consolidar métricas, cobertura de intervalos y limitaciones (C-14) |
 | Datos y pipeline | Corrida forzada del 15-11 con evaluaciones omitidas; pronósticos regenerados y procedencia registrada | Revalidar benchmarks y holdouts con los datos actuales |
-| API y frontend | Funcionales en local y en AWS; defectos de interfaz abiertos | Corregir DEF-12 a DEF-14 y revisar los resultados de los ciclos |
+| API y frontend | Implementados en local; AWS respondió el 15-11 con datos anteriores a C-08 y defectos de interfaz registrados | Verificar publicación de datos y corregir DEF-12 a DEF-14 |
 | Despliegue en AWS | Operativo con datos publicados manualmente; CI/CD bloqueada | C-36, C-42 y C-45 |
 | Documentación técnica | [Manual de implementación](docs/10-manual-implementacion/README.md) en su primera versión; manual de usuario pendiente | C-15 y anexos operacionales de C-45 |
 | Pruebas | Campañas de 70 y 200 casos con registro de defectos | Cerrar defectos abiertos y repetir el ciclo |

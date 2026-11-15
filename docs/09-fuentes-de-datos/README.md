@@ -1,6 +1,6 @@
 # Fuentes de datos y procedimiento reproducible de obtención
 
-Este documento registra de dónde salen los datos de SAAD, cómo se obtienen de forma reproducible y cómo se comprueba que lo obtenido coincide con lo registrado. Los datos **no se versionan en Git**: lo que se versiona es el código que los descarga y el manifest que identifica cada archivo obtenido.
+Este documento registra de dónde salen los datos de SAAD, cómo se obtienen de forma reproducible y cómo se comprueba que lo obtenido coincide con lo registrado. El RAW no se versiona; se versionan el código, el manifiesto de procedencia y, como excepción procesada, los tres pronósticos y sus manifiestos.
 
 La fuente de verdad del detalle de cada etapa es [PIPELINE.md](../../PIPELINE.md). Las URLs de este documento son las que usa el código (`src/data/download_*.py`); si el código cambia, este documento debe actualizarse.
 
@@ -9,16 +9,16 @@ La fuente de verdad del detalle de cada etapa es [PIPELINE.md](../../PIPELINE.md
 | Carpeta | Contenido | ¿Versionada? |
 |---|---|---|
 | `data/raw/` | Archivos tal como los publica la fuente | **No.** Solo se versionan `data/raw/.gitkeep` y `data/raw/provenance_manifest.json` |
-| `data/processed/` | Salidas del pipeline, regenerables | **No**, salvo `.gitkeep` y el pronóstico vigente (`data/processed/modeling/pronostico_demanda_sm.parquet` y su manifiesto) |
+| `data/processed/` | Salidas del pipeline, regenerables | **No**, salvo `.gitkeep` y los pronósticos de demanda, establecimientos y suicidios con sus manifiestos en `data/processed/modeling/` |
 | `.cache/` | Descargas temporales (ZIP de transporte) | **No** |
 | `reports/` | Reportes y métricas del análisis | Sí |
 
 Reglas:
 
-- **RAW no se versiona** (regla de `.gitignore`: `data/raw/*`). Motivos verificables: tamaño (`data/raw/` pesa unos 12 GB; las Atenciones de Urgencia son 9,1 GB) y que cualquiera puede reconstruirlo desde la fuente oficial con el procedimiento de este documento.
+- **RAW no se versiona** (regla de `.gitignore`: `data/raw/*`). El pipeline puede descargar las fuentes disponibles, pero una fuente mutable puede haber reemplazado el snapshot anterior; el hash por sí solo no lo recupera. Los tamaños históricos del equipo son orientativos y cambian con las descargas.
 - Se conserva en `data/raw/` el archivo en su formato original. Los contenedores de transporte (`.zip`) no son RAW canónico: se descargan a `.cache/downloads/`, se validan y solo se publica el archivo extraído.
 - Una descarga solo llega a `data/raw/` si pasa la validación de formato y esquema mínimo; si falla, el RAW existente no se toca.
-- Todo snapshot publicado queda registrado en `data/raw/provenance_manifest.json` con URL, fecha, tamaño y SHA256.
+- Las ingestas con procedencia registran URL, fecha, tamaño y SHA256 en `data/raw/provenance_manifest.json`; algunos RAW históricos anteriores al registro pueden no tener entrada.
 
 ## 2. Fuentes oficiales
 
@@ -118,6 +118,12 @@ Todas las etapas de descarga viven en `src/data/` y se ejecutan con `scripts/run
 - Observado en el RAW, que se conserva sin modificar: cada hoja de indicadores intercala el detalle por nivel de cuidado con filas agregadas `Datos País`, `Datos Servicio Salud` y `Datos Establecimiento`; el nombre de la hoja varía (`Año 2024`, `Corte Septiembre`) y el año se lee del título. El libro de categorización es jerárquico (región, Servicio de Salud, establecimiento y nivel en una sola columna), no trae código de establecimiento y solo declara el año: el trimestre viene del nombre de la publicación.
 - La lectura de las categorías CUDYR se toma de González P, Kappes M, Gallardo-Vargas C. *Cuidados según dependencia y riesgo en hospitales de baja complejidad del Servicio de Salud Reloncaví, Chile*. Ciencia y Enfermería. 2024;30:31 ([doi:10.29393/CE30-31CSPC30031](https://doi.org/10.29393/CE30-31CSPC30031)). Se cita como referencia; no se guarda en RAW.
 
+### 2.10 DEIS / MINSAL — Defunciones
+
+- **Etapa:** `download_defunciones`. Descarga las cifras oficiales 1990–2023 y descubre el paquete preliminar publicado en el [catálogo DEIS](https://deis.minsal.cl/) al iniciar sin snapshot o al forzar la actualización.
+- **Destino:** `data/raw/defunciones/`, con CSV y diccionario originales en un directorio por paquete. El manifiesto identifica transporte y archivos extraídos. Se conservan los cortes anteriores disponibles, pero la consolidación usa únicamente el preliminar más reciente registrado para evitar sumar períodos superpuestos.
+- El consolidado nacional comienza en 2020 según `src/data/defunciones_config.json`; el mart derivado de suicidios selecciona X60–X84 y residencia comunal. Los cortes preliminares tienen rezago y sus fechas máximas no certifican completitud. Detalles y comandos en [PIPELINE.md](../../PIPELINE.md).
+
 ## 3. Procedimiento de descarga
 
 Requisitos: Python 3.12 y las dependencias de `requirements.txt`; acceso a internet; espacio en disco (unos 12 GB de RAW).
@@ -128,8 +134,9 @@ python -m pip install -r requirements.txt
 # Pipeline completo: descarga lo que falta y procesa
 python scripts/run_pipeline.py
 
-# Solo una descarga
+# Desde una etapa de descarga: también evalúa sus descendientes
 python scripts/run_pipeline.py --stage download_deis
+python scripts/run_pipeline.py --stage download_defunciones
 python scripts/run_pipeline.py --stage download_establishments
 python scripts/run_pipeline.py --stage download_censo
 python scripts/run_pipeline.py --stage download_censo_poblacion
@@ -142,15 +149,16 @@ python scripts/run_pipeline.py --stage download_contexto_genero
 
 Comportamiento:
 
-- **Idempotente:** si el RAW ya existe y es válido, la etapa hace `SKIP` y no consulta la fuente.
-- **`--force`:** solicita explícitamente un snapshot nuevo y propaga la regeneración solo a las etapas que dependen de él. Úsalo con cuidado en las fuentes mutables (sección 5).
+- **Selección:** `--stage` evalúa la etapa y sus descendientes, no solo la descarga; puede ejecutar modelado si corresponde. No reconstruye sus upstream. Para omitir evaluación se puede añadir `--sin-evaluacion`; consultar el DAG en `PIPELINE.md`.
+- **Idempotente:** cada etapa comprueba sus outputs y puede hacer `SKIP` si son válidos; esto no demuestra que haya consultado la fuente ni detecta necesariamente cambios de código.
+- **`--force`:** fuerza la etapa seleccionada y sus descendientes, con las reglas propias de cada fuente; puede consultar la red y regenerar datos y modelos. Úsalo con cuidado en las fuentes mutables (sección 5).
 - **`--refresh-current-urgencias`:** vuelve a consultar el ZIP del año corriente de Urgencias y actualiza solo la rama afectada.
 - **Estadísticas Hospitalarias del año en curso:** con el RAW presente, la etapa hace `SKIP`. Para traer un corte mensual nuevo: `python scripts/run_pipeline.py --stage download_estadisticas_hospitalarias --force` (busca el último mes publicado sin fijarlo en el código).
 - **Descarga segura:** cada fuente se descarga a `.cache/downloads/`, se valida (ZIP íntegro, columnas requeridas, hojas del XLSX, geometría legible) y recién entonces se publica en `data/raw/`.
 
 ## 4. Manifest y hashes
 
-`data/raw/provenance_manifest.json` es una lista JSON con una entrada por `source_id`. Es el único archivo de `data/raw/` que se versiona. Hoy registra 49 fuentes.
+`data/raw/provenance_manifest.json` es una lista JSON que identifica fuentes y snapshots. Algunas fuentes históricas tienen varias entradas con el mismo `source_id`; el verificador de abajo toma la última. Es el único archivo de procedencia en `data/raw/` que se versiona.
 
 Formato actual (una entrada con historial de snapshots; lo escribe `record_raw_snapshot` en `src/data/raw_provenance.py`):
 
@@ -175,8 +183,8 @@ Formato actual (una entrada con historial de snapshots; lo escribe `record_raw_s
 ```
 
 - `raw_sha256` / `raw_size`: hash y tamaño del archivo publicado en `data/raw/`. Los ZIP de DEIS agregan `zip_sha256` / `zip_size` del contenedor y `archive_member`; los demás XLSX/Parquet registran el contenedor en `transport`.
-- `downloaded_at`: marca UTC de la descarga. Cada descarga nueva **agrega** un snapshot; no reemplaza el anterior.
-- El manifest no registra un hash propio para los diccionarios extraídos de los ZIP DEIS; sí lo hace para el ZIP y el CSV.
+- `downloaded_at`: marca UTC de la descarga. Las entradas con historial conservan snapshots previos; las fuentes en formato plano pueden aparecer en varias entradas.
+- El nivel de detalle depende de la ingesta: Defunciones registra el CSV y el diccionario por separado; no asumir que todos los diccionarios de otras ramas tienen entrada o hash propio.
 - Los Parquet de Urgencias procesados guardan en su metadato `raw_sha256` el hash del RAW desde el que se generaron, de modo que se puede saber si un procesado quedó desactualizado.
 
 ### Verificar que el RAW local coincide con el manifest
@@ -215,6 +223,7 @@ EOF
 ## 5. Fuentes mutables y límites de la reproducibilidad
 
 - **Atenciones de Urgencia del año corriente** (hoy 2026): el DEIS sobrescribe periódicamente el ZIP sin versionarlo. Dos descargas en fechas distintas pueden dar archivos distintos.
+- **Defunciones preliminares:** cada paquete se identifica por período y fecha; solo se usa el más reciente registrado en el consolidado. El registro de fechas recientes puede estar incompleto.
 - **Catálogo de establecimientos:** es el catálogo "actualizado" publicado por DEIS, no un año cerrado.
 - **Estadísticas Hospitalarias REM-20 del año en curso:** el DEIS reemplaza el libro con cada corte mensual (con otro nombre de archivo) y deja de exponer el anterior sin aviso. El manifest registra cada corte obtenido (`corte_mes`).
 - **Años cerrados** (Urgencias 2020-2025, Egresos 2020-2025, Censo 2024, proyecciones INE, Casen 2022, dotación de camas 2010-2025 y 2019-2025, Estadísticas Hospitalarias 2014-2025 y su categorización 2024-2025, cuadros de género): se espera que el hash no cambie.
@@ -223,5 +232,5 @@ El manifest identifica **qué** snapshot se usó (URL, fecha y hash), pero una U
 
 ## 6. Observaciones verificadas sobre el manifest
 
-- Los cuatro cuadros de Estadísticas de Género aparecen **dos veces** en la lista, ambas en el formato anterior (campos planos `sha256`, `downloaded_at` y `raw_path` en lugar de `snapshots`): una descarga del 2026-09-03 y otra del 2026-10-07. Los demás `source_id` ya usan el formato con `snapshots`. El script de verificación de la sección 4 admite ambos formatos y toma la última entrada de cada `source_id`.
-- Con el manifest actual, las 27 fuentes coinciden con el RAW local.
+- Al 15-11, los cuatro cuadros de Estadísticas de Género aparecen tres veces en formato plano; las demás entradas usan `snapshots`. El script de la sección 4 admite ambos formatos y toma la última entrada de cada `source_id`.
+- La verificación del RAW depende de los archivos presentes en el equipo. El [informe C-08](../../reports/validation/c08_revalidacion_20261115T161029Z/informe.md) registra los hashes comprobados de Urgencias 2026 y Defunciones; no afirma que se hayan comprobado todas las fuentes.
