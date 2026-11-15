@@ -533,6 +533,7 @@ PIPELINE_ORDER = [
     "eda_mart_ocupacion_psiquiatria_hospital_rm",
     "build_mart_egresos_f00_f99_rm",
     "build_contraste_camas_psiquiatria_rm",
+    "eda_mart_egresos_f00_f99_rm",
     "build_capa_oferta_urgencia_rm",
     "resolve_coordenadas_establecimientos",
     "build_cobertura_urgencia_comuna",
@@ -550,8 +551,7 @@ PIPELINE_ORDER = [
     "eda_mart_suicidios_comuna_weekly",
     "benchmark_suicidios",
     "evaluate_holdout_suicidios",
-    "forecast_suicidios",
-    "eda_mart_egresos_f00_f99_rm"
+    "forecast_suicidios"
 ]
 
 SUPPORTED_URGENCIAS_YEARS = tuple(range(2020, current_year_chile() + 1))
