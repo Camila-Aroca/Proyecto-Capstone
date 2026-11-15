@@ -402,6 +402,14 @@ STAGES = {
         "outputs": ["data/processed/marts/contraste_camas_psiquiatria_rm.parquet"],
         "depends_on": ["build_egresos_f00_f99", "build_mart_ocupacion_psiquiatria_hospital_rm"]
     },
+    "eda_mart_egresos_f00_f99_rm": {
+        "module": "scripts.eda_mart_egresos_f00_f99_rm",
+        "outputs": [
+            "reports/eda/eda_mart_egresos_f00_f99_rm.md",
+            "reports/eda/eda_mart_egresos_f00_f99_rm_resumen.json",
+        ],
+        "depends_on": ["build_mart_egresos_f00_f99_rm", "build_contraste_camas_psiquiatria_rm", "build_egresos_f00_f99"]
+    },
     "build_capa_oferta_urgencia_rm": {
         "module": "src.geo.build_capa_oferta_urgencia_rm",
         "outputs": ["data/processed/geo/capa_oferta_urgencia_rm.parquet"],
@@ -542,7 +550,8 @@ PIPELINE_ORDER = [
     "eda_mart_suicidios_comuna_weekly",
     "benchmark_suicidios",
     "evaluate_holdout_suicidios",
-    "forecast_suicidios"
+    "forecast_suicidios",
+    "eda_mart_egresos_f00_f99_rm"
 ]
 
 SUPPORTED_URGENCIAS_YEARS = tuple(range(2020, current_year_chile() + 1))

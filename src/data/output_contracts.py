@@ -332,6 +332,10 @@ def validate_expected_schema(path: Path) -> bool:
         from scripts.eda_mart_ocupacion_psiquiatria_hospital_rm import validate_outputs
         validate_outputs()
         return True
+    elif name in {"eda_mart_egresos_f00_f99_rm.md", "eda_mart_egresos_f00_f99_rm_resumen.json"}:
+        from scripts.eda_mart_egresos_f00_f99_rm import validate_outputs
+        validate_outputs()
+        return True
     elif name in {"eda_estadisticas_hospitalarias.md", "eda_estadisticas_hospitalarias_resumen.json"}:
         from scripts.eda_estadisticas_hospitalarias import validate_outputs
         validate_outputs()

@@ -1,0 +1,159 @@
+{
+  "filas_anual": 318,
+  "filas_desglose": 7399,
+  "territorios": 53,
+  "comunas": 52,
+  "anos": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "pk_anual_duplicados": 0,
+  "pk_desglose_duplicados": 0,
+  "desglose_sin_anual": 0,
+  "nulos_poblacion_por_ano": {
+    "2020": 53
+  },
+  "poblacion_y_tasa_nulas_a_la_vez": true,
+  "comunas_suman_region": true,
+  "region_igual_egresos_residentes_rm": true,
+  "dimension_territorio_ano_distintos_del_total": 0,
+  "dimension_territorio_ano_total": 1272,
+  "tasa_recalculo_max_diferencia": 0.0,
+  "p90_menor_que_mediana": 0,
+  "comunas_ano_sin_egresos": 0,
+  "comunas_ano_con_pocos_egresos": 14,
+  "umbral_pocos_egresos": 10,
+  "egresos_comuna_ano": {
+    "count": 312.0,
+    "mean": 233.72435897435898,
+    "std": 243.0769683118981,
+    "min": 1.0,
+    "25%": 83.0,
+    "50%": 154.5,
+    "75%": 269.75,
+    "max": 1266.0
+  },
+  "categorias_por_dimension": {
+    "grupo_diagnostico": 11,
+    "grupo_edad": 10,
+    "prevision": 5,
+    "sexo": 3
+  },
+  "region_por_ano": [
+    {
+      "ano": 2020,
+      "egresos": 9416,
+      "poblacion": null,
+      "tasa_por_10000": NaN,
+      "dias_estada_mediana": 13.0,
+      "dias_estada_p90": 47.0,
+      "proporcion_snss": 0.5392948173322005
+    },
+    {
+      "ano": 2021,
+      "egresos": 10446,
+      "poblacion": 8242459,
+      "tasa_por_10000": 12.673402439733096,
+      "dias_estada_mediana": 14.0,
+      "dias_estada_p90": 43.0,
+      "proporcion_snss": 0.55944859276278
+    },
+    {
+      "ano": 2022,
+      "egresos": 12193,
+      "poblacion": 8310984,
+      "tasa_por_10000": 14.670946304312462,
+      "dias_estada_mediana": 12.0,
+      "dias_estada_p90": 42.0,
+      "proporcion_snss": 0.5345690150086115
+    },
+    {
+      "ano": 2023,
+      "egresos": 13122,
+      "poblacion": 8367790,
+      "tasa_por_10000": 15.681559886182612,
+      "dias_estada_mediana": 12.0,
+      "dias_estada_p90": 41.0,
+      "proporcion_snss": 0.606538637402835
+    },
+    {
+      "ano": 2024,
+      "egresos": 13822,
+      "poblacion": 8420729,
+      "tasa_por_10000": 16.414255820368997,
+      "dias_estada_mediana": 11.0,
+      "dias_estada_p90": 41.0,
+      "proporcion_snss": 0.606062798437274
+    },
+    {
+      "ano": 2025,
+      "egresos": 13923,
+      "poblacion": 8471244,
+      "tasa_por_10000": 16.435602610431243,
+      "dias_estada_mediana": 10.0,
+      "dias_estada_p90": 39.0,
+      "proporcion_snss": 0.6304675716440422
+    }
+  ],
+  "contraste": [
+    {
+      "ano": 2020,
+      "egresos_residentes_rm": 9416,
+      "camas_equivalentes_egresos": 610.8,
+      "camas_equivalentes_egresos_snss": 413.7,
+      "camas_ocupadas_rem20": 575.3,
+      "camas_ocupadas_rem20_sin_forense": 494.2,
+      "razon_egresos_snss_rem20_sin_forense": 0.837
+    },
+    {
+      "ano": 2021,
+      "egresos_residentes_rm": 10446,
+      "camas_equivalentes_egresos": 650.8,
+      "camas_equivalentes_egresos_snss": 434.3,
+      "camas_ocupadas_rem20": 586.8,
+      "camas_ocupadas_rem20_sin_forense": 505.9,
+      "razon_egresos_snss_rem20_sin_forense": 0.858
+    },
+    {
+      "ano": 2022,
+      "egresos_residentes_rm": 12193,
+      "camas_equivalentes_egresos": 708.3,
+      "camas_equivalentes_egresos_snss": 464.2,
+      "camas_ocupadas_rem20": 563.0,
+      "camas_ocupadas_rem20_sin_forense": 482.9,
+      "razon_egresos_snss_rem20_sin_forense": 0.961
+    },
+    {
+      "ano": 2023,
+      "egresos_residentes_rm": 13122,
+      "camas_equivalentes_egresos": 712.0,
+      "camas_equivalentes_egresos_snss": 475.9,
+      "camas_ocupadas_rem20": 586.7,
+      "camas_ocupadas_rem20_sin_forense": 501.3,
+      "razon_egresos_snss_rem20_sin_forense": 0.949
+    },
+    {
+      "ano": 2024,
+      "egresos_residentes_rm": 13822,
+      "camas_equivalentes_egresos": 764.1,
+      "camas_equivalentes_egresos_snss": 514.7,
+      "camas_ocupadas_rem20": 578.8,
+      "camas_ocupadas_rem20_sin_forense": 492.4,
+      "razon_egresos_snss_rem20_sin_forense": 1.045
+    },
+    {
+      "ano": 2025,
+      "egresos_residentes_rm": 13923,
+      "camas_equivalentes_egresos": 735.4,
+      "camas_equivalentes_egresos_snss": 504.7,
+      "camas_ocupadas_rem20": 596.4,
+      "camas_ocupadas_rem20_sin_forense": 508.5,
+      "razon_egresos_snss_rem20_sin_forense": 0.992
+    }
+  ],
+  "contraste_egresos_igual_region": true
+}

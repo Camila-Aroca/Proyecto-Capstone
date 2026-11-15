@@ -1,7 +1,7 @@
 # Diccionario de datos: `contraste_camas_psiquiatria_rm`
 
 - **Ruta:** `data/processed/marts/contraste_camas_psiquiatria_rm.parquet`.
-- **Constructor:** `src/data/build_contraste_camas_psiquiatria_rm.py`, stage `build_contraste_camas_psiquiatria_rm` (upstream: `build_egresos_f00_f99`, `build_mart_ocupacion_psiquiatria_hospital_rm`). Pruebas: `tests/test_mart_egresos_f00_f99_rm.py`.
+- **Constructor:** `src/data/build_contraste_camas_psiquiatria_rm.py`, stage `build_contraste_camas_psiquiatria_rm` (upstream: `build_egresos_f00_f99`, `build_mart_ocupacion_psiquiatria_hospital_rm`). Pruebas: `tests/test_mart_egresos_f00_f99_rm.py`. EDA: `reports/eda/eda_mart_egresos_f00_f99_rm.md`.
 - **Propósito:** respaldar con una segunda fuente la escala de la propuesta de camas, que usa REM-20. Compara, por año, las camas de psiquiatría ocupadas en promedio según Egresos y según REM-20. Si ambas dan el mismo orden de magnitud, la escala queda respaldada; no deben coincidir exactamente.
 - **Fuente:** `egresos_f00_f99_nacional_2020_2025` (residentes RM) y `mart_ocupacion_psiquiatria_hospital_rm`.
 

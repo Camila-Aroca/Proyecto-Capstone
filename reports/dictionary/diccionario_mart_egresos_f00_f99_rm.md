@@ -1,7 +1,7 @@
 # Diccionario de datos: `mart_egresos_f00_f99_rm_anual` y `mart_egresos_f00_f99_rm_desglose`
 
 - **Rutas:** `data/processed/marts/mart_egresos_f00_f99_rm_anual.parquet` y `data/processed/marts/mart_egresos_f00_f99_rm_desglose.parquet`.
-- **Constructor:** `src/data/build_mart_egresos_f00_f99_rm.py`, stage `build_mart_egresos_f00_f99_rm` (upstream: `build_egresos_f00_f99`, `clean_poblacion_proyecciones`). Pruebas: `tests/test_mart_egresos_f00_f99_rm.py`.
+- **Constructor:** `src/data/build_mart_egresos_f00_f99_rm.py`, stage `build_mart_egresos_f00_f99_rm` (upstream: `build_egresos_f00_f99`, `clean_poblacion_proyecciones`). Pruebas: `tests/test_mart_egresos_f00_f99_rm.py`. EDA: `reports/eda/eda_mart_egresos_f00_f99_rm.md` (stage `eda_mart_egresos_f00_f99_rm`).
 - **Propósito:** perfil anual de las hospitalizaciones por salud mental (diagnóstico principal F00-F99) de los residentes de la RM, por comuna de residencia y para la región. Lo sirve la API en `/api/v1/hospitalizaciones-residentes/{series_id}` y el tablero comunal. Complementa a Urgencias, no la reemplaza: Urgencias cuenta dónde se atendió la persona y Egresos dónde vive.
 - **Fuente:** `data/processed/egresos/egresos_f00_f99_nacional_2020_2025.parquet` filtrado a `residente_rm` (DEIS, egresos hospitalarios 2020-2025) y la proyección INE por comuna y año (`dim_poblacion_comuna_anual`), que fija el universo de 52 comunas.
 
