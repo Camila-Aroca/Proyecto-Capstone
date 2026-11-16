@@ -25,7 +25,7 @@ from src.api import caracterizacion, hospitalizaciones  # noqa: E402
 from src.api.establecimientos import RutasEstablecimientos  # noqa: E402
 from src.api.service import Rutas  # noqa: E402
 from src.api.suicidios import RutasSuicidios  # noqa: E402
-from src.data.raw_provenance import file_sha256  # noqa: E402
+from src.data.raw_provenance import file_sha256, processed_raw_sha256  # noqa: E402
 from src.models import persistence, pronostico_establecimientos, suicidios  # noqa: E402
 
 MANIFIESTOS: Final[tuple[Path, ...]] = (
@@ -58,7 +58,8 @@ def problemas(raiz: Path = RAIZ) -> list[str]:
             ruta = raiz / entrada["ruta"]
             if not ruta.is_file():
                 salida.append(f"{manifiesto.name}: falta la entrada {nombre} ({entrada['ruta']})")
-            elif file_sha256(ruta) != entrada["sha256"]:
+            # Para los años en curso el manifiesto guarda la identidad del RAW declarada en el Parquet.
+            elif (processed_raw_sha256(ruta) if entrada.get("tipo") == "raw_sha256" else file_sha256(ruta)) != entrada["sha256"]:
                 salida.append(f"{manifiesto.name}: {entrada['ruta']} cambió después de generar el pronóstico")
     return salida
 

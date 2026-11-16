@@ -488,6 +488,18 @@
         "raw_filename": "AtencionesUrgencia2026.csv",
         "raw_size": 1749419188,
         "raw_sha256": "7ee500a2999aa6d7a80f88bcb07db7d2fa25c4dd00f146a79c19381075a9d27c"
+      },
+      {
+        "source_url": "https://repositoriodeis.minsal.cl/SistemaAtencionesUrgencia/AtencionesUrgencia2026.zip",
+        "downloaded_at": "2026-11-16T02:21:29.664773+00:00",
+        "zip_filename": "deis_urgencias_2026_AtencionesUrgencia2026.zip",
+        "zip_size": 48930899,
+        "zip_sha256": "306788162f7869f848c9c8ab08147b0f58c6c060c205b7422000699fa61428ac",
+        "archive_member": "AtencionesUrgencia2026.csv",
+        "raw_path": "data/raw/urgencias/AtencionesUrgencia2026.csv",
+        "raw_filename": "AtencionesUrgencia2026.csv",
+        "raw_size": 1749419188,
+        "raw_sha256": "7ee500a2999aa6d7a80f88bcb07db7d2fa25c4dd00f146a79c19381075a9d27c"
       }
     ]
   },

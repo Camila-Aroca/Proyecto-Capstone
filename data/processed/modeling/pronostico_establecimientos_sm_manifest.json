@@ -1,7 +1,7 @@
 {
   "dataset": "pronostico_establecimientos_sm",
-  "generado_en_utc": "2026-11-15T17:19:08.273379Z",
-  "generado_en_chile": "2026-11-15T14:19:08.273379-03:00",
+  "generado_en_utc": "2026-11-16T02:30:20.199716Z",
+  "generado_en_chile": "2026-11-15T23:30:20.199731-03:00",
   "objetivos": {
     "atenciones_sm": {
       "modelo": "poisson_glm_global_conformal",
@@ -74,7 +74,7 @@
     },
     "seleccion_benchmark": {
       "ruta": "reports/modeling/benchmark_establecimientos_sm_seleccion.json",
-      "sha256": "e64950ef1353416d7f4dc53b3aeb5a11503de99bae02002801b539c9359e4ca1"
+      "sha256": "f5fe27abf4cb32f6acebd044e8e70f71a4df9d95400aa839d0242430bb5ea774"
     },
     "urgencias_2026": {
       "ruta": "data/processed/urgencias/urgencias_rm_2026.parquet",

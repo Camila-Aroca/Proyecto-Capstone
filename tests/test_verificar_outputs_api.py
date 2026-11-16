@@ -54,6 +54,17 @@ def test_reporta_entrada_que_cambio_despues_del_pronostico(outputs: Path) -> Non
     assert all("cambió después de generar el pronóstico" in p for p in encontrados)
 
 
+def test_entrada_raw_sha256_se_compara_con_la_identidad_del_raw(outputs: Path, monkeypatch) -> None:
+    manifiesto = outputs / v.MANIFIESTOS[0]
+    datos = json.loads(manifiesto.read_text())
+    datos["entradas"]["urgencias_2026"] = {"ruta": ENTRADA.as_posix(), "sha256": "raw-declarado", "tipo": "raw_sha256"}
+    manifiesto.write_text(json.dumps(datos))
+    monkeypatch.setattr(v, "processed_raw_sha256", lambda ruta: "raw-declarado")
+    assert v.problemas(outputs) == []
+    monkeypatch.setattr(v, "processed_raw_sha256", lambda ruta: "otro-raw")
+    assert v.problemas(outputs) == [f"{v.MANIFIESTOS[0].name}: {ENTRADA.as_posix()} cambió después de generar el pronóstico"]
+
+
 def test_incluye_marts_manifiestos_y_selecciones() -> None:
     rutas = {r.as_posix() for r in v.requeridos()}
     assert "data/processed/marts/mart_suicidios_comuna_weekly.parquet" in rutas

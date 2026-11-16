@@ -115,7 +115,7 @@
   "preservation_verified": true,
   "artifact_sha256": {
     "parquet": "b139ee96b3523d0ae73bd90dcb3c5003e276b8662ea3c6baf8969209c37b4eb1",
-    "report": "0300677a759200fcbb59a19fe80d161e6e8ea166477e056bc93bde0bff5918c5",
-    "dictionary": "cc984b29005406937a87f9200b81caa00ae3bd88d7d4e0fcfbfae7bd53a489d2"
+    "report": "ddcf0ada33b94a2b62d8b31d3135f6a11b3afd38191493da8606691e32a0599b",
+    "dictionary": "01c41b5d453408af3348db3cb017ff19070bc003c28b8a3cf73915bb8f9c6c5b"
   }
 }
