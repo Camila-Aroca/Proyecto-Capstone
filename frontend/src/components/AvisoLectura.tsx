@@ -17,7 +17,7 @@ export function AvisoLectura({ advertencias }: Props) {
           <path d="M8 7v4.5M8 4.6v.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
         </svg>
         Cómo leer estas cifras
-        <span className="font-normal opacity-80">· {advertencias.length} advertencias</span>
+        <span className="font-normal">· {advertencias.length} advertencias</span>
         <svg aria-hidden className="ml-auto transition-transform duration-150 group-open:rotate-180" width="12" height="12" viewBox="0 0 12 12">
           <path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" />
         </svg>

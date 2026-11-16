@@ -66,18 +66,25 @@ se contabilizaban como aprobados ni fallidos. Desde el ciclo 4 corren con datos 
 | DEF-08 | ID de cuenta de AWS expuesto en `cdk.context.json` en el repositorio público | Media (seguridad) | Repositorio | Revisión de código | Catalina | Commit enmendado (`5417177`), datos movidos a `infra/aws/.env`, force-push; `cdk.context.json` en `.gitignore` (`b73228e`) | Repositorio verificado | **Cerrado** |
 | DEF-09 | Pipeline `saad-pr` podía ser disparado por PR de forks externos | Alta (seguridad) | AWS | Revisión de configuración de CodePipeline | Catalina | Cambiado a push en ramas distintas de `main` (`0d39a7b`); verificado en AWS | Pipeline verificado | **Cerrado** |
 | DEF-10 | El contrato OpenAPI no declara errores 404, 409 ni 503 | Baja | Código | Ciclo 1 (comparador de contrato) | — | Decisión de equipo documentada en `docs/06-requisitos/contrato_api/README.md` (`3f1fd84`); no se modifica el contrato | Ciclo 2: comparador da 0 errores | **Cerrado** |
+| DEF-11 | `subir_datos.sh` no valida que los outputs del pipeline estén completos antes de publicar | Media | Equipo / AWS | Revisión de script | Catalina | `scripts/verificar_outputs_api.py` revisa, antes del `aws s3 sync`, que existan todos los archivos de las rutas que declara la API (`src/api/`) y que el SHA-256 de cada entrada de los tres manifiestos de pronóstico coincida con el archivo presente; si no, `subir_datos.sh` se detiene sin publicar. El script además espera a que ECS se estabilice tras el redespliegue (hallazgo del retest del ciclo 3) | 2026-11-15: 5 pruebas en `tests/test_verificar_outputs_api.py`; sobre los datos del repositorio el verificador bloqueó la publicación por un desfase real (DEF-15) | **Cerrado** |
 
 ---
 
-## Defectos de infraestructura y scripts (abiertos)
+## Defectos de datos (abiertos)
 
 | ID | Título | Criticidad | Entorno | Detectado en | Responsable | Corrección propuesta | Retest | Estado |
 |---|---|---|---|---|---|---|---|---|
-| DEF-11 | `subir_datos.sh` no valida que los outputs del pipeline estén completos antes de publicar | Media | Equipo / AWS | Revisión de script | Catalina | Agregar verificación de los archivos esperados (marts, manifiestos y JSON de selección) antes de hacer `aws s3 sync` | Pendiente | **Abierto** |
+| DEF-15 | Los pronósticos commiteados en `7e48f9a` no coinciden con las entradas del repositorio: los manifiestos registran el SHA-256 de los JSON de selección con finales de línea CRLF (corrida en Windows) y, en demanda, de una selección que no está en el historial; también cambió `urgencias_rm_2026.parquet` | Alta | Equipo (Linux) / AWS si se publica desde Linux | 2026-11-15, verificador de DEF-11 | Felipe (pipeline) | Commitear la selección de demanda usada en la corrida o regenerar las etapas de forecast; fijar `eol=lf` para `reports/modeling/*.json` en `.gitattributes` para que el hash no dependa del sistema operativo | `scripts/verificar_outputs_api.py` sin problemas | **Abierto** |
+
+Detalle del diagnóstico: con LF, las selecciones de establecimientos y suicidios del repositorio dan
+`f5fe27ab…` y `8195b1ff…`; con CRLF dan exactamente lo que registran los manifiestos (`e64950ef…` y
+`05fd7c29…`). La de demanda no coincide con ninguna versión del historial, ni con LF ni con CRLF.
+Mientras no se corrija, la API ejecutada en Linux marca esos pronósticos como desactualizados y
+`subir_datos.sh` no publica.
 
 ---
 
-## Defectos de interfaz (abiertos) — campaña SAAD-CP v2.1
+## Defectos de interfaz — campaña SAAD-CP v2.1
 
 Hallados con el catálogo de 200 casos y registrados con su evidencia (cada archivo anexo lleva su
 SHA256 en el `resultados.json` de su ciclo). La versión desplegada en AWS **no está confirmada**
@@ -86,9 +93,9 @@ propuestas hasta el triage; el responsable es un rol, no una asignación.
 
 | ID | Título | Criticidad | Entorno | Detectado en | Responsable | Corrección propuesta | Retest | Estado |
 |---|---|---|---|---|---|---|---|---|
-| DEF-12 | El aviso «Pronóstico no disponible: el establecimiento no existe» persiste tras cargar el establecimiento alternativo (OBS-AWS-01 del plan de pruebas) | Media | AWS | [Ciclo 9](ciclo_09_20261114T220556Z/catalogo_200/resultados.md) (SAAD-CP-004) | Frontend (propuesto) | Limpiar el estado de error general cuando llega el detalle 200 del establecimiento alternativo (`frontend/src/components/VistaEstablecimientos.tsx`) | Repetir SAAD-CP-004 en un contexto de navegador nuevo | **Abierto** |
-| DEF-13 | Contraste insuficiente en tema claro: «· 4 advertencias» (4,09:1) y la etiqueta «en desarrollo» (4,26:1); el mínimo para texto normal es 4,5:1 | Media (accesibilidad) | AWS | [Ciclo 7](ciclo_07_20261114T211303Z/catalogo_200/resultados.md) y [ciclo 10](ciclo_10_20261114T225227Z/catalogo_200/resultados.md) (SAAD-CP-073) | Frontend (propuesto) | Oscurecer el color de ambos textos hasta llegar a 4,5:1 en el tema claro (el tema oscuro cumple: 7,31:1 y 6,41:1) | Repetir SAAD-CP-073 con axe-core en tema claro y oscuro | **Abierto** |
-| DEF-14 | El tablero desborda en horizontal en AWS: el documento mide 533 px en una ventana de 360 px (desborde de 173 px) y 44 px a 640 px; la tabla de comunas no queda contenida en su contenedor desplazable | Media | AWS (no ocurre con el código local) | [Ciclo 10](ciclo_10_20261114T225227Z/catalogo_200/resultados.md) (SAAD-CP-071; observación en SAAD-CP-072) | Frontend (propuesto) | Contener la tabla de comunas en su contenedor desplazable para que no ensanche la página, y confirmar si el sitio desplegado corresponde al código actual | Repetir SAAD-CP-071 (360×800) y SAAD-CP-072 (zoom 200 %) en AWS | **Abierto** |
+| DEF-12 | El aviso «Pronóstico no disponible: el establecimiento no existe» persiste tras cargar el establecimiento alternativo (OBS-AWS-01 del plan de pruebas) | Media | AWS | [Ciclo 9](ciclo_09_20261114T220556Z/catalogo_200/resultados.md) (SAAD-CP-004) | Catalina | El fallo del detalle se guarda en un estado propio (`errorDetalle`) que se limpia al iniciar cada consulta de detalle; el error general queda solo para meta y listado (`VistaEstablecimientos.tsx`) | Local 2026-11-15 (Chrome headless, perfil nuevo): `#/establecimientos?id=999999999` abre el 109102 sin alertas. AWS: pendiente de publicar el frontend | **Corregido · retest AWS pendiente** |
+| DEF-13 | Contraste insuficiente en tema claro: «· 4 advertencias» (4,09:1) y la etiqueta «en desarrollo» (4,26:1); el mínimo para texto normal es 4,5:1 | Media (accesibilidad) | AWS | [Ciclo 7](ciclo_07_20261114T211303Z/catalogo_200/resultados.md) y [ciclo 10](ciclo_10_20261114T225227Z/catalogo_200/resultados.md) (SAAD-CP-073) | Catalina | Se quita `opacity-80` del contador de advertencias (`AvisoLectura.tsx`) y la etiqueta pasa de `--ink-3` a `--ink-2` (`Alcance.tsx`) | Local 2026-11-15, contraste calculado sobre colores computados: claro 6,36:1 y 7,64:1; oscuro 10,63:1 y 9,18:1. AWS: pendiente de publicar el frontend | **Corregido · retest AWS pendiente** |
+| DEF-14 | El tablero desborda en horizontal en AWS: el documento mide 533 px en una ventana de 360 px (desborde de 173 px) y 44 px a 640 px; la tabla de comunas no queda contenida en su contenedor desplazable | Media | AWS y local | [Ciclo 10](ciclo_10_20261114T225227Z/catalogo_200/resultados.md) (SAAD-CP-071; observación en SAAD-CP-072) | Catalina | Causa real: no era la tabla sino los tooltips (`Tip.tsx`). Ocultos con `visibility: hidden` seguían ocupando espacio, y los anclados cerca del borde derecho ensanchaban el documento. Ahora se ocultan con `display: none` (con `transition-discrete` y `@starting-style` para conservar el fundido) | Local 2026-11-15: el mismo código antes del cambio reproducía 533 px a 360 px; después, 0 px de desborde a 360 y 640 px en tablero, establecimientos y entrada. Los tooltips siguen abriendo con mouse y con foco de teclado. AWS: pendiente de publicar el frontend | **Corregido · retest AWS pendiente** |
 
 | Defecto | Casos fallidos | Evidencia principal |
 |---|---|---|
@@ -129,11 +136,13 @@ carpeta de ciclo.
 
 | Estado | Defectos |
 |---|---|
-| Abierto | DEF-11, DEF-12, DEF-13, DEF-14 |
-| Cerrado | DEF-01, DEF-02, DEF-03, DEF-04, DEF-05, DEF-06, DEF-07, DEF-08, DEF-09, DEF-10 |
+| Abierto | DEF-15 |
+| Corregido, retest AWS pendiente | DEF-12, DEF-13, DEF-14 |
+| Cerrado | DEF-01, DEF-02, DEF-03, DEF-04, DEF-05, DEF-06, DEF-07, DEF-08, DEF-09, DEF-10, DEF-11 |
 
 DEF-01 a DEF-04 se cerraron en el ciclo 4 (2026-11-12) tras ejecutar el pipeline con
 `--sin-evaluacion`, publicar los outputs con `subir_datos.sh` y reiniciar la API en ambos
 entornos (local con `docker compose restart api`, AWS con el redespliegue `95d00f8` y un nuevo
-`force-new-deployment`). De ese grupo solo DEF-11 sigue abierto. DEF-12 a DEF-14 se abrieron el
-2026-11-14 con la campaña SAAD-CP v2.1.
+`force-new-deployment`). DEF-12 a DEF-14 se abrieron el 2026-11-14 con la campaña SAAD-CP v2.1 y
+se corrigieron el 2026-11-15 junto con DEF-11; el verificador de DEF-11 encontró ese mismo día
+DEF-15.

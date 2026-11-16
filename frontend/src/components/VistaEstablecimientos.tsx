@@ -47,6 +47,8 @@ export function VistaEstablecimientos() {
   const [automatica, setAutomatica] = useState(false);
   const [semanas, setSemanas] = useState<number>(VENTANAS[1]);
   const [detalle, setDetalle] = useState<EstablecimientoDetalle | null>(null);
+  // Separado de `error`: cada consulta de detalle reemplaza el fallo de la anterior.
+  const [errorDetalle, setErrorDetalle] = useState<string | null>(null);
 
   useEffect(() => {
     const fallo = (e: unknown) => setError(e instanceof Error ? e.message : String(e));
@@ -89,9 +91,10 @@ export function VistaEstablecimientos() {
     if (seleccion == null) return;
     const control = new AbortController();
     setDetalle(null);
+    setErrorDetalle(null);
     api.establecimiento(seleccion, semanas, control.signal)
       .then(setDetalle)
-      .catch((e) => e.name !== "AbortError" && setError(e.message));
+      .catch((e) => e.name !== "AbortError" && setErrorDetalle(e.message));
     return () => control.abort();
   }, [seleccion, semanas]);
 
@@ -102,7 +105,8 @@ export function VistaEstablecimientos() {
 
   const metaObjetivo = meta?.objetivos.find((o) => o.objetivo === objetivo) ?? null;
   const umbral = meta?.umbral_cambio_pct ?? null;
-  const estado: EstadoProceso = error ? "error" : meta && lista.length ? "listo" : "calculando";
+  const fallo = error ?? errorDetalle;
+  const estado: EstadoProceso = fallo ? "error" : meta && lista.length ? "listo" : "calculando";
   const resumen = lista.find((f) => f.establecimiento_codigo === seleccion);
   const ultima = meta ? { ...meta.ultima_semana_observada, fecha_inicio: meta.ultima_semana_fecha_inicio } : null;
 
@@ -116,10 +120,10 @@ export function VistaEstablecimientos() {
       />
 
       <main id="contenido" tabIndex={-1} className="mx-auto max-w-7xl space-y-5 px-4 py-5 outline-none sm:px-6">
-        {error && (
+        {fallo && (
           <div role="alert" className="panel px-4 py-3 text-[13px]" style={{ borderColor: "var(--alza)" }}>
             <p className="font-semibold">No se pudo consultar el pronóstico por establecimiento.</p>
-            <p className="text-2">{error}</p>
+            <p className="text-2">{fallo}</p>
           </div>
         )}
 

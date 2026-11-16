@@ -44,7 +44,7 @@ export function Alcance() {
                   <span className="font-medium">{item.titulo}.</span>{" "}
                   <span className="text-2">{item.detalle}</span>
                   {!item.disponible && (
-                    <span className="ml-1.5 whitespace-nowrap rounded px-1.5 py-px text-[11px] font-medium text-3" style={{ background: "var(--surface-2)" }}>
+                    <span className="ml-1.5 whitespace-nowrap rounded px-1.5 py-px text-[11px] font-medium text-2" style={{ background: "var(--surface-2)" }}>
                       en desarrollo
                     </span>
                   )}

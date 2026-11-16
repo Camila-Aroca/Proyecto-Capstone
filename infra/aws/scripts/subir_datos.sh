@@ -18,6 +18,9 @@ BUCKET="$(salida BucketDatos)"
 for ruta in data/processed reports data/raw/poblacion; do
   [[ -d "$ruta" ]] || { echo "Falta $ruta: ejecuta el pipeline antes de subir." >&2; exit 1; }
 done
+PYTHON="$RAIZ/.venv/bin/python"
+[[ -x "$PYTHON" ]] || PYTHON=python3
+"$PYTHON" scripts/verificar_outputs_api.py
 
 # Sin --delete: un archivo borrado en local sigue en S3 hasta que se elimine a mano.
 aws s3 sync data/processed/   "s3://$BUCKET/data/processed/"   --region "$REGION" --exclude "*.tmp"
@@ -26,7 +29,12 @@ aws s3 sync data/raw/poblacion/ "s3://$BUCKET/data/raw/poblacion/" --region "$RE
 echo "Datos publicados en s3://$BUCKET desde el commit $(git rev-parse --short HEAD)."
 
 if [[ "${1:-}" != "--sin-reinicio" ]]; then
-  aws ecs update-service --region "$REGION" --cluster "$(salida Cluster)" \
-    --service "$(salida Servicio)" --force-new-deployment >/dev/null
-  echo "Nuevo despliegue de la API solicitado: cargará los datos al arrancar."
+  CLUSTER="$(salida Cluster)"
+  SERVICIO="$(salida Servicio)"
+  aws ecs update-service --region "$REGION" --cluster "$CLUSTER" \
+    --service "$SERVICIO" --force-new-deployment >/dev/null
+  # La API carga los datos al arrancar: probar antes de que termine sirve los datos anteriores.
+  echo "Nuevo despliegue de la API solicitado; esperando a que se estabilice (puede tardar ~10 min)..."
+  aws ecs wait services-stable --region "$REGION" --cluster "$CLUSTER" --services "$SERVICIO"
+  echo "API estable con los datos nuevos."
 fi

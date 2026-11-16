@@ -21,6 +21,9 @@ from src.api.schemas import Caracterizacion
 
 router = APIRouter(prefix='/api/v1')
 BASE = Path('data/processed')
+DEFUNCIONES = Path('defunciones/defunciones_nacional.parquet')
+URGENCIAS = Path('urgencias')
+GENERO = Path('contexto_genero/egresos_intento_suicida_sexo_anio.parquet')
 ETARIOS = ['menores_1', 'de_1_a_4', 'de_5_a_14', 'de_15_a_64', 'de_65_y_mas']
 ETIQUETAS = ['Menores de 1 año', '1–4 años', '5–14 años', '15–64 años', '65 años y más']
 
@@ -145,7 +148,7 @@ def caracterizacion(
         raise HTTPException(422, 'Una semana solicitada no existe en el calendario DEIS.')
     try:
         if fuente == 'suicidios':
-            salida = caracterizar_suicidios(BASE / 'defunciones/defunciones_nacional.parquet', claves, codigo)
+            salida = caracterizar_suicidios(BASE / DEFUNCIONES, claves, codigo)
             salida['escenario'] = None
         else:
             comunas = None
@@ -154,11 +157,9 @@ def caracterizacion(
                 if panel is None:
                     raise HTTPException(503, 'El panel regional aún no está disponible.')
                 comunas = set(panel.panel.loc[panel.panel['nivel'] == 'comuna', 'series_id'].astype(str))
-            salida = caracterizar_urgencias(BASE / 'urgencias', claves, nivel, codigo,
+            salida = caracterizar_urgencias(BASE / URGENCIAS, claves, nivel, codigo,
                                            36 if fuente == 'urgencias' else 42, comunas=comunas)
-            salida['escenario'] = escenario_contextual(
-                BASE / 'contexto_genero/egresos_intento_suicida_sexo_anio.parquet',
-                salida['total'], min(a for a, _ in claves))
+            salida['escenario'] = escenario_contextual(BASE / GENERO, salida['total'], min(a for a, _ in claves))
     except FileNotFoundError as exc:
         raise HTTPException(503, 'Faltan fuentes processed del pipeline para la caracterización.') from exc
     except LookupError as exc:

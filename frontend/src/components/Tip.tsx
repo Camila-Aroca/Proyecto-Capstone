@@ -17,9 +17,11 @@ interface Props {
 }
 
 const PANEL = "panel pointer-events-none absolute top-full z-20 mt-1 w-max max-w-64 whitespace-normal px-3 py-2 text-left text-[12px] font-normal leading-snug text-(--ink) shadow-sm";
-const OCULTO = "invisible translate-y-0.5 opacity-0 transition-[opacity,translate,visibility] duration-150 ease-out motion-reduce:transition-none";
-const ABIERTO_MOUSE = "group-hover/tip:visible group-hover/tip:translate-y-0 group-hover/tip:opacity-100 group-hover/tip:delay-75";
-const ABIERTO_TECLADO = "group-has-focus-visible/tip:visible group-has-focus-visible/tip:translate-y-0 group-has-focus-visible/tip:opacity-100";
+// Oculto con display:none y no con visibility: un panel invisible igual ensancha la pagina
+// cuando su ancla esta cerca del borde derecho (desborde horizontal en pantallas angostas).
+const OCULTO = "hidden translate-y-0.5 opacity-0 transition-[opacity,translate,display] transition-discrete duration-150 ease-out motion-reduce:transition-none";
+const ABIERTO_MOUSE = "group-hover/tip:block group-hover/tip:translate-y-0 group-hover/tip:opacity-100 group-hover/tip:delay-75 group-hover/tip:starting:translate-y-0.5 group-hover/tip:starting:opacity-0";
+const ABIERTO_TECLADO = "group-has-focus-visible/tip:block group-has-focus-visible/tip:translate-y-0 group-has-focus-visible/tip:opacity-100 group-has-focus-visible/tip:starting:translate-y-0.5 group-has-focus-visible/tip:starting:opacity-0";
 
 export function Tip({ texto, lado = "izquierda", children }: Props) {
   const id = useId();
