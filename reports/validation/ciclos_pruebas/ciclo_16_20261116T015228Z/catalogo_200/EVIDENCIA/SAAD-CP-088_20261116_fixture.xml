@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.108" timestamp="2026-11-15T22:46:14.150016-03:00" hostname="cata-ThinkPad-T14-Gen-4"><testcase classname="tests.test_build_urgencias_comuna_etario_mart" name="test_validation_rejects_unexpected_age_group_value" time="0.020"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

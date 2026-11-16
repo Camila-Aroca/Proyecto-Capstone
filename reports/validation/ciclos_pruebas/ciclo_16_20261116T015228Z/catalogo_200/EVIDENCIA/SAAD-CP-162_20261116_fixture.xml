@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.091" timestamp="2026-11-15T22:47:50.057321-03:00" hostname="cata-ThinkPad-T14-Gen-4"><testcase classname="tests.test_pipeline_orchestration" name="test_force_refresh_with_identical_snapshot_does_not_force_downstream" time="0.001"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.143" timestamp="2026-11-15T22:48:13.688837-03:00" hostname="cata-ThinkPad-T14-Gen-4"><testcase classname="tests.test_build_mart_ocupacion_psiquiatria_hospital_rm" name="test_total_del_hospital_suma_dias_cama_no_indices" time="0.048"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

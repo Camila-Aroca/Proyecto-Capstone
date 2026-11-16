@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="3" time="0.113" timestamp="2026-11-15T22:48:07.360264-03:00" hostname="cata-ThinkPad-T14-Gen-4"><testcase classname="tests.test_propuesta_camas" name="test_abstencion[frame0-418-12 meses]" time="0.003"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_propuesta_camas" name="test_abstencion[frame1-418-duplicados]" time="0.001"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_propuesta_camas" name="test_abstencion[frame2-427-psiquiatr\xeda]" time="0.000"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

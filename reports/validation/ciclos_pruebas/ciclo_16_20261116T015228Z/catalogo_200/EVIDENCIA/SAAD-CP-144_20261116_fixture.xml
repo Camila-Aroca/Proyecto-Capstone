@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.919" timestamp="2026-11-15T22:47:18.675176-03:00" hostname="cata-ThinkPad-T14-Gen-4"><testcase classname="tests.test_api.TestClasificacionDelCambio" name="test_un_cambio_grande_puede_caber_en_el_ruido" time="0.005"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.936" timestamp="2026-11-15T22:47:28.242076-03:00" hostname="cata-ThinkPad-T14-Gen-4"><testcase classname="tests.test_api_establecimientos.TestPronosticoDesactualizado" name="test_descarta_los_horizontes_ya_observados" time="0.006"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

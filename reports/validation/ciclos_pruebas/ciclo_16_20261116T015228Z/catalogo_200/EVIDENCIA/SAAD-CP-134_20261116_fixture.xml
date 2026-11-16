@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.629" timestamp="2026-11-15T22:47:05.180890-03:00" hostname="cata-ThinkPad-T14-Gen-4"><testcase classname="tests.test_models_holdout.TestEvaluacion" name="test_lectura_vs_baseline_exige_significancia_en_ambos_niveles" time="0.001"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

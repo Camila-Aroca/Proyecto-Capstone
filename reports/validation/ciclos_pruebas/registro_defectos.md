@@ -43,7 +43,12 @@ Con eso, el ciclo 4 confirmó los tres defectos cerrados. Se registra como nota 
 defecto nuevo: `subir_datos.sh` ya fuerza el redespliegue; falta solo esperar a que termine antes
 de volver a probar.
 
-### Casos antes bloqueados por DEF-01 a DEF-03 (ya aprobados desde el ciclo 4)
+### Casos antes bloqueados por DEF-01 a DEF-03 (desbloqueados desde el ciclo 4)
+
+Con los datos publicados, estos casos dejaron de estar bloqueados, pero son pruebas manuales de
+interfaz que el ciclo automatizado no ejecuta: desde el ciclo 16 figuran como NO EJECUTADO, no como
+aprobados. Hasta el ciclo 15 el script los seguía marcando BLOCKED por una tabla sin actualizar. Los
+de suicidios (048, 050 y 052) vuelven a estar BLOCKED, ahora por DEF-15.
 
 | Defecto | Casos que estaban BLOCKED |
 |---|---|
@@ -52,7 +57,7 @@ de volver a probar.
 | DEF-03 (suicidios) | CP-SAAD-048, CP-SAAD-050, CP-SAAD-052 |
 
 **Contingencia (histórica, ciclos 1-3):** los casos BLOCKED se marcaban como tal en la matriz; no
-se contabilizaban como aprobados ni fallidos. Desde el ciclo 4 corren con datos reales.
+se contabilizaban como aprobados ni fallidos.
 
 ---
 
@@ -74,13 +79,22 @@ se contabilizaban como aprobados ni fallidos. Desde el ciclo 4 corren con datos 
 
 | ID | Título | Criticidad | Entorno | Detectado en | Responsable | Corrección propuesta | Retest | Estado |
 |---|---|---|---|---|---|---|---|---|
-| DEF-15 | Los pronósticos commiteados en `7e48f9a` no coinciden con las entradas del repositorio: los manifiestos registran el SHA-256 de los JSON de selección con finales de línea CRLF (corrida en Windows) y, en demanda, de una selección que no está en el historial; también cambió `urgencias_rm_2026.parquet` | Alta | Equipo (Linux) / AWS si se publica desde Linux | 2026-11-15, verificador de DEF-11 | Felipe (pipeline) | Commitear la selección de demanda usada en la corrida o regenerar las etapas de forecast; fijar `eol=lf` para `reports/modeling/*.json` en `.gitattributes` para que el hash no dependa del sistema operativo | `scripts/verificar_outputs_api.py` sin problemas | **Abierto** |
+| DEF-15 | Los pronósticos commiteados en `7e48f9a` no coinciden con las entradas del repositorio: los manifiestos registran el SHA-256 de los JSON de selección con finales de línea CRLF (corrida en Windows) y, en demanda, de una selección que no está en el historial; también cambió `urgencias_rm_2026.parquet` | Alta | LOCAL (Linux) · AWS | 2026-11-15, verificador de DEF-11; confirmado en el ciclo 16 | Felipe (pipeline) | Commitear la selección de demanda usada en la corrida o regenerar las etapas de forecast; fijar `eol=lf` para `reports/modeling/*.json` en `.gitattributes` para que el hash no dependa del sistema operativo | `scripts/verificar_outputs_api.py` sin problemas | **Abierto** |
 
 Detalle del diagnóstico: con LF, las selecciones de establecimientos y suicidios del repositorio dan
 `f5fe27ab…` y `8195b1ff…`; con CRLF dan exactamente lo que registran los manifiestos (`e64950ef…` y
 `05fd7c29…`). La de demanda no coincide con ninguna versión del historial, ni con LF ni con CRLF.
 Mientras no se corrija, la API ejecutada en Linux marca esos pronósticos como desactualizados y
 `subir_datos.sh` no publica.
+
+**Impacto confirmado en el ciclo 16 (2026-11-16):**
+- CP-SAAD-047 FALLIDO en LOCAL y **en AWS**: `/api/v1/suicidios` responde 503 («El pronóstico de
+  suicidios está desactualizado (cambió 'seleccion_benchmark')»). Lo que hay en S3 tiene el mismo
+  desfase, así que la vista de suicidios no funciona en producción.
+- CP-SAAD-020 FALLIDO en AWS: el primer pronóstico de la serie RM difiere entre LOCAL (semana 46) y
+  AWS, porque cada entorno tiene una versión distinta del pronóstico. Arrastra a CP-SAAD-006 y
+  CP-SAAD-070.
+- CP-SAAD-048, 050 y 052 quedan BLOCKED.
 
 ---
 

@@ -39,6 +39,8 @@ RAIZ: Final[Path] = Path(__file__).resolve().parents[1]
 SALIDA_BASE: Final[Path] = RAIZ / "reports/validation/ciclos_pruebas"
 PY: Final[str] = sys.executable
 CATALOGO: Final[Path] = RAIZ / "docs/05-entregas/Fase_2_2/Pruebas/SAAD_Casos_de_Prueba_70_Fase_2_2_AWS.docx"
+# El catálogo de 70 casos se retiró al publicar el de 200 (7a43e65); se lee de su última versión.
+REVISION_CATALOGO: Final[str] = "7a43e65^"
 CDK: Final[Path] = RAIZ / "infra/aws/cdk"
 
 APROBADO, FALLIDO, BLOCKED, NO_EJECUTADO = "APROBADO", "FALLIDO", "BLOCKED", "NO EJECUTADO"
@@ -46,11 +48,7 @@ APROBADO, FALLIDO, BLOCKED, NO_EJECUTADO = "APROBADO", "FALLIDO", "BLOCKED", "NO
 # Casos del catálogo que hoy no se pueden ejecutar porque falta un dato o un despliegue.
 # El defecto que los bloquea está en registro_defectos.md.
 BLOQUEOS: Final[dict[str, str]] = {
-    **{c: "DEF-02: sin datos de establecimientos (mart semanal y pronóstico no publicados)"
-       for c in ("CP-SAAD-038", "CP-SAAD-039", "CP-SAAD-040", "CP-SAAD-041")},
-    **{c: "DEF-01: sin dotación ni ocupación de camas de psiquiatría"
-       for c in ("CP-SAAD-042", "CP-SAAD-043", "CP-SAAD-044", "CP-SAAD-045", "CP-SAAD-059")},
-    **{c: "DEF-03: sin mart ni pronóstico de suicidios"
+    **{c: "DEF-15: la API responde 503 porque el pronóstico de suicidios está desfasado de su selección"
        for c in ("CP-SAAD-048", "CP-SAAD-050", "CP-SAAD-052")},
 }
 # Casos cubiertos indirectamente por otro caso automatizado: caso → (caso fuente, entorno o None = ambos).
@@ -145,8 +143,15 @@ def paso_contrato() -> dict[str, Any]:
 # -------------------------------------------------------------------------- catálogo
 
 def leer_catalogo() -> dict[str, str]:
+    import io
+
     import docx
-    documento = docx.Document(str(CATALOGO))
+    if CATALOGO.is_file():
+        documento = docx.Document(str(CATALOGO))
+    else:
+        version = subprocess.run(["git", "show", f"{REVISION_CATALOGO}:{CATALOGO.relative_to(RAIZ).as_posix()}"],
+                                 cwd=RAIZ, capture_output=True, check=True).stdout
+        documento = docx.Document(io.BytesIO(version))
     casos = {}
     for p in documento.paragraphs:
         m = re.match(r"(CP-SAAD-\d{3})\s+·\s+(.+)", p.text.strip())

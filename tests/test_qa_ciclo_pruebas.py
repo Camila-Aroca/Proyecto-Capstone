@@ -7,7 +7,8 @@ from scripts.qa_ciclo_pruebas import (
 )
 
 CATALOGO = {"CP-SAAD-006": "Lectura de outputs", "CP-SAAD-020": "Serie RM", "CP-SAAD-025": "Camas",
-            "CP-SAAD-038": "Búsqueda establecimientos", "CP-SAAD-060": "HTTPS",
+            "CP-SAAD-038": "Búsqueda establecimientos", "CP-SAAD-048": "Calendario suicidios",
+            "CP-SAAD-060": "HTTPS",
             "CP-SAAD-067": "Teclado", "CP-SAAD-070": "Ciclo completo"}
 LOCAL = {"casos": [
     {"id": "CP-SAAD-020", "estado": APROBADO, "detalle": "HTTP 200"},
@@ -35,7 +36,8 @@ def test_estados_por_entorno_y_no_aplica() -> None:
 
 def test_bloqueados_y_no_ejecutados_no_cuentan_como_aprobados() -> None:
     m = _matriz()
-    assert m["CP-SAAD-038"]["aws"] == BLOCKED and "DEF-02" in m["CP-SAAD-038"]["nota"]
+    assert m["CP-SAAD-048"]["aws"] == BLOCKED and "DEF-15" in m["CP-SAAD-048"]["nota"]
+    assert m["CP-SAAD-038"]["aws"] == NO_EJECUTADO  # su defecto (DEF-02) ya está cerrado
     assert m["CP-SAAD-067"]["local"] == NO_EJECUTADO
 
 
