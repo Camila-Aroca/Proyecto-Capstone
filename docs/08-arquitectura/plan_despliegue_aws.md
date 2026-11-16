@@ -45,7 +45,7 @@ Hallazgos que siguen vigentes:
 ## 4. Decisiones que hay que confirmar antes de desplegar (C-36)
 
 1. **Tipo de cuenta.** ¿Es una cuenta propia o una de AWS Academy Learner Lab? En Learner Lab normalmente no se pueden crear roles IAM ni hacer `cdk bootstrap`, y algunos servicios están restringidos. **Es lo primero a verificar.**
-2. **Presupuesto.** Con todo encendido el mes completo, unos US$57 al mes. Si se borra entre demos, pocos dólares. Hay que crear una alerta en AWS Budgets (gratuita) por, por ejemplo, US$20.
+2. **Presupuesto.** Con todo encendido el mes completo, unos US$59 al mes (as-built, detalle en `costos_aws_verificacion.md`). Si se borra entre demos, pocos dólares. Hay que crear una alerta en AWS Budgets (gratuita) por, por ejemplo, US$20.
 3. **Responsables.** C-39 (arranque desde S3) es de Felipe. Si lo hace Catalina, hay que reasignarlo. C-42 cambia de alcance por la decisión del pipeline local.
 4. **Demostración mínima.** URL de CloudFront mostrando mapa, pronóstico, establecimientos y advertencias con datos leídos de S3, más la publicación de datos con `subir_datos.sh` como flujo de actualización.
 

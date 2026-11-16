@@ -56,20 +56,22 @@ Los montos son brutos (lo que se boletea por rol).
 
 ## 2. Infraestructura cloud (OPEX)
 
-Detalle y verificación en [costos_aws_verificacion.md](../08-arquitectura/costos_aws_verificacion.md) y en la sección 4 de la arquitectura to-be.
+Costo del despliegue actual (as-built, pilas CDK `Saad` y `SaadCi`). Detalle y verificación en [costos_aws_verificacion.md](../08-arquitectura/costos_aws_verificacion.md).
 
 | Ítem | Cantidad | Costo unitario | Total | Tipo |
 |---|---|---|---|---|
-| AWS, total base (Fargate, ALB, IPv4, S3, ECR, CloudWatch; CloudFront en capa gratuita) | 2 meses | US$56,71 / mes (≈ $53.875) | US$113,42 (≈ $107.750) | Mensual |
-| **Subtotal cloud** | | | **≈ $107.750** | |
+| AWS as-built (Fargate, ALB, IPv4, S3, ECR, CloudWatch con alarmas, CodeBuild, CodePipeline; CloudFront en capa gratuita) | 2 meses | US$59,27 / mes (≈ $56.306) | US$118,54 (≈ $112.613) | Mensual |
+| **Subtotal cloud** | | | **≈ $112.613** | |
 
 Escenarios alternativos (no incluidos en el total):
 
 | Escenario | US$/mes | CLP/mes |
 |---|---|---|
-| Base + Aurora Serverless v2 pausada | ≈ 60,41 | ≈ $57.390 |
-| Base + Aurora Serverless v2 sin pausa | ≈ 100,61 | ≈ $95.580 |
-| Total del AWS Pricing Calculator sin conciliar | 107,62 | ≈ $102.240 |
+| As-built sin ejecuciones de CI (conexión de GitHub pendiente, uso real hoy) | ≈ 56,51 | ≈ $53.685 |
+| As-built + Aurora Serverless v2 pausada (no desplegada) | ≈ 62,97 | ≈ $59.822 |
+| As-built + Aurora Serverless v2 sin pausa (no desplegada) | ≈ 103,17 | ≈ $98.012 |
+| Estimación to-be original (con pipeline en Fargate, sin CI ni alarmas) | 56,71 | ≈ $53.875 |
+| Total del AWS Pricing Calculator to-be sin conciliar | 107,62 | ≈ $102.240 |
 
 ---
 
@@ -77,7 +79,7 @@ Escenarios alternativos (no incluidos en el total):
 
 | Ítem | Base | % | Total | Tipo |
 |---|---|---|---|---|
-| Imprevistos (re-trabajo, variación de precios cloud, tipo de cambio) | $4.337.750 | 5 % | $216.888 | Único |
+| Imprevistos (re-trabajo, variación de precios cloud, tipo de cambio) | $4.342.613 | 5 % | $217.131 | Único |
 
 ---
 
@@ -86,13 +88,13 @@ Escenarios alternativos (no incluidos en el total):
 | Categoría | Tipo | Total CLP |
 |---|---|---|
 | Recursos humanos (bruto) | Único (CAPEX) | $4.230.000 |
-| Infraestructura cloud | Mensual (OPEX) × 2 meses | $107.750 |
-| **Subtotal** | | **$4.337.750** |
-| Contingencia (5 %) | | $216.888 |
-| **Total valorizado del proyecto** | | **$4.554.638** |
-| Desembolso real del equipo | | ≈ $0 (cloud solo si se aprueba el despliegue to-be: ≈ $107.750) |
+| Infraestructura cloud | Mensual (OPEX) × 2 meses | $112.613 |
+| **Subtotal** | | **$4.342.613** |
+| Contingencia (5 %) | | $217.131 |
+| **Total valorizado del proyecto** | | **$4.559.744** |
+| Desembolso real del equipo | | ≈ $0 en desarrollo; la nube desplegada cuesta ≈ $112.613 por los 2 meses |
 
-Operación posterior al proyecto: ≈ US$57 al mes (≈ $53.875 CLP) mientras la plataforma siga desplegada.
+Operación posterior al proyecto: ≈ US$59 al mes (≈ $56.306 CLP) mientras la plataforma siga desplegada.
 
 ---
 
