@@ -1,0 +1,105 @@
+{
+ "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_reintento",
+ "ciclo": 17,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Catalina Rodríguez",
+ "alcance": "2 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-17T22:28:18+00:00",
+ "fin_utc": "2026-11-17T22:31:16.462735+00:00",
+ "commit": "8f7dd49bfc2740fb6c2ce1b12cd8ff12fbe64e20",
+ "arbol_versionado_limpio": false,
+ "archivos_versionados_modificados": 2,
+ "archivos_sin_rastrear": [
+  "docs/05-entregas/informe_avance_apt_catalina.md",
+  "docs/05-entregas/reflexion_monitoreo_apt.md",
+  "docs/07-diagramas/.$despliegue_aws_as_built.drawio.bkp",
+  "package-lock.json",
+  "reports/validation/ciclos_pruebas/ciclo_02_20261112T142133Z/",
+  "reports/validation/ciclos_pruebas/ciclo_03_20261112T152058Z/"
+ ],
+ "entorno": "AWS (URL desplegada; host redactado)",
+ "modo": "manual",
+ "nota": "Reintento tras autorizar saad-github, ejecutar saad-pr y publicar los datos con subir_datos.sh.",
+ "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+ "python": "3.12.3",
+ "so": "Linux 7.0.0-43-generic",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 2,
+  "fallidos": 0,
+  "no_ejecutados": 0
+ },
+ "advertencias": [
+  "Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-066",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_reintento",
+   "titulo": "Estado de conexión CI",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "8f7dd49bfc2740fb6c2ce1b12cd8ff12fbe64e20",
+   "snapshot": "AWS · solo lectura",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Conexión saad-github AVAILABLE; última ejecución de saad-pr Succeeded (2026-11-17T19:21): fuente GitHub y Tests-y-cfn-lint verificables.",
+   "observaciones": "saad-despliegue: última ejecución Failed 2026-11-12 (creada con la conexión aún PENDING); no se relanzó para no desplegar a producción durante la prueba.",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T22:31:04.433009+00:00",
+    "fin": "2026-11-17T22:31:16.462735+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-066.txt",
+   "evidencia_sha256": "06bb49da9a8986c2b724318d1d08f50199a8b63c5cac117bdb28cc5b4b308c92",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-066.txt",
+     "sha256": "06bb49da9a8986c2b724318d1d08f50199a8b63c5cac117bdb28cc5b4b308c92"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-068",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_reintento",
+   "titulo": "Paridad local y AWS por snapshot",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "8f7dd49bfc2740fb6c2ce1b12cd8ff12fbe64e20",
+   "snapshot": "AWS vs LOCAL · 2026-S45/S46",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Tras publicar los datos con subir_datos.sh (commit 8f7dd49) el primer pronóstico de /series/RM coincide en LOCAL y AWS (2026-S46). qa_e2e_local_vs_aws.py --sin-capturas: 24 aprobados, 0 fallidos; 13 endpoints equivalentes y las comprobaciones de infraestructura y seguridad de AWS aprobadas.",
+   "observaciones": "La corrida anterior (misma jornada) quedó bloqueada por snapshot: AWS servía el pronóstico desde 2026-S40.",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T22:28:18+00:00",
+    "fin": "2026-11-17T22:30:00+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-068.md",
+   "evidencia_sha256": "7f01a6d590d1a0087cdd8bd0b8640c5e1d162f4ea3c06a72a4a5e118f73ed1a9",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-068.md",
+     "sha256": "7f01a6d590d1a0087cdd8bd0b8640c5e1d162f4ea3c06a72a4a5e118f73ed1a9"
+    }
+   ],
+   "hash_input": null
+  }
+ ]
+}
