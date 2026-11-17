@@ -451,7 +451,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--nota", default="", help="Condición del entorno que debe quedar registrada")
     parser.add_argument("--entradas", type=Path, help="JSON con los veredictos de los casos (modo manual)")
     parser.add_argument("--entorno", choices=("local", "aws"), help="Entorno donde se ejecutó (modo manual)")
+    parser.add_argument("--subcarpeta", default=SUBCARPETA,
+                        help="Carpeta de la corrida dentro del ciclo; permite varias corridas (p. ej. catalogo_200_aws)")
     args = parser.parse_args(argv)
+    if not args.subcarpeta.startswith(SUBCARPETA) or "/" in args.subcarpeta or "\\" in args.subcarpeta:
+        parser.error(f"--subcarpeta debe empezar con {SUBCARPETA} y no llevar separadores")
     if args.modo == "http" and not args.url_base:
         parser.error("--modo http requiere --url-base")
     if args.modo == "manual" and not (args.entradas and args.entorno):
@@ -465,7 +469,7 @@ def main(argv: list[str] | None = None) -> int:
 
     ahora = datetime.now(timezone.utc)
     ciclo = carpeta_ciclo(args.salida, args.ciclo, ahora)
-    destino = ciclo / SUBCARPETA
+    destino = ciclo / args.subcarpeta
     if destino.exists():
         parser.error(f"Ya existe {destino.name} en {ciclo.name}: repetir exige otro ciclo; no se sobrescribe.")
     evidencia = destino / "EVIDENCIA"
@@ -478,7 +482,7 @@ def main(argv: list[str] | None = None) -> int:
         sin_rastrear = [x[3:] for x in git("status", "--short").split("\n") if x.startswith("??")]
         propio = _relativo(ciclo)
         sin_rastrear = [x for x in sin_rastrear if not x.startswith(propio)]
-        contexto: dict[str, Any] = {"run_id": f"{ciclo.name}/{SUBCARPETA}", "ejecutor": args.ejecutor, "sha": sha}
+        contexto: dict[str, Any] = {"run_id": f"{ciclo.name}/{args.subcarpeta}", "ejecutor": args.ejecutor, "sha": sha}
         fecha = ahora.strftime("%Y%m%d")
         entorno = ENTORNO_FIXTURE
         if args.modo == "http":
@@ -543,7 +547,7 @@ def main(argv: list[str] | None = None) -> int:
                 pass
         raise
     r = meta["resumen"]
-    print(f"{ciclo.name}/{SUBCARPETA}: {r['aprobados']} aprobados, {r['fallidos']} fallidos, "
+    print(f"{ciclo.name}/{args.subcarpeta}: {r['aprobados']} aprobados, {r['fallidos']} fallidos, "
           f"{r['no_ejecutados']} no ejecutados")
     return 1 if r["fallidos"] else 0
 

@@ -141,6 +141,29 @@ def test_main_escribe_resultados_y_no_sobrescribe(tmp_path: Path, monkeypatch: p
         q.main(argv)
 
 
+def test_main_subcarpeta_permite_varias_corridas_en_un_ciclo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _falso_pytest(monkeypatch, tests=1)
+    cat = _catalogo(tmp_path / "c.docx")
+    base = tmp_path / "ciclos"
+    argv = ["--ciclo", "17", "--ejecutor", "A", "--casos", "001", "--catalogo", str(cat), "--salida", str(base)]
+    assert q.main(argv) == 0
+    assert q.main([*argv, "--subcarpeta", "catalogo_200_aws"]) == 0
+    ciclo = next(base.glob("ciclo_17_*"))
+    meta = json.loads((ciclo / "catalogo_200_aws" / "resultados.json").read_text(encoding="utf-8"))
+    assert meta["run_id"] == f"{ciclo.name}/catalogo_200_aws"
+    assert (ciclo / "catalogo_200" / "resultados.json").is_file()
+    with pytest.raises(SystemExit):                                           # cada subcarpeta no se sobrescribe
+        q.main([*argv, "--subcarpeta", "catalogo_200_aws"])
+
+
+@pytest.mark.parametrize("nombre", ["otra", "catalogo_200/../x"])
+def test_main_subcarpeta_invalida(tmp_path: Path, nombre: str) -> None:
+    with pytest.raises(SystemExit):
+        q.main(["--ciclo", "17", "--ejecutor", "A", "--casos", "001", "--catalogo", str(_catalogo(tmp_path / "c.docx")),
+                "--salida", str(tmp_path / "ciclos"), "--subcarpeta", nombre])
+    assert not (tmp_path / "ciclos").exists()
+
+
 def test_main_rechaza_casos_ajenos_al_catalogo(tmp_path: Path) -> None:
     cat = _catalogo(tmp_path / "c.docx")
     with pytest.raises(SystemExit):
