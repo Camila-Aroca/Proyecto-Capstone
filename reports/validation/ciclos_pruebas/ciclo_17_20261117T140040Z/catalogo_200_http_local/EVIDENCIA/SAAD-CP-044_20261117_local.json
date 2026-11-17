@@ -1,0 +1,51 @@
+{
+ "caso": "SAAD-CP-044",
+ "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+ "snapshot": "/meta: última semana observada 2026-11-08; pronóstico calculado 2026-11-17T14:44:07.753983Z (persistido)",
+ "estado_inicial": {
+  "hora_utc": "2026-11-17T15:05:21+00:00",
+  "meta": {
+   "codigo": 200,
+   "cabeceras": {
+    "content-type": "application/json"
+   },
+   "cuerpo": "{\"modelo\":\"hibrido_glm_region_lgbm_comuna_conformal\",\"horizontes\":[1,2,3,4,5,6,7,8],\"umbral_cambio_pct\":7.0,\"semana_en_curso\":null,\"nivel_intervalo\":0.8,\"ultima_semana_observada\":{\"ano\":2026,\"semana\":45,\"fecha_inicio\":\"2026-11-08\",\"atenciones\":1825.0},\"pronostico_calculado_en\":\"2026-11-17T14:44:07.753983Z\",\"origen_pronostico\":\"persistido\",\"comunas_con_pronostico\":50,\"metricas_backtest\":{\"mase_region\":0.6107,\"mase_comuna\":0.6694,\"cobertura_region\":0.875,\"cobertura_comuna\":0.8079},\"cobertura_holdout\":[{\"nivel\":\"region\",\"cobertura_observada\":0.6968,\"evaluaciones\":155,\"dentro_de_tolerancia\":false},{\"nivel\":\"comuna\",\"cobertura_observada\":0.7684,\"evaluaciones\":7750,\"dentro_de_tolerancia\":false}],\"advertencias\":[\"Las cifras son atenciones de urgencia (eventos), no personas únicas ni prevalencia.\",\"Intervalo 80%: fuera de muestra cubrió 70% en el nivel regional. Interpretar los límites como orientativos.\",\"Intervalo 80%: fuera de muestra cubrió 77% en el nivel comunal. Interpretar los límites como orientativos.\",\"2 comuna(s) sin pronóstico por falta de datos; se muestran como 'sin pronóstico', nunca como cero.\"]}",
+   "cuerpo_truncado": false,
+   "inicio": "2026-11-17T15:05:21+00:00",
+   "fin": "2026-11-17T15:05:21+00:00"
+  }
+ },
+ "esperado": "4392 días no se rechazan por longitud; 4393 devuelve 422 por MAX_DIAS",
+ "peticiones": [
+  {
+   "ruta": "/calendario-eventos?desde=2020-01-01&hasta=2032-01-10",
+   "esperado": 200,
+   "respuesta": {
+    "url": "http://127.0.0.1:8000/api/v1/calendario-eventos?desde=2020-01-01&hasta=2032-01-10",
+    "codigo": 200,
+    "cabeceras": {
+     "content-type": "application/json"
+    },
+    "cuerpo": "[{\"evento_id\":\"verano_2019\",\"nombre\":\"Verano\",\"categoria\":\"estacion\",\"fecha_inicio\":\"2019-12-22\",\"fecha_fin\":\"2020-03-19\",\"detalle\":\"Solsticio de diciembre: 22-12-2019 a las 01:19 (hora de Chile). Termina el día antes de la estación siguiente.\"},{\"evento_id\":\"ano_nuevo_2020\",\"nombre\":\"Año Nuevo\",\"categoria\":\"festividad\",\"fecha_inicio\":\"2019-12-31\",\"fecha_fin\":\"2020-01-01\",\"detalle\":\"Víspera (31 de diciembre) y feriado del 1 de enero.\"},{\"evento_id\":\"otono_2020\",\"nombre\":\"Otoño\",\"categoria\":\"estacion\",\"fecha_inicio\":\"2020-03-20\",\"fecha_fin\":\"2020-06-19\",\"detalle\":\"Equinoccio de marzo: 20-03-2020 a las 00:49 (hora de Chile). Termina el día antes de la estación siguiente.\"},{\"evento_id\":\"semana_santa_2020\",\"nombre\":\"Semana Santa\",\"categoria\":\"festividad\",\"fecha_inicio\":\"2020-04-10\",\"fecha_fin\":\"2020-04-12\",\"detalle\":\"De Viernes Santo a Domingo de Resurrección; viernes y sábado son feriados.\"},{\"evento_id\":\"dia_madre_2020\",\"nombre\":\"Día de la Madre\",\"categoria\":\"festividad\",\"fecha_inicio\":\"2020-05-10\",\"fecha_fin\":\"2020-05-10\",\"detalle\":\"Segundo domingo de mayo; no es feriado.\"},{\"evento_id\":\"invierno_2020\",\"nombre\":\"Invierno\",\"categoria\":\"estacion\",\"fecha_inicio\":\"2020-06-20\",\"fecha_fin\":\"2020-09-21\",\"detalle\":\"Solsticio de junio: 20-06-2020 a las 17:43 (hora de Chile). Termina el día antes de la estación siguiente.\"},{\"evento_id\":\"dia_padre_2020\",\"nombre\":\"Día del Padre\",\"categoria\":\"festividad\",\"fecha_inicio\":\"2020-06-21\",\"fecha_fin\":\"2020-06-21\",\"detalle\":\"Tercer domingo de ju",
+    "cuerpo_truncado": true,
+    "inicio": "2026-11-17T15:05:21+00:00",
+    "fin": "2026-11-17T15:05:21+00:00"
+   }
+  },
+  {
+   "ruta": "/calendario-eventos?desde=2020-01-01&hasta=2032-01-11",
+   "esperado": 422,
+   "respuesta": {
+    "url": "http://127.0.0.1:8000/api/v1/calendario-eventos?desde=2020-01-01&hasta=2032-01-11",
+    "codigo": 422,
+    "cabeceras": {
+     "content-type": "application/json"
+    },
+    "cuerpo": "{\"detail\":\"El período no puede superar 4392 días.\"}",
+    "cuerpo_truncado": false,
+    "inicio": "2026-11-17T15:05:21+00:00",
+    "fin": "2026-11-17T15:05:21+00:00"
+   }
+  }
+ ]
+}

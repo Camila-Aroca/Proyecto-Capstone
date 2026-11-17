@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.672" timestamp="2026-11-17T11:01:37.705711-03:00" hostname="cata-ThinkPad-T14-Gen-4"><testcase classname="tests.test_models_holdout.TestSemanalHoldout" name="test_exclusion_excesiva_hace_fallar_la_evaluacion" time="0.016"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

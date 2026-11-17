@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.115" timestamp="2026-11-17T11:00:58.169086-03:00" hostname="cata-ThinkPad-T14-Gen-4"><testcase classname="tests.test_build_contexto_genero_mart" name="test_publish_is_atomic_valid_and_idempotent" time="0.034"><system-out>--------------------------------- Captured Out ---------------------------------
+[SKIP] Mart contextual válido: /tmp/pytest-of-<usuario>/pytest-54/test_publish_is_atomic_valid_a0/mart_contexto_genero_indicador_sexo.parquet
+
+</system-out></testcase></testsuite></testsuites>

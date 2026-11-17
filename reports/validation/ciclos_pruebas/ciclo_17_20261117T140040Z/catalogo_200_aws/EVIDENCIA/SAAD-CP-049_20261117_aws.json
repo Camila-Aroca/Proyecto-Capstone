@@ -1,0 +1,51 @@
+{
+ "caso": "SAAD-CP-049",
+ "entorno": "AWS (URL desplegada; host redactado)",
+ "snapshot": "/meta: última semana observada 2026-11-08; pronóstico calculado 2026-11-16T02:15:05.410245Z (persistido)",
+ "estado_inicial": {
+  "hora_utc": "2026-11-17T14:01:30+00:00",
+  "meta": {
+   "codigo": 200,
+   "cabeceras": {
+    "Content-Type": "application/json"
+   },
+   "cuerpo": "{\"modelo\":\"hibrido_glm_region_lgbm_comuna_conformal\",\"horizontes\":[1,2,3,4,5,6,7,8],\"umbral_cambio_pct\":7.0,\"semana_en_curso\":null,\"nivel_intervalo\":0.8,\"ultima_semana_observada\":{\"ano\":2026,\"semana\":45,\"fecha_inicio\":\"2026-11-08\",\"atenciones\":1825.0},\"pronostico_calculado_en\":\"2026-11-16T02:15:05.410245Z\",\"origen_pronostico\":\"persistido\",\"comunas_con_pronostico\":50,\"metricas_backtest\":{\"mase_region\":0.6107,\"mase_comuna\":0.6694,\"cobertura_region\":0.875,\"cobertura_comuna\":0.8079},\"cobertura_holdout\":[{\"nivel\":\"region\",\"cobertura_observada\":0.6968,\"evaluaciones\":155,\"dentro_de_tolerancia\":false},{\"nivel\":\"comuna\",\"cobertura_observada\":0.7684,\"evaluaciones\":7750,\"dentro_de_tolerancia\":false}],\"advertencias\":[\"Las cifras son atenciones de urgencia (eventos), no personas únicas ni prevalencia.\",\"Intervalo 80%: fuera de muestra cubrió 70% en el nivel regional. Interpretar los límites como orientativos.\",\"Intervalo 80%: fuera de muestra cubrió 77% en el nivel comunal. Interpretar los límites como orientativos.\",\"2 comuna(s) sin pronóstico por falta de datos; se muestran como 'sin pronóstico', nunca como cero.\"]}",
+   "cuerpo_truncado": false,
+   "inicio": "2026-11-17T14:01:30+00:00",
+   "fin": "2026-11-17T14:01:30+00:00"
+  }
+ },
+ "esperado": "520 cumple el contrato; 521 devuelve HTTP 422",
+ "peticiones": [
+  {
+   "ruta": "/series/RM?semanas=520",
+   "esperado": 200,
+   "respuesta": {
+    "url": "<url-base>/api/v1/series/RM?semanas=520",
+    "codigo": 200,
+    "cabeceras": {
+     "Content-Type": "application/json"
+    },
+    "cuerpo": "{\"series_id\":\"RM\",\"nombre\":\"Región Metropolitana\",\"nivel\":\"region\",\"historico\":[{\"ano\":2021,\"semana\":1,\"fecha_inicio\":\"2021-01-03\",\"atenciones\":569.0},{\"ano\":2021,\"semana\":2,\"fecha_inicio\":\"2021-01-10\",\"atenciones\":650.0},{\"ano\":2021,\"semana\":3,\"fecha_inicio\":\"2021-01-17\",\"atenciones\":847.0},{\"ano\":2021,\"semana\":4,\"fecha_inicio\":\"2021-01-24\",\"atenciones\":1177.0},{\"ano\":2021,\"semana\":5,\"fecha_inicio\":\"2021-01-31\",\"atenciones\":1168.0},{\"ano\":2021,\"semana\":6,\"fecha_inicio\":\"2021-02-07\",\"atenciones\":1141.0},{\"ano\":2021,\"semana\":7,\"fecha_inicio\":\"2021-02-14\",\"atenciones\":1201.0},{\"ano\":2021,\"semana\":8,\"fecha_inicio\":\"2021-02-21\",\"atenciones\":1262.0},{\"ano\":2021,\"semana\":9,\"fecha_inicio\":\"2021-02-28\",\"atenciones\":1311.0},{\"ano\":2021,\"semana\":10,\"fecha_inicio\":\"2021-03-07\",\"atenciones\":1235.0},{\"ano\":2021,\"semana\":11,\"fecha_inicio\":\"2021-03-14\",\"atenciones\":1380.0},{\"ano\":2021,\"semana\":12,\"fecha_inicio\":\"2021-03-21\",\"atenciones\":1347.0},{\"ano\":2021,\"semana\":13,\"fecha_inicio\":\"2021-03-28\",\"atenciones\":1366.0},{\"ano\":2021,\"semana\":14,\"fecha_inicio\":\"2021-04-04\",\"atenciones\":1449.0},{\"ano\":2021,\"semana\":15,\"fecha_inicio\":\"2021-04-11\",\"atenciones\":1514.0},{\"ano\":2021,\"semana\":16,\"fecha_inicio\":\"2021-04-18\",\"atenciones\":1475.0},{\"ano\":2021,\"semana\":17,\"fecha_inicio\":\"2021-04-25\",\"atenciones\":1511.0},{\"ano\":2021,\"semana\":18,\"fecha_inicio\":\"2021-05-02\",\"atenciones\":1597.0},{\"ano\":2021,\"semana\":19,\"fecha_inicio\":\"2021-05-09\",\"atenciones\":1512.0},{\"ano\":2021,\"semana\":20,\"fecha_inicio\":\"2021-",
+    "cuerpo_truncado": true,
+    "inicio": "2026-11-17T14:01:31+00:00",
+    "fin": "2026-11-17T14:01:31+00:00"
+   }
+  },
+  {
+   "ruta": "/series/RM?semanas=521",
+   "esperado": 422,
+   "respuesta": {
+    "url": "<url-base>/api/v1/series/RM?semanas=521",
+    "codigo": 422,
+    "cabeceras": {
+     "Content-Type": "application/json"
+    },
+    "cuerpo": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"query\",\"semanas\"],\"msg\":\"Input should be less than or equal to 520\",\"input\":\"521\",\"ctx\":{\"le\":520}}]}",
+    "cuerpo_truncado": false,
+    "inicio": "2026-11-17T14:01:31+00:00",
+    "fin": "2026-11-17T14:01:32+00:00"
+   }
+  }
+ ]
+}

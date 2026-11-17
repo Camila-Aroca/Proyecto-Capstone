@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="5" time="1.012" timestamp="2026-11-17T11:02:14.430159-03:00" hostname="cata-ThinkPad-T14-Gen-4"><testcase classname="tests.test_api_caracterizacion" name="test_redondeo_escenario_no_pierde_eventos[0]" time="0.011"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_api_caracterizacion" name="test_redondeo_escenario_no_pierde_eventos[1]" time="0.004"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_api_caracterizacion" name="test_redondeo_escenario_no_pierde_eventos[2]" time="0.004"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_api_caracterizacion" name="test_redondeo_escenario_no_pierde_eventos[7]" time="0.003"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase><testcase classname="tests.test_api_caracterizacion" name="test_redondeo_escenario_no_pierde_eventos[100001]" time="0.004"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

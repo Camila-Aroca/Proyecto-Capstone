@@ -1,0 +1,364 @@
+{
+ "run_id": "ciclo_17_20261117T140040Z/catalogo_200_local",
+ "ciclo": 17,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Catalina Rodríguez",
+ "alcance": "10 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-17T14:01:30+00:00",
+ "fin_utc": "2026-11-17T14:01:30+00:00",
+ "commit": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+ "arbol_versionado_limpio": false,
+ "archivos_versionados_modificados": 3,
+ "archivos_sin_rastrear": [
+  "docs/05-entregas/informe_avance_apt_catalina.md",
+  "docs/05-entregas/reflexion_monitoreo_apt.md",
+  "docs/07-diagramas/.$despliegue_aws_as_built.drawio.bkp",
+  "package-lock.json",
+  "reports/validation/ciclos_pruebas/ciclo_02_20261112T142133Z/",
+  "reports/validation/ciclos_pruebas/ciclo_03_20261112T152058Z/"
+ ],
+ "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+ "modo": "http",
+ "nota": "Docker Compose local tras docker compose restart api, datos del commit 2dc0150",
+ "version_desplegada": null,
+ "python": "3.12.3",
+ "so": "Linux 7.0.0-43-generic",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 10,
+  "fallidos": 0,
+  "no_ejecutados": 0
+ },
+ "advertencias": [
+  "Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-039",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_local",
+   "titulo": "Año de egreso no publicado",
+   "modulo": "Egresos residentes",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "/meta: última semana observada 2026-11-08; pronóstico calculado 2026-11-16T02:15:05.410245Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:01:30+00:00",
+    "fin": "2026-11-17T14:01:30+00:00"
+   },
+   "resultado_real": "GET /hospitalizaciones-residentes/RM?ano=1900 → HTTP 422 (esperado 422)",
+   "peticiones": [
+    {
+     "ruta": "/hospitalizaciones-residentes/RM?ano=1900",
+     "esperado": 422,
+     "obtenido": 422
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-039_20261117_local.json",
+   "evidencia_sha256": "3c6dca50473fc795c8f9b60f6c73a73b4f70d272a4185ca8bb07e1fd81ea04b8",
+   "hash_input": {
+    "peticiones_sha256": "433b50a977203bf01b08acbf1e5582c4e2a7e6ff67bb78c5b99abaf62af76de2"
+   },
+   "observaciones": "Docker Compose local tras docker compose restart api, datos del commit 2dc0150"
+  },
+  {
+   "id": "SAAD-CP-043",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_local",
+   "titulo": "Calendario con intervalo invertido",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "/meta: última semana observada 2026-11-08; pronóstico calculado 2026-11-16T02:15:05.410245Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:01:30+00:00",
+    "fin": "2026-11-17T14:01:30+00:00"
+   },
+   "resultado_real": "GET /calendario-eventos?desde=2026-12-31&hasta=2026-01-01 → HTTP 422 (esperado 422)",
+   "peticiones": [
+    {
+     "ruta": "/calendario-eventos?desde=2026-12-31&hasta=2026-01-01",
+     "esperado": 422,
+     "obtenido": 422
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-043_20261117_local.json",
+   "evidencia_sha256": "82f130a5dc55e6a564fc20b92d89dda6deecb206e6217dc7a72fc06d15a1a40d",
+   "hash_input": {
+    "peticiones_sha256": "71042e053118ee85e8ee1360d69c5c84e144ecf889838cda7f6a232bb60be21d"
+   },
+   "observaciones": "Docker Compose local tras docker compose restart api, datos del commit 2dc0150"
+  },
+  {
+   "id": "SAAD-CP-044",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_local",
+   "titulo": "Límite exacto del calendario",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "/meta: última semana observada 2026-11-08; pronóstico calculado 2026-11-16T02:15:05.410245Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:01:30+00:00",
+    "fin": "2026-11-17T14:01:30+00:00"
+   },
+   "resultado_real": "GET /calendario-eventos?desde=2020-01-01&hasta=2032-01-10 → HTTP 200 (esperado 200); GET /calendario-eventos?desde=2020-01-01&hasta=2032-01-11 → HTTP 422 (esperado 422)",
+   "peticiones": [
+    {
+     "ruta": "/calendario-eventos?desde=2020-01-01&hasta=2032-01-10",
+     "esperado": 200,
+     "obtenido": 200
+    },
+    {
+     "ruta": "/calendario-eventos?desde=2020-01-01&hasta=2032-01-11",
+     "esperado": 422,
+     "obtenido": 422
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-044_20261117_local.json",
+   "evidencia_sha256": "e4b67e4e422e7693d67ad750b851dba77bc4810afc888817f24d9bcc87c21268",
+   "hash_input": {
+    "peticiones_sha256": "ed6b708b5fbd71adc245ddbf370bed8d1d767f542947a541ff3e45b72fb557fb"
+   },
+   "observaciones": "Docker Compose local tras docker compose restart api, datos del commit 2dc0150"
+  },
+  {
+   "id": "SAAD-CP-048",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_local",
+   "titulo": "Límite inferior de semanas",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "/meta: última semana observada 2026-11-08; pronóstico calculado 2026-11-16T02:15:05.410245Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:01:30+00:00",
+    "fin": "2026-11-17T14:01:30+00:00"
+   },
+   "resultado_real": "GET /series/RM?semanas=1 → HTTP 200 (esperado 200); GET /series/RM?semanas=0 → HTTP 422 (esperado 422)",
+   "peticiones": [
+    {
+     "ruta": "/series/RM?semanas=1",
+     "esperado": 200,
+     "obtenido": 200
+    },
+    {
+     "ruta": "/series/RM?semanas=0",
+     "esperado": 422,
+     "obtenido": 422
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-048_20261117_local.json",
+   "evidencia_sha256": "ffecdededb2843e64a225b33898a5c93864a6f7be0ad31478c437cedb00506e5",
+   "hash_input": {
+    "peticiones_sha256": "5920cd6da9fdc151a76a5c4a0177af0f7d20b202b542c7db30d4086d0e452bc7"
+   },
+   "observaciones": "Docker Compose local tras docker compose restart api, datos del commit 2dc0150"
+  },
+  {
+   "id": "SAAD-CP-049",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_local",
+   "titulo": "Límite superior de semanas",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "/meta: última semana observada 2026-11-08; pronóstico calculado 2026-11-16T02:15:05.410245Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:01:30+00:00",
+    "fin": "2026-11-17T14:01:30+00:00"
+   },
+   "resultado_real": "GET /series/RM?semanas=520 → HTTP 200 (esperado 200); GET /series/RM?semanas=521 → HTTP 422 (esperado 422)",
+   "peticiones": [
+    {
+     "ruta": "/series/RM?semanas=520",
+     "esperado": 200,
+     "obtenido": 200
+    },
+    {
+     "ruta": "/series/RM?semanas=521",
+     "esperado": 422,
+     "obtenido": 422
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-049_20261117_local.json",
+   "evidencia_sha256": "75596de1dcdba70a03974427de3f826e842a14eef1d007481889fd165ca5a01a",
+   "hash_input": {
+    "peticiones_sha256": "b09296d5339dc10510b59c42c630f4d7b4ac8233888b158e1e2a161811a2fbba"
+   },
+   "observaciones": "Docker Compose local tras docker compose restart api, datos del commit 2dc0150"
+  },
+  {
+   "id": "SAAD-CP-050",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_local",
+   "titulo": "Serie desconocida",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "/meta: última semana observada 2026-11-08; pronóstico calculado 2026-11-16T02:15:05.410245Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:01:30+00:00",
+    "fin": "2026-11-17T14:01:30+00:00"
+   },
+   "resultado_real": "GET /series/NO_EXISTE → HTTP 404 (esperado 404)",
+   "peticiones": [
+    {
+     "ruta": "/series/NO_EXISTE",
+     "esperado": 404,
+     "obtenido": 404
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-050_20261117_local.json",
+   "evidencia_sha256": "01ed57b329ff85c17e4cad86a3579ba712d507c9ecc3bf482ce370132dde0f39",
+   "hash_input": {
+    "peticiones_sha256": "abf84784d8500e5d7327ea1c0e7247e711b5fe1f253ab4b24f3a5654585cf6bb"
+   },
+   "observaciones": "Docker Compose local tras docker compose restart api, datos del commit 2dc0150"
+  },
+  {
+   "id": "SAAD-CP-052",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_local",
+   "titulo": "Nivel fuera del dominio",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "/meta: última semana observada 2026-11-08; pronóstico calculado 2026-11-16T02:15:05.410245Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:01:30+00:00",
+    "fin": "2026-11-17T14:01:30+00:00"
+   },
+   "resultado_real": "GET /pronosticos?nivel=hospital → HTTP 422 (esperado 422)",
+   "peticiones": [
+    {
+     "ruta": "/pronosticos?nivel=hospital",
+     "esperado": 422,
+     "obtenido": 422
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-052_20261117_local.json",
+   "evidencia_sha256": "bc8825c94dae9774dfccab27b86b7edadc535f0f9ecb8c9c508c819a57715dec",
+   "hash_input": {
+    "peticiones_sha256": "398e987647996c79be0fce5c41eca7ba2525a54452a640fcd4fb3d5c8435af09"
+   },
+   "observaciones": "Docker Compose local tras docker compose restart api, datos del commit 2dc0150"
+  },
+  {
+   "id": "SAAD-CP-053",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_local",
+   "titulo": "Semana DEIS fuera de dominio",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "/meta: última semana observada 2026-11-08; pronóstico calculado 2026-11-16T02:15:05.410245Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:01:30+00:00",
+    "fin": "2026-11-17T14:01:30+00:00"
+   },
+   "resultado_real": "GET /caracterizacion/urgencias/region/RM?semanas=2026-54 → HTTP 422 (esperado 422)",
+   "peticiones": [
+    {
+     "ruta": "/caracterizacion/urgencias/region/RM?semanas=2026-54",
+     "esperado": 422,
+     "obtenido": 422
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-053_20261117_local.json",
+   "evidencia_sha256": "77487c32bd94bd3bb1eb0e43dc92d36c613de51eead05f6408abf83e1bceeb15",
+   "hash_input": {
+    "peticiones_sha256": "dbdc36e07250169eb5ddd0185294f5ed6800435491631d8e36e4a37e6c1c39d2"
+   },
+   "observaciones": "Docker Compose local tras docker compose restart api, datos del commit 2dc0150"
+  },
+  {
+   "id": "SAAD-CP-054",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_local",
+   "titulo": "Defunciones no identifica establecimiento",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "/meta: última semana observada 2026-11-08; pronóstico calculado 2026-11-16T02:15:05.410245Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:01:30+00:00",
+    "fin": "2026-11-17T14:01:30+00:00"
+   },
+   "resultado_real": "GET /caracterizacion/suicidios/establecimiento/109102?semanas=2025-1 → HTTP 422 (esperado 422)",
+   "peticiones": [
+    {
+     "ruta": "/caracterizacion/suicidios/establecimiento/109102?semanas=2025-1",
+     "esperado": 422,
+     "obtenido": 422
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-054_20261117_local.json",
+   "evidencia_sha256": "ac09d2a0d12d683b655c45f47c75482fb6fa1e40e0ac7fe315797f3d4ee4c8d0",
+   "hash_input": {
+    "peticiones_sha256": "a6feee50172ac373dfb0b45fc1cc6d96935c2ac28f8d77e86aeda1c6996933f9"
+   },
+   "observaciones": "Docker Compose local tras docker compose restart api, datos del commit 2dc0150"
+  },
+  {
+   "id": "SAAD-CP-055",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_local",
+   "titulo": "Comuna ajena a RM",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "/meta: última semana observada 2026-11-08; pronóstico calculado 2026-11-16T02:15:05.410245Z (persistido)",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:01:30+00:00",
+    "fin": "2026-11-17T14:01:30+00:00"
+   },
+   "resultado_real": "GET /caracterizacion/urgencias/comuna/05101?semanas=2025-1 → HTTP 404 (esperado 404)",
+   "peticiones": [
+    {
+     "ruta": "/caracterizacion/urgencias/comuna/05101?semanas=2025-1",
+     "esperado": 404,
+     "obtenido": 404
+    }
+   ],
+   "evidencia": "EVIDENCIA/SAAD-CP-055_20261117_local.json",
+   "evidencia_sha256": "02264dbb4fcc586cbb2c43b22fd167f8a432ddfddb68575b9b6e4cb218794490",
+   "hash_input": {
+    "peticiones_sha256": "a6d004e403443ca00b43ab27e8996b38de7f823b8e107db967c1c7a921c799d5"
+   },
+   "observaciones": "Docker Compose local tras docker compose restart api, datos del commit 2dc0150"
+  }
+ ]
+}

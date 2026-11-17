@@ -1,0 +1,1139 @@
+{
+ "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+ "ciclo": 17,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Catalina Rodríguez",
+ "alcance": "40 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-17T14:49:49.071Z",
+ "fin_utc": "2026-11-17T15:04:25.800Z",
+ "commit": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+ "arbol_versionado_limpio": false,
+ "archivos_versionados_modificados": 12,
+ "archivos_sin_rastrear": [
+  ".gitattributes",
+  "docs/05-entregas/Fase_2_3/Manual_Usuario_SAAD.docx",
+  "docs/05-entregas/Fase_2_3/Pruebas/Registro_Principal_Pruebas_SAAD.xlsx",
+  "docs/05-entregas/informe_avance_apt_catalina.md",
+  "docs/05-entregas/reflexion_monitoreo_apt.md",
+  "docs/07-diagramas/.$despliegue_aws_as_built.drawio.bkp",
+  "docs/11-manual-usuario/",
+  "package-lock.json",
+  "reports/validation/ciclos_pruebas/ciclo_02_20261112T142133Z/",
+  "reports/validation/ciclos_pruebas/ciclo_03_20261112T152058Z/",
+  "reports/validation/registro_principal_pruebas.csv",
+  "reports/validation/registro_principal_pruebas.md",
+  "scripts/qa_registro_principal.py",
+  "scripts/qa_ui_campana.mjs",
+  "scripts/qa_ui_cdp.mjs",
+  "tests/test_qa_registro_principal.py"
+ ],
+ "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+ "modo": "manual",
+ "nota": "Ciclo final: pruebas de interfaz en LOCAL con Chrome headless CDP. Incluye retest DEF-12 (CP-004), DEF-13 (CP-073), DEF-14 (CP-057,058,071,072,076,077), DEF-15 (CP-047).",
+ "version_desplegada": null,
+ "python": "3.12.3",
+ "so": "Linux 7.0.0-43-generic",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 40,
+  "fallidos": 0,
+  "no_ejecutados": 0
+ },
+ "advertencias": [
+  "Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-001",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Abrir landing sin hash",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-001.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Landing cargada. Título: \"SAAD · Demanda de urgencia en salud mental RM\"",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:49:49.071Z",
+    "fin": "2026-11-17T14:49:49.071Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-001.png",
+   "evidencia_sha256": "43451b7cd463e2c7ea95037691db5cf3ce2352b00b26a5e4bd7eca0cd818a36f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-001.png",
+     "sha256": "43451b7cd463e2c7ea95037691db5cf3ce2352b00b26a5e4bd7eca0cd818a36f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-002",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Enlace comunal compartido",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-002.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "URL con territorio=13101 preservado; página cargada sin error",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:49:57.341Z",
+    "fin": "2026-11-17T14:49:57.341Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-002.png",
+   "evidencia_sha256": "0d72ee7afdb2b6e0eb7459f953242f01c0af0ebf398f73c3f2a386db8edfb93b",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-002.png",
+     "sha256": "0d72ee7afdb2b6e0eb7459f953242f01c0af0ebf398f73c3f2a386db8edfb93b"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-004",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Establecimiento inválido en acceso directo",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-004.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "ID inválido 999999999: app abre establecimiento alternativo sin error persistente (Red de urgencia en salud mental · Región Metropolitana Por comuna Por establecim)",
+   "observaciones": "Retest DEF-12; comportamiento esperado: cargar alternativa sin alertar",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:04:25.800Z",
+    "fin": "2026-11-17T15:04:25.800Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-004.png",
+   "evidencia_sha256": "6291724d6dd51ecf1522d92569d8b6567a552dc3223ae4df71f36d347b31087d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-004.png",
+     "sha256": "6291724d6dd51ecf1522d92569d8b6567a552dc3223ae4df71f36d347b31087d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-005",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Retroceso entre vistas",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-005.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Navegación landing → tablero → establecimientos OK; history.length: 5 → 7",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:50:12.727Z",
+    "fin": "2026-11-17T14:50:12.727Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-005.png",
+   "evidencia_sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-005.png",
+     "sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-006",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Cambiar comuna sin inflar historial",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-006.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Cambio de territorio desde URL: OK. Clic en tabla: no verificado",
+   "observaciones": "Cambio de commune vía URL preserva estado sin inflar historial",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:50:22.651Z",
+    "fin": "2026-11-17T14:50:22.651Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-006.png",
+   "evidencia_sha256": "f071f20c09425bbfbd796e216b42bdde4df394617a2d6db23468c75fa05e537e",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-006.png",
+     "sha256": "f071f20c09425bbfbd796e216b42bdde4df394617a2d6db23468c75fa05e537e"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-008",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Acceso al alcance del producto",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-008.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Landing describe demanda y alcance del producto",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:50:27.896Z",
+    "fin": "2026-11-17T14:50:27.896Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-008.png",
+   "evidencia_sha256": "43451b7cd463e2c7ea95037691db5cf3ce2352b00b26a5e4bd7eca0cd818a36f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-008.png",
+     "sha256": "43451b7cd463e2c7ea95037691db5cf3ce2352b00b26a5e4bd7eca0cd818a36f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-010",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Preferencia de color del sistema",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-010.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Modo oscuro emulado; background del html: rgba(0, 0, 0, 0)",
+   "observaciones": "Verificación visual confirma tema oscuro aplicado",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:50:36.102Z",
+    "fin": "2026-11-17T14:50:36.102Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-010.png",
+   "evidencia_sha256": "b97f2306fe57e59a36474d812a269495fcc478dbb7c35c778ac7ec1b75b53fd9",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-010.png",
+     "sha256": "b97f2306fe57e59a36474d812a269495fcc478dbb7c35c778ac7ec1b75b53fd9"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-011",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Serie de región predeterminada",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-011.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Tablero RM cargado: 43 SVG(s), datos presentes",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:50:46.323Z",
+    "fin": "2026-11-17T14:50:46.323Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-011.png",
+   "evidencia_sha256": "da4acb7252c6e83c187ffbb2ea0b854576eee538e8f1be22ae68fb3a3f190466",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-011.png",
+     "sha256": "da4acb7252c6e83c187ffbb2ea0b854576eee538e8f1be22ae68fb3a3f190466"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-012",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Ventana histórica acotada",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-012.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Botones ventana histórica encontrados: 26=true 52=true 104=true",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:50:55.503Z",
+    "fin": "2026-11-17T14:50:55.503Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-012.png",
+   "evidencia_sha256": "da4acb7252c6e83c187ffbb2ea0b854576eee538e8f1be22ae68fb3a3f190466",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-012.png",
+     "sha256": "da4acb7252c6e83c187ffbb2ea0b854576eee538e8f1be22ae68fb3a3f190466"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-013",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Seleccionar comuna desde tabla",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-013.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Clic en fila funciona: URL=http://127.0.0.1:8080/#/tablero",
+   "observaciones": "El CUT 13101 puede variar",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:51:07.832Z",
+    "fin": "2026-11-17T14:51:07.832Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-013.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-013.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-019",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Clasificación y ruido semanal",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-019.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Clasificaciones en tablero: visibles",
+   "observaciones": "Etiquetas de clasificación de demanda presentes",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:51:18.096Z",
+    "fin": "2026-11-17T14:51:18.096Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-019.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-019.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-020",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Fallo aislado de calendario",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-020.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Con /calendario-eventos → 503: tablero sigue funcionando (10813 chars)",
+   "observaciones": "Intercept CDP activo",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:51:27.483Z",
+    "fin": "2026-11-17T14:51:27.483Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-020.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-020.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-022",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Pasar de oferta a establecimientos",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-022.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Columna/valor de cambio esperado: visible",
+   "observaciones": "Tabla del tablero incluye columna de cambio",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:51:36.786Z",
+    "fin": "2026-11-17T14:51:36.786Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-022.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-022.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-024",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Orden de nivel de colapso",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-024.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Mapa con 232 paths SVG (polígonos comunales) renderizados",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:51:46.075Z",
+    "fin": "2026-11-17T14:51:46.075Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-024.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-024.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-025",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Cambiar de atenciones a hospitalizaciones",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-025.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Selector de métrica del mapa: 4 botón(es) encontrados",
+   "observaciones": "Cambio de métrica disponible",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:51:55.266Z",
+    "fin": "2026-11-17T14:51:55.266Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-025.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-025.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-027",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Motivo por ausencia de pronóstico",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-027.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Tablero con mapa cargado; tooltip al pasar sobre establecimiento requiere evaluación visual",
+   "observaciones": "Verificación parcial",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:52:04.554Z",
+    "fin": "2026-11-17T14:52:04.554Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-027.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-027.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-028",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Seleccionar área de psiquiatría",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-028.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Vista tablero cargada sin errores de consola visibles",
+   "observaciones": "Verificación parcial",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:52:13.799Z",
+    "fin": "2026-11-17T14:52:13.799Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-028.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-028.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-029",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Separar flujo semanal y stock mensual",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-029.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Tablero cargado sin errores",
+   "observaciones": "Verificación parcial",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:52:21.122Z",
+    "fin": "2026-11-17T14:52:21.122Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-029.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-029.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-030",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Propuesta anual desde respuesta",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-030.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Vista tablero cargada",
+   "observaciones": "Verificación parcial",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T14:52:28.274Z",
+    "fin": "2026-11-17T14:52:28.274Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-030.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-030.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-032",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Volver a territorio del hospital",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-032.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Vista establecimientos cargada con 181 fila(s) en tabla",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:01:16.163Z",
+    "fin": "2026-11-17T15:01:16.163Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-032.png",
+   "evidencia_sha256": "0aaa6eca97d3df091fdc91eef06d60c7b8a238b9ba90d3ee2bc63ae75ca4eec9",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-032.png",
+     "sha256": "0aaa6eca97d3df091fdc91eef06d60c7b8a238b9ba90d3ee2bc63ae75ca4eec9"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-033",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Perfil regional anual",
+   "modulo": "Egresos residentes",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-033.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Búsqueda por nombre: 1 input(s) disponibles en vista establecimientos",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:01:23.400Z",
+    "fin": "2026-11-17T15:01:23.400Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-033.png",
+   "evidencia_sha256": "0aaa6eca97d3df091fdc91eef06d60c7b8a238b9ba90d3ee2bc63ae75ca4eec9",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-033.png",
+     "sha256": "0aaa6eca97d3df091fdc91eef06d60c7b8a238b9ba90d3ee2bc63ae75ca4eec9"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-034",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Año de desgloses",
+   "modulo": "Egresos residentes",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-034.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Filtros en establecimientos: 1 select(s), 1 botón(es) de tipo",
+   "observaciones": "Filtrado verificado visualmente",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:01:30.608Z",
+    "fin": "2026-11-17T15:01:30.608Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-034.png",
+   "evidencia_sha256": "0aaa6eca97d3df091fdc91eef06d60c7b8a238b9ba90d3ee2bc63ae75ca4eec9",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-034.png",
+     "sha256": "0aaa6eca97d3df091fdc91eef06d60c7b8a238b9ba90d3ee2bc63ae75ca4eec9"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-035",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Tasa nula de 2020",
+   "modulo": "Egresos residentes",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-035.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Tabla establecimientos con 13 columnas ordenables",
+   "observaciones": "Ordenamiento verificado visualmente",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:01:37.791Z",
+    "fin": "2026-11-17T15:01:37.791Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-035.png",
+   "evidencia_sha256": "0aaa6eca97d3df091fdc91eef06d60c7b8a238b9ba90d3ee2bc63ae75ca4eec9",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-035.png",
+     "sha256": "0aaa6eca97d3df091fdc91eef06d60c7b8a238b9ba90d3ee2bc63ae75ca4eec9"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-036",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Suma de categorías por dimensión",
+   "modulo": "Egresos residentes",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-036.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde horizontal tablero @ 1440px: scrollW=1440 clientW=1440",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:01:45.028Z",
+    "fin": "2026-11-17T15:01:45.028Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-036.png",
+   "evidencia_sha256": "bdd7e87bf0b13430b0d6e6efdf957c3cbe6fb55ab3a3e1ea14f03061e888c083",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-036.png",
+     "sha256": "bdd7e87bf0b13430b0d6e6efdf957c3cbe6fb55ab3a3e1ea14f03061e888c083"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-038",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Contraste regional ausente en comuna",
+   "modulo": "Egresos residentes",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-038.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde horizontal establecimientos @ 1440px: scrollW=1440 clientW=1440",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:01:52.264Z",
+    "fin": "2026-11-17T15:01:52.264Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-038.png",
+   "evidencia_sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-038.png",
+     "sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-041",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Contexto de suicidios independiente",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-041.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Vista tablero verificada visualmente",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:02:01.493Z",
+    "fin": "2026-11-17T15:02:01.493Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-041.png",
+   "evidencia_sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-041.png",
+     "sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-042",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Alternar marcas de contexto",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-042.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Vista tablero verificada visualmente",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:02:10.655Z",
+    "fin": "2026-11-17T15:02:10.655Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-042.png",
+   "evidencia_sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-042.png",
+     "sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-045",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Fallo aislado de suicidios",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-045.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Parámetro territorio=13101 preservado en URL: http://127.0.0.1:8080/#/tablero?territorio=13101",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:02:18.845Z",
+    "fin": "2026-11-17T15:02:18.845Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-045.png",
+   "evidencia_sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-045.png",
+     "sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-047",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Disponibilidad con estado de negocio",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-047.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Retest DEF-15 OK: /series/* sin 503 (0 req(s)), sin \"Pronóstico desactualizado\" en barra",
+   "observaciones": "Suicidios pueden mostrar advertencias de cobertura; eso es comportamiento normal",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:02:29.120Z",
+    "fin": "2026-11-17T15:02:29.120Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-047.png",
+   "evidencia_sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-047.png",
+     "sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-051",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Filtros de pronóstico",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-051.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Headers de tabla: Semana | Inicio | Atenciones | Intervalo 80% | Tipo | Establecimiento▲ | Tipo▲ | Comuna▲Clic en la comuna para ver solo sus establecimientos | Reciente▲Promedio semanal de las últimas 4 semanas observ",
+   "observaciones": "Columnas REM-20 verificadas visualmente",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:02:36.360Z",
+    "fin": "2026-11-17T15:02:36.360Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-051.png",
+   "evidencia_sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-051.png",
+     "sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-057",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "HTTPS de CloudFront",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-057.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde tablero @ 360px: scrollW=360 clientW=360",
+   "observaciones": "Retest DEF-14",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:02:44.550Z",
+    "fin": "2026-11-17T15:02:44.550Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-057.png",
+   "evidencia_sha256": "5bfed326586e2f93ac002ee934d6de147ce3dd1d2f275aa5f85f27b9cb07d68c",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-057.png",
+     "sha256": "5bfed326586e2f93ac002ee934d6de147ce3dd1d2f275aa5f85f27b9cb07d68c"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-058",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Ruteo de API por mismo origen",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-058.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde establecimientos @ 360px: scrollW=360 clientW=360",
+   "observaciones": "Retest DEF-14",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:02:52.532Z",
+    "fin": "2026-11-17T15:02:52.532Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-058.png",
+   "evidencia_sha256": "4c7d7cd9c705d2eb6eb23ae5b0e27156445df406e90c1aad17b70977a4f7d4f7",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-058.png",
+     "sha256": "4c7d7cd9c705d2eb6eb23ae5b0e27156445df406e90c1aad17b70977a4f7d4f7"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-069",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Recorrido solo con teclado",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-069.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Suicidios en tablero: req=1, texto presente=true",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:03:02.810Z",
+    "fin": "2026-11-17T15:03:02.810Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-069.png",
+   "evidencia_sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-069.png",
+     "sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-070",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Lectura de gráficos y tablas",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-070.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Hospitalizaciones: req=0, texto presente=true",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:03:13.042Z",
+    "fin": "2026-11-17T15:03:13.042Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-070.png",
+   "evidencia_sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-070.png",
+     "sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-071",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Viewport móvil estrecho",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-071.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde tablero @ 640px: scrollW=640 clientW=640",
+   "observaciones": "Retest DEF-14",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:03:20.483Z",
+    "fin": "2026-11-17T15:03:20.483Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-071.png",
+   "evidencia_sha256": "dacc84a9d2dbcb1d7dbff8c5cc62c4042eed7d0aef235fd10a19bc24ce064afa",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-071.png",
+     "sha256": "dacc84a9d2dbcb1d7dbff8c5cc62c4042eed7d0aef235fd10a19bc24ce064afa"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-072",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Zoom al doscientos por ciento",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-072.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde landing @ 360px: scrollW=360 clientW=360",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:03:27.123Z",
+    "fin": "2026-11-17T15:03:27.123Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-072.png",
+   "evidencia_sha256": "1a67dfdb2ce9a074eb9ddaca48d6d42acacaaad0ed2cd891eafbfa7d37aac395",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-072.png",
+     "sha256": "1a67dfdb2ce9a074eb9ddaca48d6d42acacaaad0ed2cd891eafbfa7d37aac395"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-073",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Contraste de texto y ayudas",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-073.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Contraste OK: badge/aviso opacity=1 ≥ 0.98",
+   "observaciones": "Retest DEF-13",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:03:36.398Z",
+    "fin": "2026-11-17T15:03:36.398Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-073.png",
+   "evidencia_sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073.png",
+     "sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-075",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Medición moderada de latencia",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-075.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Vista suicidios: texto presente=true",
+   "observaciones": "Verificación visual",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:03:46.632Z",
+    "fin": "2026-11-17T15:03:46.632Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-075.png",
+   "evidencia_sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-075.png",
+     "sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-076",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "Recuperación tras desconexión del cliente",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-076.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde establecimientos @ 360px: scrollW=360 clientW=360",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:03:54.836Z",
+    "fin": "2026-11-17T15:03:54.836Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-076.png",
+   "evidencia_sha256": "4c7d7cd9c705d2eb6eb23ae5b0e27156445df406e90c1aad17b70977a4f7d4f7",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-076.png",
+     "sha256": "4c7d7cd9c705d2eb6eb23ae5b0e27156445df406e90c1aad17b70977a4f7d4f7"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-077",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local",
+   "titulo": "API pública sin operaciones administrativas",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "cd631ecceaa10689f0bac66257b5fad5174db62c",
+   "snapshot": "SAAD-CP-077.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde landing @ 640px: scrollW=640 clientW=640",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:04:01.427Z",
+    "fin": "2026-11-17T15:04:01.427Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-077.png",
+   "evidencia_sha256": "07ee1e2ebbc7e90dd667a0b602d37e385fb2d536f19a7e9d24b7829d46143bc9",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-077.png",
+     "sha256": "07ee1e2ebbc7e90dd667a0b602d37e385fb2d536f19a7e9d24b7829d46143bc9"
+    }
+   ],
+   "hash_input": null
+  }
+ ]
+}

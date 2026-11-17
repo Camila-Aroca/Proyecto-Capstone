@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.660" timestamp="2026-11-17T11:01:35.182064-03:00" hostname="cata-ThinkPad-T14-Gen-4"><testcase classname="tests.test_models_holdout.TestSnapshot" name="test_raw_distinto_del_registrado" time="0.006"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>

@@ -1,0 +1,36 @@
+{
+ "caso": "SAAD-CP-039",
+ "entorno": "AWS (URL desplegada; host redactado)",
+ "snapshot": "/meta: última semana observada 2026-11-08; pronóstico calculado 2026-11-16T02:15:05.410245Z (persistido)",
+ "estado_inicial": {
+  "hora_utc": "2026-11-17T14:01:30+00:00",
+  "meta": {
+   "codigo": 200,
+   "cabeceras": {
+    "Content-Type": "application/json"
+   },
+   "cuerpo": "{\"modelo\":\"hibrido_glm_region_lgbm_comuna_conformal\",\"horizontes\":[1,2,3,4,5,6,7,8],\"umbral_cambio_pct\":7.0,\"semana_en_curso\":null,\"nivel_intervalo\":0.8,\"ultima_semana_observada\":{\"ano\":2026,\"semana\":45,\"fecha_inicio\":\"2026-11-08\",\"atenciones\":1825.0},\"pronostico_calculado_en\":\"2026-11-16T02:15:05.410245Z\",\"origen_pronostico\":\"persistido\",\"comunas_con_pronostico\":50,\"metricas_backtest\":{\"mase_region\":0.6107,\"mase_comuna\":0.6694,\"cobertura_region\":0.875,\"cobertura_comuna\":0.8079},\"cobertura_holdout\":[{\"nivel\":\"region\",\"cobertura_observada\":0.6968,\"evaluaciones\":155,\"dentro_de_tolerancia\":false},{\"nivel\":\"comuna\",\"cobertura_observada\":0.7684,\"evaluaciones\":7750,\"dentro_de_tolerancia\":false}],\"advertencias\":[\"Las cifras son atenciones de urgencia (eventos), no personas únicas ni prevalencia.\",\"Intervalo 80%: fuera de muestra cubrió 70% en el nivel regional. Interpretar los límites como orientativos.\",\"Intervalo 80%: fuera de muestra cubrió 77% en el nivel comunal. Interpretar los límites como orientativos.\",\"2 comuna(s) sin pronóstico por falta de datos; se muestran como 'sin pronóstico', nunca como cero.\"]}",
+   "cuerpo_truncado": false,
+   "inicio": "2026-11-17T14:01:30+00:00",
+   "fin": "2026-11-17T14:01:30+00:00"
+  }
+ },
+ "esperado": "HTTP 422 informa años disponibles sin generar desgloses vacíos como válidos",
+ "peticiones": [
+  {
+   "ruta": "/hospitalizaciones-residentes/RM?ano=1900",
+   "esperado": 422,
+   "respuesta": {
+    "url": "<url-base>/api/v1/hospitalizaciones-residentes/RM?ano=1900",
+    "codigo": 422,
+    "cabeceras": {
+     "Content-Type": "application/json"
+    },
+    "cuerpo": "{\"detail\":\"Año sin egresos publicados; disponibles: [2020, 2021, 2022, 2023, 2024, 2025].\"}",
+    "cuerpo_truncado": false,
+    "inicio": "2026-11-17T14:01:30+00:00",
+    "fin": "2026-11-17T14:01:31+00:00"
+   }
+  }
+ ]
+}

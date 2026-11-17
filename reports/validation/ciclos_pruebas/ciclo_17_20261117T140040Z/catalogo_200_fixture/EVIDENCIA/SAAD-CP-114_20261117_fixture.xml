@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.679" timestamp="2026-11-17T11:01:03.089788-03:00" hostname="cata-ThinkPad-T14-Gen-4"><testcase classname="tests.test_models_demanda.TestAusenciaDeFugaTemporal" name="test_features_no_cambian_al_alterar_el_futuro" time="0.047"><system-out>--------------------------------- Captured Out ---------------------------------
+
+</system-out></testcase></testsuite></testsuites>
