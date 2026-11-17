@@ -1,190 +1,242 @@
-# Manual de implementación reproducible de SAAD (Fase 2.2)
+# Manual de implementación — SAAD
 
-**Versión:** primera versión de Fase 2.2, redactada el 14 de noviembre de 2026 sobre `11056a6` y actualizada el 15-11 con la evidencia C-08 y una consulta de AWS.
-**Alcance:** instalación local (Python y Docker Compose) y despliegue en AWS tal como está registrado en el repositorio.
-**Pendiente:** los anexos operacionales definitivos de AWS (seguridad, costos, observabilidad y operación) se completan en C-45. La corrida parcial posterior al corte de octubre se registra en C-08; la evaluación de modelos sigue pendiente.
+> Fase 2.2 · 17 de noviembre de 2026. Sistema de Análisis y Anticipación de Demanda de Urgencia en Salud Mental para la Región Metropolitana. Guía para instalar, desplegar, verificar y recuperar la aplicación. La evidencia se identifica por fecha, entorno y versión.
 
-Este manual no certifica nada por sí solo. Cada sección indica si el paso fue **ejecutado y registrado**, **documentado sin registro de ejecución**, **fallido**, **bloqueado** o **pendiente**, y enlaza la evidencia cuando existe.
+**Documento de entrega.** [Manual de implementación en Word](Manual_Implementacion_SAAD.docx).
+
+## Índice
+
+1. [Estado de validación](#1-estado-de-validación)
+2. [Arquitectura y requisitos](#2-arquitectura-y-requisitos)
+3. [Configuración por entorno](#3-configuración-por-entorno)
+4. [Instalación y actualización local](#4-instalación-y-actualización-local)
+5. [Despliegue y publicación en AWS](#5-despliegue-y-publicación-en-aws)
+6. [Validación y registro de evidencia](#6-validación-y-registro-de-evidencia)
+7. [Diagnóstico y recuperación](#7-diagnóstico-y-recuperación)
+8. [Pendientes de cierre](#8-pendientes-de-cierre)
 
 ## 1. Estado de validación
 
-| Elemento | Estado | Evidencia |
-|---|---|---|
-| Instalación local con Docker Compose (API + frontend) | **Ejecutado** el 12-11 en Ubuntu 24.04, commit `f51f7f5` | [`reports/validation/baseline_local/20261112T135538Z/informe.md`](../../reports/validation/baseline_local/20261112T135538Z/informe.md): 10 de 14 casos aprobados. Los 4 fallidos faltaban outputs de datos y se cerraron después (DEF-01 a DEF-03) |
-| Reejecución local posterior a la publicación de outputs | **Ejecutado** el 12-11 (ciclo 4) | [`reports/validation/ciclos_pruebas/registro_defectos.md`](../../reports/validation/ciclos_pruebas/registro_defectos.md) |
-| Instalación Python local (Windows) | **Ejecutado** el 10-11 sobre `e7a55db` con cambios sin commit: `pip check` sin conflictos y 867 pruebas aprobadas | [`reports/validation/c08_revalidacion_20261110.md`](../../reports/validation/c08_revalidacion_20261110.md). No es una ejecución desde un clon limpio |
-| Instalación limpia en un segundo computador | **Confirmada por el equipo el 08-10; sin evidencia archivada** en el repositorio (comandos, versiones, logs) | Solo la menciona el `README.md` |
-| Pipeline posterior al corte de octubre | **Ejecutado parcialmente** el 15-11 con `--sin-evaluacion --force`; los benchmarks y holdouts no se rehicieron | [Evidencia C-08](../../reports/validation/c08_revalidacion_20261115T161029Z/informe.md) |
-| Suite automatizada | **Ejecutada** el 15-11: 920 pruebas ordinarias y 29 de integración aprobadas; commit base `5c341c5` con cambios locales | [Resultados y entorno C-08/U-39](../../reports/validation/c08_revalidacion_20261115T161029Z/informe.md) |
-| API local en el árbol de trabajo del 14-11 (sin ejecutar el pipeline) | **Observación histórica:** la API recalculó demanda en memoria y `/suicidios/RM` respondió 503 por un pronóstico desactualizado. Los pronósticos se regeneraron el 15-11; esta observación no verifica el estado posterior | Comprobación manual de la sesión del 14-11, sin archivo de evidencia |
-| Despliegue de la API y el frontend en AWS (CloudFront → ALB → ECS Fargate, `us-east-1`) | **Ejecutado y probado** el 12-11: 21 casos aprobados, 4 fallidos y 6 no ejecutados en la corrida E2E | [`reports/validation/e2e_local_aws/20261112T131720Z/informe.md`](../../reports/validation/e2e_local_aws/20261112T131720Z/informe.md). Los 4 fallidos fueron faltas de outputs, cerradas luego |
-| Pipeline en Fargate programado con EventBridge | **No implementado.** Cambio de alcance: el pipeline corre en el equipo y se publica con `subir_datos.sh` | [`docs/08-arquitectura/plan_despliegue_aws.md`](../08-arquitectura/plan_despliegue_aws.md), sección 2. C-42 sigue abierto |
-| CI/CD con CodePipeline y CodeBuild | **Bloqueado:** la conexión `saad-github` está en `PENDING` hasta que la dueña del repositorio la apruebe | Sección «Bloqueo de CI» de `registro_defectos.md`. La misma verificación se corre en el equipo |
-| Defectos abiertos | Sin defectos abiertos al cierre del ciclo 17 (2026-11-17) | [registro_defectos.md](../../reports/validation/ciclos_pruebas/registro_defectos.md) |
-
-La URL pública de la aplicación es [SAAD en AWS](https://d1zg565jvf1c8p.cloudfront.net/#/). El número de cuenta, los nombres de buckets y las credenciales no se incluyen aquí; la configuración local de AWS permanece fuera de Git.
-
-**Consulta de solo lectura del 15-11:** la portada, `/api/v1/salud`, `/api/v1/meta`, `/api/v1/establecimientos-meta` y `/api/v1/suicidios/RM` respondieron HTTP 200. Salud informó datos y pronóstico listos. `/meta` informó última semana observada 2026-S39 y pronóstico generado el 12-11; la corrida local C-08 llegó a 2026-S45. Esto verifica respuestas puntuales y muestra una diferencia de corte, no valida toda la interfaz ni identifica el commit desplegado.
-
-## 2. Versiones
-
-| Componente | Versión | Origen |
-|---|---|---|
-| Python | 3.12 (`python:3.12-slim` en la imagen; 3.12.6 en el equipo de la revalidación del 10-11) | `Dockerfile`, C-08 |
-| Node.js | 22 (`node:22-alpine` en la imagen del frontend; v22.15.1 en la línea base local) | `frontend/Dockerfile`, línea base local |
-| nginx | 1.27 (`nginx:1.27-alpine`) | `frontend/Dockerfile` |
-| Docker / Compose | 29.6.1 / 5.3.1 (versiones usadas en la línea base local) | línea base local |
-| Dependencias Python | Fijadas con `==` en `requirements.txt`. Entre ellas: FastAPI 0.141.1, pandas 3.0.5, NumPy 2.5.2, PyArrow 25.0.1, LightGBM 4.7.0 | `requirements.txt` |
-| Dependencias del frontend | Fijadas en `frontend/package-lock.json` (React ^19.3.0, Vite ^6.4.3, TypeScript ^7.0.2) | `frontend/package.json` |
-| AWS CDK | CLI `aws-cdk@2` con las librerías de `infra/aws/cdk/requirements.txt` | `infra/aws/cdk/README.md` |
-| Región AWS | `us-east-1` | `infra/aws/cdk/README.md` |
-
-## 3. Arquitectura y servicios
-
-| Servicio | Qué hace | Dónde corre |
-|---|---|---|
-| `api` (`saad-api`) | FastAPI de solo lectura. Carga los outputs del pipeline al arrancar | Docker Compose (puerto 8000) o ECS Fargate (0,5 vCPU, 2 GB, 1 tarea) |
-| `web` (`saad-web`) | Build de Vite servido por nginx; reenvía `/api` a la API | Docker Compose (puerto 8080) o S3 privado detrás de CloudFront |
-| `pipeline` (`saad-pipeline`) | Tarea por lotes que descarga fuentes, genera marts y modelos y escribe en `data/` y `reports/` | **Solo en el equipo** (perfil `pipeline` de Compose o `python scripts/run_pipeline.py`) |
-| CloudFront, ALB, S3 de datos y de sitio, ECR, CloudWatch, SNS | Entrada HTTPS, balanceo, almacenamiento, imágenes y observabilidad | Solo AWS. Definidos en `infra/aws/cdk/saad_stack.py` |
-
-Aurora o PostGIS **no se despliegan**: la API no usa base de datos.
-
-## 4. Configuración no secreta
-
-| Variable | Dónde se usa | Efecto |
-|---|---|---|
-| `SAAD_API_PORT`, `SAAD_WEB_PORT` | `docker-compose.yml` | Puertos del host (por defecto 8000 y 8080) |
-| `SAAD_USAR_PRONOSTICO_DESACTUALIZADO` | API, Compose y `desplegar.sh` | Con `1`, sirve el pronóstico guardado aunque no esté vigente, con una advertencia visible. Con `0`, lo recalcula al arrancar y mientras tanto responde `503` |
-| `SAAD_CORS_ORIGINS` | `src/api/main.py` | Orígenes permitidos. Por defecto `http://localhost:5173` y `http://127.0.0.1:5173` |
-| `SAAD_API_URL` | `frontend/vite.config.ts` | Destino del proxy de desarrollo (por defecto `http://127.0.0.1:8000`) |
-| `VITE_CARTO_API_KEY` | `frontend/.env.local` (copiar de `frontend/.env.example`) | Clave de CARTO para el mapa base. Sin clave el mapa muestra solo los límites comunales. En producción queda dentro del JavaScript publicado, por lo que se debe restringir por dominio en CARTO |
-| `SAAD_S3_BUCKET`, `SAAD_S3_PREFIX` | `src/cloud/api_arranque.py` y `src/cloud/pipeline_task.py` | Con bucket, bajan `data/` y `reports/` desde S3. Sin él, usan el disco local |
-| `SAAD_ECS_CLUSTER`, `SAAD_ECS_SERVICE` | `src/cloud/pipeline_task.py` | Si están, fuerzan un nuevo despliegue de la API al terminar con cambios |
-| `AWS_ACCOUNT_ID`, `AWS_REGION`, `SAAD_STACK`, `SAAD_ECR_REPO`, `SAAD_API_CPU`, `SAAD_API_MEMORY`, `SAAD_ALARM_EMAIL` | `infra/aws/.env` (copiar de `infra/aws/.env.example`) | Parámetros del despliegue en AWS |
-
-`SAAD_ORIGIN_SECRET` (encabezado secreto CloudFront → ALB) también vive en `infra/aws/.env`, lo genera `desplegar.sh` la primera vez y **no debe copiarse a documentos, issues ni capturas**.
-
-## 5. Instalación local
-
-### 5.1 Requisitos previos
-
-- Python 3.12, Node.js 22 y Git. Para el camino con contenedores: Docker con Compose v2.
-- Espacio en disco: `data/raw/` pesa unos 12 GB (las Atenciones de Urgencia son 9,1 GB; ver [`docs/09-fuentes-de-datos`](../09-fuentes-de-datos/README.md)). Los outputs que lee la API ocupan alrededor de 215 MB.
-- Acceso a internet a los sitios oficiales de DEIS/MINSAL, INE y datos.gob.cl para descargar las fuentes.
-
-### 5.2 Python y pipeline (documentado; ver sección 1 para su validación)
-
-```bash
-git clone https://github.com/Camila-Aroca/Proyecto-Capstone.git
-cd Proyecto-Capstone
-python -m venv .venv
-# Windows: .venv\Scripts\activate    Linux/macOS: source .venv/bin/activate
-python -m pip install -r requirements.txt
-python -m pip check                  # debe informar «No broken requirements found.»
-python scripts/run_pipeline.py       # genera data/processed y reports/ (primera vez: descarga el RAW)
-```
-
-Las variantes del pipeline están en [`PIPELINE.md`](../../PIPELINE.md):
-
-| Comando | Para qué |
+| Procedimiento | Estado y evidencia |
 |---|---|
-| `python scripts/run_pipeline.py` | Evalúa todo el DAG. Hace `SKIP` de lo vigente y ejecuta lo pendiente, incluidos benchmarks y holdouts |
-| `python scripts/run_pipeline.py --sin-evaluacion` | Actualiza datos y pronósticos sin rehacer benchmarks, holdouts ni diagnósticos. **No reemplaza la corrida completa** |
-| `python scripts/run_pipeline.py --refresh-current-urgencias` | Vuelve a consultar el ZIP mutable de Urgencias del año en curso y regenera solo lo afectado |
-| `python scripts/run_pipeline.py --stage <etapa>` | Una etapa y sus descendientes. Exige que sus insumos ya existan |
+| Instalación local con Docker Compose | **Ejecutada** el 12-11 en Ubuntu 24.04 sobre `f51f7f5`. La primera corrida registró 10 de 14 casos aprobados. Los cuatro casos fallidos se revalidaron en el ciclo 4 tras publicar las salidas faltantes. [Línea base local](../../reports/validation/baseline_local/20261112T135538Z/informe.md) · [Registro de defectos](../../reports/validation/ciclos_pruebas/registro_defectos.md) |
+| Instalación con Python en Windows | **Ejecutada** el 10-11 sobre `e7a55db` con cambios locales. `pip check` sin conflictos y 867 pruebas aprobadas. La instalación limpia en un segundo equipo se informó el 08-10 y queda sin evidencia archivada. [Revalidación del 10-11](../../reports/validation/c08_revalidacion_20261110.md) · [README del proyecto](../../README.md) |
+| Pipeline y pruebas automatizadas | **Ejecución parcial** del pipeline el 15-11 con `--sin-evaluacion --force`. En la misma revalidación se registraron 920 pruebas ordinarias y 29 de integración aprobadas sobre `5c341c5` con cambios locales. Los benchmarks y holdouts quedan pendientes para el snapshot actualizado. [Informe C-08](../../reports/validation/c08_revalidacion_20261115T161029Z/informe.md) |
+| Despliegue de API y frontend en AWS | **Ejecutado**. La prueba E2E del 12-11 registró 21 aprobados, 4 fallidos por salidas faltantes y 6 sin ejecutar. La lectura AWS del ciclo 17 registró una tarea sana y la imagen `saad-api:95d00f8`, identificada por su digest. [Informe E2E del 12-11](../../reports/validation/e2e_local_aws/20261112T131720Z/informe.md) · [Lectura AWS del ciclo 17](../../reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_aws_lectura/resultados.md) |
+| Publicación de datos y paridad local–AWS | **SAAD-CP-068 aprobado** en el reintento del 17-11. La primera comparación estuvo bloqueada porque `/meta` informaba 2026-S45 en AWS, pero `/series/RM` empezaba a pronosticar en 2026-S40. Tras publicar los datos del commit `8f7dd49`, `/series/RM` empezó en 2026-S46 en ambos entornos. La corrida registró 13 endpoints equivalentes, 24 comprobaciones aprobadas, 0 fallidas y 7 sin ejecutar. [Evidencia de paridad](https://github.com/Camila-Aroca/Proyecto-Capstone/blob/be1fd85503963e3b9b6d1d636b5a251041a3cc02/reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_aws_reintento/EVIDENCIA/SAAD-CP-068.md) |
+| Defectos y automatización | **DEF-01 a DEF-16 cerrados** según el registro. DEF-11 se verificó con pruebas del publicador, DEF-12 a DEF-14 con retests de interfaz y DEF-15 a DEF-16 con evidencias de datos. En el reintento, **SAAD-CP-066 aprobado**. La conexión `saad-github` quedó en `AVAILABLE` y `saad-pr` ejecutó con éxito. `saad-despliegue` conserva su fallo histórico del 12-11 y no se volvió a lanzar. [Registro de defectos](https://github.com/Camila-Aroca/Proyecto-Capstone/blob/be1fd85503963e3b9b6d1d636b5a251041a3cc02/reports/validation/ciclos_pruebas/registro_defectos.md) · [Reintento del ciclo 17](https://github.com/Camila-Aroca/Proyecto-Capstone/blob/be1fd85503963e3b9b6d1d636b5a251041a3cc02/reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_aws_reintento/resultados.md) |
 
-Los datos RAW del año en curso son mutables: tras un refresh cambian los hashes registrados en `data/raw/provenance_manifest.json`. No se enlazan registros de Urgencias con Egresos por paciente; la relación entre fuentes es solo territorial.
+La certificación de octubre corresponde al código y a los datos de ese corte. Registre por separado el commit utilizado para los comandos, la imagen desplegada y el snapshot de datos servido.
 
-### 5.3 API y frontend sin contenedores (documentado)
+## 2. Arquitectura y requisitos
 
-```bash
-# Terminal 1, desde la raíz: API en http://127.0.0.1:8000 (documentación en /docs)
-uvicorn src.api.main:app --reload
+| Componente | Implementación |
+|---|---|
+| Aplicación local | FastAPI en el puerto 8000. Vite en 5173 durante desarrollo, o nginx en 8080 con Docker Compose. nginx reenvía `/api` a la API. |
+| Aplicación en AWS | CloudFront entrega el sitio desde un bucket S3 privado y enruta `/api` al ALB y a ECS Fargate. La configuración predeterminada de CDK para la API es 0,5 vCPU, 2 GB y una tarea. |
+| Almacenamiento y operación | ECS lee el bucket de datos al iniciar. ECR conserva imágenes; CloudWatch recibe logs y alarmas; SNS entrega avisos cuando la suscripción está confirmada. La API lee archivos Parquet y reportes. PostgreSQL y PostGIS quedan fuera del despliegue. |
+| Pipeline | Se ejecuta en el equipo mediante Python o el perfil `pipeline` de Compose. Escribe en `data/` y `reports/`. La publicación a AWS se hace mediante un procedimiento independiente. |
 
-# Terminal 2: frontend en http://localhost:5173
-cd frontend && npm install && npm run dev
+### 2.1 Requisitos del equipo
+
+- Para instalar sin contenedores, disponga de Git, Python 3.12 y Node.js 22 con npm. Use `requirements.txt` y `frontend/package-lock.json` como referencias de versiones. Para Compose, disponga de Docker con el complemento `docker compose`, un motor activo y puertos de host disponibles. Las imágenes fijan Python 3.12, Node.js 22 y nginx 1.27.
+- Para generar los datos desde cero, disponga de acceso a las fuentes oficiales y espacio para el RAW, descargas temporales, salidas y contenedores. El inventario documenta unos 12 GB de RAW. [Fuentes de datos](../09-fuentes-de-datos/README.md)
+- Para desplegar en AWS, use Bash en un entorno con Python 3, Node.js/npm, Git, Docker y AWS CLI. Los scripts esperan entornos virtuales con `.venv/bin/` y el despliegue usa OpenSSL si necesita generar el secreto de origen. En Windows, ejecute los scripts AWS en un entorno Linux como WSL con estas dependencias disponibles.
+
+### 2.2 Permisos para la operación en AWS
+
+| Identidad | Acceso requerido |
+|---|---|
+| Operador de despliegue | Identidad autenticada en la cuenta del proyecto. Acceso para publicar la imagen en ECR, consultar la lista administrada de CloudFront en EC2, desplegar CloudFormation vía CDK y usar los roles de bootstrap. Para una cuenta nueva también se requiere autorización para crear dichos recursos. |
+| Operador de datos | Lectura de salidas de la pila, listado y escritura en los prefijos de datos del bucket, y consulta y actualización del servicio ECS para reiniciarlo y esperar su estabilización. |
+| Operador de verificación | Lectura de CloudFormation, ECS, ALB, ECR, S3 y CloudWatch según los controles que ejecutará. La verificación de CodeConnections requiere acceso de lectura a la conexión. |
+| Rol de la tarea de API | Lectura del bucket de datos para listar y descargar archivos. El rol de ejecución de ECS obtiene la imagen de ECR y escribe logs. |
+| Responsable de la conexión GitHub | Autoriza la conexión `saad-github` y el acceso de la aplicación de GitHub al repositorio. |
+
+La pila define los permisos de la tarea. El detalle de las políticas efectivas de los operadores y su validación en la cuenta se documentan en [C-45](https://github.com/Camila-Aroca/Proyecto-Capstone/issues/145). [Infraestructura CDK](../../infra/aws/cdk/README.md)
+
+## 3. Configuración por entorno
+
+| Entorno | Configuración |
+|---|---|
+| Python y Vite | El proxy de desarrollo usa `SAAD_API_URL` con destino predeterminado `http://127.0.0.1:8000`. La lista `SAAD_CORS_ORIGINS` de la API admite los dos orígenes locales de Vite por defecto. Copie `frontend/.env.example` a `frontend/.env.local` si necesita `VITE_CARTO_API_KEY`. Como queda incluida en el JavaScript del cliente, restrinja su uso por dominio en CARTO. |
+| Docker Compose | `SAAD_API_PORT` y `SAAD_WEB_PORT` permiten ajustar los puertos 8000 y 8080 del host. La API recibe montajes de solo lectura para `data/` y `reports/`. El perfil `pipeline` usa montajes con escritura. |
+| AWS, configuración del operador | Use `infra/aws/.env.example` como base para `infra/aws/.env`, que está fuera de Git. Los valores de la terminal tienen prioridad cuando están definidos. La región de la pila CDK es `us-east-1`. Los scripts obtienen la cuenta de la identidad AWS activa mediante STS. Para el despliegue estándar use la pila `Saad` y el repositorio `saad-api`. `SAAD_STACK` elige la pila que consulta el publicador de datos. |
+| AWS, configuración de la tarea | CDK asigna `SAAD_S3_BUCKET` y un `SAAD_S3_PREFIX` vacío. `SAAD_API_CPU`, `SAAD_API_MEMORY` y `SAAD_ALARM_EMAIL` configuran recursos y avisos del despliegue manual. `SAAD_ORIGIN_SECRET` se genera en el primer despliegue si falta y se guarda fuera de Git. |
+
+Para el pronóstico regional y comunal de demanda, `SAAD_USAR_PRONOSTICO_DESACTUALIZADO=0` reutiliza el pronóstico vigente y permite recalcular en memoria si falta o quedó desactualizado. Con `1`, puede servir el persistido desactualizado si existen el archivo y su manifiesto. La API informa una advertencia de vista temporal. Durante la preparación, los endpoints que necesitan el pronóstico pueden responder `503` con `Retry-After`. [Configuración del frontend](../../frontend/vite.config.ts) · [Servicio de pronóstico](../../src/api/service.py) · [Configuración AWS de ejemplo](../../infra/aws/.env.example)
+
+## 4. Instalación y actualización local
+
+### 4.1 Preparar Python y generar los datos
+
+**Prerrequisitos.** Git, Python 3.12, espacio y acceso a las fuentes según la sección 2.
+
+**Pasos.** Clone el repositorio con `git clone https://github.com/Camila-Aroca/Proyecto-Capstone.git` y entre a `Proyecto-Capstone/`. Sitúese en el commit que va a verificar. Cree el entorno con `python -m venv .venv`. Actívelo con `.\.venv\Scripts\Activate.ps1` en PowerShell o con `source .venv/bin/activate` en Bash. Luego instale las dependencias y ejecute el pipeline.
+
+```text
+python -m pip install -r requirements.txt
+python -m pip check
+python scripts/run_pipeline.py
+python scripts/verificar_outputs_api.py
 ```
 
-Durante el arranque, los endpoints de pronóstico pueden responder `503` con `Retry-After`; el frontend reintenta.
+**Resultado esperado.** El pipeline valida y publica los archivos necesarios en `data/processed/` y `reports/`. La primera ejecución también descarga los insumos RAW.
 
-### 5.4 Docker Compose (**ejecutado y registrado** en la línea base local)
+**Comprobación.** `pip check` informa ausencia de conflictos, el pipeline termina con código 0 y el verificador confirma que están las salidas de la API, que las huellas de los manifiestos coinciden y que los cortes de demanda y establecimientos están alineados. Conserve el log y el commit. [Guía del pipeline](../../PIPELINE.md#2-ejecución-completa)
 
-Requiere `data/` y `reports/` con los outputs del pipeline, porque no se copian en las imágenes: se montan en solo lectura en la API.
+### 4.2 Iniciar la API y el frontend sin contenedores
+
+**Prerrequisitos.** Entorno Python instalado, datos verificados, Node.js 22 y puertos 8000 y 5173 disponibles.
+
+**Pasos.** En una terminal con el entorno Python activo, desde la raíz, ejecute `python -m uvicorn src.api.main:app --reload`. En otra terminal, entre a `frontend/` y ejecute `npm ci` y luego `npm run dev`.
+
+**Resultado esperado.** La API queda disponible en `http://127.0.0.1:8000` y Vite muestra la dirección de desarrollo, normalmente `http://localhost:5173`.
+
+**Comprobación.** Abra la aplicación y el tablero regional. Consulte `http://127.0.0.1:8000/api/v1/salud` y ejecute los controles de la sección 6. Conserve el estado de arranque que reporte cada servicio.
+
+### 4.3 Iniciar la aplicación con Docker Compose
+
+**Prerrequisitos.** Motor Docker activo, complemento Compose instalado, puertos disponibles y salidas verificadas en los directorios de trabajo.
+
+**Pasos.** Ejecute los comandos desde la raíz.
 
 ```bash
-docker compose up -d --build          # API en :8000, frontend en :8080
-docker compose ps                     # la API debe quedar «healthy»
-curl http://localhost:8000/api/v1/salud
+docker compose config --quiet
+docker compose up -d --build
+docker compose ps
+curl -fsS http://localhost:8080/api/v1/salud
 ```
 
-Pipeline en contenedor, que sí escribe en `data/` y `reports/`:
+**Resultado esperado.** La API queda sana y nginx sirve el frontend en `http://localhost:8080` con acceso a la API por el mismo origen. Ajuste la URL si cambió el puerto del host. En PowerShell puede usar `curl.exe` en lugar de `curl`.
+
+**Comprobación.** Verifique `healthy` en la API, ambos estados `listo` en el JSON de salud y la carga del tablero regional en el navegador. Consulte los criterios de la sección 6. Ante un error, revise `docker compose logs --tail 100 api web`.
+
+### 4.4 Actualizar datos y pronósticos
+
+**Prerrequisitos.** Entorno de la sección 4.1. El modo sin evaluación requiere las selecciones de modelos ya publicadas y las ejecuciones parciales requieren sus insumos upstream.
+
+**Pasos.** Elija el comando adecuado y conserve su log. El modo `--refresh-current-urgencias` se ejecuta por separado de `--sin-evaluacion`.
+
+| Comando | Cuándo usarlo |
+|---|---|
+| `python scripts/run_pipeline.py` | Primer arranque o evaluación completa. Ejecuta las etapas pendientes y reutiliza las salidas que valida. |
+| `python scripts/run_pipeline.py --sin-evaluacion` | Actualizar datos y pronósticos con las selecciones existentes, omitiendo benchmarks, holdouts, diagnósticos y calibraciones de evaluación. |
+| `python scripts/run_pipeline.py --refresh-current-urgencias` | Consultar el ZIP mutable de Urgencias del año en curso y actualizar su RAW y salidas afectadas cuando corresponda. El refresco por sí solo deja pendiente el pronóstico. |
+| `python scripts/run_pipeline.py --stage <etapa>` | Ejecutar la etapa y sus descendientes con los insumos ya disponibles. Agregue `--force` si necesita reconstruir salidas existentes. |
+| `docker compose --profile pipeline run --rm pipeline` | Ejecutar el pipeline completo en contenedor sobre los volúmenes locales. |
+| `docker compose --profile pipeline run --rm pipeline python -m src.cloud.pipeline_task --modo semanal` | Refrescar Urgencias y regenerar el pronóstico de demanda en contenedor. Compruebe la alineación con establecimientos antes de publicar. |
+
+**Resultado esperado.** Se generan o reutilizan las salidas que corresponden al modo seleccionado. Conserve la fecha de corte y, si aplicó el refresh, los hashes del manifiesto de procedencia.
+
+**Comprobación.** Ejecute `python scripts/verificar_outputs_api.py` y revise el log del pipeline. Reinicie la API local para que vuelva a cargar los datos mediante `docker compose restart api` o reiniciando Uvicorn según el entorno. Compruebe el corte y la serie después del arranque. [Modalidades de ejecución](../../PIPELINE.md#3-ejecución-desde-una-etapa)
+
+## 5. Despliegue y publicación en AWS
+
+### 5.1 Preparar la cuenta y el entorno de CDK
+
+**Prerrequisitos.** Acceso autorizado a la cuenta del equipo y a los roles de bootstrap, requisitos de la sección 2 y configuración de la sección 3. Trabaje desde la raíz del repositorio.
+
+**Pasos.** Autentíquese con el método asignado a su cuenta. Compruebe la identidad, cree el entorno virtual de CDK y prepare la cuenta y región una vez si aún no están preparadas.
 
 ```bash
-docker compose --profile pipeline run --rm pipeline                                              # modo completo
-docker compose --profile pipeline run --rm pipeline python -m src.cloud.pipeline_task --modo semanal
+aws sts get-caller-identity
+python3 -m venv infra/aws/cdk/.venv
+infra/aws/cdk/.venv/bin/pip install -r infra/aws/cdk/requirements.txt
+CUENTA_SAAD=$(aws sts get-caller-identity --query Account --output text)
+npx --yes aws-cdk@2 bootstrap "aws://${CUENTA_SAAD}/us-east-1"
 ```
 
-**La API lee sus datos solo al arrancar.** Tras regenerar outputs hay que reiniciarla (`docker compose restart api`); si no, sigue sirviendo el estado anterior. Este hallazgo está en el registro de defectos.
+**Resultado esperado.** La cuenta coincide con la autorizada, las dependencias de CDK se instalan y el bootstrap queda disponible en `us-east-1`.
 
-## 6. Provisión de datos a la API
+**Comprobación.** Verifique el código de salida de la instalación, la cuenta informada por STS y el estado exitoso de la pila de bootstrap. Registre el resultado sin exponer identificadores de cuenta o credenciales en la entrega.
 
-| Entorno | Estrategia | Estado |
-|---|---|---|
-| Local / Compose | Volumen `./data` y `./reports` montado en solo lectura | **Ejecutado** (línea base local) |
-| AWS | Al arrancar, `src/cloud/api_arranque.py` baja `data/` y `reports/` del bucket de datos; el rol de la tarea solo puede leer ese bucket. Si la descarga falla, la tarea termina con error; si el bucket no contiene objetos, advierte y continúa sin datos | **Ejecutado** el 12-11: 150 archivos, 212 MB, API lista en unos 36 s (comentario de cierre de #140) |
-| Publicación de datos nuevos | `infra/aws/scripts/subir_datos.sh` sube a S3 `data/processed/`, `reports/` y `data/raw/poblacion/` y fuerza un nuevo despliegue de la API. No usa `--delete` | **Ejecutado** el 12-11 |
+### 5.2 Publicar la imagen y desplegar la aplicación
 
-Qué sube `subir_datos.sh`: solo outputs procesados, reportes y el cuadro INE de población. El RAW de Urgencias no se sube. `scripts/verificar_outputs_api.py` (DEF-11, cerrado) se ejecuta antes del `aws s3 sync` y detiene la publicación si falta algún output o si los manifiestos no coinciden con las entradas actuales. También verifica que demanda y establecimientos cierren en la misma semana observada (guard DEF-16).
+**Prerrequisitos.** Cuenta preparada, permisos de despliegue, Docker activo y código de la API en un commit con `src/`, `scripts/`, `requirements.txt` y `Dockerfile` sin cambios locales. Para la primera instalación, tenga listas las salidas del pipeline.
 
-## 7. Despliegue en AWS
+**Pasos.** Ejecute `bash infra/aws/scripts/publicar_imagen.sh` y copie la etiqueta impresa. Para crear la pila con la API apagada, ejecute `bash infra/aws/scripts/desplegar.sh <etiqueta> 0` y luego `bash infra/aws/scripts/subir_datos.sh --sin-reinicio`. Encienda la API con `bash infra/aws/scripts/desplegar.sh <etiqueta> 1`. En una pila operativa con datos compatibles se puede aplicar directamente este último comando para actualizar el código.
 
-Descrito en [`infra/aws/cdk/README.md`](../../infra/aws/cdk/README.md) y [`docs/08-arquitectura/plan_despliegue_aws.md`](../08-arquitectura/plan_despliegue_aws.md). Resumen de la secuencia, con su estado:
+**Resultado esperado.** ECR contiene una imagen etiquetada con el SHA corto, la pila publica la URL de CloudFront y ECS inicia una tarea con la imagen seleccionada. El script de despliegue también construye y publica el frontend del árbol de trabajo actual.
 
-| Paso | Comando | Estado |
-|---|---|---|
-| 1. Preparar la cuenta (una vez) | `aws login`, `cdk bootstrap aws://<cuenta>/us-east-1` | **Ejecutado** (la pila `Saad` existe). La verificación de cuenta, permisos y plan ejecutable de C-36 (#136) sigue abierta |
-| 2. Publicar la imagen en ECR | `infra/aws/scripts/publicar_imagen.sh` (etiqueta = SHA corto del commit; se niega si hay cambios sin commit en el código) | **Ejecutado:** imágenes `547a7e7` y `90965fc` |
-| 3. Crear la pila con la API apagada | `infra/aws/scripts/desplegar.sh <etiqueta> 0` | **Ejecutado** |
-| 4. Subir datos | `infra/aws/scripts/subir_datos.sh --sin-reinicio` | **Ejecutado** |
-| 5. Encender la API | `infra/aws/scripts/desplegar.sh <etiqueta> 1` | **Ejecutado**; servicio con 1 tarea en servicio al 12-11 |
-| 6. Actualizar datos | pipeline local → `infra/aws/scripts/subir_datos.sh` | **Ejecutado** el 12-11 con `--sin-evaluacion` |
-| 7. Verificar | `scripts/qa_e2e_local_vs_aws.py` | **Ejecutado** el 12-11; ver sección 1 |
-| 8. Crear la pila de CI (`SaadCi`) | `cdk deploy SaadCi` y activación de la conexión con GitHub | **Bloqueado:** conexión `PENDING` |
-| 9. Ejecutar el pipeline en Fargate con EventBridge | — | **No implementado** (decisión de alcance) |
+**Comprobación.** Verifique etiqueta y digest en ECR, definición activa de tarea, tarea en ejecución y target sano. Abra la URL que devuelve la pila y ejecute los controles de la sección 6. Registre por separado el commit del frontend utilizado durante el despliegue. [Procedimiento CDK](../../infra/aws/cdk/README.md#despliegue)
 
-Una versión de AWS desplegada hoy no está confirmada contra el commit del repositorio: `/api/v1/meta` no expone el SHA ni el digest de la imagen (nota en `registro_defectos.md`). Para saber qué corre, consultar la etiqueta de la imagen en el servicio ECS.
+### 5.3 Publicar datos en una pila en servicio
 
-La regeneración local no publica automáticamente en AWS. Antes de actualizar el despliegue, correr `scripts/verificar_outputs_api.py` para confirmar que los outputs están completos y alineados; si pasa, `subir_datos.sh` hace la publicación y el redespliegue. Comprobar `/api/v1/salud`, `/api/v1/meta` y los endpoints pertinentes tras cada publicación.
+**Prerrequisitos.** Salidas coherentes, dependencias Python instaladas, identidad y región verificadas y permisos de publicación. Registre el conjunto a publicar y conserve una copia o referencia a las versiones del conjunto anterior, incluidos sus manifiestos.
 
-Para desmontar el entorno entre demos: `aws cloudformation delete-stack --stack-name Saad --region us-east-1`. El repositorio ECR y la preparación de CDK quedan.
+**Pasos.** Desde la raíz y en Bash, ejecute `bash infra/aws/scripts/subir_datos.sh`. El script verifica las salidas antes de sincronizar `data/processed/`, `reports/` y `data/raw/poblacion/`. Después solicita el reemplazo de la tarea ECS y espera la estabilización. Use `--sin-reinicio` en la carga inicial con la API apagada o si la recuperación requiere conciliar el contenido antes de reiniciar. El RAW de Urgencias permanece en el equipo.
 
-## 8. Permisos por rol
+**Resultado esperado.** La nueva tarea carga desde S3 las salidas publicadas. El script realiza tres sincronizaciones independientes y conserva los objetos que se hayan quitado del árbol local.
 
-| Rol | Permisos | Fuente |
-|---|---|---|
-| Rol de la tarea de la API (ECS) | Solo lectura del bucket de datos | cierre de #137 |
-| Rol de ejecución de la tarea | Descargar la imagen de ECR y escribir logs | cierre de #137 |
-| Usuarios y claves de acceso | La pila no crea ninguno | cierre de #137 |
-| ALB | Solo acepta tráfico de la prefix list de CloudFront y con el encabezado secreto; el resto recibe 403 | cierre de #137 y prueba E2E |
-| Buckets de datos y de sitio | Sin acceso público; cifrado en reposo (SSE-S3); solo HTTPS. El de datos tiene versionado; el del sitio solo lo lee CloudFront | cierre de #137 |
-| Quien despliega (equipo) | Credenciales AWS propias para `publicar_imagen.sh`, `desplegar.sh` y `subir_datos.sh`. El detalle de las políticas concretas no está documentado en este manual y se completa en C-45 | pendiente |
-| Colaboradores del repositorio | Hacer push de ramas; las verificaciones de CI solo se activan por push, no por pull requests de forks | `infra/aws/cdk/README.md` |
-| Dueña del repositorio | Instalar *AWS Connector for GitHub* y aprobar la conexión `saad-github` | `registro_defectos.md` |
+**Comprobación.** Revise la salida del verificador, la estabilidad de ECS y los logs de arranque. Aplique la sección 6 y compare `/meta` y `/series/RM` con el mismo conjunto local. Una sincronización interrumpida puede dejar versiones mezcladas en S3. Si ocurre, complete o recupere el conjunto antes de reiniciar la API. [Script de publicación](../../infra/aws/scripts/subir_datos.sh)
 
-## 9. Fallas conocidas y cómo reconocerlas
+## 6. Validación y registro de evidencia
 
-| Síntoma | Causa verificada | Acción |
-|---|---|---|
-| `503` en `/api/v1/establecimientos`, `/suicidios/RM` y otros | Falta un output del pipeline o está desactualizado | Ejecutar el pipeline y publicar; reiniciar la API |
-| `404` en `/api/v1/camas-psiquiatria/RM` | Falta `dim_camas_psiquiatria_hospital_rm` | Ejecutar la etapa `build_dim_camas_psiquiatria_hospital_rm` |
-| Advertencia «Vista temporal» y pronóstico no vigente | Cambió la selección del benchmark respecto del snapshot con que se generó el pronóstico | Regenerar con la etapa `forecast_demanda_sm`, o usar `SAAD_USAR_PRONOSTICO_DESACTUALIZADO=1` a sabiendas de que las cifras pueden no corresponder al modelo seleccionado |
-| La API no muestra datos recién publicados | Lee al arrancar | Reiniciar (`docker compose restart api` o `force-new-deployment`; `subir_datos.sh` ya lo solicita) |
-| La descarga falla y el RAW previo se conserva | Es el comportamiento esperado del refresh | Reintentar; no hay que reparar nada |
+### 6.1 Comprobar que la aplicación quedó operativa
 
-## 10. Limitaciones de este manual
+**Prerrequisitos.** URL confirmada, API iniciada y fecha de corte esperada. Use el puerto local de la instalación o la URL de CloudFront registrada en la pila.
 
-- No incluye una reejecución desde un clon limpio realizada para este documento.
-- No describe políticas IAM concretas del equipo de despliegue ni el procedimiento operacional definitivo (C-45).
-- La corrida completa del pipeline con benchmarks y holdouts sobre los datos posteriores al 8 de octubre está pendiente. La corrida C-08 del 15-11 omitió esas evaluaciones. La certificación del 8 de octubre (`reports/validation/apt_certification_20261008T002147Z/`) corresponde a otra versión del código y los datos, y no certifica la versión vigente.
-- DEF-12 a DEF-14 (interfaz) se cerraron en el ciclo 15; DEF-15 y DEF-16 (datos) en el ciclo 17. Sin defectos abiertos al 2026-11-17. La CI/CD sigue bloqueada (conexión `saad-github` pendiente de aprobación).
+**Pasos.** Abra el tablero regional. Use la misma URL para consultar `/api/v1/salud`, `/api/v1/meta`, `/api/v1/series/RM`, `/api/v1/establecimientos-meta` y, si se actualizó esa rama, `/api/v1/suicidios/RM`.
+
+**Resultado esperado.** `/salud` devuelve los estados `estado_datos` y `estado_pronostico` como `listo`. Las respuestas aplicables devuelven HTTP 200 y el tablero muestra el histórico y pronóstico del territorio seleccionado.
+
+**Comprobación.** Compare la última semana observada de `/meta` y la primera semana pronosticada de `/series/RM` con los valores del snapshot que preparó. Registre el origen del pronóstico, las advertencias y los resultados observados. El código HTTP de `/salud` acredita respuesta del proceso y sus campos indican la disponibilidad de los datos. [Rutas de la API](../../src/api/routes.py)
+
+### 6.2 Comparar local y AWS
+
+**Prerrequisitos.** Ambos entornos accesibles y preparados con el mismo snapshot, URL local identificada y una identidad con acceso de lectura a los recursos AWS que inspecciona el script.
+
+**Pasos.** Verifique primero el corte de ambos entornos, después ejecute desde la raíz `python scripts/qa_e2e_local_vs_aws.py --local http://localhost:8080 --sin-capturas`. Use el puerto de su frontend local si lo cambió.
+
+**Resultado esperado.** La corrida compara las respuestas y registra los resultados de infraestructura y API. Si los cortes o manifiestos difieren, registre el caso como bloqueado por diferencia de snapshot.
+
+**Comprobación.** Abra el informe generado y revise el resultado por endpoint. Para incorporar el retest al registro principal, anote el caso, ciclo, fecha, entorno, commit del ejecutor, imagen o digest, corte, resultado real y ruta de la evidencia. [Ejecutor de pruebas](../../scripts/qa_e2e_local_vs_aws.py) · [Registro principal](https://github.com/Camila-Aroca/Proyecto-Capstone/blob/be1fd85503963e3b9b6d1d636b5a251041a3cc02/reports/validation/registro_principal_pruebas.md)
+
+## 7. Diagnóstico y recuperación
+
+### 7.1 Recuperar después de una falla de datos o del pipeline
+
+**Prerrequisitos.** Log del fallo, acceso a los insumos y una copia o referencias verificables de la última publicación coherente.
+
+**Pasos.** Identifique la etapa y salida que fallaron. Si el refresh de Urgencias fue rechazado, compruebe el RAW previo en el manifiesto de procedencia y reintente cuando la fuente esté disponible. Si falta una salida, ejecute su etapa y descendientes según `PIPELINE.md`. Use `--force` cuando deba regenerar una salida existente que no corresponde al snapshot. Por ejemplo, un `404` por falta de dotación psiquiátrica requiere revisar `build_dim_camas_psiquiatria_hospital_rm`.
+
+**Resultado esperado.** La rama afectada produce salidas coherentes con los insumos y conserva los estados de ausencia de datos que define el contrato.
+
+**Comprobación.** Verifique el código de salida y ejecute `python scripts/verificar_outputs_api.py`. Reinicie la API local o publique el conjunto validado según la sección 5.3. Confirme que el endpoint recuperado muestra el resultado esperado y registre el retest. [Hallazgos y retests](../../reports/validation/ciclos_pruebas/registro_defectos.md)
+
+### 7.2 Recuperar la API o volver a una versión de código
+
+**Prerrequisitos.** Acceso a logs y al servicio. Para volver a una versión anterior, identifique la última etiqueta de imagen válida en ECR y el commit de frontend compatible si también debe recuperarlo.
+
+**Pasos.** En Compose, consulte `docker compose logs --tail 100 api` y use `docker compose restart api` cuando el problema sea de recarga. En AWS, revise los eventos ECS y `aws logs tail /ecs/saad-api --region us-east-1`. Si el problema es de recarga y el snapshot está verificado, asigne las salidas `Cluster` y `Servicio` de la pila a las variables del siguiente bloque y ejecute los comandos en Bash.
+
+```bash
+aws ecs update-service --region us-east-1 --cluster "$CLUSTER_SAAD" \
+  --service "$SERVICIO_SAAD" --force-new-deployment
+aws ecs wait services-stable --region us-east-1 --cluster "$CLUSTER_SAAD" \
+  --services "$SERVICIO_SAAD"
+```
+
+Para revertir una versión de API use `bash infra/aws/scripts/desplegar.sh <etiqueta-anterior> 1`. Ejecute el script desde el commit del frontend que desea publicar.
+
+**Resultado esperado.** La tarea inicia con la versión prevista y carga el conjunto de datos disponible. El rollback de ECS protege el despliegue de la tarea. La recuperación de datos se realiza mediante la sección 7.3.
+
+**Comprobación.** Confirme definición de tarea, etiqueta o digest, target sano y resultados de la sección 6. Registre el evento y su evidencia. El reinicio para recargar datos está documentado en el ciclo 4. La reversión manual de imagen queda documentada como procedimiento pendiente de un retest archivado. [Operación de la pila](../../infra/aws/cdk/README.md#operación)
+
+### 7.3 Recuperar una publicación de datos incompleta
+
+**Prerrequisitos.** Permisos sobre el bucket de datos y una copia coherente del conjunto previo, o acceso a las versiones de sus objetos en S3. Identifique las versiones a partir de la publicación de referencia y sus manifiestos.
+
+**Pasos.** Identifique las salidas que se publicaron y las que faltaron. Prepare el conjunto completo en una copia de trabajo con las rutas `data/` y `reports/` que espera el verificador. Si debe recuperarlo desde S3, consulte las versiones de los objetos con `aws s3api list-object-versions` y descargue cada versión requerida con `aws s3api get-object --version-id` a su ruta local correspondiente. Ejecute `python scripts/verificar_outputs_api.py` desde la raíz de esa copia. Con el operador autorizado, publique el conjunto completo con `bash infra/aws/scripts/subir_datos.sh --sin-reinicio`. Concilie los objetos que quedaron de la publicación incompleta y reinicie ECS según la sección 7.2 cuando el contenido esté verificado.
+
+**Resultado esperado.** La API carga un conjunto con archivos y manifiestos compatibles entre sí.
+
+**Comprobación.** Contraste hashes, corte y primera semana de pronóstico con la publicación de referencia. Confirme la recuperación con las comprobaciones de la sección 6. La recuperación completa de versiones S3 queda documentada para un ensayo controlado, pendiente de evidencia archivada. [Versionado del bucket en CDK](../../infra/aws/cdk/saad_stack.py) · [Manual operacional C-45](https://github.com/Camila-Aroca/Proyecto-Capstone/issues/145)
+
+## 8. Pendientes de cierre
+
+- Archivar una instalación desde un clon limpio, con versiones, comandos, fecha, commit y log de verificación.
+- Completar la evaluación de modelos con el corte actualizado. La revalidación C-08 conserva su alcance parcial.
+- Ejecutar y verificar `saad-despliegue` en una ventana autorizada. La conexión GitHub y `saad-pr` ya se verificaron en SAAD-CP-066.
+- Registrar políticas efectivas, costos, alarmas y ensayos de recuperación en [C-45](https://github.com/Camila-Aroca/Proyecto-Capstone/issues/145). La ejecución programada en Fargate y EventBridge se sigue en [C-42](https://github.com/Camila-Aroca/Proyecto-Capstone/issues/142).
