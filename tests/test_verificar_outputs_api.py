@@ -65,6 +65,28 @@ def test_entrada_raw_sha256_se_compara_con_la_identidad_del_raw(outputs: Path, m
     assert v.problemas(outputs) == [f"{v.MANIFIESTOS[0].name}: {ENTRADA.as_posix()} cambió después de generar el pronóstico"]
 
 
+def _cortes(outputs: Path, demanda: int, establecimientos: int) -> None:
+    for ruta, extra in (
+        (v.persistence.RUTA_MANIFIESTO, {"ultima_semana_observada": {"ano": 2026, "semana": demanda}}),
+        (v.pronostico_establecimientos.RUTA_MANIFIESTO,
+         {"objetivos": {"atenciones_sm": {"ultima_semana_observada": {"ano": 2026, "semana": establecimientos}}}}),
+    ):
+        datos = json.loads((outputs / ruta).read_text())
+        (outputs / ruta).write_text(json.dumps({**datos, **extra}))
+
+
+def test_cortes_alineados_entre_demanda_y_establecimientos(outputs: Path) -> None:
+    _cortes(outputs, 45, 45)
+    assert v.problemas(outputs) == []
+
+
+def test_reporta_pronostico_de_demanda_con_mart_desactualizado(outputs: Path) -> None:
+    _cortes(outputs, 39, 45)
+    assert v.problemas(outputs) == [
+        "el pronóstico de demanda cierra en 2026-S39 y el de establecimientos en 2026-S45: "
+        "reconstruya los marts de urgencias y ambos pronósticos"]
+
+
 def test_incluye_marts_manifiestos_y_selecciones() -> None:
     rutas = {r.as_posix() for r in v.requeridos()}
     assert "data/processed/marts/mart_suicidios_comuna_weekly.parquet" in rutas

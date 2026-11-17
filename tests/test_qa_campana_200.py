@@ -212,6 +212,12 @@ def test_peticiones_http_simple_y_rango_y_no_soportado() -> None:
     assert q.peticiones_http("2. Abrir el navegador", "algo") == [] and q.peticiones_http(None, "") == []
 
 
+def test_peticiones_http_valor_valido_y_luego_rechazado() -> None:
+    pares = q.peticiones_http("2. GET /series/RM?semanas=520 y luego semanas=521.", "520 cumple el contrato; 521 devuelve HTTP 422")
+    assert pares == [{"ruta": "/series/RM?semanas=520", "esperado": 200},
+                     {"ruta": "/series/RM?semanas=521", "esperado": 422}]
+
+
 def test_entorno_http_distingue_local_de_aws() -> None:
     assert q.entorno_http("http://127.0.0.1:8000")[1] == "local"
     assert q.entorno_http("http://localhost:8000")[1] == "local"

@@ -61,7 +61,30 @@ def problemas(raiz: Path = RAIZ) -> list[str]:
             # Para los años en curso el manifiesto guarda la identidad del RAW declarada en el Parquet.
             elif (processed_raw_sha256(ruta) if entrada.get("tipo") == "raw_sha256" else file_sha256(ruta)) != entrada["sha256"]:
                 salida.append(f"{manifiesto.name}: {entrada['ruta']} cambió después de generar el pronóstico")
+    salida += cortes_desalineados(raiz)
     return salida
+
+
+def _semana(dato: dict | None) -> tuple[int, int] | None:
+    return (int(dato["ano"]), int(dato["semana"])) if dato else None
+
+
+def cortes_desalineados(raiz: Path = RAIZ) -> list[str]:
+    """Demanda comunal y establecimientos salen del mismo RAW de urgencias: deben cerrar en la misma semana.
+
+    Si difieren, un mart quedó sin reconstruir (p. ej. tras una corrida interrumpida) y la API serviría
+    un pronóstico que empieza antes de la última semana observada (DEF-16).
+    """
+    rutas = (raiz / persistence.RUTA_MANIFIESTO, raiz / pronostico_establecimientos.RUTA_MANIFIESTO)
+    if not all(r.is_file() for r in rutas):
+        return []
+    demanda = _semana(json.loads(rutas[0].read_text(encoding="utf-8")).get("ultima_semana_observada"))
+    objetivos = json.loads(rutas[1].read_text(encoding="utf-8")).get("objetivos", {})
+    establecimientos = _semana((objetivos.get("atenciones_sm") or {}).get("ultima_semana_observada"))
+    if demanda and establecimientos and demanda != establecimientos:
+        return [f"el pronóstico de demanda cierra en {demanda[0]}-S{demanda[1]} y el de establecimientos en "
+                f"{establecimientos[0]}-S{establecimientos[1]}: reconstruya los marts de urgencias y ambos pronósticos"]
+    return []
 
 
 def main() -> int:

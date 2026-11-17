@@ -51,6 +51,7 @@ _ENCABEZADO = re.compile(r"^SAAD-CP-(\d{3})\s{2}(.+)$")
 _SELECTOR = re.compile(r"python -m pytest (.+?) -q --junitxml=EVIDENCIA/")
 _GET = re.compile(r"^2\.\s+GET\s+(\S+)")
 _HTTP = re.compile(r"HTTP\s+(\d{3})")
+_Y_LUEGO = re.compile(r"^2\.\s+GET\s+(\S+?=)(\d+) y luego \w+=(\d+)")
 _RANGO = re.compile(r"desde=(\d{4}-\d{2}-\d{2}) con hasta=desde\+(\d+) d[ií]as y luego \+(\d+)")
 ENTORNO_LOCAL: Final[str] = "LOCAL (API local con Uvicorn en 127.0.0.1)"
 ENTORNO_AWS: Final[str] = "AWS (URL desplegada; host redactado)"
@@ -257,6 +258,12 @@ def peticiones_http(paso2: str | None, esperado: str) -> list[dict[str, Any]]:
             {"ruta": f"/calendario-eventos?desde={inicio}&hasta={inicio + timedelta(days=fuera)}", "esperado": 422},
         ]
     get, codigo = _GET.search(paso2), _HTTP.search(esperado)
+    par = _Y_LUEGO.search(paso2)
+    if par and codigo:
+        # «GET /x?p=A y luego p=B»: A es el valor válido (200) y B el que el contrato rechaza.
+        base = par.group(1)
+        return [{"ruta": f"{base}{par.group(2)}", "esperado": 200},
+                {"ruta": f"{base}{par.group(3)}", "esperado": int(codigo.group(1))}]
     if get and codigo:
         # El catálogo cierra cada paso con un punto de oración; no forma parte de la URL.
         return [{"ruta": get.group(1).rstrip("."), "esperado": int(codigo.group(1))}]
