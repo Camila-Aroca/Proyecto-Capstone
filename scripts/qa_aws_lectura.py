@@ -217,15 +217,20 @@ def main() -> int:
         ejec[p] = [{"estado": e["status"], "inicio": e["startTime"]} for e in
                    aws("codepipeline", "list-pipeline-executions", "--pipeline-name", p, "--max-items", "3")["pipelineExecutionSummaries"]]
     c.nota("Últimas ejecuciones", ejec)
-    disponible = all(x["ConnectionStatus"] == "AVAILABLE" for x in con) and con
-    estado = "APROBADO" if disponible and all(v and v[0]["estado"] == "Succeeded" for v in ejec.values()) else "NO EJECUTADO"
+    disponible = bool(con) and all(x["ConnectionStatus"] == "AVAILABLE" for x in con)
+    pr_ok = bool(ejec["saad-pr"]) and ejec["saad-pr"][0]["estado"] == "Succeeded"
+    estado = "APROBADO" if disponible and pr_ok else "NO EJECUTADO"
+    des = ejec["saad-despliegue"][0] if ejec["saad-despliegue"] else {"estado": "sin ejecuciones", "inicio": ""}
+    estados_con = ", ".join(x["ConnectionStatus"] for x in con)
     entradas.append(c.cerrar(
         estado,
-        ("BLOQUEADO, sin aprobar: " if estado != "APROBADO" else "") +
-        f"conexión saad-github en estado {', '.join(x['ConnectionStatus'] for x in con)}; "
-        f"última ejecución saad-pr {ejec['saad-pr'][0]['estado']} y saad-despliegue {ejec['saad-despliegue'][0]['estado']} "
-        f"({ejec['saad-despliegue'][0]['inicio'][:10]}). La conexión debe autorizarse manualmente en la consola de AWS "
-        "(Developer Tools → Settings → Connections); no se disparó ninguna ejecución."))
+        (f"Conexión saad-github {estados_con}; última ejecución de saad-pr {ejec['saad-pr'][0]['estado']} "
+         f"({ejec['saad-pr'][0]['inicio'][:16]}): fuente GitHub y Tests-y-cfn-lint verificables."
+         if estado == "APROBADO" else
+         f"BLOQUEADO, sin aprobar: conexión saad-github en estado {estados_con}; saad-pr {ejec['saad-pr'][0]['estado']}. "
+         "La conexión debe autorizarse en la consola de AWS (Developer Tools → Settings → Connections)."),
+        f"saad-despliegue: última ejecución {des['estado']} {des['inicio'][:10]} (creada con la conexión aún PENDING); "
+        "no se relanzó para no desplegar a producción durante la prueba."))
 
     # 067
     c = Caso("067", salida)

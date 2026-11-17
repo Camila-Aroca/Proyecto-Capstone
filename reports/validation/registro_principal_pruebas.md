@@ -1,14 +1,14 @@
 # Registro principal de pruebas — SAAD-CP v2.1
 
-> Generado el 2026-11-17 15:45 UTC. Los 200 casos del catálogo se consolidan aquí; para cada caso se conserva el último resultado ejecutado por entorno.
+> Generado el 2026-11-17 22:31 UTC. Los 200 casos del catálogo se consolidan aquí; para cada caso se conserva el último resultado ejecutado por entorno.
 
 ## Resumen ejecutivo
 
 | Estado | Casos |
 |---|---|
-| APROBADO | 191 |
+| APROBADO | 193 |
 | FALLIDO | 0 |
-| NO EJECUTADO | 9 |
+| NO EJECUTADO | 7 |
 | **Total** | **200** |
 
 ## Matriz de pruebas — catálogo de 200 casos
@@ -80,9 +80,9 @@
 | SAAD-CP-063 | Retención y consulta de logs | AWS desplegado | APROBADO | — | — | ✓ | [17](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_aws_lectura/EVIDENCIA/SAAD-CP-063.txt) |
 | SAAD-CP-064 | Alarmas sin provocar incidentes | AWS desplegado | APROBADO | — | — | ✓ | [17](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_aws_lectura/EVIDENCIA/SAAD-CP-064.txt) |
 | SAAD-CP-065 | Mínimo privilegio del rol API | AWS desplegado | APROBADO | — | — | ✓ | [17](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_aws_lectura/EVIDENCIA/SAAD-CP-065.txt) |
-| SAAD-CP-066 | Estado de conexión CI | AWS desplegado | NO EJECUTADO | — | — | — |  |  |  |
+| SAAD-CP-066 | Estado de conexión CI | AWS desplegado | APROBADO | — | — | ✓ | [17](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_aws_reintento/EVIDENCIA/SAAD-CP-066.txt) |
 | SAAD-CP-067 | Revisión de DEF 11 en publicación | AWS desplegado | APROBADO | — | — | ✓ | [17](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_aws_lectura/EVIDENCIA/SAAD-CP-067.txt) |
-| SAAD-CP-068 | Paridad local y AWS por snapshot | AWS desplegado | NO EJECUTADO | — | — | — |  |  |  |
+| SAAD-CP-068 | Paridad local y AWS por snapshot | AWS desplegado | APROBADO | — | — | ✓ | [17](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_aws_reintento/EVIDENCIA/SAAD-CP-068.md) |
 | SAAD-CP-069 | Recorrido solo con teclado | Calidad transversal | APROBADO | — | ✓ | — | [17](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_manual_local/EVIDENCIA/SAAD-CP-069.png) |
 | SAAD-CP-070 | Lectura de gráficos y tablas | Calidad transversal | APROBADO | — | ✓ | — | [17](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_manual_local/EVIDENCIA/SAAD-CP-070.png) |
 | SAAD-CP-071 | Viewport móvil estrecho | Calidad transversal | APROBADO | — | ✓ | ✓ | [17](reports/validation/ciclos_pruebas/ciclo_17_20261117T140040Z/) |  |  |

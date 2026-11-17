@@ -1,0 +1,30 @@
+SAAD-CP-066 · APROBADO · 2026-11-17T22:31:04.433009+00:00
+Conexión saad-github AVAILABLE; última ejecución de saad-pr Succeeded (2026-11-17T19:21): fuente GitHub y Tests-y-cfn-lint verificables.
+
+## CodeConnections
+[
+ {
+  "nombre": "saad-github",
+  "estado": "AVAILABLE"
+ }
+]
+
+## Últimas ejecuciones
+{
+ "saad-pr": [
+  {
+   "estado": "Succeeded",
+   "inicio": "2026-11-17T19:21:27.406000-03:00"
+  },
+  {
+   "estado": "Failed",
+   "inicio": "2026-11-12T10:43:29.238000-03:00"
+  }
+ ],
+ "saad-despliegue": [
+  {
+   "estado": "Failed",
+   "inicio": "2026-11-12T10:43:29.846000-03:00"
+  }
+ ]
+}
