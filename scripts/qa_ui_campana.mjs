@@ -9,8 +9,9 @@
  * Salida: /tmp/saad-manual-{entorno}/entradas.json  (y capturas PNG en la misma carpeta)
  */
 import { abrirNavegador, espera } from "./qa_ui_cdp.mjs";
-import { writeFileSync, mkdirSync } from "node:fs";
-import { join } from "node:path";
+import { writeFileSync, mkdirSync, readFileSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 
 // ── CLI args ──────────────────────────────────────────────────────────────────
@@ -19,6 +20,8 @@ const entorno = args[args.indexOf("--entorno") + 1] ?? "local";
 const BASE = args[args.indexOf("--url") + 1] ?? "http://127.0.0.1:8080";
 const SOLO = args.includes("--solo") ? args[args.indexOf("--solo") + 1]?.split(",") : null;
 
+const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
+const API = `${BASE}/api/v1`;
 const OUT_DIR = join(tmpdir(), `saad-manual-${entorno}`);
 mkdirSync(OUT_DIR, { recursive: true });
 
@@ -42,6 +45,42 @@ function ne(id, obs) {
   return { id: `SAAD-CP-${id}`, estado: "NO EJECUTADO", resultado_real: obs, observaciones: obs,
            snapshot: "", defecto: "", anexos: [], inicio: t, fin: t };
 }
+
+
+// ── Intercepción de red (CDP Fetch) ───────────────────────────────────────────
+let _manejador = null;
+let _registrado = false;
+async function interceptar(p, patron, fn) {
+  if (!_registrado) {
+    _registrado = true;
+    p.on("Fetch.requestPaused", async (e) => {
+      try {
+        if (_manejador && e.request.url.includes(_manejador.patron)) await _manejador.fn(e);
+        else await p.cdp("Fetch.continueRequest", { requestId: e.requestId });
+      } catch { /* la petición ya terminó */ }
+    });
+  }
+  _manejador = { patron, fn };
+  await p.cdp("Fetch.enable", { patterns: [{ urlPattern: `*${patron}*`, requestStage: "Request" }] });
+}
+async function soltar(p) {
+  _manejador = null;
+  await p.cdp("Fetch.disable").catch(() => {});
+}
+function respuestaJson(obj) {
+  return {
+    responseCode: 200,
+    responseHeaders: [{ name: "content-type", value: "application/json" }, { name: "access-control-allow-origin", value: "*" }],
+    body: Buffer.from(JSON.stringify(obj)).toString("base64"),
+  };
+}
+
+async function fresco(p, url, ms = 6000) {
+  await p.ir("about:blank", 300);
+  await p.cdp("Network.setCacheDisabled", { cacheDisabled: true });
+  await p.ir(url, ms);
+}
+const cambiarTerritorio = (codigo) => `(()=>{const s=document.querySelector('select');const set=Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set;set.call(s,'${codigo}');s.dispatchEvent(new Event('change',{bubbles:true}));return s.value})()`;
 
 // ── Checks de scroll ──────────────────────────────────────────────────────────
 async function sinDesborde(p) {
@@ -503,6 +542,224 @@ const CASOS = {
     return ok
       ? aprobado("077", `Sin desborde landing @ 640px: scrollW=${sw} clientW=${cw}`)
       : fallido("077", `Desborde landing @ 640px: scrollW=${sw} > clientW=${cw}`);
+  },
+
+  // ── Casos adicionales (segunda tanda) ──────────────────────────────────────
+
+  "003": async (p) => {
+    const lst = await (await fetch(`${API}/establecimientos`)).json();
+    const h = lst.find((e) => /hospital/i.test(e.tipo ?? "") || /hospital/i.test(e.nombre ?? ""));
+    if (!h) return ne("003", "GET /establecimientos no entregó ningún hospital");
+    const clave = String(h.nombre).slice(0, 18);
+    await p.ir(`${BASE}/#/establecimientos?comuna=${h.comuna_codigo}&id=${h.establecimiento_codigo}`, 6000);
+    await espera(2500);
+    const antes = await p.eval("document.body.innerText");
+    await p.eval("location.reload()");
+    await espera(6000);
+    const despues = await p.eval("document.body.innerText");
+    const hash = await p.eval("location.hash");
+    await p.captura(snap("003"));
+    const ok = antes.includes(clave) && despues.includes(clave) && hash.includes(`id=${h.establecimiento_codigo}`);
+    return ok
+      ? aprobado("003", `Hospital ${h.establecimiento_codigo} (${h.nombre}) conserva su detalle tras recargar; hash=${hash}`)
+      : fallido("003", `Hospital ${h.establecimiento_codigo}: antes=${antes.includes(clave)} despues=${despues.includes(clave)} hash=${hash}`);
+  },
+
+  "007": async (p) => {
+    await fresco(p, `${BASE}/#/tablero`);
+    await espera(2500);
+    let llegado = false, pasos = 0;
+    for (; pasos < 40 && !llegado; pasos++) {
+      await p.tecla("Tab");
+      llegado = await p.eval(`/por establecimiento/i.test(document.activeElement?.textContent ?? "")`);
+    }
+    if (!llegado) { await p.captura(snap("007")); return fallido("007", "Tab no alcanzó el enlace 'Por establecimiento' en 40 pasos"); }
+    await p.tecla("Enter");
+    await espera(3000);
+    const hash = await p.eval("location.hash");
+    const scroll = await p.eval("window.scrollY");
+    const foco = await p.eval(`(()=>{const a=document.activeElement; return a? a.tagName+':'+(a.getAttribute('aria-label')||a.id||a.textContent||'').trim().slice(0,40):'ninguno'})()`);
+    await p.captura(snap("007"));
+    const ok = hash.startsWith("#/establecimientos") && scroll === 0;
+    return ok
+      ? aprobado("007", `Tab (${pasos} pasos) + Enter lleva a ${hash.split("?")[0]}; scroll=${scroll}; foco tras el cambio: ${foco}`)
+      : fallido("007", `hash=${hash} scroll=${scroll} foco=${foco}`);
+  },
+
+  "014": async (p) => {
+    const geo = await (await fetch(`${API}/geo/comunas`)).json();
+    const f = geo.features.find((x) => Object.values(x.properties ?? {}).some((v) => String(v) === "13101"));
+    const nombreGeo = f && Object.values(f.properties).find((v) => String(v).toLowerCase() === "santiago");
+    await fresco(p, `${BASE}/#/tablero`);
+    await espera(4000);
+    await p.eval(`document.querySelectorAll('path.leaflet-interactive')[0].dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}))`);
+    await espera(3500);
+    const hash = await p.eval("location.hash");
+    const cuerpo = await p.eval("document.body.innerText");
+    await p.captura(snap("014"));
+    const ok = !!nombreGeo && hash.includes("territorio=13101") && cuerpo.includes("residentes de Santiago");
+    return ok
+      ? aprobado("014", `Polígono 13101 (GeoJSON: ${nombreGeo}) → ${hash}; la serie y el título muestran Santiago`)
+      : fallido("014", `GeoJSON nombre=${nombreGeo} hash=${hash} titulo_santiago=${cuerpo.includes("residentes de Santiago")}`);
+  },
+
+  "015": async (p) => {
+    await p.ir(`${BASE}/#/tablero`, 6000);
+    await espera(4000);
+    const leer = `JSON.stringify((()=>{const t=[...document.querySelectorAll('table')].find(t=>/^Comuna/.test(t.querySelector('th')?.textContent.trim()||''));const ths=[...t.querySelectorAll('th')];const i=ths.findIndex(h=>/^Pronóstico/.test(h.textContent.trim()));return {sort:ths[i].getAttribute('aria-sort'),vals:[...t.querySelectorAll('tbody tr')].map(tr=>tr.children[i]?.textContent.trim())}})())`;
+    const clic = `(()=>{const t=[...document.querySelectorAll('table')].find(t=>/^Comuna/.test(t.querySelector('th')?.textContent.trim()||''));const h=[...t.querySelectorAll('th')].find(h=>/^Pronóstico/.test(h.textContent.trim()));(h.querySelector('button')??h).click()})()`;
+    const num = (s) => (/^[-−]?\d/.test(s) ? parseFloat(s.replace(/\./g, "").replace(",", ".")) : null);
+    const orden = async (sentido) => {
+      for (let k = 0; k < 4; k++) {
+        const r = JSON.parse(await p.eval(leer));
+        if (r.sort === sentido) return r.vals.map(num);
+        await p.eval(clic); await espera(500);
+      }
+      return null;
+    };
+    const asc = await orden("ascending");
+    await p.captura(snap("015"));
+    const desc = await orden("descending");
+    if (!asc || !desc) return fallido("015", "No se obtuvo orden ascendente y descendente");
+    const valido = (v, dir) => {
+      const nn = v.filter((x) => x !== null);
+      const nulosAlFinal = v.slice(nn.length).every((x) => x === null) && v.slice(0, nn.length).every((x) => x !== null);
+      const mono = nn.every((x, i) => i === 0 || (dir === "asc" ? x >= nn[i - 1] : x <= nn[i - 1]));
+      return nulosAlFinal && mono;
+    };
+    const nulos = asc.filter((x) => x === null).length;
+    const ok = valido(asc, "asc") && valido(desc, "desc") && nulos >= 1;
+    return ok
+      ? aprobado("015", `Pronóstico monótono en ambos sentidos (${asc.length - nulos} valores, ${nulos} sin pronóstico al final en ascendente y descendente)`)
+      : fallido("015", `asc válido=${valido(asc, "asc")} desc válido=${valido(desc, "desc")} nulos=${nulos}`);
+  },
+
+  "016": async (p) => {
+    await p.ir(`${BASE}/#/tablero`, 6000);
+    await espera(4000);
+    const r = JSON.parse(await p.eval(`JSON.stringify((()=>{const t=[...document.querySelectorAll('table')].find(t=>/^Comuna/.test(t.querySelector('th')?.textContent.trim()||''));const ths=[...t.querySelectorAll('th')];const i=ths.findIndex(h=>/^Tasa/.test(h.textContent.trim()));return {ayuda:ths[i].textContent,filas:[...t.querySelectorAll('tbody tr')].map(tr=>[tr.children[0].textContent.trim(),tr.children[i].textContent.trim()])}})())`));
+    const api = await (await fetch(`${API}/resumen-comunal`)).json();
+    const porNombre = new Map(api.map((c) => [c.nombre, c.tasa_pronostico_por_10000]));
+    const num = (s) => parseFloat(s.replace(/\./g, "").replace(",", "."));
+    const cmp = r.filas.filter(([n, v]) => /^\d/.test(v) && porNombre.get(n) != null)
+      .map(([n, v]) => ({ n, ui: num(v), api: porNombre.get(n) }));
+    const maxDif = Math.max(...cmp.map((c) => Math.abs(c.ui - c.api)));
+    await p.captura(snap("016"));
+    const declara = /10\.000/.test(r.ayuda) && /por semana|a la semana/i.test(r.ayuda) && /no es prevalencia/i.test(r.ayuda);
+    const ok = declara && cmp.length > 0 && maxDif < 0.06;
+    return ok
+      ? aprobado("016", `Ayuda: "${r.ayuda.replace(/Tasa▲/, "").trim()}". ${cmp.length} comunas comparadas con tasa_pronostico_por_10000: diferencia máxima ${maxDif.toFixed(3)}`)
+      : fallido("016", `declara=${declara} comparadas=${cmp.length} difMax=${maxDif}`);
+  },
+
+  "017": async (p) => {
+    await p.ir(`${BASE}/#/tablero`, 6000);
+    await espera(4000);
+    const h = JSON.parse(await p.eval(`JSON.stringify((()=>{const t=[...document.querySelectorAll('table')].find(t=>/^Comuna/.test(t.querySelector('th')?.textContent.trim()||''));const g=(re)=>[...t.querySelectorAll('th')].find(h=>re.test(h.textContent.trim()))?.textContent??'';return {pobreza:g(/^Pobreza/),oferta:g(/^Oferta/)}})())`));
+    await p.captura(snap("017"));
+    const ok = /Casen 2022/.test(h.pobreza) && /vigentes/i.test(h.oferta) && !/2026/.test(h.pobreza + h.oferta);
+    return ok
+      ? aprobado("017", `Pobreza: "${h.pobreza.replace("▲", "")}" · Oferta: "${h.oferta.replace("▲", "")}"; ninguna usa el año del pronóstico`)
+      : fallido("017", `pobreza="${h.pobreza}" oferta="${h.oferta}"`);
+  },
+
+  "018": async (p) => {
+    const terr = await (await fetch(`${API}/territorios`)).json();
+    const sin = terr.filter((t) => !t.tiene_pronostico);
+    if (!sin.length) return ne("018", "El snapshot no tiene comunas con tiene_pronostico=false");
+    const partes = [];
+    let ok = true;
+    for (const t of sin) {
+      await fresco(p, `${BASE}/#/tablero?territorio=${t.series_id}`, 7000);
+      await espera(3000);
+      const cuerpo = await p.eval("document.body.innerText");
+      const motivo = cuerpo.includes(t.motivo_sin_pronostico);
+      const aviso = /Pronóstico no disponible/.test(cuerpo);
+      const api = await fetch(`${API}/series/${t.series_id}`);
+      partes.push(`${t.nombre} (${t.series_id}): aviso=${aviso} motivo=${motivo} /series=${api.status}`);
+      ok = ok && motivo && aviso;
+      if (t === sin[0]) await p.captura(snap("018"));
+    }
+    return ok
+      ? aprobado("018", `La interfaz declara ausencia y motivo sin dibujar pronóstico cero. ${partes.join(" | ")}`,
+          "Observación: junto al motivo se muestra el texto genérico 'No se pudo consultar la API… Verifique que el backend esté corriendo' (mensaje confuso para una ausencia esperada).")
+      : fallido("018", partes.join(" | "));
+  },
+
+  "021": async (p) => {
+    await fresco(p, `${BASE}/#/tablero`);
+    await espera(2500);
+    let retenidas = 0;
+    const antes = p.red.length;
+    await interceptar(p, "/series/13101", async (e) => {
+      retenidas++;
+      await espera(5000);
+      await p.cdp("Fetch.continueRequest", { requestId: e.requestId });
+    });
+    await p.eval(cambiarTerritorio("13101"));
+    await espera(700);
+    await p.eval(cambiarTerritorio("13102"));
+    await espera(9000);
+    const hash = await p.eval("location.hash");
+    const cuerpo = await p.eval("document.body.innerText");
+    const destino = p.red.slice(antes).filter((r) => r.url.includes("/series/13101")).map((r) => r.codigo ?? r.error);
+    await soltar(p);
+    await p.captura(snap("021"));
+    const ok = retenidas > 0 && hash.includes("13102") && cuerpo.includes("residentes de Cerrillos") && !cuerpo.includes("residentes de Santiago");
+    return ok
+      ? aprobado("021", `Petición /series/13101 retenida 5 s y cambio inmediato a 13102 por el selector; desenlace de la petición tardía: ${destino.join(",") || "sin respuesta"}; la pantalla queda en Cerrillos (13102) sin datos de Santiago`)
+      : fallido("021", `retenidas=${retenidas} desenlace=${destino.join(",")} hash=${hash} cerrillos=${cuerpo.includes("residentes de Cerrillos")} santiago=${cuerpo.includes("residentes de Santiago")}`);
+  },
+
+  "026": async (p) => {
+    const motivo = "Fixture de prueba: los datos observados no cubren la semana vigente.";
+    await interceptar(p, "/establecimientos-meta", async (e) => {
+      const meta = await (await fetch(e.request.url)).json();
+      await p.cdp("Fetch.fulfillRequest", { requestId: e.requestId, ...respuestaJson({ ...meta, vigente: false, motivo_desactualizacion: motivo }) });
+    });
+    await p.ir(`${BASE}/#/establecimientos`, 7000);
+    await espera(3000);
+    const cuerpo = await p.eval("document.body.innerText");
+    await soltar(p);
+    await p.captura(snap("026"));
+    const ok = cuerpo.includes("Pronóstico desactualizado") && cuerpo.includes(motivo);
+    return ok
+      ? aprobado("026", `Con /establecimientos-meta vigente=false la vista muestra "Pronóstico desactualizado" y el motivo del fixture`)
+      : fallido("026", `aviso=${cuerpo.includes("Pronóstico desactualizado")} motivo=${cuerpo.includes(motivo)}`);
+  },
+
+  "040": async (p) => {
+    let servidas = 0;
+    await interceptar(p, "/hospitalizaciones-residentes/", async (e) => {
+      const r = await fetch(e.request.url);
+      const d = await r.json();
+      servidas++;
+      await p.cdp("Fetch.fulfillRequest", { requestId: e.requestId, ...respuestaJson({ ...d, contraste_camas: null }) });
+    });
+    await p.ir(`${BASE}/#/tablero`, 7000);
+    await espera(4000);
+    const cuerpo = await p.eval("document.body.innerText");
+    const codigos = p.red.filter((r) => r.url.includes("/hospitalizaciones-residentes/")).map((r) => r.codigo);
+    await soltar(p);
+    await p.captura(snap("040"));
+    const perfil = /egresos/i.test(cuerpo);
+    const ok = servidas > 0 && perfil && !/error|no se pudo/i.test(cuerpo.split("Cargando")[0] ?? "");
+    return ok
+      ? aprobado("040", `Con contraste_camas=null en ${servidas} respuesta(s) 200 de hospitalizaciones-residentes (${codigos.join(",")}) el perfil de egresos se muestra y el módulo no se bloquea`,
+          "Fixture inyectado por CDP (copia de la respuesta real sin el contraste); no se modificó el snapshot.")
+      : fallido("040", `servidas=${servidas} perfil=${perfil} codigos=${codigos.join(",")}`);
+  },
+
+  "056": async (p) => {
+    const md = readFileSync(join(RAIZ, "reports/validation/contrato_api/comparacion_api_frontend.md"), "utf8");
+    const m = md.match(/\*\*Resultado:\*\*\s*(\d+) errores · (\d+) advertencias · (\d+) observaciones/);
+    await p.ir(`${BASE}/#/tablero`, 5000);
+    await p.captura(snap("056"));
+    if (!m) return fallido("056", "No se encontró la línea de resultado en el reporte de contrato");
+    const [, e, a, o] = m.map(Number);
+    return e === 0
+      ? aprobado("056", `Reporte comparacion_api_frontend.md: ${e} errores · ${a} advertencias · ${o} observaciones; advertencias y errores 404/409/503 no declarados quedan listados en el reporte`)
+      : fallido("056", `El reporte tiene ${e} errores incompatibles`);
   },
 };
 
