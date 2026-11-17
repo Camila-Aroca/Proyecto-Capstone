@@ -20,7 +20,7 @@ Este manual no certifica nada por sí solo. Cada sección indica si el paso fue 
 | Despliegue de la API y el frontend en AWS (CloudFront → ALB → ECS Fargate, `us-east-1`) | **Ejecutado y probado** el 12-11: 21 casos aprobados, 4 fallidos y 6 no ejecutados en la corrida E2E | [`reports/validation/e2e_local_aws/20261112T131720Z/informe.md`](../../reports/validation/e2e_local_aws/20261112T131720Z/informe.md). Los 4 fallidos fueron faltas de outputs, cerradas luego |
 | Pipeline en Fargate programado con EventBridge | **No implementado.** Cambio de alcance: el pipeline corre en el equipo y se publica con `subir_datos.sh` | [`docs/08-arquitectura/plan_despliegue_aws.md`](../08-arquitectura/plan_despliegue_aws.md), sección 2. C-42 sigue abierto |
 | CI/CD con CodePipeline y CodeBuild | **Bloqueado:** la conexión `saad-github` está en `PENDING` hasta que la dueña del repositorio la apruebe | Sección «Bloqueo de CI» de `registro_defectos.md`. La misma verificación se corre en el equipo |
-| Defectos abiertos | DEF-11 (`subir_datos.sh` no valida outputs completos) y DEF-12 a DEF-14 (interfaz en AWS) | `registro_defectos.md` |
+| Defectos abiertos | Sin defectos abiertos al cierre del ciclo 17 (2026-11-17) | [registro_defectos.md](../../reports/validation/ciclos_pruebas/registro_defectos.md) |
 
 La URL pública de la aplicación es [SAAD en AWS](https://d1zg565jvf1c8p.cloudfront.net/#/). El número de cuenta, los nombres de buckets y las credenciales no se incluyen aquí; la configuración local de AWS permanece fuera de Git.
 
@@ -135,7 +135,7 @@ docker compose --profile pipeline run --rm pipeline python -m src.cloud.pipeline
 | AWS | Al arrancar, `src/cloud/api_arranque.py` baja `data/` y `reports/` del bucket de datos; el rol de la tarea solo puede leer ese bucket. Si la descarga falla, la tarea termina con error; si el bucket no contiene objetos, advierte y continúa sin datos | **Ejecutado** el 12-11: 150 archivos, 212 MB, API lista en unos 36 s (comentario de cierre de #140) |
 | Publicación de datos nuevos | `infra/aws/scripts/subir_datos.sh` sube a S3 `data/processed/`, `reports/` y `data/raw/poblacion/` y fuerza un nuevo despliegue de la API. No usa `--delete` | **Ejecutado** el 12-11 |
 
-Qué sube `subir_datos.sh`: solo outputs procesados, reportes y el cuadro INE de población. El RAW de Urgencias no se sube. **Limitación abierta (DEF-11):** el script no valida que los outputs esperados estén completos antes de sincronizar; hay que correr el pipeline completo y revisar el resultado antes de publicar.
+Qué sube `subir_datos.sh`: solo outputs procesados, reportes y el cuadro INE de población. El RAW de Urgencias no se sube. `scripts/verificar_outputs_api.py` (DEF-11, cerrado) se ejecuta antes del `aws s3 sync` y detiene la publicación si falta algún output o si los manifiestos no coinciden con las entradas actuales. También verifica que demanda y establecimientos cierren en la misma semana observada (guard DEF-16).
 
 ## 7. Despliegue en AWS
 
@@ -155,7 +155,7 @@ Descrito en [`infra/aws/cdk/README.md`](../../infra/aws/cdk/README.md) y [`docs/
 
 Una versión de AWS desplegada hoy no está confirmada contra el commit del repositorio: `/api/v1/meta` no expone el SHA ni el digest de la imagen (nota en `registro_defectos.md`). Para saber qué corre, consultar la etiqueta de la imagen en el servicio ECS.
 
-La regeneración local de C-08 no publica automáticamente en AWS. Antes de actualizar el despliegue, verificar con el equipo propietario de la cuenta los outputs y la limitación DEF-11; después de una publicación autorizada, comprobar nuevamente `/api/v1/salud`, `/api/v1/meta` y los endpoints pertinentes. La consulta del 15-11 mostró un corte anterior al local.
+La regeneración local no publica automáticamente en AWS. Antes de actualizar el despliegue, correr `scripts/verificar_outputs_api.py` para confirmar que los outputs están completos y alineados; si pasa, `subir_datos.sh` hace la publicación y el redespliegue. Comprobar `/api/v1/salud`, `/api/v1/meta` y los endpoints pertinentes tras cada publicación.
 
 Para desmontar el entorno entre demos: `aws cloudformation delete-stack --stack-name Saad --region us-east-1`. El repositorio ECR y la preparación de CDK quedan.
 
@@ -187,4 +187,4 @@ Para desmontar el entorno entre demos: `aws cloudformation delete-stack --stack-
 - No incluye una reejecución desde un clon limpio realizada para este documento.
 - No describe políticas IAM concretas del equipo de despliegue ni el procedimiento operacional definitivo (C-45).
 - La corrida completa del pipeline con benchmarks y holdouts sobre los datos posteriores al 8 de octubre está pendiente. La corrida C-08 del 15-11 omitió esas evaluaciones. La certificación del 8 de octubre (`reports/validation/apt_certification_20261008T002147Z/`) corresponde a otra versión del código y los datos, y no certifica la versión vigente.
-- El despliegue en AWS tiene DEF-12 a DEF-14 abiertos (interfaz) y la CI/CD bloqueada.
+- DEF-12 a DEF-14 (interfaz) se cerraron en el ciclo 15; DEF-15 y DEF-16 (datos) en el ciclo 17. Sin defectos abiertos al 2026-11-17. La CI/CD sigue bloqueada (conexión `saad-github` pendiente de aprobación).

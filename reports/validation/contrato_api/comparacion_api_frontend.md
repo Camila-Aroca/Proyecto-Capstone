@@ -1,6 +1,6 @@
 # Contrato de datos API / frontend: comparación (#61)
 
-- **Fecha (UTC):** 2026-11-16T01:54:55+00:00 · **Commit:** `a5e5e4b`
+- **Fecha (UTC):** 2026-11-17T14:30:22+00:00 · **Commit:** `cd631ec`
 - **Contrato de la API:** [`docs/06-requisitos/contrato_api/openapi.json`](../../../docs/06-requisitos/contrato_api/openapi.json) (OpenAPI 3.1.0, 15 rutas, 38 esquemas), generado desde `src/api/schemas.py`.
 - **Tipos del frontend:** `frontend/src/api.ts` (33 interfaces, 14 llamadas).
 - **Ejecutado con:** `scripts/qa_contrato_api.py`

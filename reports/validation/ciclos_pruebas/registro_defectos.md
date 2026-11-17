@@ -75,26 +75,26 @@ se contabilizaban como aprobados ni fallidos.
 
 ---
 
-## Defectos de datos (abiertos)
+## Defectos de datos (cerrados en el ciclo 17)
 
-| ID | Título | Criticidad | Entorno | Detectado en | Responsable | Corrección propuesta | Retest | Estado |
+| ID | Título | Criticidad | Entorno | Detectado en | Responsable | Corrección | Retest | Estado |
 |---|---|---|---|---|---|---|---|---|
-| DEF-15 | Los pronósticos commiteados en `7e48f9a` no coinciden con las entradas del repositorio: los manifiestos registran el SHA-256 de los JSON de selección con finales de línea CRLF (corrida en Windows) y, en demanda, de una selección que no está en el historial; también cambió `urgencias_rm_2026.parquet` | Alta | LOCAL (Linux) · AWS | 2026-11-15, verificador de DEF-11; confirmado en el ciclo 16 | Felipe (pipeline) | Commitear la selección de demanda usada en la corrida o regenerar las etapas de forecast; fijar `eol=lf` para `reports/modeling/*.json` en `.gitattributes` para que el hash no dependa del sistema operativo | `scripts/verificar_outputs_api.py` sin problemas | **Abierto** |
+| DEF-15 | Los pronósticos commiteados en `7e48f9a` no coinciden con las entradas del repositorio: los manifiestos registran el SHA-256 de los JSON de selección con finales de línea CRLF (corrida en Windows) y, en demanda, de una selección que no está en el historial; también cambió `urgencias_rm_2026.parquet` | Alta | LOCAL (Linux) · AWS | 2026-11-15, verificador de DEF-11; confirmado en el ciclo 16 | Felipe (pipeline) | Pipeline regenerado con `--sin-evaluacion` el 2026-11-16 (`2dc0150`); outputs publicados con `subir_datos.sh`; `.gitattributes` agrega `reports/modeling/*.json text eol=lf` para que el hash no dependa del sistema operativo | Ciclo 17: CP-SAAD-047 APROBADO en LOCAL y AWS; `scripts/verificar_outputs_api.py` sin problemas | **Cerrado** |
+| DEF-16 | Pronóstico de demanda comunal desactualizado tras corrida interrumpida: `2dc0150` regeneró urgencias y establecimientos pero dejó el mart comunal en S39 (última semana observada) mientras establecimientos llegó a S45 | Alta | LOCAL · AWS | 2026-11-17, `scripts/verificar_outputs_api.py` (guard `cortes_desalineados`), ciclo 17 | Catalina (pipeline) | Reconstrucción forzada de `build_urgencias_comuna_marts` y `forecast_demanda_sm` el 2026-11-17; guard `cortes_desalineados()` añadido al verificador para prevenir la publicación cuando demanda y establecimientos difieren; outputs republicados con `subir_datos.sh` | Ciclo 17: `verificar_outputs_api.py` pasa sin errores; demanda y establecimientos cierran en la misma semana observada | **Cerrado** |
 
-Detalle del diagnóstico: con LF, las selecciones de establecimientos y suicidios del repositorio dan
+Detalle DEF-15: con LF, las selecciones de establecimientos y suicidios del repositorio dan
 `f5fe27ab…` y `8195b1ff…`; con CRLF dan exactamente lo que registran los manifiestos (`e64950ef…` y
 `05fd7c29…`). La de demanda no coincide con ninguna versión del historial, ni con LF ni con CRLF.
-Mientras no se corrija, la API ejecutada en Linux marca esos pronósticos como desactualizados y
-`subir_datos.sh` no publica.
+La regeneración completa del 2026-11-16 produjo manifiestos con LF, que el verificador ya acepta.
 
 **Impacto confirmado en el ciclo 16 (2026-11-16):**
 - CP-SAAD-047 FALLIDO en LOCAL y **en AWS**: `/api/v1/suicidios` responde 503 («El pronóstico de
-  suicidios está desactualizado (cambió 'seleccion_benchmark')»). Lo que hay en S3 tiene el mismo
-  desfase, así que la vista de suicidios no funciona en producción.
-- CP-SAAD-020 FALLIDO en AWS: el primer pronóstico de la serie RM difiere entre LOCAL (semana 46) y
-  AWS, porque cada entorno tiene una versión distinta del pronóstico. Arrastra a CP-SAAD-006 y
-  CP-SAAD-070.
-- CP-SAAD-048, 050 y 052 quedan BLOCKED.
+  suicidios está desactualizado (cambió 'seleccion_benchmark')»). Lo que había en S3 tenía el mismo
+  desfase.
+- CP-SAAD-020 FALLIDO en AWS: el primer pronóstico de la serie RM difería entre LOCAL (semana 46) y
+  AWS. Arrastraba a CP-SAAD-006 y CP-SAAD-070.
+- CP-SAAD-048, 050 y 052 quedaban BLOCKED.
+Todos cerrados en el ciclo 17 tras la republicación.
 
 ---
 
@@ -150,12 +150,11 @@ carpeta de ciclo.
 
 | Estado | Defectos |
 |---|---|
-| Abierto | DEF-15 |
-| Cerrado | DEF-01, DEF-02, DEF-03, DEF-04, DEF-05, DEF-06, DEF-07, DEF-08, DEF-09, DEF-10, DEF-11, DEF-12, DEF-13, DEF-14 |
+| Abierto | — |
+| Cerrado | DEF-01, DEF-02, DEF-03, DEF-04, DEF-05, DEF-06, DEF-07, DEF-08, DEF-09, DEF-10, DEF-11, DEF-12, DEF-13, DEF-14, DEF-15, DEF-16 |
 
-DEF-01 a DEF-04 se cerraron en el ciclo 4 (2026-11-12) tras ejecutar el pipeline con
-`--sin-evaluacion`, publicar los outputs con `subir_datos.sh` y reiniciar la API en ambos
-entornos (local con `docker compose restart api`, AWS con el redespliegue `95d00f8` y un nuevo
-`force-new-deployment`). DEF-12 a DEF-14 se abrieron el 2026-11-14 con la campaña SAAD-CP v2.1 y
-se corrigieron el 2026-11-15 junto con DEF-11; tras publicar el frontend en AWS, el ciclo 15
-(2026-11-16) los cerró. El verificador de DEF-11 encontró DEF-15, que sigue abierto.
+DEF-01 a DEF-04 se cerraron en el ciclo 4 (2026-11-12). DEF-12 a DEF-14 se abrieron el 2026-11-14
+y se cerraron el 2026-11-15 junto con DEF-11. DEF-15 se detectó el 2026-11-15 con el verificador
+de DEF-11 y se cerró el 2026-11-16 regenerando el pipeline (`2dc0150`). DEF-16 se detectó el
+2026-11-17 con el guard `cortes_desalineados()` añadido al verificador y se cerró ese mismo día
+reconstruyendo las etapas de demanda y republicando con `subir_datos.sh`.

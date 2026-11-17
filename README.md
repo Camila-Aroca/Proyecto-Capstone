@@ -38,7 +38,7 @@ Estado del repositorio al 15 de noviembre de 2026. «Implementado» significa qu
 | **Calendario de contexto (festividades y estaciones)** | Implementado | Contexto visual. No son variables del modelo ni explicaciones causales |
 | **Autenticación de usuarios** | **No implementada** | No hay referencias a autenticación en `src/api/` |
 | **API de consulta** | Implementada | FastAPI de solo lectura en `src/api/`. Contrato en [`docs/06-requisitos/contrato_api/`](docs/06-requisitos/contrato_api/README.md) |
-| **Interfaz web** | Implementada | React en `frontend/`, con el branding del proyecto aplicado según el issue #100. Hay defectos de interfaz abiertos en AWS (DEF-12 a DEF-14) |
+| **Interfaz web** | Implementada | React en `frontend/`, con el branding del proyecto aplicado según el issue #100. Defectos de interfaz DEF-12 a DEF-14 cerrados en el ciclo 15 |
 | **Pipeline y datos** | Revalidación parcial ejecutada | Corrida forzada local del 15-11 con evaluaciones omitidas; ver «Evidencia técnica» |
 
 El control de cambios del **alcance contractual** (ERF y ERNF) está pendiente en el issue C-02. No se debe leer este README como una adenda aprobada.
@@ -66,7 +66,7 @@ AWS **no sustituye** la contingencia local: si el despliegue no estuviera dispon
 - **Certificación del pipeline del 8 de octubre** ([`reports/validation/apt_certification_20261008T002147Z/`](reports/validation/apt_certification_20261008T002147Z/)): código de salida 0 y 77/77 outputs válidos **en esa versión**. Parte de las etapas reutilizó outputs existentes y no es una reconstrucción limpia. **No certifica la versión vigente.**
 - **Revalidación posterior al corte de octubre** ([evidencia C-08](reports/validation/c08_revalidacion_20261115T161029Z/informe.md)): el 15-11 terminó con código 0 una corrida forzada con `--sin-evaluacion`, que regeneró datos y pronósticos. Los tres benchmarks y los tres holdouts se omitieron; la evaluación con el snapshot actualizado sigue pendiente. El [informe del 10-11](reports/validation/c08_revalidacion_20261110.md) documenta el rezago de Defunciones y una ejecución anterior.
 - **Suite automatizada U-39:** 920 pruebas ordinarias y 29 de integración aprobadas por separado sobre el commit base `5c341c5`, con cambios locales; salidas y entorno en la [evidencia C-08](reports/validation/c08_revalidacion_20261115T161029Z/informe.md). No acredita instalación desde un clon limpio.
-- **Pruebas de la plataforma:** línea base local ([`baseline_local`](reports/validation/baseline_local/20261112T135538Z/informe.md)), prueba E2E local contra AWS, ciclos de prueba y registro de defectos en [`reports/validation/`](reports/validation/). Abiertos al 14-11: DEF-11 (`subir_datos.sh` no valida outputs completos) y DEF-12 a DEF-14 (interfaz).
+- **Pruebas de la plataforma:** línea base local ([`baseline_local`](reports/validation/baseline_local/20261112T135538Z/informe.md)), prueba E2E local contra AWS, ciclos de prueba y [registro de defectos](reports/validation/ciclos_pruebas/registro_defectos.md) en [`reports/validation/`](reports/validation/). Sin defectos abiertos al cierre del ciclo 17 (2026-11-17). Ver el [registro principal de pruebas](reports/validation/registro_principal_pruebas.md) para el detalle completo.
 - **Instalación limpia en un segundo computador:** el equipo la confirmó el 8 de octubre, pero **no hay evidencia archivada** en el repositorio (comandos, versiones, logs). El [manual de implementación](docs/10-manual-implementacion/README.md) registra qué instalaciones tienen evidencia y cuáles no.
 
 La existencia de código, la certificación de outputs, la instalación limpia, el despliegue y la validación con usuarios son evidencias distintas.
@@ -77,10 +77,10 @@ La existencia de código, la certificación de outputs, la instalación limpia, 
 |---|---|---|
 | Modelo de demanda | Implementado; holdout con datos de octubre | Consolidar métricas, cobertura de intervalos y limitaciones (C-14) |
 | Datos y pipeline | Corrida forzada del 15-11 con evaluaciones omitidas; pronósticos regenerados y procedencia registrada | Revalidar benchmarks y holdouts con los datos actuales |
-| API y frontend | Implementados en local; AWS respondió el 15-11 con datos anteriores a C-08 y defectos de interfaz registrados | Verificar publicación de datos y corregir DEF-12 a DEF-14 |
+| API y frontend | Implementados; AWS responde con datos actualizados (ciclo 17, 2026-11-17); DEF-12 a DEF-14 cerrados | — |
 | Despliegue en AWS | Operativo con datos publicados manualmente; CI/CD bloqueada | C-36, C-42 y C-45 |
 | Documentación técnica | [Manual de implementación](docs/10-manual-implementacion/README.md) en su primera versión; manual de usuario pendiente | C-15 y anexos operacionales de C-45 |
-| Pruebas | Campañas de 70 y 200 casos con registro de defectos | Cerrar defectos abiertos y repetir el ciclo |
+| Pruebas | Ciclo 17 completo; sin defectos abiertos; [registro principal](reports/validation/registro_principal_pruebas.md) generado | — |
 | Validación con cliente o experto | **Sin cliente piloto institucional confirmado.** No hay registro de validación de la muestra funcional con cliente (issue #90 sin cerrar) | Registrar feedback clínico (C-19) y validación (#90) |
 | Presentación y video | En preparación | PPT, ensayos y video actualizado (C-09 a C-12) |
 

@@ -1,0 +1,3 @@
+# Fija LF para los JSON de selección de benchmark, para que el SHA-256 del manifiesto
+# no dependa del sistema operativo (corrección DEF-15).
+reports/modeling/*.json text eol=lf
