@@ -1,0 +1,314 @@
+{
+ "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_lectura",
+ "ciclo": 17,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Catalina Rodríguez",
+ "alcance": "10 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-17T15:43:01.364329+00:00",
+ "fin_utc": "2026-11-17T15:44:00.223450+00:00",
+ "commit": "c2f1267614fb33f7eb10438450eb16c420743483",
+ "arbol_versionado_limpio": false,
+ "archivos_versionados_modificados": 2,
+ "archivos_sin_rastrear": [
+  "docs/05-entregas/informe_avance_apt_catalina.md",
+  "docs/05-entregas/reflexion_monitoreo_apt.md",
+  "docs/07-diagramas/.$despliegue_aws_as_built.drawio.bkp",
+  "package-lock.json",
+  "reports/validation/ciclos_pruebas/ciclo_02_20261112T142133Z/",
+  "reports/validation/ciclos_pruebas/ciclo_03_20261112T152058Z/",
+  "scripts/qa_aws_lectura.py"
+ ],
+ "entorno": "AWS (URL desplegada; host redactado)",
+ "modo": "manual",
+ "nota": "Ciclo final: inspección de solo lectura de AWS con scripts/qa_aws_lectura.py (ECS, ALB, ECR, S3, IAM, CloudWatch, CodeConnections), revisión de subir_datos.sh y comparación local/AWS con qa_e2e_local_vs_aws.py.",
+ "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+ "python": "3.12.3",
+ "so": "Linux 7.0.0-43-generic",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 8,
+  "fallidos": 0,
+  "no_ejecutados": 2
+ },
+ "advertencias": [
+  "Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-059",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_lectura",
+   "titulo": "Targets y tareas sanas",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "AWS · solo lectura",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Servicio saad-api ACTIVE: desiredCount=1 runningCount=1; 1 target(s) healthy; 10 últimos eventos sin fallo recurrente (todos 'steady state').",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:43:01.364329+00:00",
+    "fin": "2026-11-17T15:43:04.513131+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-059.txt",
+   "evidencia_sha256": "1293ff93de2bc1d8ffa9f46bbbe06e838e8dee77801fc0d191bfb4fab84e32d4",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-059.txt",
+     "sha256": "1293ff93de2bc1d8ffa9f46bbbe06e838e8dee77801fc0d191bfb4fab84e32d4"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-060",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_lectura",
+   "titulo": "Digest de imagen en servicio",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "AWS · solo lectura",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Imagen activa saad-api:95d00f8 (SHA corto de commit, no 'latest'); digest sha256:77ba308e42ac…; subida 2026-11-12T12:03:10. Commit 95d00f8 2026-11-12 12:02:49 -0300 data: actualiza pronósticos y EDA tr",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:43:04.513156+00:00",
+    "fin": "2026-11-17T15:43:07.439324+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-060.txt",
+   "evidencia_sha256": "5e68f990bccdeee399f5a35a90eb4608bbe32522b1cabca0d2cb7e0cdccba605",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-060.txt",
+     "sha256": "5e68f990bccdeee399f5a35a90eb4608bbe32522b1cabca0d2cb7e0cdccba605"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-061",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_lectura",
+   "titulo": "Privacidad de bucket del sitio",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "AWS · solo lectura",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Block Public Access con las 4 opciones activas; la política solo permite s3:GetObject al servicio CloudFront acotado por AWS:SourceArn de la distribución, más un Deny de transporte sin TLS; sin Allow a '*'.",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:43:07.439346+00:00",
+    "fin": "2026-11-17T15:43:18.452679+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-061.txt",
+   "evidencia_sha256": "b634d0f3545463becad05f0b15c41b2ce672b9d65df39d8b7cf45b268b344ed4",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-061.txt",
+     "sha256": "b634d0f3545463becad05f0b15c41b2ce672b9d65df39d8b7cf45b268b344ed4"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-062",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_lectura",
+   "titulo": "Datos descargados al arranque",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "AWS · solo lectura",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Arranque 2026-11-16T02:58Z: 'Descargados 608 archivos (295.4 MB) desde s3://saad-datos<sufijo>.'. /meta sirve la semana 2026-S45, pronóstico calculado 2026-11-16T02:15:05Z, origen 'persistido': versión y snapshot trazables.",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:43:18.452702+00:00",
+    "fin": "2026-11-17T15:43:31.801655+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-062.txt",
+   "evidencia_sha256": "46206ef533e47b669796e231f1ec4c9eb8bf3b620ed45a580088f7551914b05e",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-062.txt",
+     "sha256": "46206ef533e47b669796e231f1ec4c9eb8bf3b620ed45a580088f7551914b05e"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-063",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_lectura",
+   "titulo": "Retención y consulta de logs",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "AWS · solo lectura",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "/ecs/saad-api: retención 14 días = CDK (14); 83 eventos en los 10 min desde el arranque 2026-11-16T02:58Z permiten correlacionar descarga, inicio de uvicorn y peticiones; 0 mensajes con credenciales.",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:43:31.801672+00:00",
+    "fin": "2026-11-17T15:43:36.848038+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-063.txt",
+   "evidencia_sha256": "40b89d4f5c63341821e135fd35a169649683cc4c18b86e9682870edd421e5067",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-063.txt",
+     "sha256": "40b89d4f5c63341821e135fd35a169649683cc4c18b86e9682870edd421e5067"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-064",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_lectura",
+   "titulo": "Alarmas sin provocar incidentes",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "AWS · solo lectura",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "7 alarmas saad-* declaradas en CDK existen con la misma métrica, umbral, período y evaluaciones; estados: OK. Diferencias: 0. El estado OK/INSUFFICIENT_DATA no se cuenta como prueba de notificación.",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:43:36.848057+00:00",
+    "fin": "2026-11-17T15:43:39.846375+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-064.txt",
+   "evidencia_sha256": "f1b3309cb618256fc1ad34dadad8157eb9eb3d07269973fce86fa02b698b46b0",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-064.txt",
+     "sha256": "f1b3309cb618256fc1ad34dadad8157eb9eb3d07269973fce86fa02b698b46b0"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-065",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_lectura",
+   "titulo": "Mínimo privilegio del rol API",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "AWS · solo lectura",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "El taskRole tiene una política en línea con s3:GetBucket*, s3:GetObject*, s3:List* solo sobre el bucket de datos y sus objetos; sin políticas gestionadas ni escritura/administración; el arranque de la API solo usa download_file, get_paginator (operaciones de escritura encontradas: 0).",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:43:39.846397+00:00",
+    "fin": "2026-11-17T15:43:50.209047+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-065.txt",
+   "evidencia_sha256": "c3f4d2137e0d3959de8701ba41f57b1f0a6b3dc744e07fa1839717d7da34bc95",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-065.txt",
+     "sha256": "c3f4d2137e0d3959de8701ba41f57b1f0a6b3dc744e07fa1839717d7da34bc95"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-066",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_lectura",
+   "titulo": "Estado de conexión CI",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "AWS · solo lectura",
+   "defecto": "Sin defecto registrado",
+   "estado": "NO EJECUTADO",
+   "resultado_real": "BLOQUEADO, sin aprobar: conexión saad-github en estado PENDING; última ejecución saad-pr Failed y saad-despliegue Failed (2026-11-12). La conexión debe autorizarse manualmente en la consola de AWS (Developer Tools → Settings → Connections); no se disparó ninguna ejecución.",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": null,
+   "evidencia": null,
+   "evidencia_sha256": null,
+   "hash_input": null,
+   "anexos": []
+  },
+  {
+   "id": "SAAD-CP-067",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_lectura",
+   "titulo": "Revisión de DEF 11 en publicación",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "AWS · solo lectura",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "subir_datos.sh ejecuta scripts/verificar_outputs_api.py (línea 23) antes del primer 'aws s3 sync' (línea 26) con 'set -e': un fallo de completitud o de coherencia de cortes (DEF-11/DEF-16) aborta la publicación. Inspección sin ejecutar el script.",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:44:00.222917+00:00",
+    "fin": "2026-11-17T15:44:00.223450+00:00"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-067.txt",
+   "evidencia_sha256": "0f8625fa77116a4587e2887b318e07039873840bbe50b03f258022b878963e2f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-067.txt",
+     "sha256": "0f8625fa77116a4587e2887b318e07039873840bbe50b03f258022b878963e2f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-068",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_lectura",
+   "titulo": "Paridad local y AWS por snapshot",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "AWS vs LOCAL",
+   "defecto": "Sin defecto registrado",
+   "estado": "NO EJECUTADO",
+   "resultado_real": "BLOQUEADO por diferencia de snapshot, sin atribuirla al código: qa_e2e_local_vs_aws.py --sin-capturas (commit c2f1267) dio 13 endpoints comparados, 12 equivalentes y /api/v1/series/RM distinto: el primer pronóstico de demanda es 2026-S46 en local y 2026-S40 en AWS (imagen saad-api:95d00f8; /meta de AWS ya informa S45). AWS sirve un pronóstico de demanda anterior al reconstruido en local para cerrar DEF-16; la comparación se reanuda tras publicar los datos con infra/aws/scripts/subir_datos.sh. Las 23 comprobaciones de infraestructura y seguridad de la misma corrida quedaron APROBADO.",
+   "observaciones": "Informe de la corrida en /tmp/saad-e2e-068 (no versionado).",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": null,
+   "evidencia": null,
+   "evidencia_sha256": null,
+   "hash_input": null,
+   "anexos": []
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+SAAD-CP-063 · APROBADO · 2026-11-17T15:43:31.801672+00:00
+/ecs/saad-api: retención 14 días = CDK (14); 83 eventos en los 10 min desde el arranque 2026-11-16T02:58Z permiten correlacionar descarga, inicio de uvicorn y peticiones; 0 mensajes con credenciales.
+
+## Retención
+{
+ "real": 14,
+ "cdk": 14
+}
+
+## Intervalo del último arranque
+{
+ "desde": "2026-11-16T02:58:44.748000+00:00",
+ "eventos_en_ventana": 83,
+ "mensajes_con_secretos": 0
+}

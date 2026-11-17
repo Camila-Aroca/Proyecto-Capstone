@@ -1,0 +1,22 @@
+SAAD-CP-062 · APROBADO · 2026-11-17T15:43:18.452702+00:00
+Arranque 2026-11-16T02:58Z: 'Descargados 608 archivos (295.4 MB) desde s3://saad-datos<sufijo>.'. /meta sirve la semana 2026-S45, pronóstico calculado 2026-11-16T02:15:05Z, origen 'persistido': versión y snapshot trazables.
+
+## Tarea activa iniciada 2026-11-16T02:58:44Z · logs de arranque
+[
+ "2026-11-16 02:59:00,200 [INFO] Descargados 608 archivos (295.4 MB) desde s3://saad-datos<sufijo>.",
+ "INFO:     Started server process [1]",
+ "INFO:     Application startup complete.",
+ "2026-11-16 02:59:34,514 [INFO] Pronostico reutilizado desde data/processed/modeling/pronostico_demanda_sm.parquet"
+]
+
+## /meta (campos de trazabilidad)
+{
+ "ultima_semana_observada": {
+  "ano": 2026,
+  "semana": 45,
+  "fecha_inicio": "2026-11-08",
+  "atenciones": 1825.0
+ },
+ "pronostico_calculado_en": "2026-11-16T02:15:05.410245Z",
+ "origen_pronostico": "persistido"
+}

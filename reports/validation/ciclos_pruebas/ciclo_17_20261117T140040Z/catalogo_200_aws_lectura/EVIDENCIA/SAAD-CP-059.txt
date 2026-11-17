@@ -1,0 +1,41 @@
+SAAD-CP-059 · APROBADO · 2026-11-17T15:43:01.364329+00:00
+Servicio saad-api ACTIVE: desiredCount=1 runningCount=1; 1 target(s) healthy; 10 últimos eventos sin fallo recurrente (todos 'steady state').
+
+## ECS DescribeServices
+{
+ "status": "ACTIVE",
+ "desiredCount": 1,
+ "runningCount": 1,
+ "pendingCount": 0
+}
+
+## Despliegues
+[
+ {
+  "rolloutState": "COMPLETED",
+  "desiredCount": 1,
+  "runningCount": 1
+ }
+]
+
+## ALB DescribeTargetHealth
+[
+ {
+  "estado": "healthy",
+  "puerto": 8000
+ }
+]
+
+## Últimos 10 eventos del servicio
+[
+ "(service saad-api) has reached a steady state.",
+ "(service saad-api) has reached a steady state.",
+ "(service saad-api) has reached a steady state.",
+ "(service saad-api) has reached a steady state.",
+ "(service saad-api) has reached a steady state.",
+ "(service saad-api) has reached a steady state.",
+ "(service saad-api) has reached a steady state.",
+ "(service saad-api) (deployment ecs-svc/0681324031036221495) deployment completed.",
+ "(service saad-api, taskSet ecs-svc/9677700980534461791) has begun draining connections on 1 tasks.",
+ "(service saad-api) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-1:<cuenta>:targetgroup/Saad-AlbHttp-MCXHIYSJ6SOI/9956869706b04b48)"
+]

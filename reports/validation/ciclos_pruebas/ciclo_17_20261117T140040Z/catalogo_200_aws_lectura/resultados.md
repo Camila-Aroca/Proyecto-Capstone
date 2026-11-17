@@ -1,0 +1,31 @@
+# Ciclo 17 · Catálogo SAAD-CP v2.1 (200 casos): Catalina Rodríguez
+
+- **Ejecutor real:** Catalina Rodríguez · **Alcance:** 10 casos · **Estado:** FORMAL
+- **Commit:** `c2f1267614fb33f7eb10438450eb16c420743483` · árbol versionado limpio: no
+- **Archivos sin rastrear al ejecutar:** `docs/05-entregas/informe_avance_apt_catalina.md`, `docs/05-entregas/reflexion_monitoreo_apt.md`, `docs/07-diagramas/.$despliegue_aws_as_built.drawio.bkp`, `package-lock.json`, `reports/validation/ciclos_pruebas/ciclo_02_20261112T142133Z/`, `reports/validation/ciclos_pruebas/ciclo_03_20261112T152058Z/`, `scripts/qa_aws_lectura.py`
+- **Versión desplegada:** No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).
+- **Nota:** Ciclo final: inspección de solo lectura de AWS con scripts/qa_aws_lectura.py (ECS, ALB, ECR, S3, IAM, CloudWatch, CodeConnections), revisión de subir_datos.sh y comparación local/AWS con qa_e2e_local_vs_aws.py.
+- **Entorno:** AWS (URL desplegada; host redactado) · Python 3.12.3 · pytest 9.1.1
+- **Inicio / fin (UTC):** 2026-11-17T15:43:01.364329+00:00 / 2026-11-17T15:44:00.223450+00:00
+- **Resultado:** 8 aprobados · 0 fallidos · 2 no ejecutados
+
+Evidencia por caso en `EVIDENCIA/` (JUnit en los casos de pytest; petición y respuesta en los HTTP), con su SHA256 y el hash del input (en `resultados.json`). Defectos: se registran en `../../registro_defectos.md`; el resumen del ciclo lo consolida quien lo coordina.
+
+| ID | Prueba | Fecha/hora (UTC) | Estado | Resultado real | Evidencia | Defecto | Observaciones |
+|---|---|---|---|---|---|---|---|
+| SAAD-CP-059 | Targets y tareas sanas | 2026-11-17T15:43:01.364329+00:00 | APROBADO | Servicio saad-api ACTIVE: desiredCount=1 runningCount=1; 1 target(s) healthy; 10 últimos eventos sin fallo recurrente (todos 'steady state'). | [`EVIDENCIA/SAAD-CP-059.txt`](EVIDENCIA/SAAD-CP-059.txt) | Sin defecto registrado | — |
+| SAAD-CP-060 | Digest de imagen en servicio | 2026-11-17T15:43:04.513156+00:00 | APROBADO | Imagen activa saad-api:95d00f8 (SHA corto de commit, no 'latest'); digest sha256:77ba308e42ac…; subida 2026-11-12T12:03:10. Commit 95d00f8 2026-11-12 12:02:49 -0300 data: actualiza pronósticos y EDA tr | [`EVIDENCIA/SAAD-CP-060.txt`](EVIDENCIA/SAAD-CP-060.txt) | Sin defecto registrado | — |
+| SAAD-CP-061 | Privacidad de bucket del sitio | 2026-11-17T15:43:07.439346+00:00 | APROBADO | Block Public Access con las 4 opciones activas; la política solo permite s3:GetObject al servicio CloudFront acotado por AWS:SourceArn de la distribución, más un Deny de transporte sin TLS; sin Allow a '*'. | [`EVIDENCIA/SAAD-CP-061.txt`](EVIDENCIA/SAAD-CP-061.txt) | Sin defecto registrado | — |
+| SAAD-CP-062 | Datos descargados al arranque | 2026-11-17T15:43:18.452702+00:00 | APROBADO | Arranque 2026-11-16T02:58Z: 'Descargados 608 archivos (295.4 MB) desde s3://saad-datos<sufijo>.'. /meta sirve la semana 2026-S45, pronóstico calculado 2026-11-16T02:15:05Z, origen 'persistido': versión y snapshot trazables. | [`EVIDENCIA/SAAD-CP-062.txt`](EVIDENCIA/SAAD-CP-062.txt) | Sin defecto registrado | — |
+| SAAD-CP-063 | Retención y consulta de logs | 2026-11-17T15:43:31.801672+00:00 | APROBADO | /ecs/saad-api: retención 14 días = CDK (14); 83 eventos en los 10 min desde el arranque 2026-11-16T02:58Z permiten correlacionar descarga, inicio de uvicorn y peticiones; 0 mensajes con credenciales. | [`EVIDENCIA/SAAD-CP-063.txt`](EVIDENCIA/SAAD-CP-063.txt) | Sin defecto registrado | — |
+| SAAD-CP-064 | Alarmas sin provocar incidentes | 2026-11-17T15:43:36.848057+00:00 | APROBADO | 7 alarmas saad-* declaradas en CDK existen con la misma métrica, umbral, período y evaluaciones; estados: OK. Diferencias: 0. El estado OK/INSUFFICIENT_DATA no se cuenta como prueba de notificación. | [`EVIDENCIA/SAAD-CP-064.txt`](EVIDENCIA/SAAD-CP-064.txt) | Sin defecto registrado | — |
+| SAAD-CP-065 | Mínimo privilegio del rol API | 2026-11-17T15:43:39.846397+00:00 | APROBADO | El taskRole tiene una política en línea con s3:GetBucket*, s3:GetObject*, s3:List* solo sobre el bucket de datos y sus objetos; sin políticas gestionadas ni escritura/administración; el arranque de la API solo usa download_file, get_paginator (operaciones de escritura encontradas: 0). | [`EVIDENCIA/SAAD-CP-065.txt`](EVIDENCIA/SAAD-CP-065.txt) | Sin defecto registrado | — |
+| SAAD-CP-066 | Estado de conexión CI | — | NO EJECUTADO | BLOQUEADO, sin aprobar: conexión saad-github en estado PENDING; última ejecución saad-pr Failed y saad-despliegue Failed (2026-11-12). La conexión debe autorizarse manualmente en la consola de AWS (Developer Tools → Settings → Connections); no se disparó ninguna ejecución. | — | Sin defecto registrado | — |
+| SAAD-CP-067 | Revisión de DEF 11 en publicación | 2026-11-17T15:44:00.222917+00:00 | APROBADO | subir_datos.sh ejecuta scripts/verificar_outputs_api.py (línea 23) antes del primer 'aws s3 sync' (línea 26) con 'set -e': un fallo de completitud o de coherencia de cortes (DEF-11/DEF-16) aborta la publicación. Inspección sin ejecutar el script. | [`EVIDENCIA/SAAD-CP-067.txt`](EVIDENCIA/SAAD-CP-067.txt) | Sin defecto registrado | — |
+| SAAD-CP-068 | Paridad local y AWS por snapshot | — | NO EJECUTADO | BLOQUEADO por diferencia de snapshot, sin atribuirla al código: qa_e2e_local_vs_aws.py --sin-capturas (commit c2f1267) dio 13 endpoints comparados, 12 equivalentes y /api/v1/series/RM distinto: el primer pronóstico de demanda es 2026-S46 en local y 2026-S40 en AWS (imagen saad-api:95d00f8; /meta de AWS ya informa S45). AWS sirve un pronóstico de demanda anterior al reconstruido en local para cerrar DEF-16; la comparación se reanuda tras publicar los datos con infra/aws/scripts/subir_datos.sh. Las 23 comprobaciones de infraestructura y seguridad de la misma corrida quedaron APROBADO. | — | Sin defecto registrado | Informe de la corrida en /tmp/saad-e2e-068 (no versionado). |
+
+## Límites
+
+- Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.
+- Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.
+- Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml.

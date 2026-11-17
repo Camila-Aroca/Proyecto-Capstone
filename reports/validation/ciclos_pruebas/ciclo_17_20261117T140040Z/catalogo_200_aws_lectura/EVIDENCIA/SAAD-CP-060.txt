@@ -1,0 +1,17 @@
+SAAD-CP-060 · APROBADO · 2026-11-17T15:43:04.513156+00:00
+Imagen activa saad-api:95d00f8 (SHA corto de commit, no 'latest'); digest sha256:77ba308e42ac…; subida 2026-11-12T12:03:10. Commit 95d00f8 2026-11-12 12:02:49 -0300 data: actualiza pronósticos y EDA tr
+
+## Imagen de la task definition activa
+<cuenta>.dkr.ecr.us-east-1.amazonaws.com/saad-api:95d00f8
+
+## ECR DescribeImages
+{
+ "tags": [
+  "95d00f8"
+ ],
+ "digest": "sha256:77ba308e42ac4c632887216c0e127f9e80ee45284f0724f266eccebf2b19bbee",
+ "subida": "2026-11-12T12:03:10.454000-03:00"
+}
+
+## Commit del tag
+95d00f8 2026-11-12 12:02:49 -0300 data: actualiza pronósticos y EDA tras corrida --sin-evaluacion (C-06)

@@ -1,0 +1,62 @@
+SAAD-CP-061 · APROBADO · 2026-11-17T15:43:07.439346+00:00
+Block Public Access con las 4 opciones activas; la política solo permite s3:GetObject al servicio CloudFront acotado por AWS:SourceArn de la distribución, más un Deny de transporte sin TLS; sin Allow a '*'.
+
+## Block Public Access (bucket del sitio)
+{
+ "BlockPublicAcls": true,
+ "IgnorePublicAcls": true,
+ "BlockPublicPolicy": true,
+ "RestrictPublicBuckets": true
+}
+
+## Política del bucket
+{
+ "Version": "2012-10-17",
+ "Statement": [
+  {
+   "Effect": "Deny",
+   "Principal": {
+    "AWS": "*"
+   },
+   "Action": "s3:*",
+   "Resource": [
+    "arn:aws:s3:::saad-sitio<sufijo>",
+    "arn:aws:s3:::saad-sitio<sufijo>/*"
+   ],
+   "Condition": {
+    "Bool": {
+     "aws:SecureTransport": "false"
+    }
+   }
+  },
+  {
+   "Effect": "Allow",
+   "Principal": {
+    "AWS": "arn:aws:iam::<cuenta>:role/Saad-CustomS3AutoDeleteObjectsCustomResourceProvide-pDn6dfXfv6TY"
+   },
+   "Action": [
+    "s3:PutBucketPolicy",
+    "s3:GetBucket*",
+    "s3:List*",
+    "s3:DeleteObject*"
+   ],
+   "Resource": [
+    "arn:aws:s3:::saad-sitio<sufijo>",
+    "arn:aws:s3:::saad-sitio<sufijo>/*"
+   ]
+  },
+  {
+   "Effect": "Allow",
+   "Principal": {
+    "Service": "cloudfront.amazonaws.com"
+   },
+   "Action": "s3:GetObject",
+   "Resource": "arn:aws:s3:::saad-sitio<sufijo>/*",
+   "Condition": {
+    "StringEquals": {
+     "AWS:SourceArn": "arn:aws:cloudfront::<cuenta>:distribution/<id>"
+    }
+   }
+  }
+ ]
+}

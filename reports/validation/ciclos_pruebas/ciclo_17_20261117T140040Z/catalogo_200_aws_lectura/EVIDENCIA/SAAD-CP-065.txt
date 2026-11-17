@@ -1,0 +1,25 @@
+SAAD-CP-065 · APROBADO · 2026-11-17T15:43:39.846397+00:00
+El taskRole tiene una política en línea con s3:GetBucket*, s3:GetObject*, s3:List* solo sobre el bucket de datos y sus objetos; sin políticas gestionadas ni escritura/administración; el arranque de la API solo usa download_file, get_paginator (operaciones de escritura encontradas: 0).
+
+## Políticas del taskRole
+{
+ "inline": [
+  "TareaApiTaskRoleDefaultPolicy495C40A0"
+ ],
+ "gestionadas": [],
+ "acciones": [
+  "s3:GetBucket*",
+  "s3:GetObject*",
+  "s3:List*"
+ ],
+ "recursos": [
+  "arn:aws:s3:::saad-datos<sufijo>",
+  "arn:aws:s3:::saad-datos<sufijo>/*"
+ ]
+}
+
+## Operaciones S3 del arranque (listar y descargar, de src/cloud/pipeline_task.py)
+[
+ "download_file",
+ "get_paginator"
+]

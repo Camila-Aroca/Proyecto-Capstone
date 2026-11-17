@@ -1,0 +1,16 @@
+SAAD-CP-064 · APROBADO · 2026-11-17T15:43:36.848057+00:00
+7 alarmas saad-* declaradas en CDK existen con la misma métrica, umbral, período y evaluaciones; estados: OK. Diferencias: 0. El estado OK/INSUFFICIENT_DATA no se cuenta como prueba de notificación.
+
+## Alarmas vivas vs. CDK
+[
+ "saad-alb-errores-5xx: OK · HTTPCode_ELB_5XX_Count · umbral 5 · período 300 s · dim ['LoadBalancer']",
+ "saad-api-cpu-alta: OK · CPUUtilization · umbral 90 · período 300 s · dim ['ClusterName', 'ServiceName']",
+ "saad-api-errores-5xx: OK · HTTPCode_Target_5XX_Count · umbral 10 · período 300 s · dim ['LoadBalancer', 'TargetGroup']",
+ "saad-api-errores-en-logs: OK · ErroresApi · umbral 1 · período 300 s · dim []",
+ "saad-api-memoria-alta: OK · MemoryUtilization · umbral 90 · período 300 s · dim ['ClusterName', 'ServiceName']",
+ "saad-api-sin-tareas-sanas: OK · HealthyHostCount · umbral 1 · período 60 s · dim ['LoadBalancer', 'TargetGroup']",
+ "saad-cloudfront-errores-5xx: OK · 5xxErrorRate · umbral 5 · período 300 s · dim ['DistributionId']"
+]
+
+## Diferencias
+ninguna

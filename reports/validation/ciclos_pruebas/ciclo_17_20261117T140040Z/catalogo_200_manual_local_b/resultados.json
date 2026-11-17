@@ -1,0 +1,346 @@
+{
+ "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local_b",
+ "ciclo": 17,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Catalina Rodríguez",
+ "alcance": "11 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-17T15:32:41.425Z",
+ "fin_utc": "2026-11-17T15:34:48.731Z",
+ "commit": "c2f1267614fb33f7eb10438450eb16c420743483",
+ "arbol_versionado_limpio": false,
+ "archivos_versionados_modificados": 2,
+ "archivos_sin_rastrear": [
+  "docs/05-entregas/informe_avance_apt_catalina.md",
+  "docs/05-entregas/reflexion_monitoreo_apt.md",
+  "docs/07-diagramas/.$despliegue_aws_as_built.drawio.bkp",
+  "package-lock.json",
+  "reports/validation/ciclos_pruebas/ciclo_02_20261112T142133Z/",
+  "reports/validation/ciclos_pruebas/ciclo_03_20261112T152058Z/"
+ ],
+ "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+ "modo": "manual",
+ "nota": "Ciclo final, segunda tanda de interfaz en LOCAL (Chrome headless CDP): navegación, orden de tabla, ayudas, comunas sin pronóstico, carrera de respuestas e intercepciones de /establecimientos-meta y contraste de egresos.",
+ "version_desplegada": null,
+ "python": "3.12.3",
+ "so": "Linux 7.0.0-43-generic",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 11,
+  "fallidos": 0,
+  "no_ejecutados": 0
+ },
+ "advertencias": [
+  "Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-003",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local_b",
+   "titulo": "Enlace a hospital por código",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "SAAD-CP-003.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Hospital 114101 (Complejo Hospitalario Dr. Sótero del Río (Santiago, Puente Alto)) conserva su detalle tras recargar; hash=#/establecimientos?comuna=13201&id=114101",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:32:41.425Z",
+    "fin": "2026-11-17T15:32:41.425Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-003.png",
+   "evidencia_sha256": "08b2c51d6d0a3042a3e24db25fe73a3e02ba19a4ac88a4d5e9279820efcab18a",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-003.png",
+     "sha256": "08b2c51d6d0a3042a3e24db25fe73a3e02ba19a4ac88a4d5e9279820efcab18a"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-007",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local_b",
+   "titulo": "Foco al cambiar de vista",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "SAAD-CP-007.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Tab (3 pasos) + Enter lleva a #/establecimientos; scroll=0; foco tras el cambio: MAIN:contenido",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:32:53.874Z",
+    "fin": "2026-11-17T15:32:53.874Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-007.png",
+   "evidencia_sha256": "cd20cce88d34be68accfae9735f096421269f1292c54cddf4e240ff8d66989b8",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-007.png",
+     "sha256": "cd20cce88d34be68accfae9735f096421269f1292c54cddf4e240ff8d66989b8"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-014",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local_b",
+   "titulo": "Seleccionar polígono comunal",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "SAAD-CP-014.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Polígono 13101 (GeoJSON: SANTIAGO) → #/tablero?territorio=13101; la serie y el título muestran Santiago",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:33:08.344Z",
+    "fin": "2026-11-17T15:33:08.344Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-014.png",
+   "evidencia_sha256": "4be278de58e271992413a4c1a09052ad4780dc34631ddad7db5fbaa1dbfc09ce",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-014.png",
+     "sha256": "4be278de58e271992413a4c1a09052ad4780dc34631ddad7db5fbaa1dbfc09ce"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-015",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local_b",
+   "titulo": "Orden numérico y nulos al final",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "SAAD-CP-015.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Pronóstico monótono en ambos sentidos (50 valores, 2 sin pronóstico al final en ascendente y descendente)",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:33:20.056Z",
+    "fin": "2026-11-17T15:33:20.056Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-015.png",
+   "evidencia_sha256": "4be278de58e271992413a4c1a09052ad4780dc34631ddad7db5fbaa1dbfc09ce",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-015.png",
+     "sha256": "4be278de58e271992413a4c1a09052ad4780dc34631ddad7db5fbaa1dbfc09ce"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-016",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local_b",
+   "titulo": "Ayuda de tasa semanal",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "SAAD-CP-016.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Ayuda: \"Atenciones pronosticadas por 10.000 habitantes a la semana; no es prevalencia\". 50 comunas comparadas con tasa_pronostico_por_10000: diferencia máxima 0.050",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:33:30.407Z",
+    "fin": "2026-11-17T15:33:30.407Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-016.png",
+   "evidencia_sha256": "4be278de58e271992413a4c1a09052ad4780dc34631ddad7db5fbaa1dbfc09ce",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-016.png",
+     "sha256": "4be278de58e271992413a4c1a09052ad4780dc34631ddad7db5fbaa1dbfc09ce"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-017",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local_b",
+   "titulo": "Temporalidad de pobreza y oferta",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "SAAD-CP-017.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Pobreza: \"PobrezaTasa de pobreza por ingresos, Casen 2022\" · Oferta: \"OfertaEstablecimientos de urgencia vigentes en la comuna; clic para verlos uno a uno\"; ninguna usa el año del pronóstico",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:33:40.820Z",
+    "fin": "2026-11-17T15:33:40.820Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-017.png",
+   "evidencia_sha256": "4be278de58e271992413a4c1a09052ad4780dc34631ddad7db5fbaa1dbfc09ce",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-017.png",
+     "sha256": "4be278de58e271992413a4c1a09052ad4780dc34631ddad7db5fbaa1dbfc09ce"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-018",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local_b",
+   "titulo": "Comuna sin serie modelable",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "SAAD-CP-018.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "La interfaz declara ausencia y motivo sin dibujar pronóstico cero. María Pinto (13504): aviso=true motivo=true /series=404 | Vitacura (13132): aviso=true motivo=true /series=404",
+   "observaciones": "Observación: junto al motivo se muestra el texto genérico 'No se pudo consultar la API… Verifique que el backend esté corriendo' (mensaje confuso para una ausencia esperada).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:34:02.614Z",
+    "fin": "2026-11-17T15:34:02.614Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-018.png",
+   "evidencia_sha256": "7b7cbf4691f7a5acb11e3ebbc76101292ae0d76f12cec075e2a7efb486c540a1",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-018.png",
+     "sha256": "7b7cbf4691f7a5acb11e3ebbc76101292ae0d76f12cec075e2a7efb486c540a1"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-021",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local_b",
+   "titulo": "Respuesta tardía de comuna previa",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "SAAD-CP-021.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Petición /series/13101 retenida 5 s y cambio inmediato a 13102 por el selector; desenlace de la petición tardía: net::ERR_ABORTED; la pantalla queda en Cerrillos (13102) sin datos de Santiago",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:34:21.912Z",
+    "fin": "2026-11-17T15:34:21.912Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-021.png",
+   "evidencia_sha256": "ddfc5c738f8c24222b52dfc62f4a646ac354d46f5b10af707a5ca77b857beb42",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-021.png",
+     "sha256": "ddfc5c738f8c24222b52dfc62f4a646ac354d46f5b10af707a5ca77b857beb42"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-026",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local_b",
+   "titulo": "Aviso de pronóstico desactualizado",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "SAAD-CP-026.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Con /establecimientos-meta vigente=false la vista muestra \"Pronóstico desactualizado\" y el motivo del fixture",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:34:32.182Z",
+    "fin": "2026-11-17T15:34:32.182Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-026.png",
+   "evidencia_sha256": "9b07c6a6a1d92b17520f64b8813683efdad47c69f092d24b6a09e70351992b19",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-026.png",
+     "sha256": "9b07c6a6a1d92b17520f64b8813683efdad47c69f092d24b6a09e70351992b19"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-040",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local_b",
+   "titulo": "Ausencia de contraste opcional",
+   "modulo": "Egresos residentes",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "SAAD-CP-040.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Con contraste_camas=null en 1 respuesta(s) 200 de hospitalizaciones-residentes (200,200,200,200,200,200,200,200,200) el perfil de egresos se muestra y el módulo no se bloquea",
+   "observaciones": "Fixture inyectado por CDP (copia de la respuesta real sin el contraste); no se modificó el snapshot.",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:34:43.370Z",
+    "fin": "2026-11-17T15:34:43.370Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-040.png",
+   "evidencia_sha256": "0bc2efea7ee7da645498755b167bdb594b5e596d43e6e8322489ff945abed769",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-040.png",
+     "sha256": "0bc2efea7ee7da645498755b167bdb594b5e596d43e6e8322489ff945abed769"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-056",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_local_b",
+   "titulo": "Contrato y cliente frontend",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "c2f1267614fb33f7eb10438450eb16c420743483",
+   "snapshot": "SAAD-CP-056.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Reporte comparacion_api_frontend.md: 0 errores · 12 advertencias · 9 observaciones; advertencias y errores 404/409/503 no declarados quedan listados en el reporte",
+   "observaciones": "—",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T15:34:48.731Z",
+    "fin": "2026-11-17T15:34:48.731Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-056.png",
+   "evidencia_sha256": "0bc2efea7ee7da645498755b167bdb594b5e596d43e6e8322489ff945abed769",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-056.png",
+     "sha256": "0bc2efea7ee7da645498755b167bdb594b5e596d43e6e8322489ff945abed769"
+    }
+   ],
+   "hash_input": null
+  }
+ ]
+}
