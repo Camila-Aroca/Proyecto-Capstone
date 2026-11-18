@@ -8,7 +8,7 @@ Los entregables con archivo o ubicación identificados en GitHub incluyen un enl
 
 - [ ] [Definición del proyecto](../01-definicion-proyecto/Definicion_Proyecto_APT_Fase_1.docx).
 - [ ] [Repositorio del proyecto](https://github.com/Camila-Aroca/Proyecto-Capstone).
-- [ ] OneDrive del proyecto.
+- [ ] [OneDrive del proyecto] (https://onedrive.live.com/shared?id=%2Fpersonal%2F1077fd38eb2f231f%2FDocuments%2FCapstone&listurl=%2Fpersonal%2F1077fd38eb2f231f%2FDocuments).
 - [ ] [Objetivo general](../01-definicion-proyecto/Definicion_Proyecto_APT_Fase_1.docx) — sección 4 de la definición del proyecto.
 - [ ] [Objetivos específicos](../01-definicion-proyecto/Definicion_Proyecto_APT_Fase_1.docx) — sección 4 de la definición del proyecto.
 - [ ] [Alcance](../01-definicion-proyecto/Definicion_Proyecto_APT_Fase_1.docx) — descripción y factibilidad del proyecto.
