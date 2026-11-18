@@ -1,14 +1,14 @@
 # Registro principal de pruebas — SAAD-CP v2.1
 
-> Generado el 2026-11-18 18:25 UTC. Los 200 casos del catálogo se consolidan aquí; para cada caso se conserva el último resultado ejecutado por entorno.
+> Generado el 2026-11-18 18:33 UTC. Los 200 casos del catálogo se consolidan aquí; para cada caso se conserva el último resultado ejecutado por entorno.
 
 ## Resumen ejecutivo
 
 | Estado | Casos |
 |---|---|
-| APROBADO | 194 |
+| APROBADO | 195 |
 | FALLIDO | 0 |
-| NO EJECUTADO | 6 |
+| NO EJECUTADO | 5 |
 | **Total** | **200** |
 
 ## Matriz de pruebas — catálogo de 200 casos
@@ -93,7 +93,7 @@
 | SAAD-CP-076 | Recuperación tras desconexión del cliente | Calidad transversal | APROBADO | — | ✓ | ✓ | [17](ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_manual_aws/EVIDENCIA/SAAD-CP-076.png) |
 | SAAD-CP-077 | API pública sin operaciones administrativas | Calidad transversal | APROBADO | — | ✓ | ✓ | [17](ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_manual_aws/EVIDENCIA/SAAD-CP-077.png) |
 | SAAD-CP-078 | Interpretación de propuesta de camas | Calidad transversal | NO EJECUTADO | — | — | — |  |  |  |
-| SAAD-CP-079 | Sesión guiada por riesgo territorial | Calidad transversal | NO EJECUTADO | — | — | — |  |  |  |
+| SAAD-CP-079 | Sesión guiada por riesgo territorial | Calidad transversal | APROBADO | — | ✓ | ✓ | [17](ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_exploracion_aws/EVIDENCIA/SAAD-CP-079-bitacora.md) |
 | SAAD-CP-080 | Recorrido de planificación completo | Calidad transversal | NO EJECUTADO | — | — | — |  |  |  |
 | SAAD-CP-081 | Grano semanal y jerarquía causal | Datos canónicos | APROBADO | ✓ | — | — | [17](ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_fixture/EVIDENCIA/SAAD-CP-081_20261117_fixture.xml) |
 | SAAD-CP-082 | Conciliación mensual contra semanal | Datos canónicos | APROBADO | ✓ | — | — | [17](ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_fixture/EVIDENCIA/SAAD-CP-082_20261117_fixture.xml) |
@@ -224,7 +224,6 @@
 | SAAD-CP-037 | Requiere usuario piloto institucional (#90 sin cerrar) |
 | SAAD-CP-046 | Requiere usuario piloto institucional (#90 sin cerrar) |
 | SAAD-CP-078 | Requiere usuario piloto institucional (#90 sin cerrar) |
-| SAAD-CP-079 | Sesión exploratoria de 30 min; requiere coordinación con cliente |
 | SAAD-CP-080 | Requiere usuario piloto institucional (#90 sin cerrar) |
 
 ## Pruebas complementarias — catálogo CAT70 (casos sin equivalente en 200)

@@ -77,7 +77,7 @@ SAAD-CP-075,Medición moderada de latencia,Calidad transversal,APROBADO,NO EJECU
 SAAD-CP-076,Recuperación tras desconexión del cliente,Calidad transversal,APROBADO,NO EJECUTADO,APROBADO,APROBADO,16,17,17
 SAAD-CP-077,API pública sin operaciones administrativas,Calidad transversal,APROBADO,NO EJECUTADO,APROBADO,APROBADO,16,17,17
 SAAD-CP-078,Interpretación de propuesta de camas,Calidad transversal,NO EJECUTADO,NO EJECUTADO,NO EJECUTADO,NO EJECUTADO,16,17,
-SAAD-CP-079,Sesión guiada por riesgo territorial,Calidad transversal,NO EJECUTADO,NO EJECUTADO,NO EJECUTADO,NO EJECUTADO,16,17,
+SAAD-CP-079,Sesión guiada por riesgo territorial,Calidad transversal,APROBADO,NO EJECUTADO,APROBADO,APROBADO,16,17,17
 SAAD-CP-080,Recorrido de planificación completo,Calidad transversal,NO EJECUTADO,NO EJECUTADO,NO EJECUTADO,NO EJECUTADO,16,17,
 SAAD-CP-081,Grano semanal y jerarquía causal,Datos canónicos,APROBADO,APROBADO,NO EJECUTADO,NO EJECUTADO,17,17,
 SAAD-CP-082,Conciliación mensual contra semanal,Datos canónicos,APROBADO,APROBADO,NO EJECUTADO,NO EJECUTADO,17,17,

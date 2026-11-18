@@ -1,0 +1,89 @@
+{
+ "run_id": "ciclo_17_20261117T140040Z/catalogo_200_exploracion_local",
+ "ciclo": 17,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Catalina Rodríguez",
+ "alcance": "1 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-18T18:30:37.280Z",
+ "fin_utc": "2026-11-18T18:32:10.031Z",
+ "commit": "68f5a26d1664fd0b867deda5a516e2acea1b1f1a",
+ "arbol_versionado_limpio": false,
+ "archivos_versionados_modificados": 1,
+ "archivos_sin_rastrear": [
+  "docs/05-entregas/informe_avance_apt_catalina.md",
+  "docs/05-entregas/reflexion_monitoreo_apt.md",
+  "docs/07-diagramas/.$despliegue_aws_as_built.drawio.bkp",
+  "package-lock.json",
+  "reports/validation/ciclos_pruebas/ciclo_02_20261112T142133Z/",
+  "reports/validation/ciclos_pruebas/ciclo_03_20261112T152058Z/",
+  "scripts/qa_ui_exploracion.mjs"
+ ],
+ "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+ "modo": "manual",
+ "nota": "Exploración guiada por riesgo territorial con barrido automatizado (Chrome CDP): comunas sin datos, con cero observado y con baja confianza. No equivale a la sesión humana de 30 minutos del caso.",
+ "version_desplegada": null,
+ "python": "3.12.3",
+ "so": "Linux 7.0.0-43-generic",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 1,
+  "fallidos": 0,
+  "no_ejecutados": 0
+ },
+ "advertencias": [
+  "Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-079",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_exploracion_local",
+   "titulo": "Sesión guiada por riesgo territorial",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "LOCAL (API local con Uvicorn en 127.0.0.1)",
+   "sha": "68f5a26d1664fd0b867deda5a516e2acea1b1f1a",
+   "snapshot": "No registrado",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "La interfaz distingue los tres estados: sin datos (2 comunas con aviso y motivo, sin pronóstico cero), cero observado (3 comunas con las semanas en 0 visibles como «0 · Observado») y baja confianza (3 comunas con intervalo, confiabilidad observada y advertencia). 2 hallazgo(s) de usabilidad en la bitácora. Duración real 1.5 min con barrido automatizado, no sesión humana de 30 min.",
+   "observaciones": "H-1: Junto al motivo se muestra «No se pudo consultar la API… Verifique que el backend esté corriendo (uvicorn src.api.main:app)…», un mensaje técnico de falla del sistema para una ausencia de dato esperada. H-1: Junto al motivo se muestra «No se pudo consultar la API… Verifique que el backend esté corriendo (uvicorn src.api.main:app)…», un mensaje técnico de falla del sistema para una ausencia de dato esperada.",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T18:30:37.280Z",
+    "fin": "2026-11-18T18:32:10.031Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-079-bitacora.md",
+   "evidencia_sha256": "7d6a7968696516035b6c1d0b229e5d9424bddbd986178c7a5e9410236acbedae",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-079-bitacora.md",
+     "sha256": "7d6a7968696516035b6c1d0b229e5d9424bddbd986178c7a5e9410236acbedae"
+    },
+    {
+     "archivo": "EVIDENCIA/A-13504.png",
+     "sha256": "c266b1be2feb6ced6c7f7cbad7bee3d308bab940afb6ee929e5e3adfe5fde37d"
+    },
+    {
+     "archivo": "EVIDENCIA/B-13303.png",
+     "sha256": "c2e9fffafc0bb62d3e9baa94ad97c860c3eac1e9de7b554e98e6c0a34380eebe"
+    },
+    {
+     "archivo": "EVIDENCIA/C-13502.png",
+     "sha256": "77e61494e076ba125e1c72e47e5334c0e386817bcff2cfbbdb344c8e6155d721"
+    }
+   ],
+   "hash_input": null
+  }
+ ]
+}

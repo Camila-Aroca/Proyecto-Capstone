@@ -107,7 +107,6 @@ NO_EJECUTABLES: Final[dict[str, str]] = {
     "SAAD-CP-037": "Requiere usuario piloto institucional (#90 sin cerrar)",
     "SAAD-CP-046": "Requiere usuario piloto institucional (#90 sin cerrar)",
     "SAAD-CP-078": "Requiere usuario piloto institucional (#90 sin cerrar)",
-    "SAAD-CP-079": "Sesión exploratoria de 30 min; requiere coordinación con cliente",
     "SAAD-CP-080": "Requiere usuario piloto institucional (#90 sin cerrar)",
 }
 
