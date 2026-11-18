@@ -74,7 +74,7 @@ VALIDACIONES_COMPLEMENTARIAS: Final[tuple[tuple[str, str, str, str, str, str], .
      "21 aprobados · 4 fallidos · 6 no ejecutados. Los 4 fallos fueron salidas faltantes; se repite con 24 aprobados y 0 fallidos "
      "el 2026-11-18 (SAAD-CP-068).",
      "e2e_local_aws/20261112T131720Z/informe.md"),
-    ("PC-03", "Contrato API y cliente frontend", "2026-11-17", "LOCAL",
+    ("PC-03", "Contrato API y cliente frontend", "2026-11-18", "LOCAL",
      "0 errores · 12 advertencias · 9 observaciones (SAAD-CP-056).",
      "contrato_api/comparacion_api_frontend.md"),
     ("PC-04", "Revalidación C-08: pipeline y procedencia", "2026-11-10", "LOCAL",

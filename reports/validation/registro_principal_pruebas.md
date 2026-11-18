@@ -259,7 +259,7 @@ Validaciones que no pertenecen a ninguno de los dos catálogos; se listan con el
 |---|---|---|---|---|---|
 | PC-01 | Línea base local con Docker Compose (C-07) | 2026-11-12 | LOCAL | 10 aprobados · 4 fallidos de 14 casos. Corrida histórica; la línea base se repite en cada ciclo de qa_ciclo_pruebas.py. | [informe](baseline_local/20261112T135538Z/informe.md) |
 | PC-02 | E2E local contra AWS (C-44) | 2026-11-12 | LOCAL + AWS | 21 aprobados · 4 fallidos · 6 no ejecutados. Los 4 fallos fueron salidas faltantes; se repite con 24 aprobados y 0 fallidos el 2026-11-18 (SAAD-CP-068). | [informe](e2e_local_aws/20261112T131720Z/informe.md) |
-| PC-03 | Contrato API y cliente frontend | 2026-11-17 | LOCAL | 0 errores · 12 advertencias · 9 observaciones (SAAD-CP-056). | [informe](contrato_api/comparacion_api_frontend.md) |
+| PC-03 | Contrato API y cliente frontend | 2026-11-18 | LOCAL | 0 errores · 12 advertencias · 9 observaciones (SAAD-CP-056). | [informe](contrato_api/comparacion_api_frontend.md) |
 | PC-04 | Revalidación C-08: pipeline y procedencia | 2026-11-10 | LOCAL | Suite ordinaria 838 aprobadas e integración 29 aprobadas; evidencia de snapshots y procedencia, no acredita despliegue. | [informe](c08_revalidacion_20261110.md) |
 | PC-05 | Revalidación C-08 con pipeline --sin-evaluacion | 2026-11-15 | LOCAL | Pipeline terminó con código 0; suite ordinaria 920 aprobadas e integración 29 aprobadas. No revalida la selección de modelos. | [informe](c08_revalidacion_20261115T161029Z/informe.md) |
 | PC-06 | Fixtures mínimos de tests de datos (#40) | 2026-10-14 | FIXTURE | 451 aprobadas y 17 deseleccionadas sin datasets masivos; salida aislada con código 0. | [informe](issue40_fixtures.md) |
