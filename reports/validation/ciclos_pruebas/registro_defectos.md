@@ -135,8 +135,10 @@ el caso pasa a fallido y se abre un defecto.
 **Estado al 2026-11-17: desbloqueada.** La conexión de CodeConnections `saad-github` pasó de `PENDING` a
 `AVAILABLE` y el pipeline `saad-pr` (fuente GitHub + `Tests-y-cfn-lint`) terminó en **Succeeded**
 (CP-066, [`catalogo_200_aws_reintento`](ciclo_17_20261117T140040Z/catalogo_200_aws_reintento/resultados.md)).
-El pipeline `saad-despliegue` conserva su última ejecución **Failed** del 2026-11-12, creada cuando la conexión
-aún estaba pendiente; no se relanzó durante la prueba porque despliega a producción.
+El pipeline `saad-despliegue`, que tenía una ejecución **Failed** del 2026-11-12 (conexión aún pendiente), se relanzó el
+2026-11-18 y terminó en **Succeeded** (Fuente, Verificar y Desplegar): la pila `Saad` quedó en `UPDATE_COMPLETE`, la API sana
+(1/1 tareas), las 7 alarmas en OK, `/api/v1/series/RM` pronosticando desde 2026-S46 y 6 casos de interfaz de humo aprobados
+sobre el sitio desplegado.
 
 **Historial:** hasta el 2026-11-16 ambos pipelines estaban bloqueados. Para activar la conexión, la dueña del
 repositorio instaló la app *AWS Connector for GitHub* y aprobó la conexión en la consola de AWS
