@@ -130,19 +130,20 @@ el caso pasa a fallido y se abre un defecto.
 
 ---
 
-## Bloqueo de CI en CodePipeline
+## CI en CodePipeline
 
-El pipeline `saad-pr` y `saad-despliegue` están **BLOCKED** porque la conexión de CodeConnections
-`saad-github` está en estado `PENDING`.
+**Estado al 2026-11-17: desbloqueada.** La conexión de CodeConnections `saad-github` pasó de `PENDING` a
+`AVAILABLE` y el pipeline `saad-pr` (fuente GitHub + `Tests-y-cfn-lint`) terminó en **Succeeded**
+(CP-066, [`catalogo_200_aws_reintento`](ciclo_17_20261117T140040Z/catalogo_200_aws_reintento/resultados.md)).
+El pipeline `saad-despliegue` conserva su última ejecución **Failed** del 2026-11-12, creada cuando la conexión
+aún estaba pendiente; no se relanzó durante la prueba porque despliega a producción.
 
-**Motivo:** para activarla, la dueña del repositorio (`Camila-Aroca`) debe instalar la app
-*AWS Connector for GitHub* y aprobar la conexión desde la consola de AWS
+**Historial:** hasta el 2026-11-16 ambos pipelines estaban bloqueados. Para activar la conexión, la dueña del
+repositorio instaló la app *AWS Connector for GitHub* y aprobó la conexión en la consola de AWS
 (*Developer Tools → Settings → Connections → saad-github → Update pending connection*).
-Requiere permisos de administración sobre el repositorio.
 
-**Contingencia activa:** la misma verificación (pytest + CDK synth + cfn-lint) se ejecuta en el
-equipo como parte del ciclo de pruebas local. Los resultados quedan en `ci_local.log` de cada
-carpeta de ciclo.
+**Contingencia anterior:** la misma verificación (pytest + CDK synth + cfn-lint) se ejecutó en el equipo; los
+resultados quedan en `ci_local.log` de cada carpeta de ciclo.
 
 ---
 

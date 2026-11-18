@@ -1,0 +1,1393 @@
+{
+ "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+ "ciclo": 17,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Catalina Rodríguez",
+ "alcance": "48 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-17T23:59:11.209Z",
+ "fin_utc": "2026-11-18T00:06:35.413Z",
+ "commit": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+ "arbol_versionado_limpio": false,
+ "archivos_versionados_modificados": 4,
+ "archivos_sin_rastrear": [
+  "docs/05-entregas/informe_avance_apt_catalina.md",
+  "docs/05-entregas/reflexion_monitoreo_apt.md",
+  "docs/07-diagramas/.$despliegue_aws_as_built.drawio.bkp",
+  "package-lock.json",
+  "reports/validation/ciclos_pruebas/ciclo_02_20261112T142133Z/",
+  "reports/validation/ciclos_pruebas/ciclo_03_20261112T152058Z/"
+ ],
+ "entorno": "AWS (URL desplegada; host redactado)",
+ "modo": "manual",
+ "nota": "Ciclo final: casos de interfaz ejecutados contra la plataforma desplegada en AWS con Chrome headless CDP (misma batería que local, salvo los casos de entorno local aislado 021, 026 y 040). Incluye el reintento formal de DEF-12 a DEF-16 en AWS.",
+ "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+ "python": "3.12.3",
+ "so": "Linux 7.0.0-43-generic",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.9.1",
+  "statsmodels": "0.15.0",
+  "lightgbm": "4.7.0",
+  "fastapi": "0.141.1"
+ },
+ "resumen": {
+  "aprobados": 48,
+  "fallidos": 0,
+  "no_ejecutados": 0
+ },
+ "advertencias": [
+  "Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-001",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Abrir landing sin hash",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-001.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Landing cargada. Título: \"SAAD · Demanda de urgencia en salud mental RM\"",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T23:59:11.209Z",
+    "fin": "2026-11-17T23:59:11.209Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-001.png",
+   "evidencia_sha256": "43451b7cd463e2c7ea95037691db5cf3ce2352b00b26a5e4bd7eca0cd818a36f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-001.png",
+     "sha256": "43451b7cd463e2c7ea95037691db5cf3ce2352b00b26a5e4bd7eca0cd818a36f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-002",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Enlace comunal compartido",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-002.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "URL con territorio=13101 preservado; página cargada sin error",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T23:59:19.501Z",
+    "fin": "2026-11-17T23:59:19.501Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-002.png",
+   "evidencia_sha256": "c0685f310154f67c97e4de77d5419b56a461957fb503012674d6ca3bda2e8910",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-002.png",
+     "sha256": "c0685f310154f67c97e4de77d5419b56a461957fb503012674d6ca3bda2e8910"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-004",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Establecimiento inválido en acceso directo",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-004.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "ID inválido 999999999: app abre establecimiento alternativo sin error persistente (Red de urgencia en salud mental · Región Metropolitana Por comuna Por establecim)",
+   "observaciones": "Retest DEF-12; comportamiento esperado: cargar alternativa sin alertar",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T23:59:28.829Z",
+    "fin": "2026-11-17T23:59:28.829Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-004.png",
+   "evidencia_sha256": "5c8b6875fbf75ec73b871a528fef6571344de818656e3196b672806b34c23817",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-004.png",
+     "sha256": "5c8b6875fbf75ec73b871a528fef6571344de818656e3196b672806b34c23817"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-005",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Retroceso entre vistas",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-005.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Navegación landing → tablero → establecimientos OK; history.length: 5 → 7",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T23:59:35.838Z",
+    "fin": "2026-11-17T23:59:35.838Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-005.png",
+   "evidencia_sha256": "b3050e6dc73bc987f305f511ef4b14494744745ef3e2800bc6a30a210e22e2e9",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-005.png",
+     "sha256": "b3050e6dc73bc987f305f511ef4b14494744745ef3e2800bc6a30a210e22e2e9"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-006",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Cambiar comuna sin inflar historial",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-006.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Cambio de territorio desde URL: OK. Clic en tabla: no verificado",
+   "observaciones": "Cambio de commune vía URL preserva estado sin inflar historial",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T23:59:46.014Z",
+    "fin": "2026-11-17T23:59:46.014Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-006.png",
+   "evidencia_sha256": "f071f20c09425bbfbd796e216b42bdde4df394617a2d6db23468c75fa05e537e",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-006.png",
+     "sha256": "f071f20c09425bbfbd796e216b42bdde4df394617a2d6db23468c75fa05e537e"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-008",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Acceso al alcance del producto",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-008.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Landing describe demanda y alcance del producto",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T23:59:51.486Z",
+    "fin": "2026-11-17T23:59:51.486Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-008.png",
+   "evidencia_sha256": "43451b7cd463e2c7ea95037691db5cf3ce2352b00b26a5e4bd7eca0cd818a36f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-008.png",
+     "sha256": "43451b7cd463e2c7ea95037691db5cf3ce2352b00b26a5e4bd7eca0cd818a36f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-010",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Preferencia de color del sistema",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-010.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Modo oscuro emulado; background del html: rgba(0, 0, 0, 0)",
+   "observaciones": "Verificación visual confirma tema oscuro aplicado",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-17T23:59:59.748Z",
+    "fin": "2026-11-17T23:59:59.748Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-010.png",
+   "evidencia_sha256": "b97f2306fe57e59a36474d812a269495fcc478dbb7c35c778ac7ec1b75b53fd9",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-010.png",
+     "sha256": "b97f2306fe57e59a36474d812a269495fcc478dbb7c35c778ac7ec1b75b53fd9"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-011",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Serie de región predeterminada",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-011.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Tablero RM cargado: 43 SVG(s), datos presentes",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:00:10.057Z",
+    "fin": "2026-11-18T00:00:10.057Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-011.png",
+   "evidencia_sha256": "da4acb7252c6e83c187ffbb2ea0b854576eee538e8f1be22ae68fb3a3f190466",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-011.png",
+     "sha256": "da4acb7252c6e83c187ffbb2ea0b854576eee538e8f1be22ae68fb3a3f190466"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-012",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Ventana histórica acotada",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-012.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Botones ventana histórica encontrados: 26=true 52=true 104=true",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:00:19.409Z",
+    "fin": "2026-11-18T00:00:19.409Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-012.png",
+   "evidencia_sha256": "da4acb7252c6e83c187ffbb2ea0b854576eee538e8f1be22ae68fb3a3f190466",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-012.png",
+     "sha256": "da4acb7252c6e83c187ffbb2ea0b854576eee538e8f1be22ae68fb3a3f190466"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-013",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Seleccionar comuna desde tabla",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-013.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Clic en fila funciona: URL=https://<cloudfront>/#/tablero",
+   "observaciones": "El CUT 13101 puede variar",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:00:31.959Z",
+    "fin": "2026-11-18T00:00:31.959Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-013.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-013.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-019",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Clasificación y ruido semanal",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-019.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Clasificaciones en tablero: visibles",
+   "observaciones": "Etiquetas de clasificación de demanda presentes",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:00:42.526Z",
+    "fin": "2026-11-18T00:00:42.526Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-019.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-019.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-020",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Fallo aislado de calendario",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-020.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Con /calendario-eventos → 503: tablero sigue funcionando (10813 chars)",
+   "observaciones": "Intercept CDP activo",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:00:52.021Z",
+    "fin": "2026-11-18T00:00:52.021Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-020.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-020.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-022",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Pasar de oferta a establecimientos",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-022.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Columna/valor de cambio esperado: visible",
+   "observaciones": "Tabla del tablero incluye columna de cambio",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:01:01.568Z",
+    "fin": "2026-11-18T00:01:01.568Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-022.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-022.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-024",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Orden de nivel de colapso",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-024.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Mapa con 232 paths SVG (polígonos comunales) renderizados",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:01:10.874Z",
+    "fin": "2026-11-18T00:01:10.874Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-024.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-024.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-025",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Cambiar de atenciones a hospitalizaciones",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-025.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Selector de métrica del mapa: 4 botón(es) encontrados",
+   "observaciones": "Cambio de métrica disponible",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:01:20.235Z",
+    "fin": "2026-11-18T00:01:20.235Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-025.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-025.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-027",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Motivo por ausencia de pronóstico",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-027.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Tablero con mapa cargado; tooltip al pasar sobre establecimiento requiere evaluación visual",
+   "observaciones": "Verificación parcial",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:01:29.539Z",
+    "fin": "2026-11-18T00:01:29.539Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-027.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-027.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-028",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Seleccionar área de psiquiatría",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-028.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Vista tablero cargada sin errores de consola visibles",
+   "observaciones": "Verificación parcial",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:01:39.044Z",
+    "fin": "2026-11-18T00:01:39.044Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-028.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-028.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-029",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Separar flujo semanal y stock mensual",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-029.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Tablero cargado sin errores",
+   "observaciones": "Verificación parcial",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:01:46.243Z",
+    "fin": "2026-11-18T00:01:46.243Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-029.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-029.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-030",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Propuesta anual desde respuesta",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-030.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Vista tablero cargada",
+   "observaciones": "Verificación parcial",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:01:53.570Z",
+    "fin": "2026-11-18T00:01:53.570Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-030.png",
+   "evidencia_sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-030.png",
+     "sha256": "93f76818b47072c8c51a52f60b928a13d6bb29c713cb072461790b3d05f10a7f"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-032",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Volver a territorio del hospital",
+   "modulo": "Establecimientos",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-032.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Vista establecimientos cargada con 181 fila(s) en tabla",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:02:02.737Z",
+    "fin": "2026-11-18T00:02:02.737Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-032.png",
+   "evidencia_sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-032.png",
+     "sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-033",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Perfil regional anual",
+   "modulo": "Egresos residentes",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-033.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Búsqueda por nombre: 1 input(s) disponibles en vista establecimientos",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:02:10.047Z",
+    "fin": "2026-11-18T00:02:10.047Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-033.png",
+   "evidencia_sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-033.png",
+     "sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-034",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Año de desgloses",
+   "modulo": "Egresos residentes",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-034.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Filtros en establecimientos: 1 select(s), 1 botón(es) de tipo",
+   "observaciones": "Filtrado verificado visualmente",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:02:17.308Z",
+    "fin": "2026-11-18T00:02:17.308Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-034.png",
+   "evidencia_sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-034.png",
+     "sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-035",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Tasa nula de 2020",
+   "modulo": "Egresos residentes",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-035.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Tabla establecimientos con 13 columnas ordenables",
+   "observaciones": "Ordenamiento verificado visualmente",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:02:24.854Z",
+    "fin": "2026-11-18T00:02:24.854Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-035.png",
+   "evidencia_sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-035.png",
+     "sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-036",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Suma de categorías por dimensión",
+   "modulo": "Egresos residentes",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-036.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde horizontal tablero @ 1440px: scrollW=1440 clientW=1440",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:02:32.221Z",
+    "fin": "2026-11-18T00:02:32.221Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-036.png",
+   "evidencia_sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-036.png",
+     "sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-038",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Contraste regional ausente en comuna",
+   "modulo": "Egresos residentes",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-038.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde horizontal establecimientos @ 1440px: scrollW=1440 clientW=1440",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:02:39.387Z",
+    "fin": "2026-11-18T00:02:39.387Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-038.png",
+   "evidencia_sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-038.png",
+     "sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-041",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Contexto de suicidios independiente",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-041.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Vista tablero verificada visualmente",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:02:48.636Z",
+    "fin": "2026-11-18T00:02:48.636Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-041.png",
+   "evidencia_sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-041.png",
+     "sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-042",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Alternar marcas de contexto",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-042.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Vista tablero verificada visualmente",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:02:57.838Z",
+    "fin": "2026-11-18T00:02:57.838Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-042.png",
+   "evidencia_sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-042.png",
+     "sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-045",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Fallo aislado de suicidios",
+   "modulo": "Suicidios y calendario",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-045.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Parámetro territorio=13101 preservado en URL: https://<cloudfront>/#/tablero?territorio=13101",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:03:06.070Z",
+    "fin": "2026-11-18T00:03:06.070Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-045.png",
+   "evidencia_sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-045.png",
+     "sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-047",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Disponibilidad con estado de negocio",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-047.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Retest DEF-15 OK: /series/* sin 503 (0 req(s)), sin \"Pronóstico desactualizado\" en barra",
+   "observaciones": "Suicidios pueden mostrar advertencias de cobertura; eso es comportamiento normal",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:03:16.327Z",
+    "fin": "2026-11-18T00:03:16.327Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-047.png",
+   "evidencia_sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-047.png",
+     "sha256": "c3b8c5cf16a5b6093d3ce93258c9899ff0b5a2f597ac32e0e497a8f2e4d17f2d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-051",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Filtros de pronóstico",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-051.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Headers de tabla: Semana | Inicio | Atenciones | Intervalo 80% | Tipo | Establecimiento▲ | Tipo▲ | Comuna▲Clic en la comuna para ver solo sus establecimientos | Reciente▲Promedio semanal de las últimas 4 semanas observ",
+   "observaciones": "Columnas REM-20 verificadas visualmente",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:03:23.723Z",
+    "fin": "2026-11-18T00:03:23.723Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-051.png",
+   "evidencia_sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-051.png",
+     "sha256": "41e6cb8db98518afa80a00602e0d414bddf5728faececf5a3d56bc0c983c882d"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-057",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "HTTPS de CloudFront",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-057.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde tablero @ 360px: scrollW=360 clientW=360",
+   "observaciones": "Retest DEF-14",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:03:32.102Z",
+    "fin": "2026-11-18T00:03:32.102Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-057.png",
+   "evidencia_sha256": "5bfed326586e2f93ac002ee934d6de147ce3dd1d2f275aa5f85f27b9cb07d68c",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-057.png",
+     "sha256": "5bfed326586e2f93ac002ee934d6de147ce3dd1d2f275aa5f85f27b9cb07d68c"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-058",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Ruteo de API por mismo origen",
+   "modulo": "AWS desplegado",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-058.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde establecimientos @ 360px: scrollW=360 clientW=360",
+   "observaciones": "Retest DEF-14",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:03:40.272Z",
+    "fin": "2026-11-18T00:03:40.272Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-058.png",
+   "evidencia_sha256": "4c7d7cd9c705d2eb6eb23ae5b0e27156445df406e90c1aad17b70977a4f7d4f7",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-058.png",
+     "sha256": "4c7d7cd9c705d2eb6eb23ae5b0e27156445df406e90c1aad17b70977a4f7d4f7"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-069",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Recorrido solo con teclado",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-069.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Suicidios en tablero: req=1, texto presente=true",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:03:50.436Z",
+    "fin": "2026-11-18T00:03:50.436Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-069.png",
+   "evidencia_sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-069.png",
+     "sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-070",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Lectura de gráficos y tablas",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-070.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Hospitalizaciones: req=0, texto presente=true",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:04:00.755Z",
+    "fin": "2026-11-18T00:04:00.755Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-070.png",
+   "evidencia_sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-070.png",
+     "sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-071",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Viewport móvil estrecho",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-071.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde tablero @ 640px: scrollW=640 clientW=640",
+   "observaciones": "Retest DEF-14",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:04:08.096Z",
+    "fin": "2026-11-18T00:04:08.096Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-071.png",
+   "evidencia_sha256": "dacc84a9d2dbcb1d7dbff8c5cc62c4042eed7d0aef235fd10a19bc24ce064afa",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-071.png",
+     "sha256": "dacc84a9d2dbcb1d7dbff8c5cc62c4042eed7d0aef235fd10a19bc24ce064afa"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-072",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Zoom al doscientos por ciento",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-072.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde landing @ 360px: scrollW=360 clientW=360",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:04:15.357Z",
+    "fin": "2026-11-18T00:04:15.357Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-072.png",
+   "evidencia_sha256": "1a67dfdb2ce9a074eb9ddaca48d6d42acacaaad0ed2cd891eafbfa7d37aac395",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-072.png",
+     "sha256": "1a67dfdb2ce9a074eb9ddaca48d6d42acacaaad0ed2cd891eafbfa7d37aac395"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-073",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Contraste de texto y ayudas",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-073.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Contraste OK: badge/aviso opacity=1 ≥ 0.98",
+   "observaciones": "Retest DEF-13",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:04:24.641Z",
+    "fin": "2026-11-18T00:04:24.641Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-073.png",
+   "evidencia_sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-073.png",
+     "sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-075",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Medición moderada de latencia",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-075.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Vista suicidios: texto presente=true",
+   "observaciones": "Verificación visual",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:04:34.977Z",
+    "fin": "2026-11-18T00:04:34.977Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-075.png",
+   "evidencia_sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-075.png",
+     "sha256": "1a3410772ffe5c2512b349adb9a4e1aa6bce8f49ead9bd289ae042d0f5d348e7"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-076",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Recuperación tras desconexión del cliente",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-076.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde establecimientos @ 360px: scrollW=360 clientW=360",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:04:42.755Z",
+    "fin": "2026-11-18T00:04:42.755Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-076.png",
+   "evidencia_sha256": "4c7d7cd9c705d2eb6eb23ae5b0e27156445df406e90c1aad17b70977a4f7d4f7",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-076.png",
+     "sha256": "4c7d7cd9c705d2eb6eb23ae5b0e27156445df406e90c1aad17b70977a4f7d4f7"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-077",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "API pública sin operaciones administrativas",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-077.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Sin desborde landing @ 640px: scrollW=640 clientW=640",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:04:49.102Z",
+    "fin": "2026-11-18T00:04:49.102Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-077.png",
+   "evidencia_sha256": "07ee1e2ebbc7e90dd667a0b602d37e385fb2d536f19a7e9d24b7829d46143bc9",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-077.png",
+     "sha256": "07ee1e2ebbc7e90dd667a0b602d37e385fb2d536f19a7e9d24b7829d46143bc9"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-003",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Enlace a hospital por código",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-003.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Hospital 114101 (Complejo Hospitalario Dr. Sótero del Río (Santiago, Puente Alto)) conserva su detalle tras recargar; hash=#/establecimientos?comuna=13201&id=114101",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:05:05.778Z",
+    "fin": "2026-11-18T00:05:05.778Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-003.png",
+   "evidencia_sha256": "838b221346efc35b76f6826c085aac89fee51f10d5b33e000c733dc24e06c7bc",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-003.png",
+     "sha256": "838b221346efc35b76f6826c085aac89fee51f10d5b33e000c733dc24e06c7bc"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-007",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Foco al cambiar de vista",
+   "modulo": "Navegación",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-007.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Tab (3 pasos) + Enter lleva a #/establecimientos; scroll=0; foco tras el cambio: MAIN:contenido",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:05:18.163Z",
+    "fin": "2026-11-18T00:05:18.163Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-007.png",
+   "evidencia_sha256": "cd20cce88d34be68accfae9735f096421269f1292c54cddf4e240ff8d66989b8",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-007.png",
+     "sha256": "cd20cce88d34be68accfae9735f096421269f1292c54cddf4e240ff8d66989b8"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-014",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Seleccionar polígono comunal",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-014.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Polígono 13101 (GeoJSON: SANTIAGO) → #/tablero?territorio=13101; la serie y el título muestran Santiago",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:05:33.032Z",
+    "fin": "2026-11-18T00:05:33.032Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-014.png",
+   "evidencia_sha256": "fc96d4a1a285fbea307ad89de00205120a1e2b66543938c3ff02cea1ea0be32a",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-014.png",
+     "sha256": "fc96d4a1a285fbea307ad89de00205120a1e2b66543938c3ff02cea1ea0be32a"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-015",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Orden numérico y nulos al final",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-015.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Pronóstico monótono en ambos sentidos (50 valores, 2 sin pronóstico al final en ascendente y descendente)",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:05:44.924Z",
+    "fin": "2026-11-18T00:05:44.924Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-015.png",
+   "evidencia_sha256": "fc96d4a1a285fbea307ad89de00205120a1e2b66543938c3ff02cea1ea0be32a",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-015.png",
+     "sha256": "fc96d4a1a285fbea307ad89de00205120a1e2b66543938c3ff02cea1ea0be32a"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-016",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Ayuda de tasa semanal",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-016.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Ayuda: \"Atenciones pronosticadas por 10.000 habitantes a la semana; no es prevalencia\". 50 comunas comparadas con tasa_pronostico_por_10000: diferencia máxima 0.050",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:05:55.602Z",
+    "fin": "2026-11-18T00:05:55.602Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-016.png",
+   "evidencia_sha256": "fc96d4a1a285fbea307ad89de00205120a1e2b66543938c3ff02cea1ea0be32a",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-016.png",
+     "sha256": "fc96d4a1a285fbea307ad89de00205120a1e2b66543938c3ff02cea1ea0be32a"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-017",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Temporalidad de pobreza y oferta",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-017.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Pobreza: \"PobrezaTasa de pobreza por ingresos, Casen 2022\" · Oferta: \"OfertaEstablecimientos de urgencia vigentes en la comuna; clic para verlos uno a uno\"; ninguna usa el año del pronóstico",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:06:06.005Z",
+    "fin": "2026-11-18T00:06:06.005Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-017.png",
+   "evidencia_sha256": "fc96d4a1a285fbea307ad89de00205120a1e2b66543938c3ff02cea1ea0be32a",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-017.png",
+     "sha256": "fc96d4a1a285fbea307ad89de00205120a1e2b66543938c3ff02cea1ea0be32a"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-018",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Comuna sin serie modelable",
+   "modulo": "Tablero comunal",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-018.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "La interfaz declara ausencia y motivo sin dibujar pronóstico cero. María Pinto (13504): aviso=true motivo=true /series=404 | Vitacura (13132): aviso=true motivo=true /series=404",
+   "observaciones": "Observación: junto al motivo se muestra el texto genérico 'No se pudo consultar la API… Verifique que el backend esté corriendo' (mensaje confuso para una ausencia esperada).",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:06:29.272Z",
+    "fin": "2026-11-18T00:06:29.272Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-018.png",
+   "evidencia_sha256": "a6679d3e5199ded0bb9ce3df969f4bf4539be4d41feb155b17d3c786db79fec2",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-018.png",
+     "sha256": "a6679d3e5199ded0bb9ce3df969f4bf4539be4d41feb155b17d3c786db79fec2"
+    }
+   ],
+   "hash_input": null
+  },
+  {
+   "id": "SAAD-CP-056",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_manual_aws",
+   "titulo": "Contrato y cliente frontend",
+   "modulo": "Contratos HTTP",
+   "ejecutor_real": "Catalina Rodríguez",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "be1fd85503963e3b9b6d1d636b5a251041a3cc02",
+   "snapshot": "SAAD-CP-056.png",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Reporte comparacion_api_frontend.md: 0 errores · 12 advertencias · 9 observaciones; advertencias y errores 404/409/503 no declarados quedan listados en el reporte",
+   "observaciones": "—",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T00:06:35.413Z",
+    "fin": "2026-11-18T00:06:35.413Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-056.png",
+   "evidencia_sha256": "0e6270aab0e72e79beb2ea123ae108ffe079a747ad73abf510dfb80228ae74f5",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-056.png",
+     "sha256": "0e6270aab0e72e79beb2ea123ae108ffe079a747ad73abf510dfb80228ae74f5"
+    }
+   ],
+   "hash_input": null
+  }
+ ]
+}

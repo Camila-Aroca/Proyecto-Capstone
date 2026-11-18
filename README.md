@@ -53,7 +53,7 @@ El control de cambios del **alcance contractual** (ERF y ERNF) está pendiente e
 | **URL funcional** | [Plataforma SAAD](https://d1zg565jvf1c8p.cloudfront.net/#/): el HTML y `/api/v1/salud` respondieron HTTP 200 el 15-11; salud informó datos y pronóstico listos | Comprobación HTTP de solo lectura; no reemplaza una prueba integral de la interfaz |
 | **Resultado de la prueba E2E** | 21 casos aprobados, 4 fallidos, 6 no ejecutados. Los 4 fallidos eran outputs de datos que faltaban y se cerraron después (DEF-01 a DEF-03) | [Registro de defectos](reports/validation/ciclos_pruebas/registro_defectos.md) |
 | **Actualización de datos** | El pipeline **se ejecuta en el equipo** y sus outputs se publican con `infra/aws/scripts/subir_datos.sh`. No se ejecuta en Fargate ni está programado con EventBridge (cambio de alcance, issue C-42 abierto) | [Plan de despliegue](docs/08-arquitectura/plan_despliegue_aws.md) |
-| **CI/CD (CodePipeline y CodeBuild)** | **Bloqueada:** la conexión con GitHub está pendiente de aprobación | Registro de defectos |
+| **CI/CD (CodePipeline y CodeBuild)** | **Operativa en verificación:** conexión con GitHub `AVAILABLE` y `saad-pr` en `Succeeded` el 17-11; `saad-despliegue` sin ejecución exitosa todavía | Registro de defectos |
 | **Versión y datos desplegados** | El 15-11, `/api/v1/meta` informó última semana observada **2026-S39** y pronóstico generado el 12-11; el pronóstico local de C-08 usa **2026-S45**. AWS no refleja ese corte local. La API no expone el SHA ni el digest de la imagen | Consulta HTTP de `/api/v1/meta`; [evidencia C-08](reports/validation/c08_revalidacion_20261115T161029Z/informe.md) |
 | **Seguridad, costos, observabilidad y manual operacional** | Parcialmente documentados; la consolidación (C-45) está pendiente | [Costos](docs/08-arquitectura/costos_aws_verificacion.md) |
 
@@ -78,7 +78,7 @@ La existencia de código, la certificación de outputs, la instalación limpia, 
 | Modelo de demanda | Implementado; holdout con datos de octubre | Consolidar métricas, cobertura de intervalos y limitaciones (C-14) |
 | Datos y pipeline | Corrida forzada del 15-11 con evaluaciones omitidas; pronósticos regenerados y procedencia registrada | Revalidar benchmarks y holdouts con los datos actuales |
 | API y frontend | Implementados; AWS responde con datos actualizados (ciclo 17, 2026-11-17); DEF-12 a DEF-14 cerrados | — |
-| Despliegue en AWS | Operativo con datos publicados manualmente; CI/CD bloqueada | C-36, C-42 y C-45 |
+| Despliegue en AWS | Operativo con datos publicados manualmente (17-11); CI desbloqueada, despliegue por CodePipeline sin ejecutar | C-36, C-42 y C-45 |
 | Documentación técnica | [Manual de implementación](docs/10-manual-implementacion/README.md) en su primera versión; manual de usuario pendiente | C-15 y anexos operacionales de C-45 |
 | Pruebas | Ciclo 17 completo; sin defectos abiertos; [registro principal](reports/validation/registro_principal_pruebas.md) generado | — |
 | Validación con cliente o experto | **Sin cliente piloto institucional confirmado.** No hay registro de validación de la muestra funcional con cliente (issue #90 sin cerrar) | Registrar feedback clínico (C-19) y validación (#90) |
