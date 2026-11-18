@@ -1,0 +1,98 @@
+{
+ "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_compatibilidad",
+ "ciclo": 17,
+ "catalogo": "SAAD_Casos_de_Prueba_200_AWS_2026.docx (v2.1)",
+ "ejecutor_real": "Codex (automatización Playwright)",
+ "alcance": "1 casos",
+ "estado_corrida": "FORMAL",
+ "inicio_utc": "2026-11-18T01:51:12.875Z",
+ "fin_utc": "2026-11-18T01:51:48.703Z",
+ "commit": "e75c28bee7c0a37b3f8be48e46cbb2fa6070ad2c",
+ "arbol_versionado_limpio": false,
+ "archivos_versionados_modificados": 2,
+ "archivos_sin_rastrear": [],
+ "entorno": "AWS (URL desplegada; host redactado)",
+ "modo": "manual",
+ "nota": "Recorrido de compatibilidad en Chromium, Firefox y WebKit contra el mismo snapshot de AWS.",
+ "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+ "python": "3.12.6",
+ "so": "Windows 11",
+ "librerias": {
+  "pytest": "9.1.1",
+  "pandas": "3.0.5",
+  "numpy": "2.5.2",
+  "pyarrow": "25.0.1",
+  "scikit-learn": "1.6.1",
+  "statsmodels": "0.14.4",
+  "lightgbm": "no instalado",
+  "fastapi": "no instalado"
+ },
+ "resumen": {
+  "aprobados": 1,
+  "fallidos": 0,
+  "no_ejecutados": 0
+ },
+ "advertencias": [
+  "Las consultas HTTP verifican el contrato de la API en el entorno y snapshot indicados; no acreditan otros entornos ni otros datos.",
+  "Los estados de ejecución del catálogo (.docx) no se modifican: esta corrida es la evidencia.",
+  "Nombre de evidencia según el plan (SAAD-CP-NNN_fecha_entorno); el comando del catálogo propone SAAD-CP-NNN.xml."
+ ],
+ "casos": [
+  {
+   "id": "SAAD-CP-074",
+   "run_id": "ciclo_17_20261117T140040Z/catalogo_200_aws_compatibilidad",
+   "titulo": "Motores de navegador",
+   "modulo": "Calidad transversal",
+   "ejecutor_real": "Codex (automatización Playwright)",
+   "entorno": "AWS (URL desplegada; host redactado)",
+   "sha": "e75c28bee7c0a37b3f8be48e46cbb2fa6070ad2c",
+   "snapshot": "{\"ultima_semana_observada\":{\"ano\":2026,\"semana\":45,\"fecha_inicio\":\"2026-11-08\",\"atenciones\":1825},\"pronostico_calculado_en\":\"2026-11-17T14:44:07.753983Z\",\"origen_pronostico\":\"persistido\",\"modelo\":\"hibrido_glm_region_lgbm_comuna_conformal\"}",
+   "defecto": "Sin defecto registrado",
+   "estado": "APROBADO",
+   "resultado_real": "Santiago (13101) y Hospital Clínico San Borja Arriarán (111100) mostraron los mismos datos y controles utilizables en Chromium 158.0.8127.18, Firefox 159.0, WebKit 27.2. Ambas consultas respondieron HTTP 200 en los tres motores, con los mismos hashes y cifras visibles.",
+   "observaciones": "Playwright en Windows. Cobertura de los tres motores del caso. Edge queda fuera de esta corrida.",
+   "version_desplegada": "No confirmada: /meta no expone el SHA ni el digest de la imagen desplegada (la última corrida AWS registrada en el ciclo 4 usó la imagen 95d00f8).",
+   "fecha_hora_utc": {
+    "inicio": "2026-11-18T01:51:12.875Z",
+    "fin": "2026-11-18T01:51:48.703Z"
+   },
+   "evidencia": "EVIDENCIA/SAAD-CP-074.md",
+   "evidencia_sha256": "ad7e354739880afc1f96f2931ac6056ef923dda40349301b01c7432a00529087",
+   "anexos": [
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-074.md",
+     "sha256": "ad7e354739880afc1f96f2931ac6056ef923dda40349301b01c7432a00529087"
+    },
+    {
+     "archivo": "EVIDENCIA/SAAD-CP-074.json",
+     "sha256": "cbf72f257e2d57a9256178c56c4ca66ccb5b6dc0211c2b169954a974dd8497d3"
+    },
+    {
+     "archivo": "EVIDENCIA/chromium-santiago.png",
+     "sha256": "359c50fd945596c8e2a0311ccf78b3c800e59e76d1fc3991d9f967728682a7ae"
+    },
+    {
+     "archivo": "EVIDENCIA/chromium-hospital.png",
+     "sha256": "e4bd6ca9d32489e40b73568cfdc1258fe68d7662733e09dce7f1b66cd30a8565"
+    },
+    {
+     "archivo": "EVIDENCIA/firefox-santiago.png",
+     "sha256": "31ae9b70b2e289b27f5bf99e8be27cbf1b8795c623efd40c47ca70fae3f2564b"
+    },
+    {
+     "archivo": "EVIDENCIA/firefox-hospital.png",
+     "sha256": "67d9448d7bc129d99192636bc180a70c840ec86595222a52a15041d970dc526f"
+    },
+    {
+     "archivo": "EVIDENCIA/webkit-santiago.png",
+     "sha256": "a3bc6a4c762fe80bad177a8465343a17e04fe5d636fb1fba1ddb8e61ac29425c"
+    },
+    {
+     "archivo": "EVIDENCIA/webkit-hospital.png",
+     "sha256": "63903b68715d39be3ecfe27a329cda84d9e160a49aeb030c936d25c55844ab18"
+    }
+   ],
+   "hash_input": "8ae5bfcca419afb2aa22d2ed82d4ef293d0b944216bf7079de2256a5acafe2b7"
+  }
+ ]
+}

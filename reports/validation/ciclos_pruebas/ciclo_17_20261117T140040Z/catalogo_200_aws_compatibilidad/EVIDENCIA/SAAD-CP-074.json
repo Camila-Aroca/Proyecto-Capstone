@@ -1,0 +1,153 @@
+{
+  "caso": "SAAD-CP-074",
+  "inicio_utc": "2026-11-18T01:51:12.875Z",
+  "fin_utc": "2026-11-18T01:51:48.703Z",
+  "entorno": "AWS (CloudFront; host redactado)",
+  "plataforma": "win32 10.0.26200",
+  "playwright": "1.65.0",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "locale": "es-CL",
+  "salud_inicial": {
+    "estado_datos": "listo",
+    "estado_pronostico": "listo",
+    "detalle": null
+  },
+  "snapshot": {
+    "ultima_semana_observada": {
+      "ano": 2026,
+      "semana": 45,
+      "fecha_inicio": "2026-11-08",
+      "atenciones": 1825
+    },
+    "pronostico_calculado_en": "2026-11-17T14:44:07.753983Z",
+    "origen_pronostico": "persistido",
+    "modelo": "hibrido_glm_region_lgbm_comuna_conformal"
+  },
+  "entrada": {
+    "comuna": "13101",
+    "hospital": 111100,
+    "nombre": "Hospital Clínico San Borja Arriarán",
+    "seleccion_hospital": "Hospital de Santiago con pronóstico ID36 incluido y menor código"
+  },
+  "navegadores": [
+    {
+      "motor": "chromium",
+      "inicio_utc": "2026-11-18T01:51:15.074Z",
+      "controles": [
+        "Seleccionar Santiago en la tabla",
+        "Abrir establecimientos de Santiago y seleccionar el hospital"
+      ],
+      "version": "158.0.8127.18",
+      "frontend_sha256": "fd4f75ffcaaa65d7bd3a62e04abf7465b2030422732ebeccf7ffa000b196cc63",
+      "comuna": {
+        "ruta": "/api/v1/series/13101?semanas=52",
+        "http": 200,
+        "sha256": "b00e0aa99e4208251f7625369df27a2f52a9c9f3a5b490a93c0804288c4efd7c",
+        "primera_semana": "2026-11-15",
+        "resumen_visible": "Para la semana del 15 de noviembre de 2026 se esperan 73 atenciones, entre 58 y 89 con un intervalo de 80%."
+      },
+      "hospital": {
+        "ruta": "/api/v1/establecimientos/111100?semanas=52",
+        "http": 200,
+        "sha256": "6ae2681b872d187c98bcb66855c7706a9c9e043d42d9c147993d04b9f6ad73de",
+        "primera_semana": "2026-11-15",
+        "resumen_visible": "Para la semana del 15 de noviembre de 2026 se esperan 8,3 atenciones, entre 3,6 y 14 con un intervalo de 80%."
+      },
+      "snapshot": {
+        "ultima_semana_observada": {
+          "ano": 2026,
+          "semana": 45,
+          "fecha_inicio": "2026-11-08",
+          "atenciones": 1825
+        },
+        "pronostico_calculado_en": "2026-11-17T14:44:07.753983Z",
+        "origen_pronostico": "persistido",
+        "modelo": "hibrido_glm_region_lgbm_comuna_conformal"
+      },
+      "errores_javascript": [],
+      "estado": "APROBADO",
+      "fin_utc": "2026-11-18T01:51:24.431Z"
+    },
+    {
+      "motor": "firefox",
+      "inicio_utc": "2026-11-18T01:51:24.432Z",
+      "controles": [
+        "Seleccionar Santiago en la tabla",
+        "Abrir establecimientos de Santiago y seleccionar el hospital"
+      ],
+      "version": "159.0",
+      "frontend_sha256": "fd4f75ffcaaa65d7bd3a62e04abf7465b2030422732ebeccf7ffa000b196cc63",
+      "comuna": {
+        "ruta": "/api/v1/series/13101?semanas=52",
+        "http": 200,
+        "sha256": "b00e0aa99e4208251f7625369df27a2f52a9c9f3a5b490a93c0804288c4efd7c",
+        "primera_semana": "2026-11-15",
+        "resumen_visible": "Para la semana del 15 de noviembre de 2026 se esperan 73 atenciones, entre 58 y 89 con un intervalo de 80%."
+      },
+      "hospital": {
+        "ruta": "/api/v1/establecimientos/111100?semanas=52",
+        "http": 200,
+        "sha256": "6ae2681b872d187c98bcb66855c7706a9c9e043d42d9c147993d04b9f6ad73de",
+        "primera_semana": "2026-11-15",
+        "resumen_visible": "Para la semana del 15 de noviembre de 2026 se esperan 8,3 atenciones, entre 3,6 y 14 con un intervalo de 80%."
+      },
+      "snapshot": {
+        "ultima_semana_observada": {
+          "ano": 2026,
+          "semana": 45,
+          "fecha_inicio": "2026-11-08",
+          "atenciones": 1825
+        },
+        "pronostico_calculado_en": "2026-11-17T14:44:07.753983Z",
+        "origen_pronostico": "persistido",
+        "modelo": "hibrido_glm_region_lgbm_comuna_conformal"
+      },
+      "errores_javascript": [],
+      "estado": "APROBADO",
+      "fin_utc": "2026-11-18T01:51:40.294Z"
+    },
+    {
+      "motor": "webkit",
+      "inicio_utc": "2026-11-18T01:51:40.294Z",
+      "controles": [
+        "Seleccionar Santiago en la tabla",
+        "Abrir establecimientos de Santiago y seleccionar el hospital"
+      ],
+      "version": "27.2",
+      "frontend_sha256": "fd4f75ffcaaa65d7bd3a62e04abf7465b2030422732ebeccf7ffa000b196cc63",
+      "comuna": {
+        "ruta": "/api/v1/series/13101?semanas=52",
+        "http": 200,
+        "sha256": "b00e0aa99e4208251f7625369df27a2f52a9c9f3a5b490a93c0804288c4efd7c",
+        "primera_semana": "2026-11-15",
+        "resumen_visible": "Para la semana del 15 de noviembre de 2026 se esperan 73 atenciones, entre 58 y 89 con un intervalo de 80%."
+      },
+      "hospital": {
+        "ruta": "/api/v1/establecimientos/111100?semanas=52",
+        "http": 200,
+        "sha256": "6ae2681b872d187c98bcb66855c7706a9c9e043d42d9c147993d04b9f6ad73de",
+        "primera_semana": "2026-11-15",
+        "resumen_visible": "Para la semana del 15 de noviembre de 2026 se esperan 8,3 atenciones, entre 3,6 y 14 con un intervalo de 80%."
+      },
+      "snapshot": {
+        "ultima_semana_observada": {
+          "ano": 2026,
+          "semana": 45,
+          "fecha_inicio": "2026-11-08",
+          "atenciones": 1825
+        },
+        "pronostico_calculado_en": "2026-11-17T14:44:07.753983Z",
+        "origen_pronostico": "persistido",
+        "modelo": "hibrido_glm_region_lgbm_comuna_conformal"
+      },
+      "errores_javascript": [],
+      "estado": "APROBADO",
+      "fin_utc": "2026-11-18T01:51:48.702Z"
+    }
+  ],
+  "equivalencia_tres_motores": true,
+  "limite": "Cobertura de Chromium, Firefox y WebKit; no acredita Edge ni todas las versiones de RNF-CMP-001."
+}

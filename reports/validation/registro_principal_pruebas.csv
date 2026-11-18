@@ -72,7 +72,7 @@ SAAD-CP-070,Lectura de gráficos y tablas,Calidad transversal,APROBADO,NO EJECUT
 SAAD-CP-071,Viewport móvil estrecho,Calidad transversal,APROBADO,NO EJECUTADO,APROBADO,APROBADO,16,17,17
 SAAD-CP-072,Zoom al doscientos por ciento,Calidad transversal,APROBADO,NO EJECUTADO,APROBADO,APROBADO,16,17,17
 SAAD-CP-073,Contraste de texto y ayudas,Calidad transversal,APROBADO,NO EJECUTADO,APROBADO,APROBADO,05,17,17
-SAAD-CP-074,Motores de navegador,Calidad transversal,NO EJECUTADO,NO EJECUTADO,NO EJECUTADO,NO EJECUTADO,16,17,
+SAAD-CP-074,Motores de navegador,Calidad transversal,APROBADO,NO EJECUTADO,NO EJECUTADO,APROBADO,16,17,17
 SAAD-CP-075,Medición moderada de latencia,Calidad transversal,APROBADO,NO EJECUTADO,APROBADO,APROBADO,16,17,17
 SAAD-CP-076,Recuperación tras desconexión del cliente,Calidad transversal,APROBADO,NO EJECUTADO,APROBADO,APROBADO,16,17,17
 SAAD-CP-077,API pública sin operaciones administrativas,Calidad transversal,APROBADO,NO EJECUTADO,APROBADO,APROBADO,16,17,17
