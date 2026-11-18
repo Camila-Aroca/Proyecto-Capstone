@@ -10,7 +10,7 @@ Los datos disponibles se encuentran distribuidos en distintas fuentes y requiere
 
 ## Demostración de la plataforma
 
-**[Abrir la plataforma desplegada en AWS](https://d1zg565jvf1c8p.cloudfront.net/#/)**. La portada respondió HTTP 200 y la API informó datos y pronóstico listos en la comprobación del 18 de noviembre (UTC). La aplicación sirve datos con corte observado 2026-S45. Ver [despliegue y evidencias](#despliegue-en-aws).
+**Plataforma desplegada en AWS** (la URL pública no se publica en el repositorio; el equipo la tiene registrada). La portada respondió HTTP 200 y la API informó datos y pronóstico listos en la comprobación del 18 de noviembre (UTC). La aplicación sirve datos con corte observado 2026-S45. Ver [despliegue y evidencias](#despliegue-en-aws).
 
 Video demostrativo del proyecto APT y su plataforma SAAD.
 
