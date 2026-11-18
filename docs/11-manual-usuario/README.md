@@ -1,6 +1,6 @@
 # Manual de usuario — SAAD (Sistema de Apoyo para el Análisis de la Demanda en salud mental)
 
-> Versión correspondiente al ciclo 17 (2026-11-17). La plataforma está disponible en AWS; para uso local consulte el [manual de implementación](../10-manual-implementacion/README.md).
+> Versión revisada contra la aplicación desplegada el 2026-11-18 (datos hasta la semana 45 de 2026). La plataforma está disponible en AWS; para uso local consulte el [manual de implementación](../10-manual-implementacion/README.md).
 
 ---
 
@@ -37,7 +37,7 @@ SAAD es una herramienta de apoyo a la toma de decisiones para el análisis de la
 
 | Pregunta | Lo que muestra |
 |---|---|
-| ¿Dónde se concentra la demanda? | Atenciones de urgencia por salud mental en las 52 comunas, con tasa por habitante y contexto de oferta y vulnerabilidad |
+| ¿Dónde se concentra la demanda? | Atenciones de urgencia por salud mental en las 52 comunas, con tasa por 10.000 habitantes y contexto de oferta y pobreza |
 | ¿Cuándo podría aumentar la presión? | Proyección semanal con intervalo de predicción, para anticipar refuerzos antes de que la presión ocurra |
 | ¿En qué establecimientos se sentirá? | Pronóstico de urgencias por establecimiento y de las hospitalizaciones que indican sus hospitales |
 | ¿Alcanzan las camas de psiquiatría? | Ocupación mensual frente a dotación y escenario anual de camas necesarias |
@@ -50,7 +50,7 @@ SAAD es una herramienta de apoyo a la toma de decisiones para el análisis de la
 
 | Requisito | Detalle |
 |---|---|
-| **Navegador** | Chrome 120+, Firefox 120+ o Edge 120+. Safari no está soportado oficialmente |
+| **Navegador** | Una versión reciente de Chrome, Edge, Firefox o Safari. En la prueba de compatibilidad (SAAD-CP-074) los motores Chromium, Firefox y WebKit (el de Safari) mostraron los mismos datos y controles |
 | **Conexión** | Acceso a internet para la versión en AWS; red local para Docker Compose |
 | **Autenticación** | No requiere usuario ni contraseña (acceso público de solo lectura) |
 | **Resolución mínima** | 360 × 640 px (móvil); la experiencia óptima es de escritorio (1 280 px o más) |
@@ -65,13 +65,13 @@ Al abrir la aplicación se muestra la página de inicio con una descripción de 
 
 ![Inicio](capturas/01_inicio.png)
 
-La barra superior muestra el nombre del sistema. Desde allí se accede a las dos vistas principales: **Tablero** y **Establecimientos**.
+La barra superior muestra el nombre del sistema. Desde allí se accede a las dos vistas principales: **Por comuna** (el tablero) y **Por establecimiento**.
 
 ![Cifras y preguntas](capturas/02_inicio_cifras_y_preguntas.png)
 
 Las cifras de la portada (total de atenciones, semanas de historia, semanas de pronóstico) se cargan en vivo desde la API. Si la API no responde, la página se muestra igual sin las cifras.
 
-El botón **«Ir al tablero»** lleva a la vista principal. También puede usar los enlaces de la barra superior.
+Los botones **«Explorar por comuna»** y **«Ver establecimientos»** llevan a cada vista. También puede usar los enlaces de la barra superior. El logo vuelve a la página de inicio.
 
 **Alcance:** debajo de la portada se describe el alcance contractual y las limitaciones conocidas del sistema. Léalo antes de interpretar los datos.
 
@@ -81,7 +81,7 @@ El botón **«Ir al tablero»** lleva a la vista principal. También puede usar 
 
 ## 4. Tablero regional
 
-El tablero es la vista de análisis principal. Muestra la demanda de urgencias por salud mental en la Región Metropolitana, con pronóstico, mapa y tabla de comunas.
+El tablero (**Por comuna**) es la vista de análisis principal. Muestra la demanda de urgencias por salud mental de la Región Metropolitana o de una comuna, con pronóstico, suicidios, hospitalizaciones de residentes, mapa y tabla de comunas.
 
 ![Tablero vista general](capturas/04_tablero_vista_general.png)
 
@@ -91,89 +91,103 @@ El tablero es la vista de análisis principal. Muestra la demanda de urgencias p
 
 | Control | Función |
 |---|---|
-| Selector de territorio | Cambia la serie entre la Región (RM) y una comuna específica. Escriba el nombre de la comuna para filtrar |
-| Ventana de semanas | Controla cuántas semanas de historia se muestran: 26 semanas (6 meses), 52 semanas (1 año) o 104 semanas (2 años) |
-| Enlace a establecimientos | Lleva a la vista de establecimientos de la comuna seleccionada |
+| **Datos hasta la semana N de AAAA** | Última semana con datos observados (corte de datos) |
+| **Estado del pronóstico** | «Pronóstico al día», «Calculando pronóstico…» o «Pronóstico no disponible» (ver la [sección 8](#8-avisos-estados-de-carga-y-errores)) |
+| **Territorio** | Lista para elegir la Región Metropolitana o una comuna. **«Volver a la región»** regresa a la serie regional |
+| **Historia** | Cuántas semanas observadas se dibujan: 26, 52 o 104 |
+| **«Ver su establecimiento →»** | Lleva a la vista de establecimientos de la comuna seleccionada |
 
-El territorio también se puede cambiar haciendo clic en el mapa o en una fila de la tabla de comunas.
+El territorio también se puede cambiar haciendo clic en una comuna del mapa o en una fila de la tabla de comunas.
+
+![Comuna seleccionada](capturas/17_comuna_santiago.png)
 
 ### 4.2 Gráfico de serie y pronóstico
 
 ![Serie regional](capturas/06_serie_regional.png)
 
-El gráfico muestra:
-- **Línea sólida azul:** atenciones observadas semana a semana.
-- **Línea discontinua:** pronóstico para las próximas semanas.
-- **Banda sombreada:** intervalo de predicción al 80 % (10º–90º percentil). En un 80 % de las semanas futuras, el valor real caerá dentro de esta banda.
-- **Línea de camas disponibles** (si existe): dotación de camas de psiquiatría de la zona.
-- **Marcas de contexto:** festividades nacionales (Fiestas Patrias, Año Nuevo, etc.) y otros eventos de salud mental con efecto conocido en la serie.
+El gráfico de **atenciones semanales de urgencia en salud mental** muestra:
+- **Observado:** atenciones registradas semana a semana.
+- **Pronóstico:** proyección para las próximas 8 semanas.
+- **Intervalo 80 %:** banda de incertidumbre del pronóstico. Fuera de muestra cubrió el 70 % de las semanas en el nivel regional y el 77 % en el comunal, por debajo del 80 % declarado: lea los límites como orientativos.
 
-**Desplazamiento:** pase el cursor sobre el gráfico para ver los valores exactos de cada semana en el tooltip.
+Pase el cursor sobre el gráfico para ver el valor de cada semana. **«Ver los datos en tabla»** abre las últimas 12 semanas observadas y las 8 pronosticadas, con su tipo (observado o pronóstico).
 
 ### 4.3 Cómo leer las cifras
 
 ![Cómo leer cifras](capturas/07_como_leer_cifras.png)
 
-El panel de cifras muestra:
-- **Atenciones esta semana / semana pasada:** número y variación respecto a la semana anterior.
-- **Pronóstico próximas N semanas:** suma del intervalo central del pronóstico.
-- **Semana del corte:** última semana con datos observados.
+Sobre el gráfico, una frase resume la próxima semana: *«Para la semana del … se esperan N atenciones, entre A y B con un intervalo de 80 %»*. Las cifras que la acompañan son:
 
-> **Importante:** el pronóstico es orientativo. El intervalo de predicción al 80 % indica la incertidumbre. No use el punto central como un valor exacto.
+| Cifra | Qué significa |
+|---|---|
+| **Nivel reciente** | Promedio de las últimas 4 semanas observadas |
+| **Pronóstico medio, 1 a 8 semanas** | Promedio semanal pronosticado y su variación frente al nivel reciente |
+| **Cambio esperado** | Alza, baja o «Sin cambio claro» (variación menor al umbral). El signo **≈** indica que el cambio cabe dentro de la fluctuación semanal |
+| **Confiabilidad del intervalo** | Porcentaje de semanas que el intervalo cubrió fuera de muestra, frente al 80 % declarado |
+
+**«Cómo leer estas cifras · N advertencias»** despliega las advertencias vigentes: que las cifras son atenciones (eventos) y no personas únicas ni prevalencia, la cobertura real de los intervalos y las comunas que no tienen pronóstico.
+
+> **Importante:** el pronóstico es orientativo. No use el punto central como un valor exacto.
 
 ### 4.4 Mapa comunal
 
 ![Mapa concentración](capturas/08_mapa_concentracion.png)
 
-El mapa muestra las 52 comunas con atenciones de salud mental. Puede cambiar la métrica con el selector sobre el mapa:
+El mapa muestra las 52 comunas de la Región Metropolitana y los establecimientos de urgencia. Puede cambiar la métrica con el selector sobre el mapa:
 
 | Métrica | Descripción |
 |---|---|
-| **Concentración** | Atenciones totales en el período seleccionado (escala de color por volumen) |
-| **Cambio esperado** | Variación entre el pronóstico de las próximas semanas y el mismo período histórico anterior |
-| **Proximidad a establecimientos** | Distancia al establecimiento de urgencias de salud mental más cercano |
+| **Concentración** | Atenciones pronosticadas por 10.000 habitantes a la semana, en quintiles |
+| **Cambio esperado** | Alza, baja o sin cambio claro del pronóstico frente al nivel reciente de cada comuna |
+| **Proximidad** | Distancia mediana a una urgencia que atiende salud mental; más oscuro es más lejos |
 
 ![Mapa cambio esperado](capturas/09_mapa_cambio_esperado.png)
 
 ![Mapa proximidad](capturas/10_mapa_proximidad.png)
 
-Haga clic en una comuna para seleccionarla: el gráfico y la tabla se actualizan con la serie de esa comuna.
+Las comunas sin pronóstico aparecen como **«Sin pronóstico»** (en proximidad, **«Sin dato»**). No significa cero atenciones: la comuna no tiene una serie confiable para modelar. Haga clic en una comuna para seleccionarla, o en un establecimiento para ver su detalle.
 
 ### 4.5 Tabla de comunas
 
 ![Tabla comunal](capturas/11_tabla_comunal.png)
 
-La tabla muestra todas las comunas con sus indicadores. Las columnas principales son:
+La tabla muestra todas las comunas con sus indicadores:
 
 | Columna | Descripción |
 |---|---|
 | **Comuna** | Nombre de la comuna |
-| **Atenciones (período)** | Total de atenciones en la ventana de tiempo seleccionada |
-| **Tasa (por 100 000 hab.)** | Atenciones por 100 000 habitantes |
-| **Cambio esperado** | Variación pronósticada respecto al mismo período anterior |
-| **Establecimientos** | Número de establecimientos con atenciones de salud mental |
+| **Reciente** | Promedio semanal de las últimas 4 semanas observadas |
+| **Pronóstico** | Promedio semanal pronosticado, 1 a 8 semanas |
+| **Cambio** | Alza o baja según el tamaño del cambio esperado. El signo ≈ marca los que caben dentro de la fluctuación semanal |
+| **Tasa** | Atenciones pronosticadas por 10.000 habitantes a la semana; no es prevalencia |
+| **Pobreza** | Tasa de pobreza por ingresos, Casen 2022 |
+| **Oferta** | Establecimientos de urgencia vigentes en la comuna; clic para verlos uno a uno |
 
 ![Ayuda columna tasa](capturas/12_ayuda_columna_tasa.png)
 
-Pase el cursor sobre el encabezado de cada columna para ver su definición. Haga clic en una fila para seleccionar la comuna.
+Pase el cursor sobre el encabezado de cada columna para ver su definición. Haga clic en un encabezado para ordenar; las comunas sin pronóstico quedan al final. Haga clic en el nombre de una comuna para seleccionarla.
 
 ![Datos en tabla](capturas/13_datos_en_tabla.png)
 
 ### 4.6 Suicidios en el tablero
 
-El tablero incluye la serie de suicidios de la Región Metropolitana dentro del panel principal. Esta serie tiene un desfase de publicación distinto al de las atenciones: puede mostrar datos hasta algunas semanas antes del corte de urgencias.
+Bajo la serie de atenciones, el bloque **«Suicidios semanales»** muestra las defunciones por suicidio de residentes del territorio seleccionado. Se detalla en la [sección 6](#6-suicidios).
 
 ### 4.7 Hospitalizaciones
 
 ![Hospitalizaciones residentes](capturas/16_hospitalizaciones_residentes.png)
 
-El panel de hospitalizaciones muestra las derivaciones desde urgencias (ID42) por comuna y período. Los datos corresponden a egresos hospitalarios del DEIS/MINSAL.
+El panel **«Hospitalizaciones de quienes viven en …»** muestra los egresos hospitalarios con diagnóstico principal de salud mental (F00–F99) por comuna de **residencia** y año (DEIS, Egresos hospitalarios), en total y por 10.000 habitantes. Permite desglosar por diagnóstico principal, edad, sexo y previsión.
+
+También compara las camas de psiquiatría ocupadas en promedio por año según Egresos y según REM-20. Las dos fuentes no coinciden exactamente: Egresos ubica al paciente por residencia y REM-20 por hospital, y el panel explica el porqué en «Por qué no coinciden exactamente».
+
+> No confunda este panel con las **hospitalizaciones derivadas desde la urgencia (ID42)**, que se ven por hospital en la vista de establecimientos.
 
 ---
 
 ## 5. Vista de establecimientos
 
-La vista de establecimientos muestra todos los establecimientos de urgencias de salud mental en la Región Metropolitana con sus indicadores individuales.
+La vista **Por establecimiento** muestra los establecimientos de urgencia de la Región Metropolitana con su pronóstico individual.
 
 ![Vista general establecimientos](capturas/18_establecimientos_vista_general.png)
 
@@ -182,20 +196,23 @@ La vista de establecimientos muestra todos los establecimientos de urgencias de 
 ![Tabla establecimientos con filtro](capturas/19_tabla_establecimientos_filtro_hospital.png)
 
 En la parte superior puede:
-- **Buscar** por nombre del establecimiento.
-- **Filtrar por tipo** (Hospital, SAPU, SAPU-Avanzado, etc.).
-- **Ordenar** la tabla por cualquier columna haciendo clic en su encabezado.
+- **Elegir qué pronosticar:** atenciones de urgencia en salud mental (ID36) u hospitalizaciones derivadas desde la urgencia (ID42, solo hospitales).
+- **Buscar** por nombre o comuna.
+- **Filtrar** por **tipo de establecimiento** (o «Todos los tipos») y por comuna, haciendo clic en la comuna de una fila.
+- **Ordenar** la tabla haciendo clic en el encabezado de una columna.
+
+Las columnas son **Establecimiento**, **Reciente**, **Pronóstico**, **Cambio** (el mismo criterio que en la vista por comuna), **Camas psiq.** (dotación declarada de camas de psiquiatría; «—» si el establecimiento no la declara) y **Nivel de colapso**.
 
 ### 5.2 Detalle de un establecimiento
 
-Haga clic en un establecimiento para ver su detalle. El panel lateral muestra:
-- Serie histórica de atenciones (ID36: salud mental; ID42: derivadas a hospitalización).
-- Pronóstico de atenciones con intervalo.
-- Variación esperada.
+Haga clic en un establecimiento para ver su detalle:
+- Serie histórica y pronóstico con intervalo del objetivo elegido.
+- **Nivel reciente**, **Cambio esperado** y **Confiabilidad del intervalo**, con la misma lectura que en el tablero.
+- **Camas de psiquiatría:** dotación declarada, no ocupación.
 
 ![Detalle atenciones](capturas/21_detalle_atenciones.png)
 
-El tooltip de **«Nivel de colapso»** explica el criterio de clasificación de presión asistencial:
+La ayuda de **«Nivel de colapso»** explica cómo se calcula la ocupación de camas de psiquiatría (días cama ocupados ÷ días cama disponibles × 100, últimos 12 meses publicados):
 
 ![Ayuda nivel colapso](capturas/20_ayuda_nivel_colapso.png)
 
@@ -203,13 +220,18 @@ El tooltip de **«Nivel de colapso»** explica el criterio de clasificación de 
 
 ![Ocupación mensual](capturas/23_ocupacion_mensual.png)
 
-Para los establecimientos con camas de psiquiatría, el panel muestra la ocupación mensual frente a la dotación declarada. Los niveles de alerta son:
+Para los hospitales con camas de psiquiatría, el panel **«Camas de psiquiatría: ocupación mensual»** muestra, por mes y por área, las camas ocupadas, disponibles y libres (fuente: DEIS, REM-20). Resume los **meses sin holgura**, las **áreas sin holgura** y las **camas libres por día** del último mes.
 
-| Color | Rango | Significado |
-|---|---|---|
-| Verde | < 85 % | Ocupación normal |
-| Amarillo | 85–95 % | Alta ocupación |
-| Rojo | > 95 % | Saturación |
+El nivel de colapso se muestra con un medidor de barras que crece con la gravedad:
+
+| Nivel | Ocupación |
+|---|---|
+| **Holgura** | Menos de 85 % |
+| **Presión** | 85–90 % |
+| **Saturación** | 90 % o más |
+| **Sobre la capacidad** | Más de 100 % en un área |
+
+Los umbrales provienen del Royal College of Psychiatrists (85 %) y de Bagust et al., BMJ 1999 (90 %). REM-20 no publica sexo ni edad de quienes ocupan las camas.
 
 ![Detalle hospitalizaciones](capturas/22_detalle_hospitalizaciones.png)
 
@@ -217,55 +239,60 @@ Para los establecimientos con camas de psiquiatría, el panel muestra la ocupaci
 
 ![Propuesta de camas](capturas/24_propuesta_camas.png)
 
-El panel de propuesta de camas muestra un escenario anual de cuántas camas serían necesarias para mantener la ocupación por debajo del umbral de alerta, dado el pronóstico de demanda. Este escenario es indicativo y no constituye una recomendación operacional.
+La propuesta de camas es un **escenario anual** por área de psiquiatría. Se calcula en tres pasos: (1) la carga del mes de mayor demanda, (2) un margen de planificación y (3) la capacidad objetivo con una ocupación objetivo (85 %, o 90 % donde corresponde). Muestra la **brecha frente al último mes**.
+
+Es una estimación condicionada, no una recomendación operacional ni cupos diarios: implementarla requiere validar localmente presupuesto, personal, espacio y plazos, que estas fuentes no incluyen.
 
 ---
 
 ## 6. Suicidios
 
-La vista de suicidios muestra la serie de muertes por suicidio en la Región Metropolitana.
+Los suicidios se consultan en el tablero, bajo la serie de atenciones, para el territorio seleccionado.
 
 ![Suicidios](capturas/15_suicidios.png)
 
-Incluye:
-- Serie semanal observada.
-- Pronóstico con intervalo de predicción.
-- Tasa por 100 000 habitantes.
-- Marcas de contexto (semanas con eventos relevantes).
+El bloque **«Suicidios semanales»** muestra las defunciones por lesiones autoinfligidas (CIE-10 X60–X84) de **residentes** del territorio:
+- Serie semanal observada y **pronóstico** con intervalo de 80 %.
+- **Tasa anual por 100.000 habitantes** y el promedio semanal del último año.
+- **Marcas de contexto** opcionales en el gráfico: **Estaciones** y **Festividades**. «Ver las fechas marcadas» lista sus fechas.
 
-> **Nota de interpretación:** los datos de suicidios tienen un desfase de registro mayor que los de urgencias. Las últimas semanas disponibles pueden cambiar en publicaciones posteriores del DEIS/MINSAL.
+> **Nota de interpretación:** las marcas son contexto visual, no explicaciones causales ni variables del modelo. Los datos de suicidios tienen un desfase de registro mayor que los de urgencias y las últimas semanas pueden cambiar en publicaciones posteriores del DEIS/MINSAL.
 
 ---
 
 ## 7. Caracterización
 
-La vista de caracterización muestra la distribución por edad y sexo de las atenciones de urgencia por salud mental.
+Bajo cada serie, el desplegable **«Ver caracterización por género y edad»** muestra la distribución de los eventos de las semanas observadas visibles.
 
 ![Caracterización](capturas/14_caracterizacion.png)
 
-Incluye:
-- Distribución etaria de las atenciones.
-- Distribución por sexo (a partir de egresos como escenario hipotético; urgencias no registra sexo directamente).
-- Defunciones registradas.
+- **Edad registrada:** grupos publicados por la fuente, en eventos y porcentaje.
+- **Sexo:** en suicidios es el **sexo registrado**. En urgencias la fuente **no registra sexo**, por lo que se muestra un **«Escenario por sexo · no observado»**.
+- **«Sin dato»** conserva los registros sin edad o sexo interpretable.
 
-> **Advertencia:** el reparto por sexo en urgencias es un escenario hipotético calculado a partir de egresos nacionales por intento suicida, no un conteo observado directo.
+> **Advertencia:** el escenario por sexo de urgencias aplica el reparto de los egresos nacionales por intento suicida al total observado. No es sexo observado ni un reparto validado de estas urgencias. La fuente registra sexo, no identidad de género.
 
 ---
 
 ## 8. Avisos, estados de carga y errores
 
-La barra superior puede mostrar avisos de lectura cuando los datos tienen limitaciones conocidas:
+La barra superior informa el estado del pronóstico:
 
-- **«Pronóstico no vigente»:** el pronóstico fue generado con una versión de los datos que no coincide con la actual. Los valores son orientativos hasta que el equipo regenere el modelo.
-- **«Vista temporal»:** se está mostrando una versión de datos que puede actualizarse próximamente.
-- **Número de advertencias:** indica cuántas limitaciones o notas afectan al período visible.
-
-Los estados de carga son:
 | Estado | Significado |
 |---|---|
-| Cargando… | La API está respondiendo; espere unos segundos |
-| Error de conexión | La API no está disponible; verifique la URL o contacte al equipo |
-| Sin datos | El establecimiento o la comunidad no tiene datos suficientes para el período |
+| **Pronóstico al día** | El pronóstico está listo y corresponde a los datos vigentes |
+| **Calculando pronóstico…** | La API está calculando el pronóstico; aparece en unos segundos |
+| **Pronóstico no disponible** | La API no pudo entregar el pronóstico |
+| **Pronóstico desactualizado** | (Vista de establecimientos) el pronóstico se generó con datos anteriores a los vigentes; un aviso explica el motivo |
+
+Otros mensajes que puede ver:
+
+| Mensaje | Significado |
+|---|---|
+| **«Cargando…»** y bloques grises | La vista está pidiendo datos a la API |
+| **«Pronóstico no disponible»** con un motivo, en una comuna | La comuna no tiene una serie modelable (por ejemplo, dejó de reportar o no tiene historia). **No es demanda cero.** Junto al motivo puede aparecer además el texto técnico «No se pudo consultar la API…»: si el motivo está visible, no se trata de una falla del sistema |
+| **«Semana sin dato observado ni pronóstico»** | Esa semana no tiene registro; no equivale a cero |
+| **«No se pudo consultar el pronóstico por establecimiento»** | La API no respondió; recargue la página o intente más tarde |
 
 ---
 
@@ -285,14 +312,17 @@ También funciona en dispositivos móviles (pantallas de 360 px o más), aunque 
 
 | Término | Definición |
 |---|---|
-| **Atención de urgencia SM** | Atención registrada en el DEIS con código de salud mental (F00–F99) en el sistema de urgencias (ID36) |
-| **ID36** | Identificador del formulario estadístico de urgencias del DEIS/MINSAL |
-| **ID42** | Identificador del formulario de egresos hospitalarios derivados desde urgencias |
-| **REM-20** | Resumen Estadístico Mensual de establecimientos; fuente del reporte de ocupación de camas |
+| **Atención de urgencia SM (ID36)** | Atención de urgencia por causas de salud mental registrada por el DEIS/MINSAL. Cuenta eventos, no personas |
+| **ID42** | Hospitalizaciones derivadas desde la urgencia con diagnóstico F00–F99, registradas por hospital |
+| **Egresos hospitalarios** | Altas hospitalarias del DEIS; en SAAD se usan por comuna de residencia del paciente |
+| **REM-20** | Resumen Estadístico Mensual del DEIS sobre camas; fuente de la ocupación mensual de psiquiatría |
+| **Tasa por 10.000** | Atenciones pronosticadas por cada 10.000 habitantes a la semana; no es prevalencia |
 | **Pronóstico** | Proyección estadística generada con un modelo evaluado por backtesting. No es un compromiso ni una certeza |
-| **Intervalo de predicción al 80 %** | Rango en el que el 80 % de las semanas futuras debería caer, según el modelo. El 20 % restante puede quedar fuera |
-| **MASE** | *Mean Absolute Scaled Error*: medida de error del modelo comparada con un baseline estacional |
+| **Intervalo de predicción al 80 %** | Rango que debería contener el 80 % de las semanas futuras. Fuera de muestra cubrió 70 % (región) y 77 % (comuna): léalo como orientativo |
+| **MASE** | *Mean Absolute Scaled Error*: error del modelo dividido por el de un pronóstico ingenuo de referencia; menor que 1 es mejor que la referencia |
+| **Nivel de colapso** | Clasificación de la ocupación de camas de psiquiatría: holgura, presión, saturación o sobre la capacidad |
 | **SAPU** | Servicio de Atención Primaria de Urgencia |
+| **SAR** | Servicio de Atención Primaria de Urgencia de Alta Resolución |
 | **SUR** | Servicio de Urgencia Rural |
 | **CESFAM** | Centro de Salud Familiar |
 | **Desfase de registro** | Las fuentes del DEIS/MINSAL se publican con rezago; los datos de las últimas semanas pueden cambiar en publicaciones posteriores |
@@ -307,16 +337,16 @@ También funciona en dispositivos móviles (pantallas de 360 px o más), aunque 
 Los datos se actualizan manualmente cuando el equipo ejecuta el pipeline y publica los outputs con `subir_datos.sh`. No hay actualización automática programada.
 
 **¿Los pronósticos son definitivos?**
-No. Son proyecciones estadísticas con un intervalo de incertidumbre. Deben leerse como orientación, no como predicciones exactas. El intervalo al 80 % indica que 1 de cada 5 semanas puede quedar fuera del rango.
+No. Son proyecciones estadísticas con un intervalo de incertidumbre. Deben leerse como orientación, no como predicciones exactas. El intervalo se declara al 80 %, pero fuera de muestra cubrió entre 70 % y 77 % de las semanas: más de 1 de cada 5 semanas puede quedar fuera del rango.
 
 **¿Puedo exportar los datos?**
-La versión actual no tiene función de exportación desde la interfaz. Los datos fuente están disponibles en el repositorio del proyecto para el equipo técnico.
+La interfaz no tiene función de exportación. «Ver los datos en tabla» muestra las cifras de cada serie, y los datos fuente están disponibles en el repositorio del proyecto para el equipo técnico.
 
-**¿Por qué algunas comunas no aparecen en el mapa?**
-El sistema cubre las 52 comunas de la Región Metropolitana con atenciones de salud mental registradas. Comunas con cero atenciones en el período no aparecen coloreadas.
+**¿Por qué algunas comunas aparecen como «Sin pronóstico»?**
+El mapa cubre las 52 comunas de la Región Metropolitana. Las que aparecen como «Sin pronóstico» no tienen una serie confiable para modelar (por ejemplo, dejaron de reportar o no tienen historia). No significa que tengan cero atenciones: SAAD nunca muestra la falta de dato como cero.
 
-**¿Qué significa «Vista temporal»?**
-El sistema detectó que el pronóstico en memoria no coincide con las entradas actuales. Esto puede ocurrir cuando se actualizaron los datos sin regenerar el modelo. El equipo técnico debe regenerar el pronóstico con `forecast_demanda_sm`.
+**¿Qué significa «Pronóstico desactualizado»?**
+Aparece en la vista de establecimientos cuando el pronóstico se generó con datos anteriores a los vigentes. El aviso indica el motivo. Los valores son orientativos hasta que el equipo regenere y publique el pronóstico.
 
 **¿La plataforma accede a datos de pacientes?**
 No. Todos los datos son agregados o disociados. No hay información que permita identificar a personas individuales.
@@ -325,4 +355,4 @@ No. Todos los datos son agregados o disociados. No hay información que permita 
 En la versión local (Docker Compose) la API y el frontend corren en la red local. En la versión AWS se requiere conexión a internet.
 
 **¿Qué navegadores son compatibles?**
-Chrome 120+, Firefox 120+ y Edge 120+. Safari tiene soporte limitado y puede mostrar diferencias visuales.
+Versiones recientes de Chrome, Edge, Firefox y Safari. La prueba de compatibilidad (SAAD-CP-074) confirmó los mismos datos y controles en los motores Chromium, Firefox y WebKit.

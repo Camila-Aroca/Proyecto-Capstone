@@ -76,8 +76,10 @@ gratuita las alarmas y la métrica quedan en US$0, CodeBuild baja a US$1,42 (284
 US$0,64 (322 min), y el total a ≈ US$57,57. CloudFront se mantiene en su capa
 gratuita, como en la estimación original.
 
-**Uso actual de CI:** mientras la conexión `saad-github` siga en `PENDING`, los pipelines no se
-ejecutan y CodeBuild y CodePipeline cuestan US$0. Con eso el total real hoy es ≈ US$56,51.
+**Uso actual de CI:** desde el 17-11 la conexión `saad-github` está `AVAILABLE` y los pipelines se
+ejecutan con cada push que los dispara (`saad-pr` en ramas distintas de `main`; `saad-despliegue` en `main`
+cuando cambian `infra/aws/**` o `frontend/**`). En un mes sin ejecuciones, CodeBuild y CodePipeline cuestan
+US$0 y el total es ≈ US$56,51; cada ejecución suma minutos según el detalle de abajo.
 
 ### Detalle de cálculos
 
