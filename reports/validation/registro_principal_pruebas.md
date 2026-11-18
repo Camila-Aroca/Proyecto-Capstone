@@ -1,6 +1,8 @@
 # Registro principal de pruebas — SAAD-CP v2.1
 
-> Generado el 2026-11-18 18:33 UTC. Los 200 casos del catálogo se consolidan aquí; para cada caso se conserva el último resultado ejecutado por entorno.
+> Generado el 2026-11-18 18:39 UTC. Los 200 casos del catálogo se consolidan aquí; para cada caso se conserva el último resultado ejecutado por entorno.
+>
+> Este registro prevalece sobre los estados que figuran en los documentos de diseño (catálogo de 200 casos y plan de pruebas, de noviembre): sus textos «No ejecutado», «DEF-11 abierto» y «PENDING» describen el estado en la fecha de redacción y están superados por los resultados de los ciclos y por el [registro de defectos](ciclos_pruebas/registro_defectos.md).
 
 ## Resumen ejecutivo
 
