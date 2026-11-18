@@ -44,12 +44,68 @@ CAT70_EXCLUSIVOS: Final[frozenset[str]] = frozenset({
     "CP-SAAD-065", "CP-SAAD-069",
 })
 
+CAT70_NOMBRES: Final[dict[str, str]] = {
+    "CP-SAAD-010": "Permisos del rol de tarea pipeline",
+    "CP-SAAD-011": "Ejecución manual controlada del refresh semanal",
+    "CP-SAAD-012": "EventBridge Scheduler dispara tarea esperada",
+    "CP-SAAD-014": "Nuevos outputs visibles tras redespliegue de API",
+    "CP-SAAD-015": "Estado temporal 503 y Retry-After durante inicialización",
+    "CP-SAAD-016": "Insuficiencia de almacenamiento efímero del pipeline",
+    "CP-SAAD-025": "GET /api/v1/camas-psiquiatria/{series_id}",
+    "CP-SAAD-046": "Caracterización por sexo y edad del flujo",
+    "CP-SAAD-052": "Semanas con recuento muy bajo no parecen picos artificiales",
+    "CP-SAAD-054": "Orden lógico de intervalos de predicción",
+    "CP-SAAD-055": "Cobertura holdout declarada sin engaño",
+    "CP-SAAD-056": "Semana parcial no sustituye semana cerrada",
+    "CP-SAAD-057": "Tasas y denominadores territoriales",
+    "CP-SAAD-063": "Ausencia de secretos en frontend, logs y configuración",
+    "CP-SAAD-064": "Cache CloudFront tras nueva versión",
+    "CP-SAAD-065": "Recuperación después de reemplazo de tarea ECS",
+    "CP-SAAD-069": "Presupuesto, etiquetas y costo del ambiente de evaluación",
+}
+
+# Otras validaciones del proyecto que no pertenecen a ningún catálogo de casos.
+# (ID, validación, fecha, entorno, resultado registrado en el informe, ruta relativa a reports/validation/)
+VALIDACIONES_COMPLEMENTARIAS: Final[tuple[tuple[str, str, str, str, str, str], ...]] = (
+    ("PC-01", "Línea base local con Docker Compose (C-07)", "2026-11-12", "LOCAL",
+     "10 aprobados · 4 fallidos de 14 casos. Corrida histórica; la línea base se repite en cada ciclo de qa_ciclo_pruebas.py.",
+     "baseline_local/20261112T135538Z/informe.md"),
+    ("PC-02", "E2E local contra AWS (C-44)", "2026-11-12", "LOCAL + AWS",
+     "21 aprobados · 4 fallidos · 6 no ejecutados. Los 4 fallos fueron salidas faltantes; se repite con 24 aprobados y 0 fallidos "
+     "el 2026-11-18 (SAAD-CP-068).",
+     "e2e_local_aws/20261112T131720Z/informe.md"),
+    ("PC-03", "Contrato API y cliente frontend", "2026-11-17", "LOCAL",
+     "0 errores · 12 advertencias · 9 observaciones (SAAD-CP-056).",
+     "contrato_api/comparacion_api_frontend.md"),
+    ("PC-04", "Revalidación C-08: pipeline y procedencia", "2026-11-10", "LOCAL",
+     "Suite ordinaria 838 aprobadas e integración 29 aprobadas; evidencia de snapshots y procedencia, no acredita despliegue.",
+     "c08_revalidacion_20261110.md"),
+    ("PC-05", "Revalidación C-08 con pipeline --sin-evaluacion", "2026-11-15", "LOCAL",
+     "Pipeline terminó con código 0; suite ordinaria 920 aprobadas e integración 29 aprobadas. No revalida la selección de modelos.",
+     "c08_revalidacion_20261115T161029Z/informe.md"),
+    ("PC-06", "Fixtures mínimos de tests de datos (#40)", "2026-10-14", "FIXTURE",
+     "451 aprobadas y 17 deseleccionadas sin datasets masivos; salida aislada con código 0.",
+     "issue40_fixtures.md"),
+    ("PC-07", "QA de propuesta anual de camas y ocupación", "2026-11-07", "LOCAL",
+     "149 pruebas aprobadas, build de producción aprobado y pipeline con --force y SKIP válido. No valida factibilidad de inversión.",
+     "propuesta_camas.md"),
+    ("PC-08", "QA de caracterización en la web", "2026-11-07", "LOCAL",
+     "87 pruebas aprobadas y ayuda del pipeline correcta. No incluye validación clínica del escenario por sexo.",
+     "qa_caracterizacion_web.md"),
+    ("PC-09", "Certificación APT del pipeline", "2026-10-08", "LOCAL",
+     "Pipeline completo con código 0 (≈1 h), entorno congelado y hashes de salidas; inventario de contratos de salida.",
+     "apt_certification_20261008T002147Z/pipeline_meta.txt"),
+    ("PC-10", "Retest de DEF-12 a DEF-14 en AWS (ciclo 15)", "2026-11-16", "AWS",
+     "SAAD-CP-004 y SAAD-CP-073 aprobados; formalizado en el registro principal con el ciclo 17.",
+     "ciclos_pruebas/ciclo_15_20261116T013931Z/retest_def12_def14.md"),
+)
+
+
 # Casos que no se pueden ejecutar en el ciclo final y su motivo
 NO_EJECUTABLES: Final[dict[str, str]] = {
     "SAAD-CP-009": "Requiere usuario piloto institucional (#90 sin cerrar)",
     "SAAD-CP-037": "Requiere usuario piloto institucional (#90 sin cerrar)",
     "SAAD-CP-046": "Requiere usuario piloto institucional (#90 sin cerrar)",
-    "SAAD-CP-074": "Requiere WebKit (solo Chrome y Firefox instalados)",
     "SAAD-CP-078": "Requiere usuario piloto institucional (#90 sin cerrar)",
     "SAAD-CP-079": "Sesión exploratoria de 30 min; requiere coordinación con cliente",
     "SAAD-CP-080": "Requiere usuario piloto institucional (#90 sin cerrar)",
@@ -211,12 +267,14 @@ def cargar_resultados_cat70(raiz: Path = RAIZ) -> dict[str, dict[str, dict[str, 
                     **caso,
                     "_ciclo_dir": ciclo_dir,
                     "_entorno_cat": cat,
+                    "_ruta": archivo.relative_to(ciclos_base).as_posix(),
                 }
             elif ya is None:
                 mejor[cid][cat] = {
                     **caso,
                     "_ciclo_dir": ciclo_dir,
                     "_entorno_cat": cat,
+                    "_ruta": archivo.relative_to(ciclos_base).as_posix(),
                 }
     return mejor
 
@@ -231,6 +289,11 @@ def estado_global(entornos: dict[str, dict[str, Any]]) -> str:
     return "NO EJECUTADO"
 
 
+def _desde_registro(ruta: Path) -> str:
+    """Los enlaces del .md se escriben relativos a reports/validation/, donde vive el registro."""
+    return ruta.relative_to("reports/validation").as_posix()
+
+
 def _enlace_evidencia(caso: dict[str, Any], raiz: Path = RAIZ) -> str:
     """Devuelve un enlace Markdown relativo a la evidencia, o vacío si no hay."""
     evidencia = caso.get("evidencia")
@@ -241,13 +304,13 @@ def _enlace_evidencia(caso: dict[str, Any], raiz: Path = RAIZ) -> str:
     ruta = Path(f"reports/validation/ciclos_pruebas/{ciclo_dir}/{subcarpeta}/{evidencia}")
     abs_ruta = raiz / ruta
     if abs_ruta.exists():
-        return f"[evidencia]({ruta.as_posix()})"
+        return f"[evidencia]({_desde_registro(ruta)})"
     # Intentar con Path.stem si tiene extensión adicional
     for ext in (".json", ".png", ".md"):
         alt = abs_ruta.with_suffix(ext)
         if alt.exists():
-            return f"[evidencia]({ruta.with_suffix(ext).as_posix()})"
-    return f"[evidencia (falta)]({ruta.as_posix()})"
+            return f"[evidencia]({_desde_registro(ruta.with_suffix(ext))})"
+    return f"[evidencia (falta)]({_desde_registro(ruta)})"
 
 
 def _ciclo_link(caso: dict[str, Any]) -> str:
@@ -255,7 +318,7 @@ def _ciclo_link(caso: dict[str, Any]) -> str:
     if not ciclo_dir:
         return ""
     num = ciclo_dir.split("_")[1] if "_" in ciclo_dir else ""
-    return f"[{num}](reports/validation/ciclos_pruebas/{ciclo_dir}/)"
+    return f"[{num}](ciclos_pruebas/{ciclo_dir}/)"
 
 
 def verificar_enlaces(resultados: dict[str, dict[str, dict[str, Any]]], raiz: Path = RAIZ) -> list[str]:
@@ -391,17 +454,31 @@ def generar_md(
                 return "✗ FALLIDO"
             return "— NO EJECUTADO"
 
-        nombre = ""
+        nombre = CAT70_NOMBRES.get(cid, cid)
         ciclo70 = ""
         ev70 = ""
-        for cat in ("LOCAL", "AWS"):
+        for cat in ("AWS", "LOCAL"):
             caso = entornos.get(cat)
             if caso:
-                nombre = caso.get("nombre", cid)
+                nombre = caso.get("nombre") or nombre
                 ciclo70 = _ciclo_link(caso)
+                if caso.get("_ruta"):
+                    ev70 = f"[resultados](ciclos_pruebas/{caso['_ruta']})"
                 break
 
         lineas.append(f"| {cid} | {nombre} | {_st70('LOCAL')} | {_st70('AWS')} | {ciclo70} | {ev70} |")
+
+    lineas += [
+        "",
+        "## Otras validaciones del proyecto",
+        "",
+        "Validaciones que no pertenecen a ninguno de los dos catálogos; se listan con el resultado que registra cada informe.",
+        "",
+        "| ID | Validación | Fecha | Entorno | Resultado registrado | Informe |",
+        "|---|---|---|---|---|---|",
+    ]
+    for pid, nom, fecha, ent, res, ruta_pc in VALIDACIONES_COMPLEMENTARIAS:
+        lineas.append(f"| {pid} | {nom} | {fecha} | {ent} | {res} | [informe]({ruta_pc}) |")
 
     # Leyenda
     lineas += [
@@ -417,6 +494,7 @@ def generar_md(
         "**Esquemas de ID:**",
         "- `SAAD-CP-NNN` — catálogo de 200 casos (SAAD-CP v2.1, 2026).",
         "- `CP-SAAD-NNN` — catálogo original de 70 casos. Los 17 listados no tienen equivalente en el de 200.",
+        "- `PC-NN` — otras validaciones del proyecto, fuera de ambos catálogos.",
         "",
         "**Entornos:**",
         "- **FIXTURE** — pytest con `tmp_path`/`monkeypatch`, sin red ni datos reales.",
@@ -544,11 +622,11 @@ def escribir_xlsx(
         cell.font = CABECERA_FONT
     for cid in sorted(CAT70_EXCLUSIVOS):
         entornos = resultados_cat70.get(cid, {})
-        nombre = ciclo70 = ""
-        for cat in ("LOCAL", "AWS"):
+        nombre, ciclo70 = CAT70_NOMBRES.get(cid, cid), ""
+        for cat in ("AWS", "LOCAL"):
             caso = entornos.get(cat)
             if caso:
-                nombre = caso.get("nombre", cid)
+                nombre = caso.get("nombre") or nombre
                 ciclo70 = caso.get("_ciclo_dir", "").split("_")[1]
                 break
 
@@ -557,6 +635,22 @@ def escribir_xlsx(
             return c.get("estado", "NO EJECUTADO") if c else "NO EJECUTADO"
 
         ws2.append([cid, nombre, _st70("LOCAL"), _st70("AWS"), ciclo70])
+
+    ws3 = wb.create_sheet("Otras validaciones")
+    ws3.append(["ID", "Validación", "Fecha", "Entorno", "Resultado registrado", "Informe"])
+    for cell in ws3[1]:
+        cell.fill = CABECERA
+        cell.font = CABECERA_FONT
+    for fila in VALIDACIONES_COMPLEMENTARIAS:
+        ws3.append([*fila[:5], f"reports/validation/{fila[5]}"])
+    for i, ancho in enumerate([8, 45, 12, 14, 90, 60], 1):
+        ws3.column_dimensions[ws3.cell(1, i).column_letter].width = ancho
+
+    for hoja in wb.worksheets:
+        hoja.page_setup.orientation = "landscape"
+        hoja.page_setup.fitToWidth = 1
+        hoja.page_setup.fitToHeight = 0
+        hoja.sheet_properties.pageSetUpPr = openpyxl.worksheet.properties.PageSetupProperties(fitToPage=True)
 
     ruta.parent.mkdir(parents=True, exist_ok=True)
     wb.save(ruta)

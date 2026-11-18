@@ -1,0 +1,101 @@
+{
+ "meta": {
+  "script": "scripts/qa_cat70_complementarios.py",
+  "entorno": "LOCAL",
+  "fecha_utc": "20261118T182142Z"
+ },
+ "conteo": {
+  "APROBADO": 6,
+  "FALLIDO": 0,
+  "NO EJECUTADO": 0
+ },
+ "casos": [
+  {
+   "id": "CP-SAAD-046",
+   "nombre": "Caracterización por sexo y edad del flujo",
+   "estado": "APROBADO",
+   "detalle": "Total 4253: edad suma 4253, sexo suma 4253; el sexo se estima y se declara como escenario, no como dato observado.",
+   "evidencia": {
+    "total": 4253,
+    "suma_edad": 4253,
+    "suma_sexo": 4253,
+    "semanas": 2
+   },
+   "entorno": "LOCAL"
+  },
+  {
+   "id": "CP-SAAD-052",
+   "nombre": "Semanas con recuento muy bajo no parecen picos artificiales",
+   "estado": "APROBADO",
+   "detalle": "18 series con promedio < 20 atenciones/semana en las últimas 26 semanas; ningún pronóstico supera 1,5 × su máximo histórico + 3 (superados: 0).",
+   "evidencia": {
+    "series_bajas": 18,
+    "picos": 0
+   },
+   "entorno": "LOCAL"
+  },
+  {
+   "id": "CP-SAAD-054",
+   "nombre": "Orden lógico de intervalos de predicción",
+   "estado": "APROBADO",
+   "detalle": "408 puntos de pronóstico en 51 series (RM y comunas): límite inferior ≤ pronóstico ≤ límite superior en todos; fuera de orden: 0; negativos: 0.",
+   "evidencia": {
+    "series": 51,
+    "puntos": 408,
+    "desordenados": 0
+   },
+   "entorno": "LOCAL"
+  },
+  {
+   "id": "CP-SAAD-055",
+   "nombre": "Cobertura holdout declarada sin engaño",
+   "estado": "APROBADO",
+   "detalle": "Intervalo nominal 80%; coberturas observadas region 69.7%, comuna 76.8%; 2 fuera de tolerancia, todas declaradas en las advertencias de /meta.",
+   "evidencia": {
+    "cobertura_holdout": [
+     {
+      "nivel": "region",
+      "cobertura_observada": 0.6968,
+      "evaluaciones": 155,
+      "dentro_de_tolerancia": false
+     },
+     {
+      "nivel": "comuna",
+      "cobertura_observada": 0.7684,
+      "evaluaciones": 7750,
+      "dentro_de_tolerancia": false
+     }
+    ]
+   },
+   "entorno": "LOCAL"
+  },
+  {
+   "id": "CP-SAAD-056",
+   "nombre": "Semana parcial no sustituye semana cerrada",
+   "estado": "APROBADO",
+   "detalle": "Última semana observada 2026-S45 (2026-11-08 a 2026-11-14), cerrada antes del cálculo del 2026-11-17; el histórico termina en ella, el primer pronóstico empieza el 2026-11-15 y semana_en_curso es None.",
+   "evidencia": {
+    "ultima_observada": {
+     "ano": 2026,
+     "semana": 45,
+     "fecha_inicio": "2026-11-08",
+     "atenciones": 1825.0
+    },
+    "primer_pronostico": "2026-11-15"
+   },
+   "entorno": "LOCAL"
+  },
+  {
+   "id": "CP-SAAD-057",
+   "nombre": "Tasas y denominadores territoriales",
+   "estado": "APROBADO",
+   "detalle": "50 comunas con tasa por 10.000: el denominador implícito (pronóstico ÷ tasa × 10.000) suma 8.43 millones, dentro del rango plausible de la RM (7.0–9.5 M); las 2 comunas sin pronóstico tienen tasa nula, no cero.",
+   "evidencia": {
+    "comunas_con_tasa": 50,
+    "poblacion_implicita": 8425555,
+    "sin_pronostico": 2
+   },
+   "entorno": "LOCAL"
+  }
+ ]
+}

@@ -1,7 +1,6 @@
 # Registro principal de pruebas — SAAD-CP v2.1
 
-> Generado el 2026-11-18 00:07 UTC. Los 200 casos del catálogo se consolidan aquí; para cada caso se conserva el último resultado ejecutado por entorno.
-> Actualización de SAAD-CP-074 el 2026-11-18 01:53 UTC. Se conserva la consolidación de los demás casos.
+> Generado el 2026-11-18 18:25 UTC. Los 200 casos del catálogo se consolidan aquí; para cada caso se conserva el último resultado ejecutado por entorno.
 
 ## Resumen ejecutivo
 
@@ -89,7 +88,7 @@
 | SAAD-CP-071 | Viewport móvil estrecho | Calidad transversal | APROBADO | — | ✓ | ✓ | [17](ciclos_pruebas/ciclo_17_20261117T140040Z/) |  |  |
 | SAAD-CP-072 | Zoom al doscientos por ciento | Calidad transversal | APROBADO | — | ✓ | ✓ | [17](ciclos_pruebas/ciclo_17_20261117T140040Z/) |  |  |
 | SAAD-CP-073 | Contraste de texto y ayudas | Calidad transversal | APROBADO | — | ✓ | ✓ | [17](ciclos_pruebas/ciclo_17_20261117T140040Z/) |  |  |
-| SAAD-CP-074 | Motores de navegador | Calidad transversal | APROBADO | — | — | ✓ | [17](ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_aws_compatibilidad/resultados.md) |  | [Santiago y San Borja Arriarán coinciden en los tres motores](ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_aws_compatibilidad/EVIDENCIA/SAAD-CP-074.md) |
+| SAAD-CP-074 | Motores de navegador | Calidad transversal | APROBADO | — | — | ✓ | [17](ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_aws_compatibilidad/EVIDENCIA/SAAD-CP-074.md) |
 | SAAD-CP-075 | Medición moderada de latencia | Calidad transversal | APROBADO | — | ✓ | ✓ | [17](ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_manual_aws/EVIDENCIA/SAAD-CP-075.png) |
 | SAAD-CP-076 | Recuperación tras desconexión del cliente | Calidad transversal | APROBADO | — | ✓ | ✓ | [17](ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_manual_aws/EVIDENCIA/SAAD-CP-076.png) |
 | SAAD-CP-077 | API pública sin operaciones administrativas | Calidad transversal | APROBADO | — | ✓ | ✓ | [17](ciclos_pruebas/ciclo_17_20261117T140040Z/) |  | [evidencia](ciclos_pruebas/ciclo_17_20261117T140040Z/catalogo_200_manual_aws/EVIDENCIA/SAAD-CP-077.png) |
@@ -234,23 +233,40 @@ Los 17 casos del catálogo CP-SAAD (70 casos) que no tienen equivalente en el ca
 
 | ID | Nombre | Estado LOCAL | Estado AWS | Ciclo | Evidencia |
 |---|---|---|---|---|---|
-| CP-SAAD-010 |  | — | — |  |  |
-| CP-SAAD-011 | Refresh semanal manual | — | — NO EJECUTADO | [02](ciclos_pruebas/ciclo_02_20261112T142947Z/) |  |
-| CP-SAAD-012 | EventBridge dispara la tarea | — | — NO EJECUTADO | [02](ciclos_pruebas/ciclo_02_20261112T142947Z/) |  |
-| CP-SAAD-014 | Nuevos outputs visibles tras redespliegue | — | — NO EJECUTADO | [02](ciclos_pruebas/ciclo_02_20261112T142947Z/) |  |
-| CP-SAAD-015 | 503 y Retry-After durante la inicialización | — | — NO EJECUTADO | [02](ciclos_pruebas/ciclo_02_20261112T142947Z/) |  |
-| CP-SAAD-016 | Almacenamiento efímero del pipeline | — | — NO EJECUTADO | [02](ciclos_pruebas/ciclo_02_20261112T142947Z/) |  |
-| CP-SAAD-025 | GET /api/v1/camas-psiquiatria/RM | ✓ APROBADO | ✓ APROBADO | [16](ciclos_pruebas/ciclo_16_20261116T015228Z/) |  |
-| CP-SAAD-046 |  | — | — |  |  |
-| CP-SAAD-052 |  | — | — |  |  |
-| CP-SAAD-054 |  | — | — |  |  |
-| CP-SAAD-055 |  | — | — |  |  |
-| CP-SAAD-056 |  | — | — |  |  |
-| CP-SAAD-057 |  | — | — |  |  |
-| CP-SAAD-063 | Sin secretos en el frontend publicado | — | ✓ APROBADO | [16](ciclos_pruebas/ciclo_16_20261116T015228Z/) |  |
-| CP-SAAD-064 |  | — | — |  |  |
-| CP-SAAD-065 | Recuperación tras reemplazo de tarea ECS | — | — NO EJECUTADO | [02](ciclos_pruebas/ciclo_02_20261112T142947Z/) |  |
-| CP-SAAD-069 |  | — | — |  |  |
+| CP-SAAD-010 | Permisos del rol de tarea pipeline | — | — NO EJECUTADO | [17](ciclos_pruebas/ciclo_17_20261118T175954Z/) | [resultados](ciclos_pruebas/ciclo_17_20261118T175954Z/aws/20261118T182217Z/resultados.json) |
+| CP-SAAD-011 | Refresh semanal manual | — | — NO EJECUTADO | [02](ciclos_pruebas/ciclo_02_20261112T142947Z/) | [resultados](ciclos_pruebas/ciclo_02_20261112T142947Z/aws/20261112T143156Z/resultados.json) |
+| CP-SAAD-012 | EventBridge dispara la tarea | — | — NO EJECUTADO | [02](ciclos_pruebas/ciclo_02_20261112T142947Z/) | [resultados](ciclos_pruebas/ciclo_02_20261112T142947Z/aws/20261112T143156Z/resultados.json) |
+| CP-SAAD-014 | Nuevos outputs visibles tras redespliegue | — | — NO EJECUTADO | [02](ciclos_pruebas/ciclo_02_20261112T142947Z/) | [resultados](ciclos_pruebas/ciclo_02_20261112T142947Z/aws/20261112T143156Z/resultados.json) |
+| CP-SAAD-015 | 503 y Retry-After durante la inicialización | — | — NO EJECUTADO | [02](ciclos_pruebas/ciclo_02_20261112T142947Z/) | [resultados](ciclos_pruebas/ciclo_02_20261112T142947Z/aws/20261112T143156Z/resultados.json) |
+| CP-SAAD-016 | Almacenamiento efímero del pipeline | — | — NO EJECUTADO | [02](ciclos_pruebas/ciclo_02_20261112T142947Z/) | [resultados](ciclos_pruebas/ciclo_02_20261112T142947Z/aws/20261112T143156Z/resultados.json) |
+| CP-SAAD-025 | GET /api/v1/camas-psiquiatria/RM | ✓ APROBADO | ✓ APROBADO | [17](ciclos_pruebas/ciclo_17_20261118T175954Z/) | [resultados](ciclos_pruebas/ciclo_17_20261118T175954Z/aws/20261118T180735Z/resultados.json) |
+| CP-SAAD-046 | Caracterización por sexo y edad del flujo | ✓ APROBADO | ✓ APROBADO | [17](ciclos_pruebas/ciclo_17_20261118T175954Z/) | [resultados](ciclos_pruebas/ciclo_17_20261118T175954Z/aws/20261118T182217Z/resultados.json) |
+| CP-SAAD-052 | Semanas con recuento muy bajo no parecen picos artificiales | ✓ APROBADO | ✓ APROBADO | [17](ciclos_pruebas/ciclo_17_20261118T175954Z/) | [resultados](ciclos_pruebas/ciclo_17_20261118T175954Z/aws/20261118T182217Z/resultados.json) |
+| CP-SAAD-054 | Orden lógico de intervalos de predicción | ✓ APROBADO | ✓ APROBADO | [17](ciclos_pruebas/ciclo_17_20261118T175954Z/) | [resultados](ciclos_pruebas/ciclo_17_20261118T175954Z/aws/20261118T182217Z/resultados.json) |
+| CP-SAAD-055 | Cobertura holdout declarada sin engaño | ✓ APROBADO | ✓ APROBADO | [17](ciclos_pruebas/ciclo_17_20261118T175954Z/) | [resultados](ciclos_pruebas/ciclo_17_20261118T175954Z/aws/20261118T182217Z/resultados.json) |
+| CP-SAAD-056 | Semana parcial no sustituye semana cerrada | ✓ APROBADO | ✓ APROBADO | [17](ciclos_pruebas/ciclo_17_20261118T175954Z/) | [resultados](ciclos_pruebas/ciclo_17_20261118T175954Z/aws/20261118T182217Z/resultados.json) |
+| CP-SAAD-057 | Tasas y denominadores territoriales | ✓ APROBADO | ✓ APROBADO | [17](ciclos_pruebas/ciclo_17_20261118T175954Z/) | [resultados](ciclos_pruebas/ciclo_17_20261118T175954Z/aws/20261118T182217Z/resultados.json) |
+| CP-SAAD-063 | Sin secretos en el frontend publicado | — | ✓ APROBADO | [17](ciclos_pruebas/ciclo_17_20261118T175954Z/) | [resultados](ciclos_pruebas/ciclo_17_20261118T175954Z/aws/20261118T180735Z/resultados.json) |
+| CP-SAAD-064 | Cache CloudFront tras nueva versión | — | ✓ APROBADO | [17](ciclos_pruebas/ciclo_17_20261118T175954Z/) | [resultados](ciclos_pruebas/ciclo_17_20261118T175954Z/aws/20261118T182217Z/resultados.json) |
+| CP-SAAD-065 | Recuperación tras reemplazo de tarea ECS | — | — NO EJECUTADO | [02](ciclos_pruebas/ciclo_02_20261112T142947Z/) | [resultados](ciclos_pruebas/ciclo_02_20261112T142947Z/aws/20261112T143156Z/resultados.json) |
+| CP-SAAD-069 | Presupuesto, etiquetas y costo del ambiente de evaluación | — | ✓ APROBADO | [17](ciclos_pruebas/ciclo_17_20261118T175954Z/) | [resultados](ciclos_pruebas/ciclo_17_20261118T175954Z/aws/20261118T182217Z/resultados.json) |
+
+## Otras validaciones del proyecto
+
+Validaciones que no pertenecen a ninguno de los dos catálogos; se listan con el resultado que registra cada informe.
+
+| ID | Validación | Fecha | Entorno | Resultado registrado | Informe |
+|---|---|---|---|---|---|
+| PC-01 | Línea base local con Docker Compose (C-07) | 2026-11-12 | LOCAL | 10 aprobados · 4 fallidos de 14 casos. Corrida histórica; la línea base se repite en cada ciclo de qa_ciclo_pruebas.py. | [informe](baseline_local/20261112T135538Z/informe.md) |
+| PC-02 | E2E local contra AWS (C-44) | 2026-11-12 | LOCAL + AWS | 21 aprobados · 4 fallidos · 6 no ejecutados. Los 4 fallos fueron salidas faltantes; se repite con 24 aprobados y 0 fallidos el 2026-11-18 (SAAD-CP-068). | [informe](e2e_local_aws/20261112T131720Z/informe.md) |
+| PC-03 | Contrato API y cliente frontend | 2026-11-17 | LOCAL | 0 errores · 12 advertencias · 9 observaciones (SAAD-CP-056). | [informe](contrato_api/comparacion_api_frontend.md) |
+| PC-04 | Revalidación C-08: pipeline y procedencia | 2026-11-10 | LOCAL | Suite ordinaria 838 aprobadas e integración 29 aprobadas; evidencia de snapshots y procedencia, no acredita despliegue. | [informe](c08_revalidacion_20261110.md) |
+| PC-05 | Revalidación C-08 con pipeline --sin-evaluacion | 2026-11-15 | LOCAL | Pipeline terminó con código 0; suite ordinaria 920 aprobadas e integración 29 aprobadas. No revalida la selección de modelos. | [informe](c08_revalidacion_20261115T161029Z/informe.md) |
+| PC-06 | Fixtures mínimos de tests de datos (#40) | 2026-10-14 | FIXTURE | 451 aprobadas y 17 deseleccionadas sin datasets masivos; salida aislada con código 0. | [informe](issue40_fixtures.md) |
+| PC-07 | QA de propuesta anual de camas y ocupación | 2026-11-07 | LOCAL | 149 pruebas aprobadas, build de producción aprobado y pipeline con --force y SKIP válido. No valida factibilidad de inversión. | [informe](propuesta_camas.md) |
+| PC-08 | QA de caracterización en la web | 2026-11-07 | LOCAL | 87 pruebas aprobadas y ayuda del pipeline correcta. No incluye validación clínica del escenario por sexo. | [informe](qa_caracterizacion_web.md) |
+| PC-09 | Certificación APT del pipeline | 2026-10-08 | LOCAL | Pipeline completo con código 0 (≈1 h), entorno congelado y hashes de salidas; inventario de contratos de salida. | [informe](apt_certification_20261008T002147Z/pipeline_meta.txt) |
+| PC-10 | Retest de DEF-12 a DEF-14 en AWS (ciclo 15) | 2026-11-16 | AWS | SAAD-CP-004 y SAAD-CP-073 aprobados; formalizado en el registro principal con el ciclo 17. | [informe](ciclos_pruebas/ciclo_15_20261116T013931Z/retest_def12_def14.md) |
 
 ## Leyenda
 
@@ -263,6 +279,7 @@ Los 17 casos del catálogo CP-SAAD (70 casos) que no tienen equivalente en el ca
 **Esquemas de ID:**
 - `SAAD-CP-NNN` — catálogo de 200 casos (SAAD-CP v2.1, 2026).
 - `CP-SAAD-NNN` — catálogo original de 70 casos. Los 17 listados no tienen equivalente en el de 200.
+- `PC-NN` — otras validaciones del proyecto, fuera de ambos catálogos.
 
 **Entornos:**
 - **FIXTURE** — pytest con `tmp_path`/`monkeypatch`, sin red ni datos reales.

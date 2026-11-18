@@ -128,3 +128,26 @@ def test_main_genera_archivos(tmp_path, monkeypatch, ciclos):
     assert md_out.exists()
     assert csv_out.exists()
     # xlsx puede fallar si openpyxl no está disponible; solo verificamos que no explota
+
+
+def test_enlaces_son_relativos_a_la_carpeta_del_registro(tmp_path):
+    evidencia = tmp_path / "reports/validation/ciclos_pruebas/ciclo_17_x/sub/EVIDENCIA/a.png"
+    evidencia.parent.mkdir(parents=True)
+    evidencia.write_bytes(b"x")
+    caso = {"evidencia": "EVIDENCIA/a.png", "_ciclo_dir": "ciclo_17_x", "_subcarpeta": "sub"}
+    assert rp._enlace_evidencia(caso, tmp_path) == "[evidencia](ciclos_pruebas/ciclo_17_x/sub/EVIDENCIA/a.png)"
+    assert rp._ciclo_link(caso) == "[17](ciclos_pruebas/ciclo_17_x/)"
+
+
+def test_registro_incluye_nombres_cat70_y_otras_validaciones(tmp_path, monkeypatch, ciclos):
+    _monkeypatch_rastreados(monkeypatch, ciclos)
+    md = rp.generar_md(rp.cargar_resultados_200(ciclos), rp.cargar_resultados_cat70(ciclos), ciclos)
+    assert "| CP-SAAD-054 | Orden lógico de intervalos de predicción |" in md
+    assert "## Otras validaciones del proyecto" in md
+    assert all(f"| {pid} |" in md for pid, *_ in rp.VALIDACIONES_COMPLEMENTARIAS)
+    assert len(rp.VALIDACIONES_COMPLEMENTARIAS) == 10
+
+
+def test_informes_de_otras_validaciones_existen():
+    faltan = [r for *_, r in rp.VALIDACIONES_COMPLEMENTARIAS if not (RAIZ / "reports/validation" / r).exists()]
+    assert not faltan
